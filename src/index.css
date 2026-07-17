@@ -1,0 +1,145 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --color-dark-950: #06060e;
+  --color-dark-900: #0c0c18;
+  --color-dark-850: #10101e;
+  --color-dark-800: #161625;
+  --color-dark-700: #1e1e35;
+  --color-dark-600: #2a2a4a;
+  --color-dark-500: #3d3d65;
+  --color-dark-400: #5a5a88;
+  --color-dark-300: #8888aa;
+  --color-dark-200: #aaaac8;
+  --color-dark-100: #d0d0e0;
+  --color-brand-500: #6366f1;
+  --color-brand-400: #818cf8;
+  --color-brand-300: #a5b4fc;
+  --color-brand-600: #4f46e5;
+  --color-accent-500: #8b5cf6;
+  --color-accent-400: #a78bfa;
+  --color-accent-300: #c4b5fd;
+  --color-neon-blue: #60a5fa;
+  --color-neon-purple: #a78bfa;
+  --color-neon-green: #34d399;
+  --color-neon-amber: #fbbf24;
+  --color-neon-rose: #fb7185;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #06060e;
+  color: #e4e4f0;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.35);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.55);
+}
+
+::selection {
+  background: rgba(99, 102, 241, 0.35);
+  color: #fff;
+}
+
+/* Glass card - solid dark backgrounds for visibility */
+.glass {
+  background: #12122a !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+}
+
+.glass-hover:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.glow-brand {
+  box-shadow: 0 0 20px rgba(99, 102, 241, 0.20), 0 0 60px rgba(99, 102, 241, 0.08);
+}
+
+.glow-accent {
+  box-shadow: 0 0 20px rgba(139, 92, 246, 0.20), 0 0 60px rgba(139, 92, 246, 0.08);
+}
+
+.glow-success {
+  box-shadow: 0 0 20px rgba(52, 211, 153, 0.20);
+}
+
+.gradient-border {
+  position: relative;
+}
+
+.gradient-border::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.5), rgba(139, 92, 246, 0.3), transparent 70%);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  -webkit-mask-composite: xor;
+  pointer-events: none;
+}
+
+.text-gradient {
+  background: linear-gradient(135deg, #818cf8, #a78bfa, #c4b5fd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Ensure inputs and selects are always visible */
+input, textarea, select {
+  color-scheme: dark;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
