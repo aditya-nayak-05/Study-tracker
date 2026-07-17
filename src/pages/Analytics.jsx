@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
 import DashboardLayout from '../layouts/DashboardLayout';
 import { BarChart, ProgressRing, AnimatedCounter, MiniLineChart } from '../components/Charts';
+import StudyHoursChart from '../components/StudyHoursChart';
 import {
   Clock, TrendingUp, Flame, Award, Target, BarChart3, Calendar,
 } from 'lucide-react';
@@ -140,17 +141,14 @@ export default function Analytics() {
           ))}
         </div>
 
-        {/* Charts */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Weekly Bar Chart */}
-          <div className="analytics-card glass gradient-border rounded-2xl p-6">
-            <h3 className="text-sm font-semibold text-white mb-5 flex items-center gap-2">
-              <BarChart3 className="w-4 h-4 text-brand-400" /> Weekly Study Hours
-            </h3>
-            <BarChart data={stats.weeklyData} maxHeight={120} barColor="#6366f1" />
-          </div>
+        {/* Interactive Study Hours Line Chart */}
+        <div className="analytics-card">
+          <StudyHoursChart />
+        </div>
 
-          {/* Daily Goal + Trend */}
+        {/* Charts Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Daily Goal Progress */}
           <div className="analytics-card glass gradient-border rounded-2xl p-6">
             <h3 className="text-sm font-semibold text-white mb-5 flex items-center gap-2">
               <Target className="w-4 h-4 text-neon-green" /> Daily Goal Progress
@@ -169,15 +167,15 @@ export default function Analytics() {
               </div>
             </div>
           </div>
-        </div>
 
-        {/* 14-Day Trend */}
-        <div className="analytics-card glass gradient-border rounded-2xl p-6">
-          <h3 className="text-sm font-semibold text-white mb-5 flex items-center gap-2">
-            <TrendingUp className="w-4 h-4 text-accent-400" /> 14-Day Study Trend
-          </h3>
-          <div className="flex justify-center">
-            <MiniLineChart data={stats.lineData} width={Math.min(600, window.innerWidth - 120)} height={80} color="#8b5cf6" />
+          {/* 14-Day Trend */}
+          <div className="analytics-card glass gradient-border rounded-2xl p-6">
+            <h3 className="text-sm font-semibold text-white mb-5 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-accent-400" /> 14-Day Study Trend
+            </h3>
+            <div className="flex justify-center">
+              <MiniLineChart data={stats.lineData} width={Math.min(500, window.innerWidth - 120)} height={80} color="#8b5cf6" />
+            </div>
           </div>
         </div>
       </div>
