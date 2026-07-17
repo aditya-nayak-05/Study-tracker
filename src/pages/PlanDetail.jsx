@@ -11,8 +11,9 @@ import { exportToPDF, exportToCSV, exportToExcel, importFromCSV, importFromExcel
 import { calculateProgress, getAllTasksInPlan, formatDate } from '../utils/helpers';
 import {
   Plus, ChevronLeft, Trash2, Edit3, Save, X, Check,
-  FileUp, FileDown, FolderPlus, GripVertical,
+  FileUp, FileDown, FolderPlus, GripVertical, Youtube, Play,
 } from 'lucide-react';
+import { extractVideoId, isValidYoutubeUrl, calcVideoProgress } from '../utils/youtube';
 
 const cardStyle = { background: '#12122a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '1rem' };
 const inputStyle = { background: '#161625', border: '1px solid rgba(255,255,255,0.12)', color: '#d0d0e0' };
@@ -38,6 +39,10 @@ export default function PlanDetail() {
   const [addTaskDay, setAddTaskDay] = useState(null);
   const [newItemName, setNewItemName] = useState('');
   const [editingDate, setEditingDate] = useState(null);
+  const [newYoutubeUrl, setNewYoutubeUrl] = useState('');
+  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [editingTaskName, setEditingTaskName] = useState('');
+  const [editingTaskUrl, setEditingTaskUrl] = useState('');
 
   useEffect(() => {
     if (plan) dispatch({ type: 'SET_UI', payload: { activePlanId: plan.id } });
@@ -98,10 +103,44 @@ export default function PlanDetail() {
   const handleAddTask = (e, dayId) => {
     e.preventDefault();
     if (!newItemName.trim()) return;
-    dispatch({ type: 'ADD_TASK', payload: { planId: plan.id, dayId, title: newItemName.trim() } });
+    const url = newYoutubeUrl.trim();
+    if (url && !isValidYoutubeUrl(url)) {
+      showToast('Invalid YouTube URL', 'warning');
+      return;
+    }
+    dispatch({
+      type: 'ADD_TASK',
+      payload: {
+        planId: plan.id,
+        dayId,
+        title: newItemName.trim(),
+        youtubeUrl: url
+      }
+    });
     showToast('Task added', 'success');
     setNewItemName('');
+    setNewYoutubeUrl('');
     setAddTaskDay(null);
+  };
+
+  const handleEditTaskSave = (e, task) => {
+    e.preventDefault();
+    if (!editingTaskName.trim()) return;
+    const url = editingTaskUrl.trim();
+    if (url && !isValidYoutubeUrl(url)) {
+      showToast('Invalid YouTube URL', 'warning');
+      return;
+    }
+    dispatch({
+      type: 'UPDATE_TASK',
+      payload: {
+        planId: plan.id,
+        taskId: task.id,
+        updates: { title: editingTaskName.trim(), youtubeUrl: url }
+      }
+    });
+    showToast('Task updated', 'success');
+    setEditingTaskId(null);
   };
 
   const handleDateChange = (dayId, newDate) => {
@@ -251,28 +290,92 @@ export default function PlanDetail() {
 
                                         {expandedDay === day.id && (
                                           <div className="ml-4 space-y-1 mt-1 pb-2">
-                                            {(day.tasks || []).map((task) => (
-                                              <div key={task.id} className="flex items-center gap-2 py-1 px-2 rounded-lg hover:bg-white/5 group">
-                                                <button onClick={() => dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: plan.id, taskId: task.id } })}
-                                                  className="w-3.5 h-3.5 rounded-full border-2 shrink-0 cursor-pointer transition-all"
-                                                  style={{
-                                                    borderColor: task.status === 'completed' ? '#34d399' : task.status === 'in-progress' ? '#fbbf24' : '#5a5a88',
-                                                    background: task.status === 'completed' ? '#34d399' : task.status === 'in-progress' ? 'rgba(251,191,36,0.2)' : 'transparent',
-                                                  }} />
-                                                <span className="text-xs flex-1" style={{ color: task.status === 'completed' ? '#5a5a88' : '#d0d0e0', textDecoration: task.status === 'completed' ? 'line-through' : 'none' }}>{task.title}</span>
-                                                <button onClick={() => dispatch({ type: 'DELETE_TASK', payload: { planId: plan.id, taskId: task.id } })}
-                                                  className="p-0.5 opacity-0 group-hover:opacity-100 cursor-pointer" style={{ color: '#fb7185' }}><Trash2 className="w-3 h-3" /></button>
-                                              </div>
-                                            ))}
+                                            {(day.tasks || []).map((task) => {
+                                              const videoId = task.youtubeUrl ? extractVideoId(task.youtubeUrl) : null;
+                                              const vp = videoId ? state.videoProgress[videoId] : null;
+                                              const isEditing = editingTaskId === task.id;
+
+                                              if (isEditing) {
+                                                return (
+                                                  <form key={task.id} onSubmit={(e) => handleEditTaskSave(e, task)} className="mt-2 space-y-2 p-3 rounded-lg border border-white/5" style={{ background: '#0c0c18' }}>
+                                                    <div>
+                                                      <label className="text-[10px] text-[#8888aa] block mb-1">Task Title</label>
+                                                      <input type="text" value={editingTaskName} onChange={(e) => setEditingTaskName(e.target.value)} className="w-full px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} autoFocus />
+                                                    </div>
+                                                    <div>
+                                                      <label className="text-[10px] text-[#8888aa] block mb-1">YouTube URL</label>
+                                                      <input type="text" value={editingTaskUrl} onChange={(e) => setEditingTaskUrl(e.target.value)} placeholder="Paste YouTube URL here..." className="w-full px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} />
+                                                    </div>
+                                                    <div className="flex gap-2 justify-end">
+                                                      <button type="submit" className="px-2.5 py-1 rounded text-[10px] font-semibold cursor-pointer" style={{ background: '#34d399', color: '#12122a' }}>Save</button>
+                                                      <button type="button" onClick={() => setEditingTaskId(null)} className="px-2.5 py-1 rounded text-[10px] font-semibold cursor-pointer" style={{ background: '#1e1e35', color: '#8888aa' }}>Cancel</button>
+                                                    </div>
+                                                  </form>
+                                                );
+                                              }
+
+                                              return (
+                                                <div key={task.id} className="py-1.5 px-2 rounded-lg hover:bg-white/5 group">
+                                                  <div className="flex items-center gap-2">
+                                                    <button onClick={() => dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: plan.id, taskId: task.id } })}
+                                                      className="w-3.5 h-3.5 rounded-full border-2 shrink-0 cursor-pointer transition-all"
+                                                      style={{
+                                                        borderColor: task.status === 'completed' ? '#34d399' : task.status === 'in-progress' ? '#fbbf24' : '#5a5a88',
+                                                        background: task.status === 'completed' ? '#34d399' : task.status === 'in-progress' ? 'rgba(251,191,36,0.2)' : 'transparent',
+                                                      }} />
+                                                    <span className="text-xs flex-1 truncate" style={{ color: task.status === 'completed' ? '#5a5a88' : '#d0d0e0', textDecoration: task.status === 'completed' ? 'line-through' : 'none' }}>{task.title}</span>
+                                                    {videoId && (
+                                                      <button onClick={() => navigate(`/learn/${plan.id}/${task.id}`)}
+                                                        className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium cursor-pointer transition-all shrink-0"
+                                                        style={{ background: 'rgba(239,68,68,0.1)', color: '#f87171' }}>
+                                                        <Play className="w-3 h-3" /> Watch
+                                                      </button>
+                                                    )}
+                                                    <button onClick={() => {
+                                                      setEditingTaskId(task.id);
+                                                      setEditingTaskName(task.title);
+                                                      setEditingTaskUrl(task.youtubeUrl || '');
+                                                    }} className="p-0.5 opacity-0 group-hover:opacity-100 cursor-pointer text-[#8888aa] hover:text-white"><Edit3 className="w-3 h-3" /></button>
+                                                    <button onClick={() => dispatch({ type: 'DELETE_TASK', payload: { planId: plan.id, taskId: task.id } })}
+                                                      className="p-0.5 opacity-0 group-hover:opacity-100 cursor-pointer" style={{ color: '#fb7185' }}><Trash2 className="w-3 h-3" /></button>
+                                                  </div>
+                                                  {task.youtubeUrl && (
+                                                    <div className="ml-6 mt-1 flex items-center gap-1 text-[9px]" style={{ color: '#5a5a88' }}>
+                                                      <Youtube className="w-2.5 h-2.5 shrink-0" />
+                                                      <span className="truncate">{task.youtubeUrl}</span>
+                                                    </div>
+                                                  )}
+                                                  {vp && vp.progress > 0 && (
+                                                    <div className="ml-6 mt-1 flex items-center gap-2">
+                                                      <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: '#1e1e35' }}>
+                                                        <div className="h-full rounded-full" style={{ width: `${Math.min(100, vp.progress)}%`, background: vp.progress >= 95 ? '#34d399' : '#6366f1' }} />
+                                                      </div>
+                                                      <span className="text-[9px]" style={{ color: '#5a5a88' }}>{Math.round(vp.progress)}% watched</span>
+                                                    </div>
+                                                  )}
+                                                </div>
+                                              );
+                                            })}
+
                                             {addTaskDay === day.id ? (
-                                              <form onSubmit={(e) => handleAddTask(e, day.id)} className="flex gap-1 mt-1">
-                                                <input type="text" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} placeholder="Task name" autoFocus
-                                                  className="flex-1 px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} />
-                                                <button type="submit" className="cursor-pointer" style={{ color: '#34d399' }}><Check className="w-4 h-4" /></button>
-                                                <button type="button" onClick={() => { setAddTaskDay(null); setNewItemName(''); }} className="cursor-pointer" style={{ color: '#5a5a88' }}><X className="w-4 h-4" /></button>
+                                              <form onSubmit={(e) => handleAddTask(e, day.id)} className="mt-1 p-3 rounded-lg space-y-2 border border-white/5" style={{ background: '#161625' }}>
+                                                <div>
+                                                  <label className="text-[10px] text-[#8888aa] block mb-1">Task Title</label>
+                                                  <input type="text" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} placeholder="e.g. Learn Python Loops" autoFocus
+                                                    className="w-full px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} />
+                                                </div>
+                                                <div>
+                                                  <label className="text-[10px] text-[#8888aa] block mb-1">YouTube URL (Optional)</label>
+                                                  <input type="text" value={newYoutubeUrl} onChange={(e) => setNewYoutubeUrl(e.target.value)} placeholder="https://www.youtube.com/watch?v=..."
+                                                    className="w-full px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} />
+                                                </div>
+                                                <div className="flex gap-2 justify-end">
+                                                  <button type="submit" className="px-2.5 py-1 rounded text-[10px] font-semibold cursor-pointer" style={{ background: '#34d399', color: '#12122a' }}>Add Task</button>
+                                                  <button type="button" onClick={() => { setAddTaskDay(null); setNewItemName(''); setNewYoutubeUrl(''); }} className="px-2.5 py-1 rounded text-[10px] font-semibold cursor-pointer" style={{ background: '#1e1e35', color: '#8888aa' }}>Cancel</button>
+                                                </div>
                                               </form>
                                             ) : (
-                                              <button onClick={() => { setAddTaskDay(day.id); setNewItemName(''); }} className="flex items-center gap-1 text-[11px] cursor-pointer ml-6" style={{ color: '#5a5a88' }}>
+                                              <button onClick={() => { setAddTaskDay(day.id); setNewItemName(''); setNewYoutubeUrl(''); }} className="flex items-center gap-1 text-[11px] cursor-pointer ml-6" style={{ color: '#5a5a88' }}>
                                                 <Plus className="w-3 h-3" /> Add Task
                                               </button>
                                             )}

@@ -80,6 +80,9 @@ function createDefaultState() {
     ui,
     globalStudyHours: storage.getItem('globalStudyHours', []),
     globalActivities: storage.getItem('globalActivities', []),
+    videoProgress: storage.getItem('videoProgress', {}),
+    studySessions: storage.getItem('studySessions', []),
+    activeSessionId: storage.getItem('activeSessionId', null),
     toasts: [],
   };
 }
@@ -384,6 +387,7 @@ function reducer(state, action) {
         estimatedTime: action.payload.estimatedTime || '',
         priority: action.payload.priority || 'low',
         status: 'not-started',
+        youtubeUrl: action.payload.youtubeUrl || '',
         createdAt: new Date().toISOString(),
       };
       const plans = state.plans.map((p) => {
@@ -536,10 +540,115 @@ function reducer(state, action) {
     case 'REMOVE_TOAST':
       return { ...state, toasts: state.toasts.filter((t) => t.id !== action.payload) };
 
+    // ── Video Progress ──
+    case 'SAVE_VIDEO_PROGRESS': {
+      const { videoId, currentTime, duration, progress } = action.payload;
+      return {
+        ...state,
+        videoProgress: {
+          ...state.videoProgress,
+          [videoId]: { videoId, currentTime, duration, progress, lastWatchedAt: new Date().toISOString() },
+        },
+      };
+    }
+
+    // ── Study Sessions ──
+    case 'START_STUDY_SESSION': {
+      const newSession = {
+        id: generateId(),
+        planId: action.payload.planId,
+        taskId: action.payload.taskId,
+        videoId: action.payload.videoId || null,
+        startedAt: new Date().toISOString(),
+        endedAt: null,
+        duration: 0,
+        videoPosition: 0,
+        notes: '',
+        isCompleted: false,
+        status: 'active',
+      };
+      return {
+        ...state,
+        studySessions: [...state.studySessions, newSession],
+        activeSessionId: newSession.id,
+      };
+    }
+
+    case 'UPDATE_STUDY_SESSION': {
+      const { sessionId, updates } = action.payload;
+      return {
+        ...state,
+        studySessions: state.studySessions.map((s) =>
+          s.id === sessionId ? { ...s, ...updates } : s
+        ),
+      };
+    }
+
+    case 'END_STUDY_SESSION': {
+      const sid = action.payload.sessionId;
+      const session = state.studySessions.find((s) => s.id === sid);
+      if (!session || session.isCompleted) return state;
+
+      const finalDuration = action.payload.duration || session.duration;
+      const hours = Math.floor(finalDuration / 3600);
+      const minutes = Math.floor((finalDuration % 3600) / 60);
+
+      const updatedSessions = state.studySessions.map((s) =>
+        s.id === sid
+          ? { ...s, isCompleted: true, status: 'completed', endedAt: new Date().toISOString(), duration: finalDuration, videoPosition: action.payload.videoPosition || s.videoPosition, notes: action.payload.notes || s.notes }
+          : s
+      );
+
+      // Auto-log study hours if duration > 0
+      let newGlobalHours = state.globalStudyHours;
+      let newPlans = state.plans;
+      let newActivities = state.globalActivities;
+
+      if (finalDuration >= 60) {
+        const entry = {
+          id: generateId(),
+          date: new Date().toISOString().split('T')[0],
+          hours,
+          minutes,
+          notes: `Study session: ${session.notes || 'Learning session'}`,
+          planId: session.planId,
+          timestamp: new Date().toISOString(),
+        };
+        newGlobalHours = [...state.globalStudyHours, entry];
+        newPlans = state.plans.map((p) =>
+          p.id === session.planId
+            ? { ...p, studyHours: [...(p.studyHours || []), entry], updatedAt: new Date().toISOString() }
+            : p
+        );
+        newActivities = [
+          { id: generateId(), type: 'study', message: `Completed study session (${hours}h ${minutes}m)`, timestamp: new Date().toISOString() },
+          ...state.globalActivities,
+        ].slice(0, 200);
+      }
+
+      return {
+        ...state,
+        studySessions: updatedSessions,
+        activeSessionId: state.activeSessionId === sid ? null : state.activeSessionId,
+        globalStudyHours: newGlobalHours,
+        plans: newPlans,
+        globalActivities: newActivities,
+      };
+    }
+
+    case 'DELETE_STUDY_SESSION': {
+      const delId = action.payload.sessionId;
+      return {
+        ...state,
+        studySessions: state.studySessions.filter((s) => s.id !== delId),
+        activeSessionId: state.activeSessionId === delId ? null : state.activeSessionId,
+      };
+    }
+
     // ── Reset ──
     case 'RESET_ALL':
       storage.clearAll();
-      return { profile: null, settings: DEFAULT_SETTINGS, plans: [], ui: DEFAULT_UI, globalStudyHours: [], globalActivities: [], toasts: [] };
+      return { profile: null, settings: DEFAULT_SETTINGS, plans: [], ui: DEFAULT_UI, globalStudyHours: [], globalActivities: [], videoProgress: {}, studySessions: [], activeSessionId: null, toasts: [] };
 
     default:
       return state;
@@ -557,7 +666,10 @@ export function StudyProvider({ children }) {
     storage.setItem('ui', { ...state.ui, searchOpen: false });
     storage.setItem('globalStudyHours', state.globalStudyHours);
     storage.setItem('globalActivities', state.globalActivities);
-  }, [state.profile, state.settings, state.plans, state.ui, state.globalStudyHours, state.globalActivities]);
+    storage.setItem('videoProgress', state.videoProgress);
+    storage.setItem('studySessions', state.studySessions);
+    storage.setItem('activeSessionId', state.activeSessionId);
+  }, [state.profile, state.settings, state.plans, state.ui, state.globalStudyHours, state.globalActivities, state.videoProgress, state.studySessions, state.activeSessionId]);
 
   // Toast auto-dismiss
   useEffect(() => {

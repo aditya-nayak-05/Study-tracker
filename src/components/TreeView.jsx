@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
 import gsap from 'gsap';
-import { ChevronRight, ChevronDown, Folder, FolderOpen, FileText, CheckCircle2, Circle, Clock } from 'lucide-react';
+import { ChevronRight, ChevronDown, Folder, FolderOpen, FileText, CheckCircle2, Circle, Clock, Youtube, Play } from 'lucide-react';
 import { calculateProgress } from '../utils/helpers';
+import { extractVideoId } from '../utils/youtube';
+import { useNavigate } from 'react-router-dom';
 
 function TreeNode({ label, level = 0, children, progress, status, isToday, defaultOpen = false, onClick }) {
   const [open, setOpen] = useState(defaultOpen);
@@ -78,6 +80,7 @@ function TreeNode({ label, level = 0, children, progress, status, isToday, defau
 
 const TreeView = React.memo(function TreeView({ plan, onTaskClick }) {
   const containerRef = useRef(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (containerRef.current) {
@@ -123,9 +126,25 @@ const TreeView = React.memo(function TreeView({ plan, onTaskClick }) {
             <TreeNode key={week.id} label={week.name} level={1} progress={getWeekProgress(week)}>
               {week.days?.map((day) => (
                 <TreeNode key={day.id} label={`${day.name}${day.date ? ' — ' + day.date : ''}`} level={2} progress={getDayProgress(day)} status={getDayStatus(day)} isToday={day.date === todayStr}>
-                  {day.tasks?.map((task) => (
-                    <TreeNode key={task.id} label={task.title} level={3} status={task.status} onClick={() => onTaskClick?.(task, day)} />
-                  ))}
+                  {day.tasks?.map((task) => {
+                    const hasVideo = task.youtubeUrl && extractVideoId(task.youtubeUrl);
+                    return (
+                      <div key={task.id} className="flex items-center gap-1">
+                        <div className="flex-1">
+                          <TreeNode label={task.title} level={3} status={task.status} onClick={() => onTaskClick?.(task, day)} />
+                        </div>
+                        {hasVideo && (
+                          <button
+                            onClick={(e) => { e.stopPropagation(); navigate(`/learn/${plan.id}/${task.id}`); }}
+                            className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium cursor-pointer shrink-0"
+                            style={{ background: 'rgba(239,68,68,0.1)', color: '#f87171' }}
+                          >
+                            <Play className="w-2.5 h-2.5" /> Watch
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
                 </TreeNode>
               ))}
             </TreeNode>

@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
 import {
   LayoutDashboard, BookOpen, Calendar, BarChart3, Clock, User, Settings,
-  ChevronLeft, ChevronRight, Pin, Sparkles,
+  ChevronLeft, ChevronRight, Pin, Sparkles, Youtube,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -13,6 +13,7 @@ const navItems = [
   { path: '/calendar', label: 'Calendar', icon: Calendar },
   { path: '/analytics', label: 'Analytics', icon: BarChart3 },
   { path: '/study-hours', label: 'Study Hours', icon: Clock },
+  { path: '/learn', label: 'Learning', icon: Youtube },
   { path: '/profile', label: 'Profile', icon: User },
   { path: '/settings', label: 'Settings', icon: Settings },
 ];

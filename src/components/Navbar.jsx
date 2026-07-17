@@ -12,6 +12,7 @@ const pageNames = {
   '/study-hours': 'Study Hours',
   '/profile': 'Profile',
   '/settings': 'Settings',
+  '/learn': 'Learning Hub',
 };
 
 const Navbar = React.memo(function Navbar({ onSearchOpen }) {
@@ -20,7 +21,16 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
   const navRef = useRef(null);
   const [notifications] = useState([]);
 
-  const currentPage = pageNames[location.pathname] || 'Plan Detail';
+  let currentPage = pageNames[location.pathname];
+  if (!currentPage) {
+    if (location.pathname.startsWith('/learn/')) {
+      currentPage = 'Learning Session';
+    } else if (location.pathname.startsWith('/plans/')) {
+      currentPage = 'Plan Detail';
+    } else {
+      currentPage = 'Plan Detail';
+    }
+  }
   const breadcrumbs = ['Home'];
   if (location.pathname !== '/') {
     breadcrumbs.push(currentPage);

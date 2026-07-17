@@ -11,8 +11,9 @@ import {
 } from '../utils/helpers';
 import {
   Plus, Play, Clock, CheckSquare, Calendar, BarChart3, User, Settings,
-  BookOpen, Target, Flame, TrendingUp, StickyNote,
+  BookOpen, Target, Flame, TrendingUp, StickyNote, Youtube,
 } from 'lucide-react';
+import { extractVideoId, getThumbnailUrl, formatDuration } from '../utils/youtube';
 
 export default function Dashboard() {
   const { state, dispatch, activePlan, showToast } = useStudy();
@@ -86,6 +87,59 @@ export default function Dashboard() {
       };
     }
   }, [state.globalStudyHours, activePlan, state.profile]);
+
+  // Compute YouTube session and recent tutorials
+  const learningStats = useMemo(() => {
+    let activeSession = null;
+    let activeSessionTask = null;
+    let activeSessionPlan = null;
+    if (state.activeSessionId) {
+      activeSession = (state.studySessions || []).find((s) => s.id === state.activeSessionId && !s.isCompleted);
+      if (activeSession) {
+        (state.plans || []).forEach((p) => {
+          if (p.id === activeSession.planId) {
+            activeSessionPlan = p;
+            p.months?.forEach((m) => m.weeks?.forEach((w) => w.days?.forEach((d) => d.tasks?.forEach((t) => {
+              if (t.id === activeSession.taskId) activeSessionTask = t;
+            }))));
+          }
+        });
+      }
+    }
+
+    const tutorialTasks = [];
+    (state.plans || []).forEach((p) => {
+      if (p.archived) return;
+      p.months?.forEach((m) => m.weeks?.forEach((w) => w.days?.forEach((d) => d.tasks?.forEach((t) => {
+        if (t.youtubeUrl) {
+          const videoId = extractVideoId(t.youtubeUrl);
+          if (videoId) {
+            const vp = state.videoProgress[videoId];
+            if (vp && vp.progress > 0 && vp.progress < 95) {
+              tutorialTasks.push({
+                task: t,
+                plan: p,
+                videoId,
+                progress: vp.progress,
+                currentTime: vp.currentTime,
+                duration: vp.duration,
+                lastWatchedAt: vp.lastWatchedAt || ''
+              });
+            }
+          }
+        }
+      }))));
+    });
+
+    tutorialTasks.sort((a, b) => {
+      if (!a.lastWatchedAt) return 1;
+      if (!b.lastWatchedAt) return -1;
+      return new Date(b.lastWatchedAt) - new Date(a.lastWatchedAt);
+    });
+    const recentTutorials = tutorialTasks.slice(0, 3);
+
+    return { activeSession, activeSessionTask, activeSessionPlan, recentTutorials };
+  }, [state.plans, state.videoProgress, state.studySessions, state.activeSessionId]);
 
   const quickActions = [
     { label: 'New Plan', icon: Plus, color: '#6366f1', action: () => navigate('/plans') },
@@ -233,6 +287,61 @@ export default function Dashboard() {
             <PomodoroTimer compact />
           </div>
         </div>
+
+        {/* Continue Learning Section */}
+        {(learningStats.activeSession || learningStats.recentTutorials.length > 0) && (
+          <div className="dash-card p-6 mb-5" style={{ background: '#12122a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '1rem' }}>
+            <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
+              <Youtube className="w-4 h-4 text-red-500" /> Continue Learning
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Active Session Card */}
+              {learningStats.activeSession && learningStats.activeSessionTask && (
+                <div className="md:col-span-3 p-4 mb-2 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-indigo-500/20" style={{ background: 'rgba(99,102,241,0.06)' }}>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                    <div>
+                      <span className="text-[10px] text-indigo-400 font-bold uppercase tracking-wider">Active Study Session</span>
+                      <h4 className="text-xs font-bold text-white leading-tight">{learningStats.activeSessionTask.title}</h4>
+                      <p className="text-[10px] text-[#8888aa] mt-0.5">Time logged: {formatDuration(learningStats.activeSession.duration)}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => navigate(`/learn/${learningStats.activeSession.planId}/${learningStats.activeSession.taskId}`)}
+                    className="px-4 py-1.5 rounded-lg text-xs font-semibold cursor-pointer text-indigo-400 border border-indigo-500/30 hover:bg-indigo-500/10 transition-all shrink-0"
+                  >
+                    Resume Session
+                  </button>
+                </div>
+              )}
+
+              {/* Recent In-Progress Tutorials */}
+              {learningStats.recentTutorials.map(({ task, plan, videoId, progress }) => (
+                <div key={task.id} className="p-3 rounded-xl flex gap-3 cursor-pointer hover:bg-white/5 transition-all border border-white/5" style={{ background: '#161625' }}
+                  onClick={() => navigate(`/learn/${plan.id}/${task.id}`)}
+                >
+                  <div className="relative w-20 aspect-video rounded-lg overflow-hidden shrink-0 bg-black/30">
+                    <img src={getThumbnailUrl(videoId)} className="w-full h-full object-cover" alt="" />
+                    <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                      <Play className="w-3.5 h-3.5 text-white" />
+                    </div>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[9px] uppercase font-bold tracking-wider" style={{ color: plan.color }}>{plan.name}</span>
+                    <h4 className="text-xs font-bold text-white truncate leading-tight mt-0.5">{task.title}</h4>
+                    <div className="flex items-center gap-2 mt-2">
+                      <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: '#1e1e35' }}>
+                        <div className="h-full rounded-full" style={{ width: `${progress}%`, background: '#6366f1' }} />
+                      </div>
+                      <span className="text-[9px] text-[#8888aa]">{Math.round(progress)}%</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Bottom Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
