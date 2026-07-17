@@ -18,13 +18,13 @@ function StudyTimer({
   const [elapsedSeconds, setElapsedSeconds] = useState(initialDuration);
   const [isRunning, setIsRunning] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
-  const [awayNotice, setAwayNotice] = useState(false);
 
   const intervalRef = useRef(null);
   const containerRef = useRef(null);
   const elapsedRef = useRef(elapsedSeconds);
+  const lastTickTimeRef = useRef(null);
 
-  // keep ref in sync for visibility handler
+  // keep ref in sync
   useEffect(() => {
     elapsedRef.current = elapsedSeconds;
   }, [elapsedSeconds]);
@@ -39,12 +39,18 @@ function StudyTimer({
 
   const startInterval = useCallback(() => {
     clearTimer();
+    lastTickTimeRef.current = Date.now();
     intervalRef.current = setInterval(() => {
-      setElapsedSeconds((prev) => {
-        const next = prev + 1;
-        onTick?.(next);
-        return next;
-      });
+      const now = Date.now();
+      const delta = Math.floor((now - lastTickTimeRef.current) / 1000);
+      if (delta >= 1) {
+        setElapsedSeconds((prev) => {
+          const next = prev + delta;
+          onTick?.(next);
+          return next;
+        });
+        lastTickTimeRef.current = now;
+      }
     }, 1000);
   }, [clearTimer, onTick]);
 
@@ -52,7 +58,7 @@ function StudyTimer({
   const handleStart = useCallback(() => {
     setHasStarted(true);
     setIsRunning(true);
-    setAwayNotice(false);
+    lastTickTimeRef.current = Date.now();
     startInterval();
   }, [startInterval]);
 
@@ -63,7 +69,7 @@ function StudyTimer({
 
   const handleResume = useCallback(() => {
     setIsRunning(true);
-    setAwayNotice(false);
+    lastTickTimeRef.current = Date.now();
     startInterval();
   }, [startInterval]);
 
@@ -78,7 +84,6 @@ function StudyTimer({
     setElapsedSeconds(0);
     setIsRunning(false);
     setHasStarted(false);
-    setAwayNotice(false);
   }, [clearTimer]);
 
   const handleFinish = useCallback(() => {
@@ -87,21 +92,27 @@ function StudyTimer({
     setElapsedSeconds(0);
     setIsRunning(false);
     setHasStarted(false);
-    setAwayNotice(false);
   }, [clearTimer, onFinish]);
 
-  /* ── visibility change auto-pause ──────────────────────── */
+  /* ── visibility change sync ──────────────────────── */
   useEffect(() => {
     const onVisChange = () => {
-      if (document.hidden && intervalRef.current) {
-        clearTimer();
-        setIsRunning(false);
-        setAwayNotice(true);
+      if (!document.hidden && isRunning && lastTickTimeRef.current) {
+        const now = Date.now();
+        const delta = Math.floor((now - lastTickTimeRef.current) / 1000);
+        if (delta >= 1) {
+          setElapsedSeconds((prev) => {
+            const next = prev + delta;
+            onTick?.(next);
+            return next;
+          });
+          lastTickTimeRef.current = now;
+        }
       }
     };
     document.addEventListener('visibilitychange', onVisChange);
     return () => document.removeEventListener('visibilitychange', onVisChange);
-  }, [clearTimer]);
+  }, [isRunning, onTick]);
 
   /* ── cleanup on unmount ────────────────────────────────── */
   useEffect(() => () => clearTimer(), [clearTimer]);
@@ -250,20 +261,6 @@ function StudyTimer({
           </span>
         </div>
       </div>
-
-      {/* away notice */}
-      {awayNotice && (
-        <span
-          style={{
-            fontSize: '0.75rem',
-            color: '#f59e0b',
-            textAlign: 'center',
-            lineHeight: 1.4,
-          }}
-        >
-          Timer was paused while you were away
-        </span>
-      )}
 
       {/* controls */}
       <div
