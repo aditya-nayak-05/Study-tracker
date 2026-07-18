@@ -333,7 +333,7 @@ export default function Learning() {
               <div 
                 className="flex items-center justify-between w-full transition-all duration-300 mb-4"
                 style={{
-                  opacity: showCinemaControls ? 1 : 0.2,
+                  opacity: showCinemaControls ? 1 : 0.02,
                   transform: showCinemaControls ? 'translateY(0)' : 'translateY(-2px)',
                 }}
               >
@@ -372,7 +372,7 @@ export default function Learning() {
               <div 
                 className="flex flex-col items-center justify-center mt-4 transition-all duration-300"
                 style={{
-                  opacity: showCinemaControls ? 0.7 : 0.1,
+                  opacity: showCinemaControls ? 0.7 : 0.0,
                   transform: showCinemaControls ? 'translateY(0)' : 'translateY(2px)',
                 }}
               >
@@ -389,7 +389,7 @@ export default function Learning() {
             <div 
               className="w-full lg:w-[320px] flex flex-col justify-center gap-4 transition-all duration-300 z-20 shrink-0"
               style={{
-                opacity: showCinemaControls ? 1 : 0.15,
+                opacity: showCinemaControls ? 1 : 0.02,
                 transform: showCinemaControls ? 'translateX(0)' : 'translateX(5px)',
                 pointerEvents: showCinemaControls ? 'auto' : 'none'
               }}
