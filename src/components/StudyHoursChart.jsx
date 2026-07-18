@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import gsap from 'gsap';
 import {
   ResponsiveContainer,
@@ -28,13 +28,11 @@ import {
   format,
   isAfter,
   parseISO,
-  isSameDay,
-  isSameWeek,
-  isSameMonth
+  isSameMonth,
+  isSameYear
 } from 'date-fns';
 import { useStudy } from '../context/StudyContext';
-import { formatDuration } from '../utils/youtube';
-import { Clock, Calendar, ChevronLeft, ChevronRight, Play, BookOpen } from 'lucide-react';
+import { Clock, ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 // ── Custom Card Components ──
@@ -58,12 +56,44 @@ export const CardContent = ({ children, className = '', style = {} }) => (
 
 // ── Format helpers ──
 const formatStudyHours = (hoursDec) => {
+  if (!Number.isFinite(hoursDec) || hoursDec <= 0) return '0m';
   const totalSec = Math.round(hoursDec * 3600);
   const h = Math.floor(totalSec / 3600);
   const m = Math.floor((totalSec % 3600) / 60);
   if (h > 0) return `${h}h ${m}m`;
   return `${m}m`;
 };
+
+// ── Custom Tooltip (defined outside render to avoid remount on every render) ──
+const CustomTooltipContent = React.memo(({ active, payload, activeRange, planColor }) => {
+  if (!active || !payload || !payload.length) return null;
+  const data = payload[0].payload;
+  let labelDetail = data.label;
+
+  try {
+    if (activeRange === 'daily') {
+      labelDetail = format(parseISO(data.date), 'MMMM dd, yyyy');
+    } else if (activeRange === 'weekly') {
+      const wStart = parseISO(data.date);
+      labelDetail = `Week of ${format(wStart, 'MMM d, yyyy')}`;
+    } else if (activeRange === 'monthly') {
+      const mStart = parseISO(data.date + '-01');
+      labelDetail = format(mStart, 'MMMM yyyy');
+    }
+  } catch {
+    // Keep the fallback label on parse errors
+  }
+
+  return (
+    <div className="p-3 rounded-xl border border-white/10 shadow-xl" style={{ background: '#161625', minWidth: '120px' }}>
+      <p className="text-[10px] text-[#8888aa] mb-1 font-medium">{labelDetail}</p>
+      <div className="flex items-center gap-1.5 mt-0.5">
+        <div className="w-2 h-2 rounded-full" style={{ background: planColor }} />
+        <span className="text-xs font-bold text-white">{formatStudyHours(payload[0].value)}</span>
+      </div>
+    </div>
+  );
+});
 
 // ── Main Component ──
 export default function StudyHoursChart() {
@@ -96,10 +126,16 @@ export default function StudyHoursChart() {
     if (activeRange === 'daily') nextDate = addWeeks(currentDate, 1);
     else if (activeRange === 'weekly') nextDate = addMonths(currentDate, 1);
     else if (activeRange === 'monthly') nextDate = addYears(currentDate, 1);
+    else return; // guard against unexpected activeRange values
 
-    // Prevent navigating into future weeks/months/years
-    if (isAfter(nextDate, now) && !isSameMonth(nextDate, now) && activeRange !== 'daily') return;
-    if (activeRange === 'daily' && isAfter(startOfWeek(nextDate, { weekStartsOn: 1 }), now)) return;
+    // Prevent navigating into future periods
+    if (activeRange === 'daily') {
+      if (isAfter(startOfWeek(nextDate, { weekStartsOn: 1 }), now)) return;
+    } else if (activeRange === 'weekly') {
+      if (isAfter(nextDate, now) && !isSameMonth(nextDate, now)) return;
+    } else if (activeRange === 'monthly') {
+      if (isAfter(nextDate, now) && !isSameYear(nextDate, now)) return;
+    }
 
     setCurrentDate(nextDate);
   };
@@ -199,8 +235,7 @@ export default function StudyHoursChart() {
   // ── Metrics Computations ──
   const metrics = useMemo(() => {
     const total = chartData.reduce((sum, d) => sum + d.studyHours, 0);
-    const count = chartData.filter((d) => d.studyHours > 0).length || 1;
-    const avg = total / chartData.length; // Average over the whole interval
+    const avg = chartData.length > 0 ? total / chartData.length : 0;
     return {
       total: formatStudyHours(total),
       avg: formatStudyHours(avg),
@@ -221,33 +256,12 @@ export default function StudyHoursChart() {
     return format(currentDate, 'yyyy');
   }, [activeRange, currentDate]);
 
-  // Custom tooltips showing human readable hours (e.g. 2h 30m)
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const data = payload[0].payload;
-      let labelDetail = data.label;
-      if (activeRange === 'daily') {
-        labelDetail = format(parseISO(data.date), 'MMMM dd, yyyy');
-      } else if (activeRange === 'weekly') {
-        const wStart = parseISO(data.date);
-        labelDetail = `Week of ${format(wStart, 'MMM d, yyyy')}`;
-      } else if (activeRange === 'monthly') {
-        const mStart = parseISO(data.date + '-01');
-        labelDetail = format(mStart, 'MMMM yyyy');
-      }
-
-      return (
-        <div className="p-3 rounded-xl border border-white/10 shadow-xl" style={{ background: '#161625', minWidth: '120px' }}>
-          <p className="text-[10px] text-[#8888aa] mb-1 font-medium">{labelDetail}</p>
-          <div className="flex items-center gap-1.5 mt-0.5">
-            <div className="w-2 h-2 rounded-full" style={{ background: activePlan?.color || '#6366f1' }} />
-            <span className="text-xs font-bold text-white">{formatStudyHours(payload[0].value)}</span>
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
+  // Memoize tooltip props so the extracted CustomTooltipContent doesn't remount
+  const planColor = activePlan?.color || '#6366f1';
+  const renderTooltip = useCallback(
+    (props) => <CustomTooltipContent {...props} activeRange={activeRange} planColor={planColor} />,
+    [activeRange, planColor]
+  );
 
   return (
     <div ref={containerRef} className="space-y-4">
@@ -352,7 +366,7 @@ export default function StudyHoursChart() {
                   tick={{ fill: '#5a5a88', fontSize: 10, fontWeight: 500 }}
                   tickFormatter={(val) => val > 0 ? `${val}h` : '0'}
                 />
-                <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.06)', strokeWidth: 1 }} />
+                <Tooltip content={renderTooltip} cursor={{ stroke: 'rgba(255,255,255,0.06)', strokeWidth: 1 }} />
                 <Line
                   type="monotone"
                   dataKey="studyHours"

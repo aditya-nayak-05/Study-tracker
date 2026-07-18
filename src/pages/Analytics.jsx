@@ -57,7 +57,8 @@ export default function Analytics() {
     // Sessions
     const sessions = hours.map((h) => (h.hours || 0) * 60 + (h.minutes || 0));
     const longestSession = sessions.length > 0 ? Math.max(...sessions) : 0;
-    const shortestSession = sessions.length > 0 ? Math.min(...sessions.filter((s) => s > 0)) : 0;
+    const positiveSessions = sessions.filter((s) => s > 0);
+    const shortestSession = positiveSessions.length > 0 ? Math.min(...positiveSessions) : 0;
 
     // Streak
     let currentStreak = 0;
