@@ -92,7 +92,7 @@ function NavbarLearningStats({ state, location }) {
   if (!plan || !task) return null;
 
   return (
-    <div className="hidden xl:flex items-center gap-3.5 mx-6 flex-1 justify-center max-w-3xl">
+    <div className="hidden xl:flex items-center gap-5.5 mx-10 flex-1 justify-center max-w-4xl">
       {/* Today Task */}
       <div 
         className="px-3.5 py-2 rounded-xl border border-white/5 flex items-center gap-2 group transition-all duration-300 hover:border-indigo-500/30 hover:shadow-[0_0_15px_rgba(99,102,241,0.15)] shrink-0" 

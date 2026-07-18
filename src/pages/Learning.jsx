@@ -263,21 +263,21 @@ export default function Learning() {
 
       {showResumePrompt ? (
         <div 
-          className="max-w-2xl mx-auto p-10 text-center my-16 rounded-3xl border border-white/10 transition-all duration-300 hover:border-indigo-500/25" 
+          className="max-w-2xl mx-auto p-12 text-center my-24 rounded-3xl border border-white/10 transition-all duration-300 hover:border-indigo-500/25" 
           style={{ 
             background: '#12122a', 
             boxShadow: '0 20px 45px rgba(0, 0, 0, 0.5), 0 0 35px rgba(99, 102, 241, 0.05)'
           }}
         >
-          <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 flex items-center justify-center mx-auto mb-6 border border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.15)] animate-pulse">
+          <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 flex items-center justify-center mx-auto mb-8 border border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.15)] animate-pulse">
             <Video className="w-8 h-8 text-indigo-400" />
           </div>
-          <h3 className="text-xl font-extrabold text-white mb-3 tracking-wide">Resume Tutorial?</h3>
-          <p className="text-sm text-[#8888aa] mb-8 leading-relaxed">
+          <h3 className="text-xl font-extrabold text-white mb-4 tracking-wide">Resume Tutorial?</h3>
+          <p className="text-sm text-[#8888aa] mb-10 leading-relaxed">
             You previously watched this video up to <strong className="text-indigo-400 font-extrabold text-base bg-indigo-500/10 px-2 py-0.5 rounded-lg ml-1 shadow-[0_0_10px_rgba(99,102,241,0.1)]">{formatDuration(savedProgress.currentTime)}</strong>.<br />
             Would you like to pick up where you left off or start fresh?
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-5">
             <button 
               onClick={() => { setStartAt(Math.floor(savedProgress.currentTime)); setShowResumePrompt(false); }} 
               className="px-6 py-3.5 rounded-xl text-sm font-bold cursor-pointer transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 text-white" 
