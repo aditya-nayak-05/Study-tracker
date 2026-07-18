@@ -553,6 +553,7 @@ function reducer(state, action) {
     }
 
     // ── Study Sessions ──
+    // ── Study Sessions ──
     case 'START_STUDY_SESSION': {
       const newSession = {
         id: generateId(),
@@ -567,20 +568,92 @@ function reducer(state, action) {
         isCompleted: false,
         status: 'active',
       };
+
+      const studyHourEntry = {
+        id: newSession.id,
+        date: new Date().toISOString().split('T')[0],
+        hours: 0,
+        minutes: 0,
+        notes: 'Study session started',
+        planId: action.payload.planId || null,
+        timestamp: new Date().toISOString(),
+      };
+
+      let plans = state.plans;
+      if (action.payload.planId) {
+        plans = state.plans.map((p) => {
+          if (p.id !== action.payload.planId) return p;
+          return {
+            ...p,
+            studyHours: [...(p.studyHours || []), studyHourEntry],
+            updatedAt: new Date().toISOString(),
+          };
+        });
+      }
+
       return {
         ...state,
         studySessions: [...state.studySessions, newSession],
         activeSessionId: newSession.id,
+        globalStudyHours: [...state.globalStudyHours, studyHourEntry],
+        plans
       };
     }
 
     case 'UPDATE_STUDY_SESSION': {
       const { sessionId, updates } = action.payload;
+      const session = state.studySessions.find((s) => s.id === sessionId);
+      if (!session) return state;
+
+      const updatedSessions = state.studySessions.map((s) =>
+        s.id === sessionId ? { ...s, ...updates } : s
+      );
+
+      // Compute precise hours and minutes
+      const finalDuration = updates.duration !== undefined ? updates.duration : session.duration;
+      const hrs = Math.floor(finalDuration / 3600);
+      const mins = (finalDuration % 3600) / 60;
+      const finalNotes = updates.notes !== undefined ? `Study session: ${updates.notes || 'Learning session'}` : undefined;
+
+      const updatedGlobalHours = state.globalStudyHours.map((h) => {
+        if (h.id === sessionId) {
+          return {
+            ...h,
+            hours: hrs,
+            minutes: mins,
+            ...(finalNotes !== undefined ? { notes: finalNotes } : {})
+          };
+        }
+        return h;
+      });
+
+      let updatedPlans = state.plans;
+      if (session.planId) {
+        updatedPlans = state.plans.map((p) => {
+          if (p.id !== session.planId) return p;
+          return {
+            ...p,
+            studyHours: (p.studyHours || []).map((h) => {
+              if (h.id === sessionId) {
+                return {
+                  ...h,
+                  hours: hrs,
+                  minutes: mins,
+                  ...(finalNotes !== undefined ? { notes: finalNotes } : {})
+                };
+              }
+              return h;
+            }),
+            updatedAt: new Date().toISOString(),
+          };
+        });
+      }
+
       return {
         ...state,
-        studySessions: state.studySessions.map((s) =>
-          s.id === sessionId ? { ...s, ...updates } : s
-        ),
+        studySessions: updatedSessions,
+        globalStudyHours: updatedGlobalHours,
+        plans: updatedPlans
       };
     }
 
@@ -589,39 +662,81 @@ function reducer(state, action) {
       const session = state.studySessions.find((s) => s.id === sid);
       if (!session || session.isCompleted) return state;
 
-      const finalDuration = action.payload.duration || session.duration;
+      const finalDuration = action.payload.duration !== undefined ? action.payload.duration : session.duration;
       const hours = Math.floor(finalDuration / 3600);
-      const minutes = Math.floor((finalDuration % 3600) / 60);
+      const minutes = (finalDuration % 3600) / 60;
+      const finalNotes = `Study session: ${action.payload.notes || session.notes || 'Learning session'}`;
 
       const updatedSessions = state.studySessions.map((s) =>
         s.id === sid
-          ? { ...s, isCompleted: true, status: 'completed', endedAt: new Date().toISOString(), duration: finalDuration, videoPosition: action.payload.videoPosition || s.videoPosition, notes: action.payload.notes || s.notes }
+          ? { 
+              ...s, 
+              isCompleted: true, 
+              status: 'completed', 
+              endedAt: new Date().toISOString(), 
+              duration: finalDuration, 
+              videoPosition: action.payload.videoPosition || s.videoPosition, 
+              notes: action.payload.notes || s.notes 
+            }
           : s
       );
 
-      // Auto-log study hours if duration > 0
       let newGlobalHours = state.globalStudyHours;
       let newPlans = state.plans;
       let newActivities = state.globalActivities;
 
-      if (finalDuration >= 60) {
-        const entry = {
-          id: generateId(),
-          date: new Date().toISOString().split('T')[0],
-          hours,
-          minutes,
-          notes: `Study session: ${session.notes || 'Learning session'}`,
-          planId: session.planId,
-          timestamp: new Date().toISOString(),
-        };
-        newGlobalHours = [...state.globalStudyHours, entry];
-        newPlans = state.plans.map((p) =>
-          p.id === session.planId
-            ? { ...p, studyHours: [...(p.studyHours || []), entry], updatedAt: new Date().toISOString() }
-            : p
-        );
+      // Guard: If session was extremely short (less than 5 seconds), discard the study hours entry to keep logs clean
+      if (finalDuration < 5) {
+        newGlobalHours = state.globalStudyHours.filter((h) => h.id !== sid);
+        if (session.planId) {
+          newPlans = state.plans.map((p) => {
+            if (p.id !== session.planId) return p;
+            return {
+              ...p,
+              studyHours: (p.studyHours || []).filter((h) => h.id !== sid),
+              updatedAt: new Date().toISOString()
+            };
+          });
+        }
+      } else {
+        // Finalize the existing entry
+        newGlobalHours = state.globalStudyHours.map((h) => {
+          if (h.id === sid) {
+            return {
+              ...h,
+              hours,
+              minutes,
+              notes: finalNotes,
+              timestamp: new Date().toISOString()
+            };
+          }
+          return h;
+        });
+
+        if (session.planId) {
+          newPlans = state.plans.map((p) => {
+            if (p.id !== session.planId) return p;
+            return {
+              ...p,
+              studyHours: (p.studyHours || []).map((h) => {
+                if (h.id === sid) {
+                  return {
+                    ...h,
+                    hours,
+                    minutes,
+                    notes: finalNotes,
+                    timestamp: new Date().toISOString()
+                  };
+                }
+                return h;
+              }),
+              updatedAt: new Date().toISOString()
+            };
+          });
+        }
+
         newActivities = [
-          { id: generateId(), type: 'study', message: `Completed study session (${hours}h ${minutes}m)`, timestamp: new Date().toISOString() },
+          { id: generateId(), type: 'study', message: `Completed study session (${hours}h ${Math.round(minutes)}m)`, timestamp: new Date().toISOString() },
           ...state.globalActivities,
         ].slice(0, 200);
       }
