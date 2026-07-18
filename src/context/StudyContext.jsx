@@ -79,6 +79,7 @@ function createDefaultState() {
     plans,
     ui,
     globalStudyHours: storage.getItem('globalStudyHours', []),
+    videoStudyHours: storage.getItem('videoStudyHours', []),
     globalActivities: storage.getItem('globalActivities', []),
     videoProgress: storage.getItem('videoProgress', {}),
     studySessions: storage.getItem('studySessions', []),
@@ -553,7 +554,6 @@ function reducer(state, action) {
     }
 
     // ── Study Sessions ──
-    // ── Study Sessions ──
     case 'START_STUDY_SESSION': {
       const newSession = {
         id: generateId(),
@@ -585,7 +585,7 @@ function reducer(state, action) {
           if (p.id !== action.payload.planId) return p;
           return {
             ...p,
-            studyHours: [...(p.studyHours || []), studyHourEntry],
+            videoStudyHours: [...(p.videoStudyHours || []), studyHourEntry],
             updatedAt: new Date().toISOString(),
           };
         });
@@ -595,7 +595,7 @@ function reducer(state, action) {
         ...state,
         studySessions: [...state.studySessions, newSession],
         activeSessionId: newSession.id,
-        globalStudyHours: [...state.globalStudyHours, studyHourEntry],
+        videoStudyHours: [...(state.videoStudyHours || []), studyHourEntry],
         plans
       };
     }
@@ -615,7 +615,7 @@ function reducer(state, action) {
       const mins = (finalDuration % 3600) / 60;
       const finalNotes = updates.notes !== undefined ? `Study session: ${updates.notes || 'Learning session'}` : undefined;
 
-      const updatedGlobalHours = state.globalStudyHours.map((h) => {
+      const updatedVideoHours = (state.videoStudyHours || []).map((h) => {
         if (h.id === sessionId) {
           return {
             ...h,
@@ -633,7 +633,7 @@ function reducer(state, action) {
           if (p.id !== session.planId) return p;
           return {
             ...p,
-            studyHours: (p.studyHours || []).map((h) => {
+            videoStudyHours: (p.videoStudyHours || []).map((h) => {
               if (h.id === sessionId) {
                 return {
                   ...h,
@@ -652,7 +652,7 @@ function reducer(state, action) {
       return {
         ...state,
         studySessions: updatedSessions,
-        globalStudyHours: updatedGlobalHours,
+        videoStudyHours: updatedVideoHours,
         plans: updatedPlans
       };
     }
@@ -681,26 +681,26 @@ function reducer(state, action) {
           : s
       );
 
-      let newGlobalHours = state.globalStudyHours;
+      let newVideoHours = state.videoStudyHours || [];
       let newPlans = state.plans;
       let newActivities = state.globalActivities;
 
       // Guard: If session was extremely short (less than 5 seconds), discard the study hours entry to keep logs clean
       if (finalDuration < 5) {
-        newGlobalHours = state.globalStudyHours.filter((h) => h.id !== sid);
+        newVideoHours = (state.videoStudyHours || []).filter((h) => h.id !== sid);
         if (session.planId) {
           newPlans = state.plans.map((p) => {
             if (p.id !== session.planId) return p;
             return {
               ...p,
-              studyHours: (p.studyHours || []).filter((h) => h.id !== sid),
+              videoStudyHours: (p.videoStudyHours || []).filter((h) => h.id !== sid),
               updatedAt: new Date().toISOString()
             };
           });
         }
       } else {
         // Finalize the existing entry
-        newGlobalHours = state.globalStudyHours.map((h) => {
+        newVideoHours = (state.videoStudyHours || []).map((h) => {
           if (h.id === sid) {
             return {
               ...h,
@@ -718,7 +718,7 @@ function reducer(state, action) {
             if (p.id !== session.planId) return p;
             return {
               ...p,
-              studyHours: (p.studyHours || []).map((h) => {
+              videoStudyHours: (p.videoStudyHours || []).map((h) => {
                 if (h.id === sid) {
                   return {
                     ...h,
@@ -745,7 +745,7 @@ function reducer(state, action) {
         ...state,
         studySessions: updatedSessions,
         activeSessionId: state.activeSessionId === sid ? null : state.activeSessionId,
-        globalStudyHours: newGlobalHours,
+        videoStudyHours: newVideoHours,
         plans: newPlans,
         globalActivities: newActivities,
       };
@@ -780,11 +780,12 @@ export function StudyProvider({ children }) {
     storage.setItem('plans', state.plans);
     storage.setItem('ui', { ...state.ui, searchOpen: false });
     storage.setItem('globalStudyHours', state.globalStudyHours);
+    storage.setItem('videoStudyHours', state.videoStudyHours || []);
     storage.setItem('globalActivities', state.globalActivities);
     storage.setItem('videoProgress', state.videoProgress);
     storage.setItem('studySessions', state.studySessions);
     storage.setItem('activeSessionId', state.activeSessionId);
-  }, [state.profile, state.settings, state.plans, state.ui, state.globalStudyHours, state.globalActivities, state.videoProgress, state.studySessions, state.activeSessionId]);
+  }, [state.profile, state.settings, state.plans, state.ui, state.globalStudyHours, state.videoStudyHours, state.globalActivities, state.videoProgress, state.studySessions, state.activeSessionId]);
 
   // Toast auto-dismiss
   useEffect(() => {

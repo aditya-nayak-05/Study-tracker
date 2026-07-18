@@ -29,6 +29,7 @@ export default function Learning() {
   const [notesText, setNotesText] = useState('');
   const [activeTimerTab, setActiveTimerTab] = useState('session'); // 'session' | 'pomodoro'
   const [showCinemaControls, setShowCinemaControls] = useState(true);
+  const [videoPlaying, setVideoPlaying] = useState(false);
   const notesTimeoutRef = useRef(null);
   const cinemaControlsTimeoutRef = useRef(null);
 
@@ -39,7 +40,7 @@ export default function Learning() {
     }
     cinemaControlsTimeoutRef.current = setTimeout(() => {
       setShowCinemaControls(false);
-    }, 500); // 0.5 seconds
+    }, 1500); // 1.5 seconds
   };
 
   useEffect(() => {
@@ -354,6 +355,16 @@ export default function Learning() {
                   videoId={videoId}
                   startAt={startAt}
                   onProgressUpdate={handleProgressUpdate}
+                  onStateChange={(stateCode) => {
+                    if (stateCode === 1) {
+                      setVideoPlaying(true);
+                      if (!state.activeSessionId) {
+                        handleStartSession();
+                      }
+                    } else if (stateCode === 2 || stateCode === 0) {
+                      setVideoPlaying(false);
+                    }
+                  }}
                   style={{
                     aspectRatio: '16 / 9',
                     width: '100%',
@@ -402,6 +413,7 @@ export default function Learning() {
                   onTick={handleTimerTick}
                   onFinish={handleFinishSession}
                   compact={true}
+                  videoPlaying={videoPlaying}
                 />
               </div>
 

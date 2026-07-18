@@ -56,6 +56,7 @@ function YouTubePlayer({
   onProgressUpdate,
   onPlayerReady,
   onVideoEnd,
+  onStateChange,
   startAt,
   className = '',
   style = {},
@@ -71,10 +72,12 @@ function YouTubePlayer({
   const onProgressUpdateRef = useRef(onProgressUpdate);
   const onPlayerReadyRef = useRef(onPlayerReady);
   const onVideoEndRef = useRef(onVideoEnd);
+  const onStateChangeRef = useRef(onStateChange);
 
   useEffect(() => { onProgressUpdateRef.current = onProgressUpdate; }, [onProgressUpdate]);
   useEffect(() => { onPlayerReadyRef.current = onPlayerReady; }, [onPlayerReady]);
   useEffect(() => { onVideoEndRef.current = onVideoEnd; }, [onVideoEnd]);
+  useEffect(() => { onStateChangeRef.current = onStateChange; }, [onStateChange]);
 
   // --- Progress helper ---
   const reportProgress = useCallback(() => {
@@ -138,6 +141,10 @@ function YouTubePlayer({
             },
             onStateChange: (event) => {
               if (destroyed) return;
+
+              if (typeof onStateChangeRef.current === 'function') {
+                onStateChangeRef.current(event.data);
+              }
 
               switch (event.data) {
                 case window.YT.PlayerState.PLAYING: // 1
@@ -247,6 +254,20 @@ function YouTubePlayer({
 
     return () => observer.disconnect();
   }, [loading]);
+
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.hidden && playerRef.current && typeof playerRef.current.pauseVideo === 'function') {
+        try {
+          playerRef.current.pauseVideo();
+        } catch (e) {
+          // ignore
+        }
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, []);
 
   return (
     <div

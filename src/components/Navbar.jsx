@@ -169,15 +169,15 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
       if (timeoutId) clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
         setShowCinemaControls(false);
-      }, 500); // 0.5 seconds
+      }, 1500); // 1.5 seconds
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     
-    // Set initial timer to fade out after 0.5s if mouse is still
+    // Set initial timer to fade out after 1.5s if mouse is still
     timeoutId = setTimeout(() => {
       setShowCinemaControls(false);
-    }, 500);
+    }, 1500);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);

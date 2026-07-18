@@ -13,6 +13,7 @@ function StudyTimer({
   onTick,
   onFinish,
   compact = false,
+  videoPlaying = false,
 }) {
   /* ── state ─────────────────────────────────────────────── */
   const [elapsedSeconds, setElapsedSeconds] = useState(initialDuration);
@@ -72,6 +73,20 @@ function StudyTimer({
     lastTickTimeRef.current = Date.now();
     startInterval();
   }, [startInterval]);
+
+  useEffect(() => {
+    if (videoPlaying) {
+      if (!hasStarted) {
+        handleStart();
+      } else if (!isRunning) {
+        handleResume();
+      }
+    } else {
+      if (isRunning) {
+        handlePause();
+      }
+    }
+  }, [videoPlaying, hasStarted, isRunning, handleStart, handleResume, handlePause]);
 
   const handleReset = useCallback(() => {
     if (elapsedRef.current > 0) {
