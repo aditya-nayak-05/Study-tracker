@@ -16,7 +16,7 @@ const pageNames = {
 };
 
 // ── Custom Navbar Learning Page Stats Widget ──
-function NavbarLearningStats({ state, location }) {
+function NavbarLearningStats({ state, location, showCinemaControls }) {
   const [istTime, setIstTime] = useState('');
 
   const parts = location.pathname.split('/');
@@ -96,7 +96,11 @@ function NavbarLearningStats({ state, location }) {
       {/* Today Task */}
       <div 
         className="px-3.5 py-2 rounded-xl border border-white/5 flex items-center gap-2 group transition-all duration-300 hover:border-indigo-500/30 hover:shadow-[0_0_15px_rgba(99,102,241,0.15)] shrink-0" 
-        style={{ background: 'rgba(255,255,255,0.02)' }}
+        style={{ 
+          background: 'rgba(255,255,255,0.02)',
+          opacity: showCinemaControls ? 1 : 0.02,
+          pointerEvents: showCinemaControls ? 'auto' : 'none'
+        }}
       >
         <span className="text-dark-400 font-medium">Today task:</span>
         <span className="text-white font-semibold max-w-[140px] truncate group-hover:text-indigo-400 transition-colors" title={task.title}>{task.title}</span>
@@ -105,7 +109,11 @@ function NavbarLearningStats({ state, location }) {
       {/* Current Plan Progress Bar */}
       <div 
         className="px-3.5 py-2 rounded-xl border border-white/5 flex items-center gap-3 transition-all duration-300 hover:border-emerald-500/30 hover:shadow-[0_0_15px_rgba(52,211,153,0.15)] flex-1 max-w-[220px]" 
-        style={{ background: 'rgba(255,255,255,0.02)' }}
+        style={{ 
+          background: 'rgba(255,255,255,0.02)',
+          opacity: showCinemaControls ? 1 : 0.02,
+          pointerEvents: showCinemaControls ? 'auto' : 'none'
+        }}
       >
         <span className="text-dark-400 font-medium shrink-0">Progress:</span>
         <div className="flex items-center gap-2 w-full">
@@ -119,7 +127,7 @@ function NavbarLearningStats({ state, location }) {
         </div>
       </div>
 
-      {/* Today Total Study Hours */}
+      {/* Today Total Study Hours - ALWAYS 100% OPACITY */}
       <div 
         className="px-3.5 py-2 rounded-xl border border-white/5 flex items-center gap-2 transition-all duration-300 hover:border-indigo-500/30 hover:shadow-[0_0_15px_rgba(99,102,241,0.15)] shrink-0" 
         style={{ background: 'rgba(255,255,255,0.02)' }}
@@ -128,7 +136,7 @@ function NavbarLearningStats({ state, location }) {
         <span className="text-indigo-400 font-extrabold">{todayHours}</span>
       </div>
 
-      {/* Current Time in India (IST) */}
+      {/* Current Time in India (IST) - ALWAYS 100% OPACITY */}
       <div 
         className="px-3.5 py-2 rounded-xl border border-white/5 flex items-center justify-center transition-all duration-300 hover:border-amber-500/30 hover:shadow-[0_0_15px_rgba(245,158,11,0.15)] shrink-0" 
         style={{ background: 'rgba(255,255,255,0.02)' }}
@@ -144,6 +152,38 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
   const location = useLocation();
   const navRef = useRef(null);
   const [notifications] = useState([]);
+
+  const [showCinemaControls, setShowCinemaControls] = useState(true);
+  const isLearnPage = location.pathname.startsWith('/learn/');
+
+  useEffect(() => {
+    if (!isLearnPage) {
+      setShowCinemaControls(true);
+      return;
+    }
+
+    let timeoutId = null;
+
+    const handleMouseMove = () => {
+      setShowCinemaControls(true);
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setShowCinemaControls(false);
+      }, 500); // 0.5 seconds
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    
+    // Set initial timer to fade out after 0.5s if mouse is still
+    timeoutId = setTimeout(() => {
+      setShowCinemaControls(false);
+    }, 500);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [isLearnPage]);
 
   let currentPage = pageNames[location.pathname];
   if (!currentPage) {
@@ -173,7 +213,13 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
       style={{ background: 'rgba(10,10,20,0.90)', backdropFilter: 'blur(12px)' }}
     >
       {/* Breadcrumbs */}
-      <div className="flex items-center gap-2 text-sm shrink-0">
+      <div 
+        className="flex items-center gap-2 text-sm shrink-0 transition-opacity duration-300"
+        style={{
+          opacity: showCinemaControls ? 1 : 0.02,
+          pointerEvents: showCinemaControls ? 'auto' : 'none'
+        }}
+      >
         {breadcrumbs.map((crumb, i) => (
           <React.Fragment key={i}>
             {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-dark-400" />}
@@ -186,11 +232,21 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
 
       {/* Cinematic Learning Page Navbar Stats */}
       {location.pathname.startsWith('/learn/') && (
-        <NavbarLearningStats state={state} location={location} />
+        <NavbarLearningStats 
+          state={state} 
+          location={location} 
+          showCinemaControls={showCinemaControls} 
+        />
       )}
 
       {/* Actions */}
-      <div className="flex items-center gap-3">
+      <div 
+        className="flex items-center gap-3 transition-opacity duration-300"
+        style={{
+          opacity: showCinemaControls ? 1 : 0.02,
+          pointerEvents: showCinemaControls ? 'auto' : 'none'
+        }}
+      >
         {/* Search */}
         <button
           onClick={onSearchOpen}

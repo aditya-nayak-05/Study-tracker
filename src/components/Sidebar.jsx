@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
 import {
@@ -25,6 +25,38 @@ const Sidebar = React.memo(function Sidebar() {
   const sidebarRef = useRef(null);
   const itemRefs = useRef([]);
   const collapsed = state.settings.sidebarCollapsed;
+
+  const [showCinemaControls, setShowCinemaControls] = useState(true);
+  const isLearnPage = location.pathname.startsWith('/learn/');
+
+  useEffect(() => {
+    if (!isLearnPage) {
+      setShowCinemaControls(true);
+      return;
+    }
+
+    let timeoutId = null;
+
+    const handleMouseMove = () => {
+      setShowCinemaControls(true);
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setShowCinemaControls(false);
+      }, 500); // 0.5 seconds
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    
+    // Set initial timer to fade out after 0.5s if mouse is still
+    timeoutId = setTimeout(() => {
+      setShowCinemaControls(false);
+    }, 500);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [isLearnPage]);
 
   useEffect(() => {
     if (sidebarRef.current) {
@@ -58,8 +90,14 @@ const Sidebar = React.memo(function Sidebar() {
   return (
     <aside
       ref={sidebarRef}
-      className="fixed left-0 top-0 h-screen flex flex-col z-40 overflow-hidden"
-      style={{ width: collapsed ? 72 : 260, background: 'rgba(10,10,20,0.95)', borderRight: '1px solid rgba(255,255,255,0.08)' }}
+      className="fixed left-0 top-0 h-screen flex flex-col z-40 overflow-hidden transition-opacity duration-300"
+      style={{ 
+        width: collapsed ? 72 : 260, 
+        background: 'rgba(10,10,20,0.95)', 
+        borderRight: '1px solid rgba(255,255,255,0.08)',
+        opacity: showCinemaControls ? 1 : 0.02,
+        pointerEvents: showCinemaControls ? 'auto' : 'none'
+      }}
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-5 h-[4.5rem] border-b border-glass-border shrink-0">
