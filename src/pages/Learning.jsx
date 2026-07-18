@@ -277,74 +277,104 @@ export default function Learning() {
         </div>
       ) : startAt !== null && (
         <div className="flex flex-col">
-          {/* Cinematic Full Viewport Player Section */}
+          {/* Cinematic Viewport Player & Timers Side-by-Side */}
           <div 
             onMouseMove={handleCinemaMouseMove}
             onMouseLeave={() => setShowCinemaControls(false)}
-            className="relative -mx-[2.5rem] -mt-[2rem] mb-10 w-[calc(100%+5rem)] flex flex-col justify-between overflow-hidden"
-            style={{ height: 'calc(100vh - 4.5rem)', background: '#070712', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+            className="relative -mx-[2.5rem] -mt-[2rem] mb-10 w-[calc(100%+5rem)] flex flex-col lg:flex-row gap-6 p-6 overflow-hidden"
+            style={{ minHeight: 'calc(100vh - 4.5rem)', background: '#070712', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
           >
-            {/* Header Overlay */}
-            <div 
-              className="p-6 flex items-center justify-between w-full z-20 bg-gradient-to-b from-[#070712]/90 to-transparent transition-all duration-300"
-              style={{
-                opacity: showCinemaControls ? 1 : 0,
-                transform: showCinemaControls ? 'translateY(0)' : 'translateY(-10px)',
-                pointerEvents: showCinemaControls ? 'auto' : 'none'
-              }}
-            >
-              <div className="flex items-center gap-3">
-                <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl cursor-pointer hover:bg-white/5 transition-all text-[#8888aa] border border-white/5" style={{ background: '#12122a' }}>
-                  <ArrowLeft className="w-4 h-4" />
-                </button>
-                <div>
-                  <span className="text-[10px] uppercase font-bold tracking-wider block" style={{ color: plan.color || '#6366f1' }}>{plan.name}</span>
-                  <h2 className="text-base font-bold text-white leading-tight">{task.title}</h2>
+            {/* Left Column: Title Bar + Video Player + Scroll Indicator */}
+            <div className="flex-1 flex flex-col justify-between h-full min-h-[50vh] lg:min-h-0">
+              {/* Title Overlay */}
+              <div 
+                className="flex items-center justify-between w-full transition-all duration-300 mb-4"
+                style={{
+                  opacity: showCinemaControls ? 1 : 0.2,
+                  transform: showCinemaControls ? 'translateY(0)' : 'translateY(-2px)',
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl cursor-pointer hover:bg-white/5 transition-all text-[#8888aa] border border-white/5" style={{ background: '#12122a' }}>
+                    <ArrowLeft className="w-4 h-4" />
+                  </button>
+                  <div>
+                    <span className="text-[10px] uppercase font-bold tracking-wider block" style={{ color: plan.color || '#6366f1' }}>{plan.name}</span>
+                    <h2 className="text-base font-bold text-white leading-tight">{task.title}</h2>
+                  </div>
+                </div>
+              </div>
+
+              {/* Video Player Box */}
+              <div className="flex-1 flex items-center justify-center w-full">
+                <YouTubePlayer
+                  videoId={videoId}
+                  startAt={startAt}
+                  onProgressUpdate={handleProgressUpdate}
+                  style={{
+                    aspectRatio: '16 / 9',
+                    width: '100%',
+                    height: '100%',
+                    maxWidth: '1280px',
+                    maxHeight: 'calc(100vh - 12rem)',
+                    borderRadius: '1.25rem',
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+                    background: '#000000',
+                  }}
+                />
+              </div>
+
+              {/* Scroll Indicator */}
+              <div 
+                className="flex flex-col items-center justify-center mt-4 transition-all duration-300"
+                style={{
+                  opacity: showCinemaControls ? 0.7 : 0.1,
+                  transform: showCinemaControls ? 'translateY(0)' : 'translateY(2px)',
+                }}
+              >
+                <div className="flex flex-col items-center gap-1 animate-bounce">
+                  <span className="text-[9px] uppercase font-bold tracking-wider text-[#8888aa]">Scroll Down for Notes & Actions</span>
+                  <svg className="w-3.5 h-3.5 text-[#8888aa]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                  </svg>
                 </div>
               </div>
             </div>
 
-            {/* Video Player Box */}
-            <div className="flex-1 flex items-center justify-center p-6 md:p-12 z-10 w-full h-full">
-              <YouTubePlayer
-                videoId={videoId}
-                startAt={startAt}
-                onProgressUpdate={handleProgressUpdate}
-                style={{
-                  aspectRatio: '16 / 9',
-                  width: '100%',
-                  height: '100%',
-                  maxWidth: '1280px',
-                  maxHeight: '100%',
-                  borderRadius: '1.25rem',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
-                  background: '#000000',
-                }}
-              />
-            </div>
-
-            {/* Scroll Indicator */}
+            {/* Right Column: Stack of Timer 1 (Session Timer) and Timer 2 (Pomodoro) */}
             <div 
-              className="pb-6 flex flex-col items-center justify-center z-20 bg-gradient-to-t from-[#070712] to-transparent transition-all duration-300"
+              className="w-full lg:w-[320px] flex flex-col justify-center gap-4 transition-all duration-300 z-20 shrink-0"
               style={{
-                opacity: showCinemaControls ? 0.7 : 0,
-                transform: showCinemaControls ? 'translateY(0)' : 'translateY(10px)',
+                opacity: showCinemaControls ? 1 : 0.15,
+                transform: showCinemaControls ? 'translateX(0)' : 'translateX(5px)',
                 pointerEvents: showCinemaControls ? 'auto' : 'none'
               }}
             >
-              <div className="flex flex-col items-center gap-1.5 animate-bounce">
-                <span className="text-[10px] uppercase font-bold tracking-wider text-[#8888aa]">Scroll Down for Timer & Notes</span>
-                <svg className="w-4 h-4 text-[#8888aa]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-                </svg>
+              {/* Timer 1: Study Session Timer */}
+              <div style={{ ...cardStyle, padding: '1rem' }} className="flex flex-col items-center">
+                <StudyTimer
+                  sessionId={state.activeSessionId && currentSession?.taskId === taskId ? state.activeSessionId : null}
+                  initialDuration={currentSession?.taskId === taskId ? currentSession.duration : 0}
+                  onTick={handleTimerTick}
+                  onFinish={handleFinishSession}
+                  compact={true}
+                />
+              </div>
+
+              {/* Timer 2: Pomodoro Timer */}
+              <div style={{ ...cardStyle, padding: '1.25rem 1rem' }} className="flex flex-col items-center justify-center">
+                <div className="flex items-center gap-2 mb-2 w-full justify-start text-xs font-semibold text-white">
+                  <Clock className="w-4 h-4 text-indigo-400" /> Pomodoro Timer
+                </div>
+                <PomodoroTimer compact={true} />
               </div>
             </div>
           </div>
 
-          {/* Lower Page Grid containing Timer, Notes, Actions */}
+          {/* Lower Page Grid containing Notes, Actions */}
           <div ref={containerRef} className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start pb-10">
-            {/* Left Column: Title & Notes */}
+            {/* Left Column: Title Info & Notes */}
             <div className="lg:col-span-2 space-y-6">
               {/* Title & Info Card */}
               <div className="p-6" style={cardStyle}>
@@ -380,49 +410,8 @@ export default function Learning() {
               </div>
             </div>
 
-            {/* Right Column: Dynamic Timer, Progress & Sidebar Actions */}
+            {/* Right Column: Progress & Sidebar Actions */}
             <div className="space-y-6">
-              {/* Dynamic Timer Selector Card */}
-              <div className="p-6 flex flex-col items-center" style={cardStyle}>
-                {/* Timer Tab Switcher */}
-                <div className="flex gap-1.5 p-1 rounded-xl mb-5 w-full" style={{ background: '#0c0c18' }}>
-                  <button
-                    onClick={() => setActiveTimerTab('session')}
-                    className="flex-1 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all border border-transparent"
-                    style={{
-                      background: activeTimerTab === 'session' ? 'rgba(255,255,255,0.06)' : 'transparent',
-                      color: activeTimerTab === 'session' ? '#ffffff' : '#8888aa'
-                    }}
-                  >
-                    Session Timer
-                  </button>
-                  <button
-                    onClick={() => setActiveTimerTab('pomodoro')}
-                    className="flex-1 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all border border-transparent"
-                    style={{
-                      background: activeTimerTab === 'pomodoro' ? 'rgba(255,255,255,0.06)' : 'transparent',
-                      color: activeTimerTab === 'pomodoro' ? '#ffffff' : '#8888aa'
-                    }}
-                  >
-                    Pomodoro
-                  </button>
-                </div>
-
-                {/* Switchable Timer Panel */}
-                <div className="w-full flex justify-center">
-                  {activeTimerTab === 'session' ? (
-                    <StudyTimer
-                      sessionId={state.activeSessionId && currentSession?.taskId === taskId ? state.activeSessionId : null}
-                      initialDuration={currentSession?.taskId === taskId ? currentSession.duration : 0}
-                      onTick={handleTimerTick}
-                      onFinish={handleFinishSession}
-                    />
-                  ) : (
-                    <PomodoroTimer compact={true} />
-                  )}
-                </div>
-              </div>
-
               {/* Video Progress Card */}
               <div className="p-6" style={cardStyle}>
                 <h3 className="text-sm font-semibold text-white mb-4">Video Progress</h3>
