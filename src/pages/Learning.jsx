@@ -5,6 +5,7 @@ import { useStudy } from '../context/StudyContext';
 import DashboardLayout from '../layouts/DashboardLayout';
 import YouTubePlayer from '../components/YouTubePlayer';
 import StudyTimer from '../components/StudyTimer';
+import PomodoroTimer from '../components/PomodoroTimer';
 import { extractVideoId, formatDuration, calcVideoProgress } from '../utils/youtube';
 import {
   ArrowLeft, Play, Pause, CheckSquare, Clock, BookOpen,
@@ -24,6 +25,7 @@ export default function Learning() {
   const [startAt, setStartAt] = useState(null);
   const [showResumePrompt, setShowResumePrompt] = useState(false);
   const [notesText, setNotesText] = useState('');
+  const [activeTimerTab, setActiveTimerTab] = useState('session'); // 'session' | 'pomodoro'
   const notesTimeoutRef = useRef(null);
 
   // ── Find Plan and Task ──
@@ -224,16 +226,6 @@ export default function Learning() {
 
   return (
     <DashboardLayout>
-      <div className="flex items-center gap-3 mb-6">
-        <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl cursor-pointer hover:bg-white/5 transition-all text-[#8888aa]">
-          <ArrowLeft className="w-4 h-4" />
-        </button>
-        <div>
-          <span className="text-[10px] uppercase font-bold tracking-wider" style={{ color: plan.color || '#6366f1' }}>{plan.name}</span>
-          <h2 className="text-lg font-bold text-white leading-tight">{task.title}</h2>
-        </div>
-      </div>
-
       {isSessionForDifferentTask && (
         <div className="p-4 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xl border border-amber-500/20" style={{ background: 'rgba(245,158,11,0.06)' }}>
           <div className="flex items-start gap-3">
@@ -264,104 +256,177 @@ export default function Learning() {
           </div>
         </div>
       ) : startAt !== null && (
-        <div ref={containerRef} className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-          {/* Left Column: Player & Notes */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Embedded Player */}
-            <YouTubePlayer
-              videoId={videoId}
-              startAt={startAt}
-              onProgressUpdate={handleProgressUpdate}
-            />
-
-            {/* Title & Info Card */}
-            <div className="p-6" style={cardStyle}>
-              <h3 className="text-base font-semibold text-white mb-1">{task.title}</h3>
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-[#8888aa]">
-                <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" /> {plan.name}</span>
-                <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> Estimated: {task.estimatedTime || 1}h</span>
-                <span className="capitalize" style={{ color: task.status === 'completed' ? '#34d399' : task.status === 'in-progress' ? '#fbbf24' : '#8888aa' }}>Status: {task.status.replace('-', ' ')}</span>
+        <div className="flex flex-col">
+          {/* Cinematic Full Viewport Player Section */}
+          <div 
+            className="relative -mx-[2.5rem] -mt-[2rem] mb-10 w-[calc(100%+5rem)] flex flex-col justify-between overflow-hidden"
+            style={{ height: 'calc(100vh - 4.5rem)', background: '#070712', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+          >
+            {/* Header Overlay */}
+            <div className="p-6 flex items-center justify-between w-full z-20 bg-gradient-to-b from-[#070712]/90 to-transparent">
+              <div className="flex items-center gap-3">
+                <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl cursor-pointer hover:bg-white/5 transition-all text-[#8888aa] border border-white/5" style={{ background: '#12122a' }}>
+                  <ArrowLeft className="w-4 h-4" />
+                </button>
+                <div>
+                  <span className="text-[10px] uppercase font-bold tracking-wider block" style={{ color: plan.color || '#6366f1' }}>{plan.name}</span>
+                  <h2 className="text-base font-bold text-white leading-tight">{task.title}</h2>
+                </div>
               </div>
             </div>
 
-            {/* Notes System */}
-            <div className="p-6 flex flex-col" style={cardStyle}>
-              <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-                <MessageSquare className="w-4 h-4 text-indigo-400" /> Study Notes
-              </h3>
-              {state.activeSessionId && currentSession?.taskId === taskId ? (
-                <textarea
-                  value={notesText}
-                  onChange={handleNotesChange}
-                  placeholder="Take detailed notes here while watching the tutorial..."
-                  className="w-full h-40 p-4 rounded-xl text-sm focus:outline-none resize-none leading-relaxed"
-                  style={{ background: '#0c0c18', border: '1px solid rgba(255,255,255,0.06)', color: '#d0d0e0' }}
-                />
-              ) : (
-                <div className="text-center py-8 rounded-xl" style={{ background: '#0c0c18' }}>
-                  <p className="text-xs text-[#5a5a88] mb-3">You must start a study session to take notes</p>
-                  <button onClick={handleStartSession} className="px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer" style={buttonStyle}>
-                    Start Study Session
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Right Column: Timer & Sidebar */}
-          <div className="space-y-6">
-            {/* Timer */}
-            <div className="p-6 flex flex-col items-center" style={cardStyle}>
-              <h3 className="text-sm font-semibold text-white mb-4 w-full flex items-center gap-2">
-                <Clock className="w-4 h-4 text-indigo-400" /> Study Session Timer
-              </h3>
-              <StudyTimer
-                sessionId={state.activeSessionId && currentSession?.taskId === taskId ? state.activeSessionId : null}
-                initialDuration={currentSession?.taskId === taskId ? currentSession.duration : 0}
-                onTick={handleTimerTick}
-                onFinish={handleFinishSession}
+            {/* Video Player Box */}
+            <div className="flex-1 flex items-center justify-center p-6 md:p-12 z-10 w-full h-full">
+              <YouTubePlayer
+                videoId={videoId}
+                startAt={startAt}
+                onProgressUpdate={handleProgressUpdate}
+                style={{
+                  aspectRatio: '16 / 9',
+                  width: '100%',
+                  height: '100%',
+                  maxWidth: '1280px',
+                  maxHeight: '100%',
+                  borderRadius: '1.25rem',
+                  border: '1px solid rgba(255,255,255,0.08)',
+                  boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+                  background: '#000000',
+                }}
               />
             </div>
 
-            {/* Video Progress Card */}
-            <div className="p-6" style={cardStyle}>
-              <h3 className="text-sm font-semibold text-white mb-4">Video Progress</h3>
-              {savedProgress ? (
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="text-[#8888aa]">Completed</span>
-                    <span className="font-semibold text-white">{Math.round(savedProgress.progress)}%</span>
-                  </div>
-                  <div className="h-2 rounded-full overflow-hidden w-full" style={{ background: '#1e1e35' }}>
-                    <div className="h-full rounded-full transition-all duration-300" style={{ width: `${savedProgress.progress}%`, background: savedProgress.progress >= 95 ? '#34d399' : '#6366f1' }} />
-                  </div>
-                  <div className="flex justify-between items-center text-[10px] text-[#5a5a88]">
-                    <span>{formatDuration(savedProgress.currentTime)}</span>
-                    <span>{formatDuration(savedProgress.duration)}</span>
-                  </div>
+            {/* Scroll Indicator */}
+            <div className="pb-6 flex flex-col items-center justify-center z-20 bg-gradient-to-t from-[#070712] to-transparent">
+              <div className="flex flex-col items-center gap-1.5 animate-bounce opacity-70">
+                <span className="text-[10px] uppercase font-bold tracking-wider text-[#8888aa]">Scroll Down for Timer & Notes</span>
+                <svg className="w-4 h-4 text-[#8888aa]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          {/* Lower Page Grid containing Timer, Notes, Actions */}
+          <div ref={containerRef} className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start pb-10">
+            {/* Left Column: Title & Notes */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Title & Info Card */}
+              <div className="p-6" style={cardStyle}>
+                <h3 className="text-base font-semibold text-white mb-1">{task.title}</h3>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-[#8888aa]">
+                  <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" /> {plan.name}</span>
+                  <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> Estimated: {task.estimatedTime || 1}h</span>
+                  <span className="capitalize" style={{ color: task.status === 'completed' ? '#34d399' : task.status === 'in-progress' ? '#fbbf24' : '#8888aa' }}>Status: {task.status.replace('-', ' ')}</span>
                 </div>
-              ) : (
-                <p className="text-xs text-[#5a5a88] text-center py-2">Start watching to track video progress</p>
-              )}
+              </div>
+
+              {/* Notes System */}
+              <div className="p-6 flex flex-col" style={cardStyle}>
+                <h3 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
+                  <MessageSquare className="w-4 h-4 text-indigo-400" /> Study Notes
+                </h3>
+                {state.activeSessionId && currentSession?.taskId === taskId ? (
+                  <textarea
+                    value={notesText}
+                    onChange={handleNotesChange}
+                    placeholder="Take detailed notes here while watching the tutorial..."
+                    className="w-full h-40 p-4 rounded-xl text-sm focus:outline-none resize-none leading-relaxed"
+                    style={{ background: '#0c0c18', border: '1px solid rgba(255,255,255,0.06)', color: '#d0d0e0' }}
+                  />
+                ) : (
+                  <div className="text-center py-8 rounded-xl" style={{ background: '#0c0c18' }}>
+                    <p className="text-xs text-[#5a5a88] mb-3">You must start a study session to take notes</p>
+                    <button onClick={handleStartSession} className="px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer" style={buttonStyle}>
+                      Start Study Session
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Quick Actions */}
-            <div className="p-6" style={cardStyle}>
-              <h3 className="text-sm font-semibold text-white mb-4">Quick Actions</h3>
-              <div className="space-y-2.5">
-                {!state.activeSessionId && (
-                  <button onClick={handleStartSession} className="w-full py-2.5 rounded-xl text-xs font-semibold cursor-pointer flex items-center justify-center gap-2" style={buttonStyle}>
-                    <Play className="w-4 h-4" /> Start Study Session
+            {/* Right Column: Dynamic Timer, Progress & Sidebar Actions */}
+            <div className="space-y-6">
+              {/* Dynamic Timer Selector Card */}
+              <div className="p-6 flex flex-col items-center" style={cardStyle}>
+                {/* Timer Tab Switcher */}
+                <div className="flex gap-1.5 p-1 rounded-xl mb-5 w-full" style={{ background: '#0c0c18' }}>
+                  <button
+                    onClick={() => setActiveTimerTab('session')}
+                    className="flex-1 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all border border-transparent"
+                    style={{
+                      background: activeTimerTab === 'session' ? 'rgba(255,255,255,0.06)' : 'transparent',
+                      color: activeTimerTab === 'session' ? '#ffffff' : '#8888aa'
+                    }}
+                  >
+                    Session Timer
                   </button>
+                  <button
+                    onClick={() => setActiveTimerTab('pomodoro')}
+                    className="flex-1 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all border border-transparent"
+                    style={{
+                      background: activeTimerTab === 'pomodoro' ? 'rgba(255,255,255,0.06)' : 'transparent',
+                      color: activeTimerTab === 'pomodoro' ? '#ffffff' : '#8888aa'
+                    }}
+                  >
+                    Pomodoro
+                  </button>
+                </div>
+
+                {/* Switchable Timer Panel */}
+                <div className="w-full flex justify-center">
+                  {activeTimerTab === 'session' ? (
+                    <StudyTimer
+                      sessionId={state.activeSessionId && currentSession?.taskId === taskId ? state.activeSessionId : null}
+                      initialDuration={currentSession?.taskId === taskId ? currentSession.duration : 0}
+                      onTick={handleTimerTick}
+                      onFinish={handleFinishSession}
+                    />
+                  ) : (
+                    <PomodoroTimer compact={true} />
+                  )}
+                </div>
+              </div>
+
+              {/* Video Progress Card */}
+              <div className="p-6" style={cardStyle}>
+                <h3 className="text-sm font-semibold text-white mb-4">Video Progress</h3>
+                {savedProgress ? (
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="text-[#8888aa]">Completed</span>
+                      <span className="font-semibold text-white">{Math.round(savedProgress.progress)}%</span>
+                    </div>
+                    <div className="h-2 rounded-full overflow-hidden w-full" style={{ background: '#1e1e35' }}>
+                      <div className="h-full rounded-full transition-all duration-300" style={{ width: `${savedProgress.progress}%`, background: savedProgress.progress >= 95 ? '#34d399' : '#6366f1' }} />
+                    </div>
+                    <div className="flex justify-between items-center text-[10px] text-[#5a5a88]">
+                      <span>{formatDuration(savedProgress.currentTime)}</span>
+                      <span>{formatDuration(savedProgress.duration)}</span>
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-xs text-[#5a5a88] text-center py-2">Start watching to track video progress</p>
                 )}
-                <button onClick={() => dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: plan.id, taskId: task.id } })}
-                  className="w-full py-2.5 rounded-xl text-xs font-semibold cursor-pointer flex items-center justify-center gap-2" style={secondaryButtonStyle}>
-                  <CheckCircle2 className="w-4 h-4" style={{ color: task.status === 'completed' ? '#34d399' : '#8888aa' }} /> 
-                  Mark Task: {task.status === 'completed' ? 'In Progress' : 'Completed'}
-                </button>
-                <button onClick={() => navigate(-1)} className="w-full py-2.5 rounded-xl text-xs font-semibold cursor-pointer" style={secondaryButtonStyle}>
-                  Exit Session
-                </button>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="p-6" style={cardStyle}>
+                <h3 className="text-sm font-semibold text-white mb-4">Quick Actions</h3>
+                <div className="space-y-2.5">
+                  {!state.activeSessionId && (
+                    <button onClick={handleStartSession} className="w-full py-2.5 rounded-xl text-xs font-semibold cursor-pointer flex items-center justify-center gap-2" style={buttonStyle}>
+                      <Play className="w-4 h-4" /> Start Study Session
+                    </button>
+                  )}
+                  <button onClick={() => dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: plan.id, taskId: task.id } })}
+                    className="w-full py-2.5 rounded-xl text-xs font-semibold cursor-pointer flex items-center justify-center gap-2" style={secondaryButtonStyle}>
+                    <CheckCircle2 className="w-4 h-4" style={{ color: task.status === 'completed' ? '#34d399' : '#8888aa' }} /> 
+                    Mark Task: {task.status === 'completed' ? 'In Progress' : 'Completed'}
+                  </button>
+                  <button onClick={() => navigate(-1)} className="w-full py-2.5 rounded-xl text-xs font-semibold cursor-pointer" style={secondaryButtonStyle}>
+                    Exit Session
+                  </button>
+                </div>
               </div>
             </div>
           </div>

@@ -58,6 +58,7 @@ function YouTubePlayer({
   onVideoEnd,
   startAt,
   className = '',
+  style = {},
 }) {
   const containerRef = useRef(null);
   const playerRef = useRef(null);
@@ -259,6 +260,7 @@ function YouTubePlayer({
         position: 'relative',
         width: '100%',
         aspectRatio: '16 / 9',
+        ...style,
       }}
     >
       {/* Loading overlay */}
