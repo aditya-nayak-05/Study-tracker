@@ -141,11 +141,46 @@ export default function Dashboard() {
     return { activeSession, activeSessionTask, activeSessionPlan, recentTutorials };
   }, [state.plans, state.videoProgress, state.studySessions, state.activeSessionId]);
 
+  // Find the recently played video, task, and plan
+  const { recentPlan, recentTask } = useMemo(() => {
+    const sortedProgress = Object.entries(state.videoProgress)
+      .filter(([_, data]) => data && data.lastWatchedAt)
+      .sort((a, b) => new Date(b[1].lastWatchedAt) - new Date(a[1].lastWatchedAt));
+
+    const latestVideoId = sortedProgress[0]?.[0];
+    if (!latestVideoId) return { recentPlan: null, recentTask: null };
+
+    for (const plan of state.plans) {
+      if (plan.archived) continue;
+      for (const m of plan.months || []) {
+        for (const w of m.weeks || []) {
+          for (const d of w.days || []) {
+            for (const t of d.tasks || []) {
+              if (t.youtubeUrl && extractVideoId(t.youtubeUrl) === latestVideoId) {
+                return { recentPlan: plan, recentTask: t };
+              }
+            }
+          }
+        }
+      }
+    }
+    return { recentPlan: null, recentTask: null };
+  }, [state.plans, state.videoProgress]);
+
+  const handleResumeVideo = useCallback(() => {
+    if (recentPlan && recentTask) {
+      navigate(`/learn/${recentPlan.id}/${recentTask.id}`, { state: { autoResume: true } });
+    } else {
+      showToast('No recently watched videos found. Go to the Learning Hub to start one!', 'info');
+    }
+  }, [recentPlan, recentTask, navigate, showToast]);
+
   const quickActions = [
     { label: 'New Plan', icon: Plus, color: '#6366f1', action: () => navigate('/plans') },
     { label: 'Continue', icon: Play, color: '#34d399', action: () => activePlan && navigate(`/plans/${activePlan.id}`) },
     { label: 'Pomodoro', icon: Clock, color: '#fbbf24', action: () => navigate('/study-hours') },
     { label: 'Log Hours', icon: Clock, color: '#60a5fa', action: () => navigate('/study-hours') },
+    { label: 'Resume Video', icon: Youtube, isSpecial: true, action: handleResumeVideo },
     { label: 'Add Task', icon: CheckSquare, color: '#a78bfa', action: () => navigate('/plans') },
     { label: 'Calendar', icon: Calendar, color: '#ec4899', action: () => navigate('/calendar') },
     { label: 'Analytics', icon: BarChart3, color: '#06b6d4', action: () => navigate('/analytics') },
@@ -182,7 +217,7 @@ export default function Dashboard() {
       <div ref={cardsRef} className="space-y-8">
         {/* Quick Actions */}
         <div className="dash-card" style={{ background: '#12122a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '1rem', padding: '1.5rem' }}>
-          <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-3">
+          <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 gap-3">
             {quickActions.map((qa) => (
               <button
                 key={qa.label}
@@ -190,12 +225,24 @@ export default function Dashboard() {
                 className="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-white/5 transition-all group cursor-pointer"
               >
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
-                  style={{ background: qa.color }}
+                  className={qa.isSpecial 
+                    ? "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 relative shadow-[0_0_12px_rgba(99,102,241,0.4)] hover:shadow-[0_0_20px_rgba(99,102,241,0.7)] group-hover:scale-115 animate-[pulse_3s_infinite_ease-in-out]" 
+                    : "w-10 h-10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform"
+                  }
+                  style={{ 
+                    background: qa.isSpecial 
+                      ? 'linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%)' 
+                      : qa.color 
+                  }}
                 >
                   <qa.icon className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-[11px] text-[#8888aa] group-hover:text-white transition-colors">{qa.label}</span>
+                <span className={qa.isSpecial 
+                  ? "text-[11px] font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-pink-400 group-hover:filter group-hover:drop-shadow-[0_0_6px_rgba(99,102,241,0.5)] transition-all"
+                  : "text-[11px] text-[#8888aa] group-hover:text-white transition-colors"
+                }>
+                  {qa.label}
+                </span>
               </button>
             ))}
           </div>

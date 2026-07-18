@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
 import DashboardLayout from '../layouts/DashboardLayout';
@@ -19,8 +19,10 @@ const secondaryButtonStyle = { background: '#1e1e35', color: '#8888aa', border: 
 export default function Learning() {
   const { planId, taskId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { state, dispatch, showToast } = useStudy();
   
+  const autoResume = location.state?.autoResume;
   const containerRef = useRef(null);
   const [startAt, setStartAt] = useState(null);
   const [showResumePrompt, setShowResumePrompt] = useState(false);
@@ -104,11 +106,16 @@ export default function Learning() {
   // ── Check Saved Progress on Load ──
   useEffect(() => {
     if (savedProgress && savedProgress.currentTime > 5 && startAt === null) {
-      setShowResumePrompt(true);
+      if (autoResume) {
+        setStartAt(Math.floor(savedProgress.currentTime));
+        setShowResumePrompt(false);
+      } else {
+        setShowResumePrompt(true);
+      }
     } else if (startAt === null) {
       setStartAt(0);
     }
-  }, [savedProgress, startAt]);
+  }, [savedProgress, startAt, autoResume]);
 
   // ── Handle Progress from Player ──
   const handleProgressUpdate = useCallback((progressData) => {
