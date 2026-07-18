@@ -130,11 +130,10 @@ function NavbarLearningStats({ state, location }) {
 
       {/* Current Time in India (IST) */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-white/5 flex items-center gap-2 transition-all duration-300 hover:border-amber-500/30 hover:shadow-[0_0_15px_rgba(245,158,11,0.15)] shrink-0" 
+        className="px-3.5 py-2 rounded-xl border border-white/5 flex items-center justify-center transition-all duration-300 hover:border-amber-500/30 hover:shadow-[0_0_15px_rgba(245,158,11,0.15)] shrink-0" 
         style={{ background: 'rgba(255,255,255,0.02)' }}
       >
-        <span className="text-dark-400 font-medium">India Time:</span>
-        <span className="text-amber-400 font-extrabold font-mono tracking-wider min-w-[90px]">{istTime}</span>
+        <span className="text-amber-400 font-extrabold font-mono tracking-wider text-center">{istTime}</span>
       </div>
     </div>
   );
