@@ -81,13 +81,20 @@ const Sidebar = React.memo(function Sidebar() {
               key={item.path}
               ref={(el) => (itemRefs.current[i] = el)}
               onClick={() => handleNavClick(item.path)}
-              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group cursor-pointer
+              className={`w-full flex items-center rounded-xl transition-all duration-300 group cursor-pointer hover:scale-[1.03] active:scale-[0.98]
+                ${collapsed ? 'justify-center p-3.5' : 'gap-3 px-4 py-3'}
                 ${isActive
-                  ? 'bg-brand-500/15 text-brand-400 glow-brand'
-                  : 'text-dark-200 hover:bg-glass-hover hover:text-white'
+                  ? 'bg-brand-500/15 text-brand-400 shadow-[inset_0_0_12px_rgba(99,102,241,0.25)] border border-brand-500/20'
+                  : 'text-dark-200 hover:bg-glass-hover hover:text-white border border-transparent hover:border-white/5'
                 }`}
             >
-              <Icon className={`w-5 h-5 shrink-0 ${isActive ? 'text-brand-400' : 'text-dark-300 group-hover:text-brand-400'}`} />
+              <Icon className={`shrink-0 transition-all duration-300 group-hover:scale-115
+                ${collapsed ? 'w-7 h-7' : 'w-5 h-5'}
+                ${isActive 
+                  ? 'text-brand-400 filter drop-shadow-[0_0_8px_rgba(99,102,241,0.65)]' 
+                  : 'text-dark-300 group-hover:text-brand-400 group-hover:filter group-hover:drop-shadow-[0_0_6px_rgba(99,102,241,0.4)]'
+                }`} 
+              />
               {!collapsed && <span className="text-sm font-medium whitespace-nowrap">{item.label}</span>}
             </button>
           );

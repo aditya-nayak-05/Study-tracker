@@ -262,15 +262,51 @@ export default function Learning() {
       )}
 
       {showResumePrompt ? (
-        <div className="max-w-xl mx-auto p-6 text-center my-10" style={cardStyle}>
-          <Video className="w-10 h-10 text-indigo-400 mx-auto mb-4" />
-          <h3 className="text-base font-bold text-white mb-2">Resume Tutorial?</h3>
-          <p className="text-xs text-[#8888aa] mb-6">You previously watched this video up to <strong className="text-white">{formatDuration(savedProgress.currentTime)}</strong>. Would you like to resume?</p>
-          <div className="flex justify-center gap-3">
-            <button onClick={() => { setStartAt(Math.floor(savedProgress.currentTime)); setShowResumePrompt(false); }} className="px-5 py-2.5 rounded-xl text-xs font-semibold cursor-pointer" style={buttonStyle}>
+        <div 
+          className="max-w-2xl mx-auto p-10 text-center my-16 rounded-3xl border border-white/10 transition-all duration-300 hover:border-indigo-500/25" 
+          style={{ 
+            background: '#12122a', 
+            boxShadow: '0 20px 45px rgba(0, 0, 0, 0.5), 0 0 35px rgba(99, 102, 241, 0.05)'
+          }}
+        >
+          <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 flex items-center justify-center mx-auto mb-6 border border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.15)] animate-pulse">
+            <Video className="w-8 h-8 text-indigo-400" />
+          </div>
+          <h3 className="text-xl font-extrabold text-white mb-3 tracking-wide">Resume Tutorial?</h3>
+          <p className="text-sm text-[#8888aa] mb-8 leading-relaxed">
+            You previously watched this video up to <strong className="text-indigo-400 font-extrabold text-base bg-indigo-500/10 px-2 py-0.5 rounded-lg ml-1 shadow-[0_0_10px_rgba(99,102,241,0.1)]">{formatDuration(savedProgress.currentTime)}</strong>.<br />
+            Would you like to pick up where you left off or start fresh?
+          </p>
+          <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <button 
+              onClick={() => { setStartAt(Math.floor(savedProgress.currentTime)); setShowResumePrompt(false); }} 
+              className="px-6 py-3.5 rounded-xl text-sm font-bold cursor-pointer transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 text-white" 
+              style={{ 
+                background: 'linear-gradient(135deg, #6366f1 0%, #818cf8 100%)',
+                boxShadow: '0 4px 15px rgba(99, 102, 241, 0.35), 0 0 20px rgba(99, 102, 241, 0.2)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.5), 0 0 30px rgba(99, 102, 241, 0.35)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.35), 0 0 20px rgba(99, 102, 241, 0.2)';
+              }}
+            >
               Resume Video
             </button>
-            <button onClick={() => { setStartAt(0); setShowResumePrompt(false); }} className="px-5 py-2.5 rounded-xl text-xs font-semibold cursor-pointer" style={secondaryButtonStyle}>
+            <button 
+              onClick={() => { setStartAt(0); setShowResumePrompt(false); }} 
+              className="px-6 py-3.5 rounded-xl text-sm font-bold cursor-pointer transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 text-[#8888aa] hover:text-white border border-white/5 hover:border-indigo-500/40" 
+              style={{ 
+                background: '#1e1e35',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.boxShadow = '0 0 15px rgba(99, 102, 241, 0.15)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
               Start From Beginning
             </button>
           </div>

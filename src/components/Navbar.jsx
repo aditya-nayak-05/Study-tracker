@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
 import { Search, Bell, ChevronRight } from 'lucide-react';
@@ -14,6 +14,131 @@ const pageNames = {
   '/settings': 'Settings',
   '/learn': 'Learning Hub',
 };
+
+// ── Custom Navbar Learning Page Stats Widget ──
+function NavbarLearningStats({ state, location }) {
+  const [istTime, setIstTime] = useState('');
+
+  const parts = location.pathname.split('/');
+  const planId = parts[2];
+  const taskId = parts[3];
+
+  const plan = state.plans.find((p) => p.id === planId);
+  
+  let task = null;
+  plan?.months?.forEach((m) => {
+    m.weeks?.forEach((w) => {
+      w.days?.forEach((d) => {
+        d.tasks?.forEach((t) => {
+          if (t.id === taskId) task = t;
+        });
+      });
+    });
+  });
+
+  // Calculate plan progress
+  const { total, completed } = useMemo(() => {
+    let tot = 0;
+    let comp = 0;
+    plan?.months?.forEach((m) => {
+      m.weeks?.forEach((w) => {
+        w.days?.forEach((d) => {
+          d.tasks?.forEach((t) => {
+            tot++;
+            if (t.status === 'completed') comp++;
+          });
+        });
+      });
+    });
+    return { total: tot, completed: comp };
+  }, [plan]);
+
+  const progressPercent = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+  // Calculate today's study hours
+  const todayStr = new Date().toISOString().split('T')[0];
+  const todayHours = useMemo(() => {
+    const hoursList = state.globalStudyHours || [];
+    const sumDec = hoursList
+      .filter((h) => h.date === todayStr)
+      .reduce((sum, h) => sum + (h.hours || 0) + (h.minutes || 0) / 60, 0);
+    
+    // Format to Xh Ym
+    const totalSec = Math.round(sumDec * 3600);
+    const h = Math.floor(totalSec / 3600);
+    const m = Math.floor((totalSec % 3600) / 60);
+    if (h > 0) return `${h}h ${m}m`;
+    return `${m}m`;
+  }, [state.globalStudyHours, todayStr]);
+
+  // Live ticking IST clock
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      const options = {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      };
+      setIstTime(now.toLocaleTimeString('en-US', options));
+    };
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  if (!plan || !task) return null;
+
+  return (
+    <div className="hidden xl:flex items-center gap-3.5 mx-6 flex-1 justify-center max-w-3xl">
+      {/* Today Task */}
+      <div 
+        className="px-3.5 py-2 rounded-xl border border-white/5 flex items-center gap-2 group transition-all duration-300 hover:border-indigo-500/30 hover:shadow-[0_0_15px_rgba(99,102,241,0.15)] shrink-0" 
+        style={{ background: 'rgba(255,255,255,0.02)' }}
+      >
+        <span className="text-dark-400 font-medium">Today task:</span>
+        <span className="text-white font-semibold max-w-[140px] truncate group-hover:text-indigo-400 transition-colors" title={task.title}>{task.title}</span>
+      </div>
+
+      {/* Current Plan Progress Bar */}
+      <div 
+        className="px-3.5 py-2 rounded-xl border border-white/5 flex items-center gap-3 transition-all duration-300 hover:border-emerald-500/30 hover:shadow-[0_0_15px_rgba(52,211,153,0.15)] flex-1 max-w-[220px]" 
+        style={{ background: 'rgba(255,255,255,0.02)' }}
+      >
+        <span className="text-dark-400 font-medium shrink-0">Progress:</span>
+        <div className="flex items-center gap-2 w-full">
+          <div className="h-1.5 rounded-full bg-white/5 overflow-hidden flex-1 relative">
+            <div 
+              className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-400 shadow-[0_0_8px_rgba(52,211,153,0.5)] transition-all duration-500" 
+              style={{ width: `${progressPercent}%` }} 
+            />
+          </div>
+          <span className="text-white font-bold shrink-0">{progressPercent}%</span>
+        </div>
+      </div>
+
+      {/* Today Total Study Hours */}
+      <div 
+        className="px-3.5 py-2 rounded-xl border border-white/5 flex items-center gap-2 transition-all duration-300 hover:border-indigo-500/30 hover:shadow-[0_0_15px_rgba(99,102,241,0.15)] shrink-0" 
+        style={{ background: 'rgba(255,255,255,0.02)' }}
+      >
+        <span className="text-dark-400 font-medium">Today hours:</span>
+        <span className="text-indigo-400 font-extrabold">{todayHours}</span>
+      </div>
+
+      {/* Current Time in India (IST) */}
+      <div 
+        className="px-3.5 py-2 rounded-xl border border-white/5 flex items-center gap-2 transition-all duration-300 hover:border-amber-500/30 hover:shadow-[0_0_15px_rgba(245,158,11,0.15)] shrink-0" 
+        style={{ background: 'rgba(255,255,255,0.02)' }}
+      >
+        <span className="text-dark-400 font-medium">India Time:</span>
+        <span className="text-amber-400 font-extrabold font-mono tracking-wider min-w-[90px]">{istTime}</span>
+      </div>
+    </div>
+  );
+}
 
 const Navbar = React.memo(function Navbar({ onSearchOpen }) {
   const { state } = useStudy();
@@ -49,7 +174,7 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
       style={{ background: 'rgba(10,10,20,0.90)', backdropFilter: 'blur(12px)' }}
     >
       {/* Breadcrumbs */}
-      <div className="flex items-center gap-2 text-sm">
+      <div className="flex items-center gap-2 text-sm shrink-0">
         {breadcrumbs.map((crumb, i) => (
           <React.Fragment key={i}>
             {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-dark-400" />}
@@ -59,6 +184,11 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
           </React.Fragment>
         ))}
       </div>
+
+      {/* Cinematic Learning Page Navbar Stats */}
+      {location.pathname.startsWith('/learn/') && (
+        <NavbarLearningStats state={state} location={location} />
+      )}
 
       {/* Actions */}
       <div className="flex items-center gap-3">
