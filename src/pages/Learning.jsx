@@ -26,7 +26,27 @@ export default function Learning() {
   const [showResumePrompt, setShowResumePrompt] = useState(false);
   const [notesText, setNotesText] = useState('');
   const [activeTimerTab, setActiveTimerTab] = useState('session'); // 'session' | 'pomodoro'
+  const [showCinemaControls, setShowCinemaControls] = useState(true);
   const notesTimeoutRef = useRef(null);
+  const cinemaControlsTimeoutRef = useRef(null);
+
+  const handleCinemaMouseMove = () => {
+    setShowCinemaControls(true);
+    if (cinemaControlsTimeoutRef.current) {
+      clearTimeout(cinemaControlsTimeoutRef.current);
+    }
+    cinemaControlsTimeoutRef.current = setTimeout(() => {
+      setShowCinemaControls(false);
+    }, 500); // 0.5 seconds
+  };
+
+  useEffect(() => {
+    return () => {
+      if (cinemaControlsTimeoutRef.current) {
+        clearTimeout(cinemaControlsTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // ── Find Plan and Task ──
   const { plan, task } = useMemo(() => {
@@ -259,11 +279,20 @@ export default function Learning() {
         <div className="flex flex-col">
           {/* Cinematic Full Viewport Player Section */}
           <div 
+            onMouseMove={handleCinemaMouseMove}
+            onMouseLeave={() => setShowCinemaControls(false)}
             className="relative -mx-[2.5rem] -mt-[2rem] mb-10 w-[calc(100%+5rem)] flex flex-col justify-between overflow-hidden"
             style={{ height: 'calc(100vh - 4.5rem)', background: '#070712', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
           >
             {/* Header Overlay */}
-            <div className="p-6 flex items-center justify-between w-full z-20 bg-gradient-to-b from-[#070712]/90 to-transparent">
+            <div 
+              className="p-6 flex items-center justify-between w-full z-20 bg-gradient-to-b from-[#070712]/90 to-transparent transition-all duration-300"
+              style={{
+                opacity: showCinemaControls ? 1 : 0,
+                transform: showCinemaControls ? 'translateY(0)' : 'translateY(-10px)',
+                pointerEvents: showCinemaControls ? 'auto' : 'none'
+              }}
+            >
               <div className="flex items-center gap-3">
                 <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl cursor-pointer hover:bg-white/5 transition-all text-[#8888aa] border border-white/5" style={{ background: '#12122a' }}>
                   <ArrowLeft className="w-4 h-4" />
@@ -296,8 +325,15 @@ export default function Learning() {
             </div>
 
             {/* Scroll Indicator */}
-            <div className="pb-6 flex flex-col items-center justify-center z-20 bg-gradient-to-t from-[#070712] to-transparent">
-              <div className="flex flex-col items-center gap-1.5 animate-bounce opacity-70">
+            <div 
+              className="pb-6 flex flex-col items-center justify-center z-20 bg-gradient-to-t from-[#070712] to-transparent transition-all duration-300"
+              style={{
+                opacity: showCinemaControls ? 0.7 : 0,
+                transform: showCinemaControls ? 'translateY(0)' : 'translateY(10px)',
+                pointerEvents: showCinemaControls ? 'auto' : 'none'
+              }}
+            >
+              <div className="flex flex-col items-center gap-1.5 animate-bounce">
                 <span className="text-[10px] uppercase font-bold tracking-wider text-[#8888aa]">Scroll Down for Timer & Notes</span>
                 <svg className="w-4 h-4 text-[#8888aa]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
