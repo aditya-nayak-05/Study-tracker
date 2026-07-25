@@ -147,19 +147,16 @@ export default function Learning() {
     }
   }, [currentSession?.id]);
 
-  // ── Check Saved Progress on Load ──
+  // ── Check Saved Progress on Load & Auto-Resume ──
   useEffect(() => {
-    if (savedProgress && savedProgress.currentTime > 5 && startAt === null) {
-      if (autoResume) {
-        setStartAt(Math.floor(savedProgress.currentTime));
-        setShowResumePrompt(false);
-      } else {
-        setShowResumePrompt(true);
-      }
+    if (savedProgress && savedProgress.currentTime > 2 && startAt === null) {
+      const resumeTime = Math.floor(savedProgress.currentTime);
+      setStartAt(resumeTime);
+      showToast(`Auto-resumed tutorial from ${formatDuration(resumeTime)}`, 'info');
     } else if (startAt === null) {
       setStartAt(0);
     }
-  }, [savedProgress, startAt, autoResume]);
+  }, [savedProgress, startAt, showToast]);
 
   // ── Handle Progress from Player ──
   const handleProgressUpdate = useCallback((progressData) => {
@@ -455,6 +452,7 @@ export default function Learning() {
                   <YouTubePlayer
                     videoId={videoId}
                     startAt={startAt}
+                    autoPlay={true}
                     onProgressUpdate={handleProgressUpdate}
                     onStateChange={(stateCode) => {
                       if (stateCode === 1) {

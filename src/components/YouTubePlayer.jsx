@@ -58,6 +58,7 @@ function YouTubePlayer({
   onVideoEnd,
   onStateChange,
   startAt,
+  autoPlay = false,
   className = '',
   style = {},
 }) {
@@ -121,7 +122,7 @@ function YouTubePlayer({
         playerRef.current = new window.YT.Player(playerDivId.current, {
           videoId,
           playerVars: {
-            autoplay: 0,
+            autoplay: autoPlay ? 1 : 0,
             modestbranding: 1,
             rel: 0,
             ...(startAt != null ? { start: Math.floor(startAt) } : {}),
@@ -133,6 +134,13 @@ function YouTubePlayer({
 
               if (startAt != null) {
                 event.target.seekTo(startAt, true);
+              }
+              if (autoPlay) {
+                try {
+                  event.target.playVideo();
+                } catch (e) {
+                  console.log('Autoplay blocked by browser policy:', e);
+                }
               }
 
               if (typeof onPlayerReadyRef.current === 'function') {
