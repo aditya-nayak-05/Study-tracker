@@ -10,6 +10,7 @@ import ToastContainer from './components/Toast';
 import CreateProfileModal from './components/CreateProfileModal';
 import SearchModal from './components/SearchModal';
 import LoadingScreen from './components/LoadingScreen';
+import BookPageTransition from './components/BookPageTransition';
 
 // Lazy-load pages
 const Dashboard = lazy(() => import('./pages/Dashboard'));
@@ -41,19 +42,19 @@ class ErrorBoundary extends Component {
       return (
         <div style={{
           minHeight: '100vh', display: 'flex', flexDirection: 'column',
-          alignItems: 'center', justifyContent: 'center', background: '#06060e',
-          color: '#e4e4f0', fontFamily: 'Inter, sans-serif', padding: '2rem',
+          alignItems: 'center', justifyContent: 'center', background: '#1a120b',
+          color: '#f5e6d0', fontFamily: 'Inter, sans-serif', padding: '2rem',
         }}>
           <div style={{
-            background: '#12122a', border: '1px solid rgba(251,113,133,0.3)',
+            background: '#2d1f14', border: '1px solid rgba(184,134,11,0.25)',
             borderRadius: '1rem', padding: '2rem', maxWidth: '600px', width: '100%',
-            boxShadow: '0 0 40px rgba(251,113,133,0.1)',
+            boxShadow: '0 10px 30px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.05)',
           }}>
-            <h2 style={{ color: '#fb7185', marginBottom: '0.5rem', fontSize: '1.25rem' }}>Something went wrong</h2>
-            <p style={{ color: '#aaaac8', fontSize: '0.875rem', marginBottom: '0.5rem' }}>
+            <h2 style={{ color: '#8b3a3a', marginBottom: '0.5rem', fontSize: '1.25rem', textShadow: '0 1px 1px rgba(0,0,0,0.5), 0 -1px 0 rgba(255,255,255,0.06)' }}>Something went wrong</h2>
+            <p style={{ color: '#a08060', fontSize: '0.875rem', marginBottom: '0.5rem', textShadow: '0 1px 1px rgba(0,0,0,0.5)' }}>
               {this.state.error?.message || 'An unexpected error occurred.'}
             </p>
-            <pre style={{ color: '#8888aa', fontSize: '0.7rem', whiteSpace: 'pre-wrap', maxHeight: '200px', overflow: 'auto', background: '#0c0c18', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1rem' }}>
+            <pre style={{ color: '#a08060', fontSize: '0.7rem', whiteSpace: 'pre-wrap', maxHeight: '200px', overflow: 'auto', background: '#1e1408', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1rem', boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.5)', border: '1px solid rgba(184,134,11,0.12)' }}>
               {this.state.error?.stack}
             </pre>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
@@ -61,8 +62,10 @@ class ErrorBoundary extends Component {
                 onClick={() => window.location.reload()}
                 style={{
                   padding: '0.625rem 1.25rem', borderRadius: '0.75rem', border: 'none',
-                  background: 'linear-gradient(to right, #6366f1, #8b5cf6)', color: '#fff',
+                  background: 'linear-gradient(180deg, #d4a843, #b8860b)', color: '#1e1408',
                   fontSize: '0.875rem', fontWeight: '600', cursor: 'pointer',
+                  boxShadow: 'inset 0 1px 1px #e8c878, 0 4px 6px rgba(0,0,0,0.4), 0 1px 3px rgba(0,0,0,0.2)',
+                  textShadow: '0 1px 0 rgba(255,255,255,0.3)',
                 }}
               >
                 Reload Page
@@ -78,9 +81,11 @@ class ErrorBoundary extends Component {
                   window.location.reload();
                 }}
                 style={{
-                  padding: '0.625rem 1.25rem', borderRadius: '0.75rem', border: '1px solid rgba(251,113,133,0.3)',
-                  background: 'transparent', color: '#fb7185',
+                  padding: '0.625rem 1.25rem', borderRadius: '0.75rem', border: '1px solid rgba(139,58,58,0.3)',
+                  background: 'transparent', color: '#8b3a3a',
                   fontSize: '0.875rem', fontWeight: '600', cursor: 'pointer',
+                  boxShadow: 'inset 0 1px 1px rgba(255,255,255,0.05)',
+                  textShadow: '0 1px 1px rgba(0,0,0,0.5)',
                 }}
               >
                 Reset & Reload
@@ -96,7 +101,7 @@ class ErrorBoundary extends Component {
 
 function PageLoader() {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '5rem 0', color: '#818cf8', fontSize: '0.875rem' }}>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '5rem 0', color: '#d4a843', fontSize: '0.875rem', textShadow: '0 1px 1px rgba(0,0,0,0.5)' }}>
       Loading page...
     </div>
   );
@@ -155,18 +160,20 @@ function AppContent() {
         <main style={{ padding: '2rem 2.5rem', paddingBottom: '5rem', position: 'relative', zIndex: 10, minHeight: 'calc(100vh - 4rem)' }}>
           <ErrorBoundary>
             <Suspense fallback={<PageLoader />}>
-              <Routes>
-                <Route path="/" element={<Dashboard />} />
-                <Route path="/plans" element={<Plans />} />
-                <Route path="/plans/:planId" element={<PlanDetail />} />
-                <Route path="/calendar" element={<CalendarPage />} />
-                <Route path="/analytics" element={<Analytics />} />
-                <Route path="/study-hours" element={<StudyHours />} />
-                <Route path="/learn" element={<LearningHub />} />
-                <Route path="/learn/:planId/:taskId" element={<Learning />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/settings" element={<Settings />} />
-              </Routes>
+              <BookPageTransition>
+                <Routes>
+                  <Route path="/" element={<Dashboard />} />
+                  <Route path="/plans" element={<Plans />} />
+                  <Route path="/plans/:planId" element={<PlanDetail />} />
+                  <Route path="/calendar" element={<CalendarPage />} />
+                  <Route path="/analytics" element={<Analytics />} />
+                  <Route path="/study-hours" element={<StudyHours />} />
+                  <Route path="/learn" element={<LearningHub />} />
+                  <Route path="/learn/:planId/:taskId" element={<Learning />} />
+                  <Route path="/profile" element={<Profile />} />
+                  <Route path="/settings" element={<Settings />} />
+                </Routes>
+              </BookPageTransition>
             </Suspense>
           </ErrorBoundary>
         </main>

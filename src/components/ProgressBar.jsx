@@ -33,17 +33,18 @@ const ProgressBar = React.memo(function ProgressBar() {
   return (
     <div
       ref={barRef}
-      className="fixed bottom-0 left-0 right-0 h-12 glass border-t border-glass-border flex items-center px-8 gap-5 z-50"
+      className="fixed bottom-0 left-0 right-0 h-12 border-t border-[rgba(255,255,255,0.08)] flex items-center px-8 gap-5 z-50 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]"
+      style={{background: '#18181f'}}
     >
-      <span className="text-xs text-dark-300 font-medium truncate max-w-[200px]">{activePlan.name}</span>
-      <div className="flex-1 h-1.5 bg-dark-700 rounded-full overflow-hidden">
+      <span className="text-xs text-[#f5f5f7] font-medium truncate max-w-[200px]" style={{textShadow: 'none'}}>{activePlan.name}</span>
+      <div className="flex-1 h-2 bg-[#191922] rounded-full overflow-hidden border border-[rgba(255,255,255,0.08)] shadow-inner relative">
         <div
           ref={fillRef}
-          className="h-full rounded-full bg-gradient-to-r from-brand-500 to-accent-500"
-          style={{ width: 0 }}
+          className="h-full rounded-full"
+          style={{ width: 0, background: '#d8a442' }}
         />
       </div>
-      <span ref={countRef} className="text-xs text-dark-200 font-mono whitespace-nowrap">
+      <span ref={countRef} className="text-xs text-[#d8a442] font-mono whitespace-nowrap" style={{textShadow: 'none'}}>
         {completed}/{total} ({percent}%)
       </span>
     </div>

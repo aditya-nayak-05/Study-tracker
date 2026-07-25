@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo, useLayoutEffect } from 'react';
+import ReactDOM from 'react-dom';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
@@ -12,9 +13,9 @@ import {
   MessageSquare, FileText, Settings, Video, CheckCircle2, RotateCcw, AlertTriangle
 } from 'lucide-react';
 
-const cardStyle = { background: '#12122a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '1rem' };
-const buttonStyle = { background: 'linear-gradient(to right, #6366f1, #818cf8)', color: '#ffffff' };
-const secondaryButtonStyle = { background: '#1e1e35', color: '#8888aa', border: '1px solid rgba(255,255,255,0.08)' };
+const cardStyle = { background: 'linear-gradient(145deg, #191922, #111116)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem', boxShadow: '0 4px 12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)' };
+const buttonStyle = { background: 'linear-gradient(180deg, #ebd47a 0%, #d8a442 50%, #a07420 100%)', color: '#09090b', border: '1px solid #755210', boxShadow: '0 3px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.6)' };
+const secondaryButtonStyle = { background: 'linear-gradient(180deg, #22222c 0%, #16161f 100%)', color: '#f5f5f7', border: '1px solid rgba(212,168,67,0.3)', boxShadow: '0 2px 5px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08)' };
 
 export default function Learning() {
   const { planId, taskId } = useParams();
@@ -24,27 +25,69 @@ export default function Learning() {
   
   const autoResume = location.state?.autoResume;
   const containerRef = useRef(null);
+  const videoPlaceholderRef = useRef(null);
   const [startAt, setStartAt] = useState(null);
   const [showResumePrompt, setShowResumePrompt] = useState(false);
   const [notesText, setNotesText] = useState('');
   const [activeTimerTab, setActiveTimerTab] = useState('session'); // 'session' | 'pomodoro'
   const [showCinemaControls, setShowCinemaControls] = useState(true);
   const [videoPlaying, setVideoPlaying] = useState(false);
+  const [placeholderRect, setPlaceholderRect] = useState(null);
   const notesTimeoutRef = useRef(null);
   const cinemaControlsTimeoutRef = useRef(null);
 
-  const handleCinemaMouseMove = () => {
+  // Track the placeholder position for the portal-based video player
+  useLayoutEffect(() => {
+    const el = videoPlaceholderRef.current;
+    if (!el) return;
+    const update = () => {
+      if (videoPlaceholderRef.current) {
+        setPlaceholderRect(videoPlaceholderRef.current.getBoundingClientRect());
+      }
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    window.addEventListener('resize', update);
+    window.addEventListener('scroll', update, true);
+    return () => { ro.disconnect(); window.removeEventListener('resize', update); window.removeEventListener('scroll', update, true); };
+  }, [showCinemaControls, startAt]);
+
+  const handleCinemaMouseMove = useCallback(() => {
     setShowCinemaControls(true);
     if (cinemaControlsTimeoutRef.current) {
       clearTimeout(cinemaControlsTimeoutRef.current);
     }
     cinemaControlsTimeoutRef.current = setTimeout(() => {
       setShowCinemaControls(false);
-    }, 1500); // 1.5 seconds
-  };
+    }, 2500); // 2.5 seconds
+  }, []);
 
   useEffect(() => {
+    const handleGlobalMove = () => {
+      setShowCinemaControls(true);
+      if (cinemaControlsTimeoutRef.current) {
+        clearTimeout(cinemaControlsTimeoutRef.current);
+      }
+      cinemaControlsTimeoutRef.current = setTimeout(() => {
+        setShowCinemaControls(false);
+      }, 2500);
+    };
+
+    window.addEventListener('mousemove', handleGlobalMove);
+    window.addEventListener('pointermove', handleGlobalMove);
+    window.addEventListener('touchstart', handleGlobalMove);
+    window.addEventListener('keydown', handleGlobalMove);
+
+    cinemaControlsTimeoutRef.current = setTimeout(() => {
+      setShowCinemaControls(false);
+    }, 2500);
+
     return () => {
+      window.removeEventListener('mousemove', handleGlobalMove);
+      window.removeEventListener('pointermove', handleGlobalMove);
+      window.removeEventListener('touchstart', handleGlobalMove);
+      window.removeEventListener('keydown', handleGlobalMove);
       if (cinemaControlsTimeoutRef.current) {
         clearTimeout(cinemaControlsTimeoutRef.current);
       }
@@ -271,10 +314,10 @@ export default function Learning() {
 
       {showResumePrompt ? (
         <div 
-          className="max-w-2xl mx-auto p-12 text-center my-24 rounded-3xl border border-white/10 transition-all duration-300 hover:border-indigo-500/25" 
+          className="max-w-2xl mx-auto p-12 text-center my-24 rounded-3xl border border-white/10 transition-all duration-300 hover:border-amber-500/25" 
           style={{ 
-            background: '#12122a', 
-            boxShadow: '0 20px 45px rgba(0, 0, 0, 0.5), 0 0 35px rgba(99, 102, 241, 0.05)'
+            background: '#2d1f14', 
+            boxShadow: '0 20px 45px rgba(0, 0, 0, 0.5), 0 0 35px rgba(184, 134, 11, 0.05)'
           }}
         >
           <div className="w-16 h-16 rounded-2xl bg-indigo-500/10 flex items-center justify-center mx-auto mb-8 border border-indigo-500/20 shadow-[0_0_15px_rgba(99,102,241,0.15)] animate-pulse">
@@ -290,14 +333,14 @@ export default function Learning() {
               onClick={() => { setStartAt(Math.floor(savedProgress.currentTime)); setShowResumePrompt(false); }} 
               className="px-6 py-3.5 rounded-xl text-sm font-bold cursor-pointer transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 text-white" 
               style={{ 
-                background: 'linear-gradient(135deg, #6366f1 0%, #818cf8 100%)',
-                boxShadow: '0 4px 15px rgba(99, 102, 241, 0.35), 0 0 20px rgba(99, 102, 241, 0.2)'
+                background: 'linear-gradient(180deg, #d4a843, #b8860b, #a07010)',
+                boxShadow: '0 4px 15px rgba(184, 134, 11, 0.35), 0 0 20px rgba(184, 134, 11, 0.2)'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(99, 102, 241, 0.5), 0 0 30px rgba(99, 102, 241, 0.35)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(184, 134, 11, 0.5), 0 0 30px rgba(184, 134, 11, 0.35)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.boxShadow = '0 4px 15px rgba(99, 102, 241, 0.35), 0 0 20px rgba(99, 102, 241, 0.2)';
+                e.currentTarget.style.boxShadow = '0 4px 15px rgba(184, 134, 11, 0.35), 0 0 20px rgba(184, 134, 11, 0.2)';
               }}
             >
               Resume Video
@@ -306,10 +349,10 @@ export default function Learning() {
               onClick={() => { setStartAt(0); setShowResumePrompt(false); }} 
               className="px-6 py-3.5 rounded-xl text-sm font-bold cursor-pointer transition-all duration-300 hover:-translate-y-0.5 active:translate-y-0 text-[#8888aa] hover:text-white border border-white/5 hover:border-indigo-500/40" 
               style={{ 
-                background: '#1e1e35',
+                background: '#3a2a1a',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.boxShadow = '0 0 15px rgba(99, 102, 241, 0.15)';
+                e.currentTarget.style.boxShadow = '0 0 15px rgba(184, 134, 11, 0.15)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.boxShadow = 'none';
@@ -324,22 +367,25 @@ export default function Learning() {
           {/* Cinematic Viewport Player & Timers Side-by-Side */}
           <div 
             onMouseMove={handleCinemaMouseMove}
+            onPointerMove={handleCinemaMouseMove}
+            onTouchStart={handleCinemaMouseMove}
             onMouseLeave={() => setShowCinemaControls(false)}
             className="relative -mx-[2.5rem] -mt-[2rem] mb-10 w-[calc(100%+5rem)] flex flex-col lg:flex-row gap-6 p-6 overflow-hidden"
-            style={{ minHeight: 'calc(100vh - 4.5rem)', background: '#070712', borderBottom: '1px solid rgba(255,255,255,0.06)' }}
+            style={{ minHeight: 'calc(100vh - 4.5rem)', background: '#1a120b', borderBottom: '1px solid rgba(184,134,11,0.12)' }}
           >
             {/* Left Column: Title Bar + Video Player + Scroll Indicator */}
             <div className="flex-1 flex flex-col justify-between h-full min-h-[50vh] lg:min-h-0">
               {/* Title Overlay */}
               <div 
-                className="flex items-center justify-between w-full transition-all duration-300 mb-4"
+                className="flex items-center justify-between w-full transition-all duration-500 mb-4"
                 style={{
-                  opacity: showCinemaControls ? 1 : 0.02,
-                  transform: showCinemaControls ? 'translateY(0)' : 'translateY(-2px)',
+                  opacity: showCinemaControls ? 1 : 0,
+                  pointerEvents: showCinemaControls ? 'auto' : 'none',
+                  transform: showCinemaControls ? 'translateY(0)' : 'translateY(-10px)',
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl cursor-pointer hover:bg-white/5 transition-all text-[#8888aa] border border-white/5" style={{ background: '#12122a' }}>
+                  <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl cursor-pointer hover:bg-white/5 transition-all text-[#8888aa] border border-white/5" style={{ background: '#2d1f14' }}>
                     <ArrowLeft className="w-4 h-4" />
                   </button>
                   <div>
@@ -349,42 +395,95 @@ export default function Learning() {
                 </div>
               </div>
 
-              {/* Video Player Box */}
-              <div className="flex-1 flex items-center justify-center w-full">
-                <YouTubePlayer
-                  videoId={videoId}
-                  startAt={startAt}
-                  onProgressUpdate={handleProgressUpdate}
-                  onStateChange={(stateCode) => {
-                    if (stateCode === 1) {
-                      setVideoPlaying(true);
-                      if (!state.activeSessionId) {
-                        handleStartSession();
-                      }
-                    } else if (stateCode === 2 || stateCode === 0) {
-                      setVideoPlaying(false);
+              {/* Placeholder: reserves space in the layout for the portal-rendered video */}
+              <div 
+                ref={videoPlaceholderRef}
+                className="flex-1 w-full"
+                style={{ aspectRatio: '16 / 9', maxWidth: '1280px', maxHeight: 'calc(100vh - 12rem)' }}
+              />
+
+              {/* Video Player - rendered via portal on document.body so position:fixed always works */}
+              {ReactDOM.createPortal(
+                <div
+                  onMouseMove={handleCinemaMouseMove}
+                  onPointerMove={handleCinemaMouseMove}
+                  onTouchStart={handleCinemaMouseMove}
+                  style={(() => {
+                    const isInline = showCinemaControls && placeholderRect;
+                    if (isInline) {
+                      // Calculate transform to visually position the fullscreen-sized element at the placeholder's location
+                      const vw = window.innerWidth;
+                      const vh = window.innerHeight;
+                      const sx = placeholderRect.width / vw;
+                      const sy = placeholderRect.height / vh;
+                      // Transform origin is top-left, so translate to placeholder's top-left after scaling
+                      const tx = placeholderRect.left / sx;
+                      const ty = placeholderRect.top / sy;
+                      return {
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100vw',
+                        height: '100vh',
+                        zIndex: 99999,
+                        overflow: 'hidden',
+                        transformOrigin: '0 0',
+                        transform: `scale(${sx}, ${sy}) translate(${tx}px, ${ty}px)`,
+                        borderRadius: `${1.25 / sx}rem / ${1.25 / sy}rem`,
+                        boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+                        willChange: 'transform, border-radius',
+                        transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                      };
                     }
-                  }}
-                  style={{
-                    aspectRatio: '16 / 9',
-                    width: '100%',
-                    height: '100%',
-                    maxWidth: '1280px',
-                    maxHeight: 'calc(100vh - 12rem)',
-                    borderRadius: '1.25rem',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
-                    background: '#000000',
-                  }}
-                />
-              </div>
+                    return {
+                      position: 'fixed',
+                      top: 0,
+                      left: 0,
+                      width: '100vw',
+                      height: '100vh',
+                      zIndex: 99999,
+                      overflow: 'hidden',
+                      transformOrigin: '0 0',
+                      transform: 'scale(1, 1) translate(0px, 0px)',
+                      borderRadius: '0px',
+                      background: '#000000',
+                      willChange: 'transform, border-radius',
+                      transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                    };
+                  })()}
+                >
+                  <YouTubePlayer
+                    videoId={videoId}
+                    startAt={startAt}
+                    onProgressUpdate={handleProgressUpdate}
+                    onStateChange={(stateCode) => {
+                      if (stateCode === 1) {
+                        setVideoPlaying(true);
+                        if (!state.activeSessionId) {
+                          handleStartSession();
+                        }
+                      } else if (stateCode === 2 || stateCode === 0) {
+                        setVideoPlaying(false);
+                      }
+                    }}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      border: 'none',
+                      background: '#000000',
+                    }}
+                  />
+                </div>,
+                document.body
+              )}
 
               {/* Scroll Indicator */}
               <div 
-                className="flex flex-col items-center justify-center mt-4 transition-all duration-300"
+                className="flex flex-col items-center justify-center mt-4 transition-all duration-500"
                 style={{
                   opacity: showCinemaControls ? 0.7 : 0.0,
-                  transform: showCinemaControls ? 'translateY(0)' : 'translateY(2px)',
+                  pointerEvents: showCinemaControls ? 'auto' : 'none',
+                  transform: showCinemaControls ? 'translateY(0)' : 'translateY(10px)',
                 }}
               >
                 <div className="flex flex-col items-center gap-1 animate-bounce">
@@ -398,10 +497,10 @@ export default function Learning() {
 
             {/* Right Column: Stack of Timer 1 (Session Timer) and Timer 2 (Pomodoro) */}
             <div 
-              className="w-full lg:w-[320px] flex flex-col justify-center gap-4 transition-all duration-300 z-20 shrink-0"
+              className="w-full lg:w-[320px] flex flex-col justify-center gap-4 transition-all duration-500 z-20 shrink-0"
               style={{
-                opacity: showCinemaControls ? 1 : 0.02,
-                transform: showCinemaControls ? 'translateX(0)' : 'translateX(5px)',
+                opacity: showCinemaControls ? 1 : 0,
+                transform: showCinemaControls ? 'translateX(0)' : 'translateX(20px)',
                 pointerEvents: showCinemaControls ? 'auto' : 'none'
               }}
             >
@@ -452,10 +551,10 @@ export default function Learning() {
                     onChange={handleNotesChange}
                     placeholder="Take detailed notes here while watching the tutorial..."
                     className="w-full h-40 p-4 rounded-xl text-sm focus:outline-none resize-none leading-relaxed"
-                    style={{ background: '#0c0c18', border: '1px solid rgba(255,255,255,0.06)', color: '#d0d0e0' }}
+                    style={{ background: '#1a120b', border: '1px solid rgba(184,134,11,0.12)', color: '#d4b896', boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.5)' }}
                   />
                 ) : (
-                  <div className="text-center py-8 rounded-xl" style={{ background: '#0c0c18' }}>
+                  <div className="text-center py-8 rounded-xl" style={{ background: '#1a120b' }}>
                     <p className="text-xs text-[#5a5a88] mb-3">You must start a study session to take notes</p>
                     <button onClick={handleStartSession} className="px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer" style={buttonStyle}>
                       Start Study Session

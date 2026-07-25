@@ -47,44 +47,44 @@ export default function CreateProfileModal() {
 
   const updateField = (field, value) => setForm((f) => ({ ...f, [field]: value }));
 
-  const inputClass = "w-full px-4 py-3 rounded-xl bg-[#1a1a30] border border-[rgba(255,255,255,0.12)] text-white placeholder-[#6b6b99] focus:outline-none focus:border-[#6366f1] focus:ring-2 focus:ring-[rgba(99,102,241,0.2)] transition-all text-sm";
+  const inputClass = "w-full px-4 py-3 rounded-xl bg-[#18181f] border border-[rgba(255,255,255,0.08)] text-[#f5f5f7] placeholder-[#94a3b8] focus:outline-none focus:border-[#d8a442] focus:ring-2 focus:ring-[#d8a442] transition-all text-sm inset-field";
 
   return (
-    <div ref={modalRef} className="fixed inset-0 z-[200] flex items-center justify-center p-4" style={{ background: 'rgba(3,3,8,0.95)' }}>
+    <div ref={modalRef} className="fixed inset-0 z-[200] flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.95)' }}>
       <form
         ref={formRef}
         onSubmit={handleSubmit}
         className="rounded-2xl p-8 w-full max-w-lg space-y-5 max-h-[90vh] overflow-y-auto"
         style={{
-          background: 'linear-gradient(145deg, rgba(16,16,30,0.98), rgba(12,12,24,0.99))',
-          border: '1px solid rgba(99,102,241,0.25)',
-          boxShadow: '0 0 80px rgba(99,102,241,0.12), 0 25px 60px rgba(0,0,0,0.5)',
+          background: '#18181f',
+          border: '1px solid rgba(255,255,255,0.08)',
+          boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
         }}
       >
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gradient mb-2">Welcome to StudyFlow</h1>
-          <p className="text-[#8888aa] text-sm">Set up your profile to get started</p>
+          <h1 className="text-2xl font-bold text-[#f2d894] mb-2" style={{textShadow: 'none'}}>Welcome to StudyFlow</h1>
+          <p className="text-[#94a3b8] text-sm">Set up your profile to get started</p>
         </div>
 
         {/* Avatar */}
         <div className="flex justify-center">
-          <label className="relative w-24 h-24 rounded-full bg-[#1a1a30] border-2 border-dashed border-[#3d3d65] hover:border-[#6366f1] transition-colors flex items-center justify-center cursor-pointer overflow-hidden group">
+          <label className="relative w-24 h-24 rounded-full bg-[#18181f] border-2 border-dashed border-[rgba(255,255,255,0.08)] hover:border-[#d8a442] transition-colors flex items-center justify-center cursor-pointer overflow-hidden group shadow-sm">
             {form.avatar ? (
               <img src={form.avatar} alt="" className="w-full h-full object-cover" />
             ) : (
-              <Camera className="w-8 h-8 text-[#5a5a88] group-hover:text-[#818cf8] transition-colors" />
+              <Camera className="w-8 h-8 text-[#94a3b8] group-hover:text-[#d8a442] transition-colors" />
             )}
             <input type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <Camera className="w-5 h-5 text-white" />
+            <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <Camera className="w-5 h-5 text-[#f5f5f7]" />
             </div>
           </label>
         </div>
 
         {/* Name */}
         <div>
-          <label className="flex items-center gap-1.5 text-sm font-medium text-[#aaaac8] mb-2">
-            <User className="w-4 h-4 text-[#818cf8]" />Name <span className="text-[#fb7185]">*</span>
+          <label className="flex items-center gap-1.5 text-sm font-medium text-[#94a3b8] mb-2" style={{textShadow: 'none'}}>
+            <User className="w-4 h-4 text-[#d8a442]" />Name <span className="text-[#8b3a3a]">*</span>
           </label>
           <input
             type="text"
@@ -98,7 +98,7 @@ export default function CreateProfileModal() {
 
         {/* Username */}
         <div>
-          <label className="block text-sm font-medium text-[#aaaac8] mb-2">Username</label>
+          <label className="block text-sm font-medium text-[#94a3b8] mb-2" style={{textShadow: 'none'}}>Username</label>
           <input
             type="text"
             value={form.username}
@@ -110,7 +110,7 @@ export default function CreateProfileModal() {
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-medium text-[#aaaac8] mb-2">Email (optional)</label>
+          <label className="block text-sm font-medium text-[#94a3b8] mb-2" style={{textShadow: 'none'}}>Email (optional)</label>
           <input
             type="email"
             value={form.email}
@@ -122,7 +122,7 @@ export default function CreateProfileModal() {
 
         {/* Bio */}
         <div>
-          <label className="block text-sm font-medium text-[#aaaac8] mb-2">Bio</label>
+          <label className="block text-sm font-medium text-[#94a3b8] mb-2" style={{textShadow: 'none'}}>Bio</label>
           <textarea
             value={form.bio}
             onChange={(e) => updateField('bio', e.target.value)}
@@ -134,8 +134,8 @@ export default function CreateProfileModal() {
 
         {/* Daily Goal */}
         <div>
-          <label className="flex items-center gap-1.5 text-sm font-medium text-[#aaaac8] mb-2">
-            <Target className="w-4 h-4 text-[#34d399]" />Daily Study Goal (hours)
+          <label className="flex items-center gap-1.5 text-sm font-medium text-[#94a3b8] mb-2" style={{textShadow: 'none'}}>
+            <Target className="w-4 h-4 text-[#4a7c3f]" />Daily Study Goal (hours)
           </label>
           <input
             type="number"
@@ -149,8 +149,8 @@ export default function CreateProfileModal() {
 
         {/* Learning Goal */}
         <div>
-          <label className="flex items-center gap-1.5 text-sm font-medium text-[#aaaac8] mb-2">
-            <BookOpen className="w-4 h-4 text-[#a78bfa]" />Learning Goal
+          <label className="flex items-center gap-1.5 text-sm font-medium text-[#94a3b8] mb-2" style={{textShadow: 'none'}}>
+            <BookOpen className="w-4 h-4 text-[#d8a442]" />Learning Goal
           </label>
           <input
             type="text"
@@ -163,7 +163,8 @@ export default function CreateProfileModal() {
 
         <button
           type="submit"
-          className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#6366f1] to-[#8b5cf6] text-white font-semibold text-sm hover:shadow-lg hover:shadow-[rgba(99,102,241,0.3)] transition-all active:scale-[0.98] cursor-pointer mt-2"
+          className="w-full py-3.5 rounded-xl bg-gradient-to-r from-[#d8a442] to-[#9e7518] text-[#18181f] font-bold text-sm transition-all active:scale-[0.98] cursor-pointer mt-2 border border-[#9e7518] shadow-md brass-btn"
+          style={{textShadow: 'none'}}
         >
           Get Started →
         </button>

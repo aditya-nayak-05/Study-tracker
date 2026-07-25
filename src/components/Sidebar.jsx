@@ -42,18 +42,22 @@ const Sidebar = React.memo(function Sidebar() {
       if (timeoutId) clearTimeout(timeoutId);
       timeoutId = setTimeout(() => {
         setShowCinemaControls(false);
-      }, 1500); // 1.5 seconds
+      }, 2500); // 2.5 seconds
     };
 
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('pointermove', handleMouseMove);
+    window.addEventListener('touchstart', handleMouseMove);
     
-    // Set initial timer to fade out after 1.5s if mouse is still
+    // Set initial timer to fade out after 2.5s if mouse is still
     timeoutId = setTimeout(() => {
       setShowCinemaControls(false);
-    }, 1500);
+    }, 2500);
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('pointermove', handleMouseMove);
+      window.removeEventListener('touchstart', handleMouseMove);
       if (timeoutId) clearTimeout(timeoutId);
     };
   }, [isLearnPage]);
@@ -90,22 +94,23 @@ const Sidebar = React.memo(function Sidebar() {
   return (
     <aside
       ref={sidebarRef}
-      className="fixed left-0 top-0 h-screen flex flex-col z-40 overflow-hidden transition-opacity duration-300"
+      className="fixed left-0 top-0 h-screen flex flex-col z-40 overflow-hidden transition-all duration-500"
       style={{ 
         width: collapsed ? 72 : 260, 
-        background: 'rgba(10,10,20,0.95)', 
+        background: 'linear-gradient(145deg, #191922, #111116)', 
         borderRight: '1px solid rgba(255,255,255,0.08)',
-        opacity: showCinemaControls ? 1 : 0.02,
+        boxShadow: 'none',
+        opacity: showCinemaControls ? 1 : 0,
         pointerEvents: showCinemaControls ? 'auto' : 'none'
       }}
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-5 h-[4.5rem] border-b border-glass-border shrink-0">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center shrink-0">
-          <Sparkles className="w-4 h-4 text-white" />
+      <div className="flex items-center gap-3 px-5 h-[4.5rem] border-b border-[rgba(255,255,255,0.08)] shrink-0">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#d8a442] to-[#d8a442] flex items-center justify-center shrink-0 border border-[rgba(255,255,255,0.08)] shadow-sm">
+          <Sparkles className="w-4 h-4 text-[#18181f]" />
         </div>
         {!collapsed && (
-          <span className="text-lg font-bold text-gradient whitespace-nowrap">StudyFlow</span>
+          <span className="text-lg font-bold text-[#f2d894] whitespace-nowrap" style={{textShadow: 'none'}}>StudyFlow</span>
         )}
       </div>
 
@@ -119,29 +124,33 @@ const Sidebar = React.memo(function Sidebar() {
               key={item.path}
               ref={(el) => (itemRefs.current[i] = el)}
               onClick={() => handleNavClick(item.path)}
-              className={`w-full flex items-center rounded-xl transition-all duration-300 group cursor-pointer hover:scale-[1.03] active:scale-[0.98]
-                ${collapsed ? 'justify-center p-3.5' : 'gap-3 px-4 py-3'}
-                ${isActive
-                  ? 'bg-brand-500/15 text-brand-400 shadow-[inset_0_0_12px_rgba(99,102,241,0.25)] border border-brand-500/20'
-                  : 'text-dark-200 hover:bg-glass-hover hover:text-white border border-transparent hover:border-white/5'
-                }`}
+              className={`w-full flex items-center transition-all duration-300 group cursor-pointer binder-tab
+                ${collapsed ? 'justify-center p-3.5 rounded-xl' : 'gap-3 px-4 py-3'}
+                ${isActive ? 'active text-[#d8a442]' : 'text-[#94a3b8] hover:text-[#f5f5f7]'}`}
             >
-              <Icon className={`shrink-0 transition-all duration-300 group-hover:scale-115
-                ${collapsed ? 'w-7 h-7' : 'w-5 h-5'}
+              <Icon className={`shrink-0 transition-all duration-300 group-hover:scale-110
+                ${collapsed ? 'w-6 h-6' : 'w-4 h-4'}
                 ${isActive 
-                  ? 'text-brand-400 filter drop-shadow-[0_0_8px_rgba(99,102,241,0.65)]' 
-                  : 'text-dark-300 group-hover:text-brand-400 group-hover:filter group-hover:drop-shadow-[0_0_6px_rgba(99,102,241,0.4)]'
+                  ? 'text-[#d8a442]' 
+                  : 'text-[#94a3b8] group-hover:text-[#d8a442]'
                 }`} 
               />
-              {!collapsed && <span className="text-sm font-medium whitespace-nowrap">{item.label}</span>}
+              {!collapsed && (
+                <span 
+                  className="text-sm font-semibold tracking-wide whitespace-nowrap" 
+                  style={{ textShadow: 'none' }}
+                >
+                  {item.label}
+                </span>
+              )}
             </button>
           );
         })}
 
         {/* Pinned plans */}
         {pinnedPlans.length > 0 && !collapsed && (
-          <div className="pt-4 mt-4 border-t border-glass-border">
-            <p className="px-4 text-[10px] font-semibold uppercase tracking-wider text-dark-400 mb-3">Pinned Plans</p>
+          <div className="pt-4 mt-4 border-t border-[rgba(255,255,255,0.08)]">
+            <p className="px-4 text-[10px] font-semibold uppercase tracking-wider text-[#94a3b8] mb-3" style={{textShadow: 'none'}}>Pinned Plans</p>
             {pinnedPlans.map((plan) => (
               <button
                 key={plan.id}
@@ -149,9 +158,9 @@ const Sidebar = React.memo(function Sidebar() {
                   dispatch({ type: 'SET_UI', payload: { activePlanId: plan.id } });
                   navigate(`/plans/${plan.id}`);
                 }}
-                className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-dark-200 hover:bg-glass-hover hover:text-white transition-all text-sm"
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[#94a3b8] hover:bg-[#18181f] hover:text-[#f5f5f7] transition-all text-sm"
               >
-                <Pin className="w-3.5 h-3.5 text-brand-400 shrink-0" />
+                <Pin className="w-3.5 h-3.5 text-[#d8a442] shrink-0" />
                 <span className="truncate">{plan.name}</span>
               </button>
             ))}
@@ -162,7 +171,7 @@ const Sidebar = React.memo(function Sidebar() {
       {/* Collapse toggle */}
       <button
         onClick={toggleCollapse}
-        className="h-12 border-t border-glass-border flex items-center justify-center text-dark-300 hover:text-white hover:bg-glass-hover transition-all shrink-0 cursor-pointer"
+        className="h-12 border-t border-[rgba(255,255,255,0.08)] flex items-center justify-center text-[#94a3b8] hover:text-[#f5f5f7] hover:bg-[#18181f] transition-all shrink-0 cursor-pointer"
       >
         {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
       </button>

@@ -23,14 +23,14 @@ const iconMap = {
 };
 
 const colorMap = {
-  create: 'text-neon-green bg-neon-green/10',
-  add: 'text-brand-400 bg-brand-500/10',
-  delete: 'text-neon-rose bg-neon-rose/10',
-  status: 'text-neon-amber bg-neon-amber/10',
-  study: 'text-neon-blue bg-neon-blue/10',
-  import: 'text-accent-400 bg-accent-500/10',
-  profile: 'text-brand-400 bg-brand-500/10',
-  default: 'text-dark-300 bg-dark-700',
+  create: 'text-[#4a7c3f] bg-[#4a7c3f]/10',
+  add: 'text-[#f2d894] bg-[#d8a442]/10',
+  delete: 'text-[#8b3a3a] bg-[#8b3a3a]/10',
+  status: 'text-[#d8a442] bg-[#d8a442]/10',
+  study: 'text-[#d8a442] bg-[#d8a442]/10',
+  import: 'text-[#d8a442] bg-[#d8a442]/10',
+  profile: 'text-[#f2d894] bg-[#d8a442]/10',
+  default: 'text-[#94a3b8] bg-[#18181f]',
 };
 
 const ActivityTimeline = React.memo(function ActivityTimeline({ activities = [], maxItems = 15 }) {
@@ -46,7 +46,7 @@ const ActivityTimeline = React.memo(function ActivityTimeline({ activities = [],
   const visibleActivities = activities.slice(0, maxItems);
 
   if (visibleActivities.length === 0) {
-    return <p className="text-dark-400 text-sm text-center py-6">No recent activity</p>;
+    return <p className="text-[#94a3b8] text-sm text-center py-6">No recent activity</p>;
   }
 
   return (
@@ -55,13 +55,13 @@ const ActivityTimeline = React.memo(function ActivityTimeline({ activities = [],
         const Icon = iconMap[activity.type] || iconMap.default;
         const colorClass = colorMap[activity.type] || colorMap.default;
         return (
-          <div key={activity.id} className="activity-item flex items-start gap-3 py-2 px-3 rounded-lg hover:bg-glass-hover transition-all">
+          <div key={activity.id} className="activity-item flex items-start gap-3 py-2 px-3 rounded-lg hover:bg-[#18181f] transition-all">
             <div className={`w-7 h-7 rounded-lg ${colorClass} flex items-center justify-center shrink-0 mt-0.5`}>
               <Icon className="w-3.5 h-3.5" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm text-dark-100 truncate">{activity.message}</p>
-              <p className="text-[11px] text-dark-400">
+              <p className="text-sm text-[#f5f5f7] truncate">{activity.message}</p>
+              <p className="text-[11px] text-[#94a3b8]">
                 {activity.timestamp ? formatDistanceToNow(activity.timestamp) : ''}
               </p>
             </div>

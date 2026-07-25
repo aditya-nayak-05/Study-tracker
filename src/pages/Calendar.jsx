@@ -9,7 +9,7 @@ import {
 } from '../utils/helpers';
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-const cardStyle = { background: '#12122a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '1rem' };
+const cardStyle = { background: 'linear-gradient(145deg, #191922, #111116)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' };
 
 export default function CalendarPage() {
   const { state, dispatch, showToast } = useStudy();
@@ -160,31 +160,31 @@ export default function CalendarPage() {
       {/* Stats strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         <div className="p-4 rounded-xl flex items-center gap-3" style={cardStyle}>
-          <CalendarDays className="w-5 h-5" style={{ color: '#818cf8' }} />
+          <CalendarDays className="w-5 h-5" style={{ color: '#d8a442' }} />
           <div>
-            <p className="text-lg font-bold text-white">{totalDatesWithTasks}</p>
-            <p className="text-[11px]" style={{ color: '#5a5a88' }}>Scheduled days</p>
+            <p className="text-lg font-bold text-[#f5f5f7]">{totalDatesWithTasks}</p>
+            <p className="text-[11px]" style={{ color: '#94a3b8' }}>Scheduled days</p>
           </div>
         </div>
         <div className="p-4 rounded-xl flex items-center gap-3" style={cardStyle}>
-          <BookOpen className="w-5 h-5" style={{ color: '#34d399' }} />
+          <BookOpen className="w-5 h-5" style={{ color: '#f2d894' }} />
           <div>
-            <p className="text-lg font-bold text-white">{(state.plans || []).length}</p>
-            <p className="text-[11px]" style={{ color: '#5a5a88' }}>Active plans</p>
+            <p className="text-lg font-bold text-[#f5f5f7]">{(state.plans || []).length}</p>
+            <p className="text-[11px]" style={{ color: '#94a3b8' }}>Active plans</p>
           </div>
         </div>
         <div className="p-4 rounded-xl flex items-center gap-3" style={cardStyle}>
-          <CheckCircle2 className="w-5 h-5" style={{ color: '#60a5fa' }} />
+          <CheckCircle2 className="w-5 h-5" style={{ color: '#d8a442' }} />
           <div>
-            <p className="text-lg font-bold text-white">{dateStats.totalTasks}</p>
-            <p className="text-[11px]" style={{ color: '#5a5a88' }}>Tasks on {selectedDate ? formatDate(selectedDate, 'MMM dd') : 'selected'}</p>
+            <p className="text-lg font-bold text-[#f5f5f7]">{dateStats.totalTasks}</p>
+            <p className="text-[11px]" style={{ color: '#94a3b8' }}>Tasks on {selectedDate ? formatDate(selectedDate, 'MMM dd') : 'selected'}</p>
           </div>
         </div>
         <div className="p-4 rounded-xl flex items-center gap-3" style={cardStyle}>
-          <Clock className="w-5 h-5" style={{ color: '#fbbf24' }} />
+          <Clock className="w-5 h-5" style={{ color: '#d8a442' }} />
           <div>
-            <p className="text-lg font-bold text-white">{dateStats.hours > 0 ? `${Math.round(dateStats.hours * 10) / 10}h` : '0h'}</p>
-            <p className="text-[11px]" style={{ color: '#5a5a88' }}>Hours studied</p>
+            <p className="text-lg font-bold text-[#f5f5f7]">{dateStats.hours > 0 ? `${Math.round(dateStats.hours * 10) / 10}h` : '0h'}</p>
+            <p className="text-[11px]" style={{ color: '#94a3b8' }}>Hours studied</p>
           </div>
         </div>
       </div>
@@ -192,22 +192,22 @@ export default function CalendarPage() {
       {/* Controls */}
       <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
         <div className="flex items-center gap-3">
-          <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl transition-all cursor-pointer" style={{ color: '#8888aa', background: '#161625' }}><ChevronLeft className="w-5 h-5" /></button>
-          <h2 className="text-lg font-semibold text-white min-w-[200px] text-center">
+          <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl transition-all cursor-pointer" style={{ color: '#94a3b8', background: '#191922' }}><ChevronLeft className="w-5 h-5" /></button>
+          <h2 className="text-lg font-semibold text-[#f2d894] min-w-[200px] text-center">
             {formatDate(currentDate, view === 'month' ? 'MMMM yyyy' : "'Week of' MMM dd")}
           </h2>
-          <button onClick={() => navigate(1)} className="p-2.5 rounded-xl transition-all cursor-pointer" style={{ color: '#8888aa', background: '#161625' }}><ChevronRight className="w-5 h-5" /></button>
+          <button onClick={() => navigate(1)} className="p-2.5 rounded-xl transition-all cursor-pointer" style={{ color: '#94a3b8', background: '#191922' }}><ChevronRight className="w-5 h-5" /></button>
         </div>
 
         <div className="flex items-center gap-2">
           <button onClick={() => { setCurrentDate(new Date()); setSelectedDate(new Date()); setView('month'); }}
-            className="px-4 py-2 rounded-lg text-xs transition-all cursor-pointer" style={{ color: '#8888aa', background: '#161625' }}>Today</button>
+            className="px-4 py-2 rounded-lg text-xs transition-all cursor-pointer" style={{ color: '#94a3b8', background: '#191922' }}>Today</button>
           <button onClick={() => setView('month')}
             className="px-4 py-2 rounded-lg text-xs font-medium cursor-pointer transition-all"
-            style={{ background: view === 'month' ? 'rgba(99,102,241,0.2)' : '#161625', color: view === 'month' ? '#818cf8' : '#8888aa' }}>Month</button>
+            style={{ background: view === 'month' ? 'rgba(212,168,67,0.15)' : '#191922', color: view === 'month' ? '#d8a442' : '#94a3b8' }}>Month</button>
           <button onClick={() => setView('week')}
             className="px-4 py-2 rounded-lg text-xs font-medium cursor-pointer transition-all"
-            style={{ background: view === 'week' ? 'rgba(99,102,241,0.2)' : '#161625', color: view === 'week' ? '#818cf8' : '#8888aa' }}>Week</button>
+            style={{ background: view === 'week' ? 'rgba(212,168,67,0.15)' : '#191922', color: view === 'week' ? '#d8a442' : '#94a3b8' }}>Week</button>
         </div>
       </div>
 
@@ -218,7 +218,7 @@ export default function CalendarPage() {
             {/* Weekday headers */}
             <div className="grid grid-cols-7 gap-1.5 mb-2">
               {WEEKDAYS.map((d) => (
-                <div key={d} className="text-center text-[11px] font-semibold py-2" style={{ color: '#5a5a88' }}>{d}</div>
+                <div key={d} className="text-center text-[11px] font-semibold py-2" style={{ color: '#94a3b8' }}>{d}</div>
               ))}
             </div>
 
@@ -248,13 +248,13 @@ export default function CalendarPage() {
                       ${!isCurrentMonth && view === 'month' ? 'opacity-25' : ''}
                     `}
                     style={{
-                      background: isSelected ? 'rgba(99,102,241,0.12)' : isToday ? 'rgba(99,102,241,0.06)' : 'transparent',
-                      border: isSelected ? '1px solid rgba(99,102,241,0.35)' : isToday ? '1px solid rgba(99,102,241,0.2)' : '1px solid transparent',
+                      background: isSelected ? 'rgba(255,255,255,0.08)' : isToday ? 'rgba(212,168,67,0.15)' : 'transparent',
+                      border: isSelected ? '1px solid #d8a442' : isToday ? '1px solid rgba(255,255,255,0.08)' : '1px solid transparent',
                     }}
                     onClick={() => setSelectedDate(day)}
                   >
                     <span className="text-xs font-medium" style={{
-                      color: isToday ? '#818cf8' : isCurrentMonth ? '#d0d0e0' : '#3d3d65',
+                      color: isToday ? '#d8a442' : isCurrentMonth ? '#94a3b8' : '#94a3b8',
                       fontWeight: isToday ? 700 : 500,
                     }}>
                       {day.getDate()}
@@ -264,25 +264,25 @@ export default function CalendarPage() {
                       <div className="flex gap-1 mt-1.5 flex-wrap">
                         {planColors.slice(0, 4).map((c, j) => (
                           <div key={j} className="w-2 h-2 rounded-full shrink-0" style={{
-                            background: allDone ? '#34d399' : c || '#6366f1',
-                            boxShadow: `0 0 4px ${allDone ? '#34d39950' : (c || '#6366f1') + '40'}`,
+                            background: allDone ? '#f2d894' : c || '#d8a442',
+                            boxShadow: `0 0 4px ${allDone ? '#f2d89450' : (c || '#d8a442') + '40'}`,
                           }} />
                         ))}
-                        {planColors.length > 4 && <span className="text-[8px]" style={{ color: '#5a5a88' }}>+{planColors.length - 4}</span>}
+                        {planColors.length > 4 && <span className="text-[8px]" style={{ color: '#94a3b8' }}>+{planColors.length - 4}</span>}
                       </div>
                     )}
 
                     {realTasks.length > 0 && (
-                      <span className="text-[9px] mt-auto" style={{ color: allDone ? '#34d399' : '#5a5a88' }}>
+                      <span className="text-[9px] mt-auto" style={{ color: allDone ? '#f2d894' : '#94a3b8' }}>
                         {completedTasks}/{realTasks.length}
                       </span>
                     )}
 
                     {hours > 0 && (
-                      <span className="text-[9px]" style={{ color: '#60a5fa' }}>{Math.round(hours * 10) / 10}h</span>
+                      <span className="text-[9px]" style={{ color: '#d8a442' }}>{Math.round(hours * 10) / 10}h</span>
                     )}
 
-                    {isOverdue && <div className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style={{ background: '#fb7185', boxShadow: '0 0 6px #fb718560' }} />}
+                    {isOverdue && <div className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style={{ background: '#d8a442', boxShadow: '0 0 6px rgba(216,164,66,0.6)' }} />}
                   </button>
                 );
               })}
@@ -293,22 +293,22 @@ export default function CalendarPage() {
         {/* Sidebar: Selected Day Detail */}
         <div className="space-y-5">
           <div className="p-6" style={cardStyle}>
-            <h3 className="text-sm font-semibold text-white mb-1">
+            <h3 className="text-sm font-semibold text-[#f2d894] mb-1">
               {selectedDate ? formatDate(selectedDate, 'EEEE') : 'Select a date'}
             </h3>
-            <p className="text-xs mb-5" style={{ color: '#5a5a88' }}>
+            <p className="text-xs mb-5" style={{ color: '#94a3b8' }}>
               {selectedDate ? formatDate(selectedDate, 'MMMM dd, yyyy') : ''}
             </p>
 
             {dateStats.totalTasks > 0 && (
               <div className="flex items-center gap-3 mb-5 pb-4" style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: '#1e1e35' }}>
+                <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(255,255,255,0.08)' }}>
                   <div className="h-full rounded-full transition-all duration-500" style={{
                     width: `${dateStats.totalTasks ? Math.round((dateStats.completedTasks / dateStats.totalTasks) * 100) : 0}%`,
-                    background: 'linear-gradient(to right, #6366f1, #34d399)',
+                    background: 'linear-gradient(to right, #d8a442, #d8a442)',
                   }} />
                 </div>
-                <span className="text-[11px] font-mono" style={{ color: '#8888aa' }}>
+                <span className="text-[11px] font-mono" style={{ color: '#94a3b8' }}>
                   {dateStats.completedTasks}/{dateStats.totalTasks}
                 </span>
               </div>
@@ -316,9 +316,9 @@ export default function CalendarPage() {
 
             {selectedGrouped.length === 0 ? (
               <div className="text-center py-8">
-                <CalendarDays className="w-8 h-8 mx-auto mb-3" style={{ color: '#2a2a4a' }} />
-                <p className="text-xs" style={{ color: '#5a5a88' }}>No tasks scheduled</p>
-                <p className="text-[10px] mt-1" style={{ color: '#3d3d65' }}>Assign dates to days in your plans</p>
+                <CalendarDays className="w-8 h-8 mx-auto mb-3" style={{ color: '#94a3b8' }} />
+                <p className="text-xs" style={{ color: '#94a3b8' }}>No tasks scheduled</p>
+                <p className="text-[10px] mt-1" style={{ color: '#94a3b8' }}>Assign dates to days in your plans</p>
               </div>
             ) : (
               <div className="space-y-5 max-h-[450px] overflow-y-auto pr-1">
@@ -328,8 +328,8 @@ export default function CalendarPage() {
                     <div className="flex items-center gap-2 mb-2.5">
                       <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: group.planColor }} />
                       <div className="flex-1 min-w-0">
-                        <p className="text-[11px] font-semibold truncate" style={{ color: '#d0d0e0' }}>{group.dayName}</p>
-                        <p className="text-[9px] truncate" style={{ color: '#5a5a88' }}>{group.planName} · {group.weekName}</p>
+                        <p className="text-[11px] font-semibold truncate" style={{ color: '#94a3b8' }}>{group.dayName}</p>
+                        <p className="text-[9px] truncate" style={{ color: '#94a3b8' }}>{group.planName} · {group.weekName}</p>
                       </div>
                     </div>
 
@@ -343,18 +343,18 @@ export default function CalendarPage() {
                             onClick={() => handleToggleTask(task)}
                             className="w-full flex items-center gap-2.5 py-2 px-2.5 rounded-lg transition-all cursor-pointer text-left group"
                             style={{ background: 'transparent' }}
-                            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.04)'}
+                            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(216,164,66,0.05)'}
                             onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                           >
                             {task.status === 'completed' ? (
-                              <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: '#34d399' }} />
+                              <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: '#f2d894' }} />
                             ) : task.status === 'in-progress' ? (
-                              <AlertCircle className="w-4 h-4 shrink-0" style={{ color: '#fbbf24' }} />
+                              <AlertCircle className="w-4 h-4 shrink-0" style={{ color: '#d8a442' }} />
                             ) : (
-                              <Circle className="w-4 h-4 shrink-0" style={{ color: '#3d3d65' }} />
+                              <Circle className="w-4 h-4 shrink-0" style={{ color: '#94a3b8' }} />
                             )}
                             <span className="text-xs flex-1" style={{
-                              color: task.status === 'completed' ? '#5a5a88' : '#d0d0e0',
+                              color: task.status === 'completed' ? '#94a3b8' : '#f5f5f7',
                               textDecoration: task.status === 'completed' ? 'line-through' : 'none',
                             }}>{task.title}</span>
                           </button>
@@ -368,15 +368,15 @@ export default function CalendarPage() {
 
             {dateStats.hours > 0 && (
               <div className="mt-5 pt-4 flex items-center gap-2" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }}>
-                <Clock className="w-4 h-4" style={{ color: '#60a5fa' }} />
-                <span className="text-xs" style={{ color: '#8888aa' }}>{Math.round(dateStats.hours * 10) / 10} hours studied</span>
+                <Clock className="w-4 h-4" style={{ color: '#d8a442' }} />
+                <span className="text-xs" style={{ color: '#94a3b8' }}>{Math.round(dateStats.hours * 10) / 10} hours studied</span>
               </div>
             )}
           </div>
 
           {/* Legend */}
           <div className="p-5" style={cardStyle}>
-            <h4 className="text-xs font-semibold text-white mb-3">Plan Colors</h4>
+            <h4 className="text-xs font-semibold text-[#f2d894] mb-3">Plan Colors</h4>
             <div className="space-y-2">
               {(state.plans || []).filter((p) => !p.archived).map((plan) => {
                 const allTasks = getAllTasksInPlan(plan);
@@ -384,8 +384,8 @@ export default function CalendarPage() {
                 return (
                   <div key={plan.id} className="flex items-center gap-2.5">
                     <div className="w-3 h-3 rounded-full shrink-0" style={{ background: plan.color }} />
-                    <span className="text-[11px] flex-1 truncate" style={{ color: '#aaaac8' }}>{plan.name}</span>
-                    <span className="text-[10px]" style={{ color: '#5a5a88' }}>{datedTasks.length}/{allTasks.length}</span>
+                    <span className="text-[11px] flex-1 truncate" style={{ color: '#f5f5f7' }}>{plan.name}</span>
+                    <span className="text-[10px]" style={{ color: '#94a3b8' }}>{datedTasks.length}/{allTasks.length}</span>
                   </div>
                 );
               })}

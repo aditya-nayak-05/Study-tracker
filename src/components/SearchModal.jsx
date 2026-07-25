@@ -71,28 +71,28 @@ export default function SearchModal({ onClose }) {
   };
 
   return (
-    <div ref={modalRef} className="fixed inset-0 z-[150] flex items-start justify-center pt-[15vh] p-4" style={{ background: 'rgba(5,5,10,0.8)' }} onClick={onClose}>
-      <div ref={contentRef} className="glass gradient-border rounded-2xl w-full max-w-xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
+    <div ref={modalRef} className="fixed inset-0 z-[150] flex items-start justify-center pt-[15vh] p-4" style={{ background: 'rgba(0,0,0,0.85)' }} onClick={onClose}>
+      <div ref={contentRef} className="rounded-2xl w-full max-w-xl overflow-hidden" style={{ background: '#18181f', border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 10px 25px rgba(0,0,0,0.1)' }} onClick={(e) => e.stopPropagation()}>
         {/* Search Input */}
-        <div className="flex items-center gap-3 px-5 py-4 border-b border-glass-border">
-          <Search className="w-5 h-5 text-dark-300 shrink-0" />
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-[rgba(255,255,255,0.08)] bg-[#18181f] shadow-sm inset-field">
+          <Search className="w-5 h-5 text-[#d8a442] shrink-0" />
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search plans, tasks, days..."
-            className="flex-1 bg-transparent text-white placeholder-dark-400 focus:outline-none text-sm"
+            className="flex-1 bg-transparent text-[#f5f5f7] placeholder-[#94a3b8] focus:outline-none text-sm"
           />
-          <button onClick={onClose} className="text-dark-400 hover:text-white transition-colors cursor-pointer">
-            <X className="w-4 h-4" />
+          <button onClick={onClose} className="text-[#94a3b8] hover:text-[#f5f5f7] transition-colors cursor-pointer">
+            <X className="w-4 h-4 text-[#d8a442]" />
           </button>
         </div>
 
         {/* Results */}
         <div className="max-h-[40vh] overflow-y-auto p-2">
           {results.length === 0 && query.trim() && (
-            <p className="text-center text-dark-400 text-sm py-8">No results found</p>
+            <p className="text-center text-[#94a3b8] text-sm py-8">No results found</p>
           )}
           {results.map((item, i) => {
             const Icon = item.icon;
@@ -100,22 +100,22 @@ export default function SearchModal({ onClose }) {
               <button
                 key={i}
                 onClick={() => handleSelect(item)}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-glass-hover transition-all text-left group cursor-pointer"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#191922] transition-all text-left group cursor-pointer border border-transparent hover:border-[#d8a442] shadow-sm"
               >
-                <Icon className="w-4 h-4 text-dark-300 shrink-0" />
-                <span className="text-sm text-dark-100 flex-1 truncate">{item.label}</span>
-                <span className="text-[10px] uppercase tracking-wider text-dark-400 bg-dark-700 px-2 py-0.5 rounded">{item.type}</span>
-                <ArrowRight className="w-3.5 h-3.5 text-dark-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                <Icon className="w-4 h-4 text-[#d8a442] shrink-0" />
+                <span className="text-sm text-[#f5f5f7] flex-1 truncate group-hover:text-[#d8a442]">{item.label}</span>
+                <span className="text-[10px] uppercase tracking-wider text-[#94a3b8] bg-[#191922] border border-[rgba(255,255,255,0.08)] px-2 py-0.5 rounded">{item.type}</span>
+                <ArrowRight className="w-3.5 h-3.5 text-[#d8a442] opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
             );
           })}
         </div>
 
         {/* Shortcut hint */}
-        <div className="px-5 py-3 border-t border-glass-border flex items-center gap-4 text-[11px] text-dark-400">
-          <span><kbd className="px-1.5 py-0.5 rounded bg-dark-700">↑↓</kbd> Navigate</span>
-          <span><kbd className="px-1.5 py-0.5 rounded bg-dark-700">↵</kbd> Open</span>
-          <span><kbd className="px-1.5 py-0.5 rounded bg-dark-700">Esc</kbd> Close</span>
+        <div className="px-5 py-3 border-t border-[rgba(255,255,255,0.08)] flex items-center gap-4 text-[11px] text-[#94a3b8]">
+          <span><kbd className="px-1.5 py-0.5 rounded bg-[#191922] border border-[rgba(255,255,255,0.08)]">↑↓</kbd> Navigate</span>
+          <span><kbd className="px-1.5 py-0.5 rounded bg-[#191922] border border-[rgba(255,255,255,0.08)]">↵</kbd> Open</span>
+          <span><kbd className="px-1.5 py-0.5 rounded bg-[#191922] border border-[rgba(255,255,255,0.08)]">Esc</kbd> Close</span>
         </div>
       </div>
     </div>

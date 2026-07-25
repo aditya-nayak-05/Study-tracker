@@ -274,13 +274,16 @@ function YouTubePlayer({
       ref={containerRef}
       className={className}
       style={{
-        background: '#0c0c18',
-        border: '1px solid rgba(255,255,255,0.1)',
-        borderRadius: '1rem',
+        background: '#18181f',
+        border: '12px solid rgba(255,255,255,0.08)',
+        borderStyle: 'ridge',
+        borderColor: 'rgba(255,255,255,0.08)',
+        borderRadius: '4px',
         overflow: 'hidden',
         position: 'relative',
         width: '100%',
         aspectRatio: '16 / 9',
+        boxShadow: 'none',
         ...style,
       }}
     >
@@ -294,7 +297,7 @@ function YouTubePlayer({
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 10,
-            background: '#0c0c18',
+            background: '#18181f',
           }}
         >
           <div style={spinnerStyle}>
@@ -314,8 +317,8 @@ function YouTubePlayer({
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 10,
-            background: '#0c0c18',
-            color: '#ef4444',
+            background: '#18181f',
+            color: '#8b3a3a',
             padding: '2rem',
             textAlign: 'center',
             gap: '0.75rem',
@@ -335,7 +338,7 @@ function YouTubePlayer({
             <line x1="12" y1="8" x2="12" y2="12" />
             <line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
-          <p style={{ margin: 0, fontSize: '0.95rem', color: 'rgba(255,255,255,0.7)' }}>
+          <p style={{ margin: 0, fontSize: '0.95rem', color: '#94a3b8' }}>
             {error}
           </p>
         </div>
@@ -363,8 +366,8 @@ const spinnerKeyframes = `
 const spinnerStyle = {
   width: 40,
   height: 40,
-  border: '3px solid rgba(255,255,255,0.1)',
-  borderTopColor: '#6366f1',
+  border: '3px solid rgba(255,255,255,0.08)',
+  borderTopColor: '#d8a442',
   borderRadius: '50%',
   animation: 'yt-player-spin 0.8s linear infinite',
 };

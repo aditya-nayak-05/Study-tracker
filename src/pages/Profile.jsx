@@ -87,14 +87,14 @@ export default function Profile() {
     <DashboardLayout title="Profile" subtitle="Your study profile and achievements">
       <div ref={containerRef} className="space-y-6">
         {/* Profile Card */}
-        <div className="profile-card glass gradient-border rounded-2xl p-6">
+        <div className="profile-card bg-[#191922] border border-[rgba(255,255,255,0.08)] rounded-2xl p-6">
           <div className="flex items-start gap-6 flex-wrap">
             {/* Avatar */}
             <label className="relative w-20 h-20 rounded-2xl overflow-hidden cursor-pointer group shrink-0">
               {(editing ? form.avatar : profile.avatar) ? (
                 <img src={editing ? form.avatar : profile.avatar} alt="" className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full bg-gradient-to-br from-brand-500 to-accent-500 flex items-center justify-center text-white text-2xl font-bold">
+                <div className="w-full h-full bg-[rgba(255,255,255,0.08)] flex items-center justify-center text-[#f5f5f7] text-2xl font-bold">
                   {profile.name?.charAt(0)?.toUpperCase() || 'U'}
                 </div>
               )}
@@ -108,35 +108,35 @@ export default function Profile() {
             <div className="flex-1">
               {editing ? (
                 <div className="space-y-3">
-                  <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Name" className="w-full px-3 py-2 rounded-xl bg-dark-800 border border-glass-border text-white text-sm focus:outline-none focus:border-brand-500/40" />
-                  <input type="text" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} placeholder="Username" className="w-full px-3 py-2 rounded-xl bg-dark-800 border border-glass-border text-white text-sm focus:outline-none focus:border-brand-500/40" />
-                  <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Email" className="w-full px-3 py-2 rounded-xl bg-dark-800 border border-glass-border text-white text-sm focus:outline-none focus:border-brand-500/40" />
-                  <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="Bio" rows={2} className="w-full px-3 py-2 rounded-xl bg-dark-800 border border-glass-border text-white text-sm focus:outline-none focus:border-brand-500/40 resize-none" />
-                  <input type="text" value={form.learningGoal} onChange={(e) => setForm({ ...form, learningGoal: e.target.value })} placeholder="Learning Goal" className="w-full px-3 py-2 rounded-xl bg-dark-800 border border-glass-border text-white text-sm focus:outline-none focus:border-brand-500/40" />
+                  <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Name" className="w-full px-3 py-2 rounded-xl bg-[#191922] border border-[rgba(255,255,255,0.1)] text-[#f5f5f7] text-sm focus:outline-none focus:border-[#d8a442]" />
+                  <input type="text" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} placeholder="Username" className="w-full px-3 py-2 rounded-xl bg-[#191922] border border-[rgba(255,255,255,0.1)] text-[#f5f5f7] text-sm focus:outline-none focus:border-[#d8a442]" />
+                  <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Email" className="w-full px-3 py-2 rounded-xl bg-[#191922] border border-[rgba(255,255,255,0.1)] text-[#f5f5f7] text-sm focus:outline-none focus:border-[#d8a442]" />
+                  <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="Bio" rows={2} className="w-full px-3 py-2 rounded-xl bg-[#191922] border border-[rgba(255,255,255,0.1)] text-[#f5f5f7] text-sm focus:outline-none focus:border-[#d8a442] resize-none" />
+                  <input type="text" value={form.learningGoal} onChange={(e) => setForm({ ...form, learningGoal: e.target.value })} placeholder="Learning Goal" className="w-full px-3 py-2 rounded-xl bg-[#191922] border border-[rgba(255,255,255,0.1)] text-[#f5f5f7] text-sm focus:outline-none focus:border-[#d8a442]" />
                   <div>
-                    <label className="text-xs text-dark-300 mb-1 block">Daily Goal (hours)</label>
-                    <input type="number" min={1} max={24} value={form.dailyGoal} onChange={(e) => setForm({ ...form, dailyGoal: parseInt(e.target.value) || 1 })} className="w-24 px-3 py-2 rounded-xl bg-dark-800 border border-glass-border text-white text-sm focus:outline-none focus:border-brand-500/40" />
+                    <label className="text-xs text-[#94a3b8] mb-1 block">Daily Goal (hours)</label>
+                    <input type="number" min={1} max={24} value={form.dailyGoal} onChange={(e) => setForm({ ...form, dailyGoal: parseInt(e.target.value) || 1 })} className="w-24 px-3 py-2 rounded-xl bg-[#191922] border border-[rgba(255,255,255,0.1)] text-[#f5f5f7] text-sm focus:outline-none focus:border-[#d8a442]" />
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={handleSave} className="px-4 py-2 rounded-xl bg-brand-500/20 text-brand-400 text-sm font-medium hover:bg-brand-500/30 cursor-pointer flex items-center gap-1"><Check className="w-4 h-4" /> Save</button>
-                    <button onClick={() => { setEditing(false); setForm(profile); }} className="px-4 py-2 rounded-xl text-dark-300 hover:text-white text-sm cursor-pointer flex items-center gap-1"><X className="w-4 h-4" /> Cancel</button>
+                    <button onClick={handleSave} className="px-4 py-2 rounded-xl bg-[rgba(255,255,255,0.08)] text-[#f2d894] text-sm font-medium hover:bg-[rgba(255,255,255,0.1)] cursor-pointer flex items-center gap-1"><Check className="w-4 h-4" /> Save</button>
+                    <button onClick={() => { setEditing(false); setForm(profile); }} className="px-4 py-2 rounded-xl text-[#94a3b8] hover:text-[#f5f5f7] text-sm cursor-pointer flex items-center gap-1"><X className="w-4 h-4" /> Cancel</button>
                   </div>
                 </div>
               ) : (
                 <div>
                   <div className="flex items-center gap-2 mb-1">
-                    <h2 className="text-xl font-bold text-white">{profile.name}</h2>
-                    <button onClick={() => { setEditing(true); setForm(profile); }} className="text-dark-400 hover:text-white cursor-pointer"><Edit3 className="w-4 h-4" /></button>
+                    <h2 className="text-xl font-bold text-[#f2d894]">{profile.name}</h2>
+                    <button onClick={() => { setEditing(true); setForm(profile); }} className="text-[#94a3b8] hover:text-[#f5f5f7] cursor-pointer"><Edit3 className="w-4 h-4" /></button>
                   </div>
-                  {profile.username && <p className="text-sm text-dark-400">@{profile.username}</p>}
-                  {profile.bio && <p className="text-sm text-dark-300 mt-2">{profile.bio}</p>}
+                  {profile.username && <p className="text-sm text-[#94a3b8]">@{profile.username}</p>}
+                  {profile.bio && <p className="text-sm text-[#94a3b8] mt-2">{profile.bio}</p>}
                   {profile.learningGoal && (
-                    <div className="flex items-center gap-2 mt-2 text-xs text-dark-300">
-                      <Target className="w-3.5 h-3.5 text-brand-400" />
+                    <div className="flex items-center gap-2 mt-2 text-xs text-[#94a3b8]">
+                      <Target className="w-3.5 h-3.5 text-[#d8a442]" />
                       <span>{profile.learningGoal}</span>
                     </div>
                   )}
-                  <p className="text-[11px] text-dark-500 mt-2">Joined {formatDate(profile.createdAt, 'MMMM yyyy')}</p>
+                  <p className="text-[11px] text-[#94a3b8] mt-2">Joined {formatDate(profile.createdAt, 'MMMM yyyy')}</p>
                 </div>
               )}
             </div>
@@ -146,34 +146,34 @@ export default function Profile() {
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {[
-            { label: 'Total Hours', value: stats.totalHours, suffix: 'h', icon: Clock, color: '#6366f1' },
-            { label: 'Plans', value: stats.totalPlans, suffix: '', icon: BookOpen, color: '#8b5cf6' },
-            { label: 'Tasks Done', value: stats.completedTasks, suffix: '', icon: Target, color: '#34d399' },
-            { label: 'Streak', value: stats.streak, suffix: 'd', icon: Flame, color: '#f97316' },
-            { label: 'Badges', value: stats.badges.length, suffix: '', icon: Award, color: '#fbbf24' },
+            { label: 'Total Hours', value: stats.totalHours, suffix: 'h', icon: Clock, color: '#d8a442' },
+            { label: 'Plans', value: stats.totalPlans, suffix: '', icon: BookOpen, color: '#d8a442' },
+            { label: 'Tasks Done', value: stats.completedTasks, suffix: '', icon: Target, color: '#f2d894' },
+            { label: 'Streak', value: stats.streak, suffix: 'd', icon: Flame, color: '#d8a442' },
+            { label: 'Badges', value: stats.badges.length, suffix: '', icon: Award, color: '#d8a442' },
           ].map((s) => (
-            <div key={s.label} className="profile-card glass gradient-border rounded-2xl p-4 text-center">
+            <div key={s.label} className="profile-card bg-[#191922] border border-[rgba(255,255,255,0.08)] rounded-2xl p-4 text-center">
               <s.icon className="w-5 h-5 mx-auto mb-2" style={{ color: s.color }} />
-              <AnimatedCounter value={s.value} suffix={s.suffix} className="text-lg font-bold text-white block" />
-              <p className="text-[10px] text-dark-400 mt-1">{s.label}</p>
+              <AnimatedCounter value={s.value} suffix={s.suffix} className="text-lg font-bold text-[#f5f5f7] block" />
+              <p className="text-[10px] text-[#94a3b8] mt-1">{s.label}</p>
             </div>
           ))}
         </div>
 
         {/* Badges */}
-        <div className="profile-card glass gradient-border rounded-2xl p-6">
-          <h3 className="text-sm font-semibold text-white mb-4 flex items-center gap-2">
-            <Award className="w-4 h-4 text-neon-amber" /> Achievements
+        <div className="profile-card bg-[#191922] border border-[rgba(255,255,255,0.08)] rounded-2xl p-6">
+          <h3 className="text-sm font-semibold text-[#f2d894] mb-4 flex items-center gap-2">
+            <Award className="w-4 h-4 text-[#d8a442]" /> Achievements
           </h3>
           {stats.badges.length === 0 ? (
-            <p className="text-dark-400 text-sm text-center py-6">Start studying to unlock badges!</p>
+            <p className="text-[#94a3b8] text-sm text-center py-6">Start studying to unlock badges!</p>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
               {stats.badges.map((badge) => (
-                <div key={badge.name} className="flex flex-col items-center gap-2 p-4 rounded-xl bg-dark-800/50 hover:bg-glass-hover transition-all">
+                <div key={badge.name} className="flex flex-col items-center gap-2 p-4 rounded-xl bg-[#111116] hover:bg-[rgba(212,168,67,0.15)] transition-all">
                   <span className="text-2xl">{badge.icon}</span>
-                  <span className="text-xs font-medium text-white text-center">{badge.name}</span>
-                  <span className="text-[10px] text-dark-400 text-center">{badge.desc}</span>
+                  <span className="text-xs font-medium text-[#f5f5f7] text-center">{badge.name}</span>
+                  <span className="text-[10px] text-[#94a3b8] text-center">{badge.desc}</span>
                 </div>
               ))}
             </div>

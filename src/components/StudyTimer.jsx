@@ -109,6 +109,13 @@ function StudyTimer({
     setHasStarted(false);
   }, [clearTimer, onFinish]);
 
+  /* ── unmount cleanup ────────────────────────────── */
+  useEffect(() => {
+    return () => {
+      clearTimer();
+    };
+  }, [clearTimer]);
+
   /* ── visibility change sync ──────────────────────── */
   useEffect(() => {
     const onVisChange = () => {
@@ -168,8 +175,8 @@ function StudyTimer({
     <div
       ref={containerRef}
       style={{
-        background: '#12122a',
-        border: '1px solid rgba(255,255,255,0.1)',
+        background: '#18181f',
+        border: '1px solid rgba(255,255,255,0.08)',
         borderRadius: '1rem',
         padding: compact ? '1rem' : '1.5rem',
         display: 'flex',
@@ -177,9 +184,10 @@ function StudyTimer({
         alignItems: 'center',
         gap: compact ? '0.75rem' : '1.25rem',
         fontFamily: "'Inter', sans-serif",
-        color: '#e2e8f0',
+        color: '#f5f5f7',
         width: '100%',
         boxSizing: 'border-box',
+        boxShadow: 'none',
       }}
     >
       {/* header */}
@@ -192,12 +200,14 @@ function StudyTimer({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Timer size={compact ? 16 : 20} color="#6366f1" />
+          <Timer size={compact ? 16 : 20} color="#d8a442" />
           <span
             style={{
               fontWeight: 600,
               fontSize: compact ? '0.85rem' : '1rem',
               letterSpacing: '0.02em',
+              textShadow: 'none',
+              color: '#f5f5f7',
             }}
           >
             Study Timer
@@ -235,8 +245,9 @@ function StudyTimer({
             cy={size / 2}
             r={radius}
             fill="none"
-            stroke="#1e1e35"
+            stroke="#18181f"
             strokeWidth={RING_STROKE}
+            style={{ filter: 'none' }}
           />
           {/* progress arc */}
           <circle
@@ -244,7 +255,7 @@ function StudyTimer({
             cy={size / 2}
             r={radius}
             fill="none"
-            stroke="#6366f1"
+            stroke="#d8a442"
             strokeWidth={RING_STROKE}
             strokeLinecap="round"
             strokeDasharray={circumference}
@@ -269,7 +280,8 @@ function StudyTimer({
               fontWeight: 700,
               fontSize: compact ? '0.95rem' : '1.5rem',
               letterSpacing: '0.04em',
-              color: '#f1f5f9',
+              color: '#d8a442',
+              textShadow: 'none',
             }}
           >
             {formatDuration(elapsedSeconds)}
@@ -291,7 +303,7 @@ function StudyTimer({
           <ControlButton
             icon={<Play size={16} />}
             label="Start"
-            bg="#6366f1"
+            bg="linear-gradient(to bottom, #d8a442, #d8a442)"
             onClick={handleStart}
             compact={compact}
           />
@@ -302,14 +314,14 @@ function StudyTimer({
             <ControlButton
               icon={<Pause size={16} />}
               label="Pause"
-              bg="#f59e0b"
+              bg="linear-gradient(to bottom, #d8a442, #d8a442)"
               onClick={handlePause}
               compact={compact}
             />
             <ControlButton
               icon={<Square size={16} />}
               label="Finish"
-              bg="#22c55e"
+              bg="linear-gradient(to bottom, #4a7c3f, #2d5a27)"
               onClick={handleFinish}
               compact={compact}
             />
@@ -321,21 +333,21 @@ function StudyTimer({
             <ControlButton
               icon={<Play size={16} />}
               label="Resume"
-              bg="#6366f1"
+              bg="linear-gradient(to bottom, #d8a442, #d8a442)"
               onClick={handleResume}
               compact={compact}
             />
             <ControlButton
               icon={<RotateCcw size={16} />}
               label="Reset"
-              bg="#ef4444"
+              bg="linear-gradient(to bottom, #8b3a3a, #5c2626)"
               onClick={handleReset}
               compact={compact}
             />
             <ControlButton
               icon={<Square size={16} />}
               label="Finish"
-              bg="#22c55e"
+              bg="linear-gradient(to bottom, #4a7c3f, #2d5a27)"
               onClick={handleFinish}
               compact={compact}
             />
@@ -357,15 +369,17 @@ function ControlButton({ icon, label, bg, onClick, compact }) {
         alignItems: 'center',
         gap: '0.35rem',
         background: bg,
-        color: '#fff',
-        border: 'none',
+        color: '#18181f',
+        border: '1px solid #9e7518',
         borderRadius: '0.5rem',
         padding: compact ? '0.3rem 0.6rem' : '0.45rem 0.85rem',
         fontSize: compact ? '0.7rem' : '0.8rem',
-        fontWeight: 600,
+        fontWeight: 700,
         cursor: 'pointer',
-        transition: 'filter 0.15s',
+        transition: 'all 0.15s',
         letterSpacing: '0.02em',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        textShadow: 'none',
       }}
       onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(1.15)')}
       onMouseLeave={(e) => (e.currentTarget.style.filter = 'none')}

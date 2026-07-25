@@ -114,16 +114,16 @@ export default function Analytics() {
   }, [state.globalStudyHours, state.profile]);
 
   const statCards = [
-    { label: "Today's Hours", value: stats.todayHours, suffix: 'h', icon: Clock, color: '#60a5fa' },
-    { label: "Yesterday", value: stats.yesterdayHours, suffix: 'h', icon: Clock, color: '#818cf8' },
-    { label: "This Week", value: stats.weeklyHours, suffix: 'h', icon: Calendar, color: '#a78bfa' },
-    { label: "This Month", value: stats.monthlyHours, suffix: 'h', icon: Calendar, color: '#c4b5fd' },
-    { label: "Total Hours", value: stats.totalHours, suffix: 'h', icon: TrendingUp, color: '#6366f1' },
-    { label: "Average/Day", value: stats.averageHours, suffix: 'h', icon: BarChart3, color: '#34d399' },
-    { label: "Longest Session", value: stats.longestSession, suffix: 'm', icon: Award, color: '#fbbf24' },
-    { label: "Shortest Session", value: stats.shortestSession, suffix: 'm', icon: Target, color: '#fb7185' },
-    { label: "Current Streak", value: stats.currentStreak, suffix: ' days', icon: Flame, color: '#f97316' },
-    { label: "Best Streak", value: stats.bestStreak, suffix: ' days', icon: Award, color: '#eab308' },
+    { label: "Today's Hours", value: stats.todayHours, suffix: 'h', icon: Clock, color: '#d8a442' },
+    { label: "Yesterday", value: stats.yesterdayHours, suffix: 'h', icon: Clock, color: '#d8a442' },
+    { label: "This Week", value: stats.weeklyHours, suffix: 'h', icon: Calendar, color: '#d8a442' },
+    { label: "This Month", value: stats.monthlyHours, suffix: 'h', icon: Calendar, color: '#d8a442' },
+    { label: "Total Hours", value: stats.totalHours, suffix: 'h', icon: TrendingUp, color: '#d8a442' },
+    { label: "Average/Day", value: stats.averageHours, suffix: 'h', icon: BarChart3, color: '#f2d894' },
+    { label: "Longest Session", value: stats.longestSession, suffix: 'm', icon: Award, color: '#d8a442' },
+    { label: "Shortest Session", value: stats.shortestSession, suffix: 'm', icon: Target, color: '#d8a442' },
+    { label: "Current Streak", value: stats.currentStreak, suffix: ' days', icon: Flame, color: '#d8a442' },
+    { label: "Best Streak", value: stats.bestStreak, suffix: ' days', icon: Award, color: '#d8a442' },
   ];
 
   return (
@@ -132,12 +132,12 @@ export default function Analytics() {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {statCards.map((card) => (
-            <div key={card.label} className="analytics-card glass gradient-border rounded-2xl p-4">
+            <div key={card.label} className="analytics-card bg-[#191922] border border-[rgba(255,255,255,0.08)] rounded-2xl p-4">
               <div className="flex items-center gap-2 mb-2">
                 <card.icon className="w-4 h-4" style={{ color: card.color }} />
-                <span className="text-[11px] text-dark-400 font-medium">{card.label}</span>
+                <span className="text-[11px] text-[#94a3b8] font-medium">{card.label}</span>
               </div>
-              <AnimatedCounter value={card.value} suffix={card.suffix} className="text-xl font-bold text-white" />
+              <AnimatedCounter value={card.value} suffix={card.suffix} className="text-xl font-bold text-[#f5f5f7]" />
             </div>
           ))}
         </div>
@@ -150,32 +150,32 @@ export default function Analytics() {
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Daily Goal Progress */}
-          <div className="analytics-card glass gradient-border rounded-2xl p-6">
-            <h3 className="text-sm font-semibold text-white mb-5 flex items-center gap-2">
-              <Target className="w-4 h-4 text-neon-green" /> Daily Goal Progress
+          <div className="analytics-card bg-[#191922] border border-[rgba(255,255,255,0.08)] rounded-2xl p-6">
+            <h3 className="text-sm font-semibold text-[#f2d894] mb-5 flex items-center gap-2">
+              <Target className="w-4 h-4 text-[#d8a442]" /> Daily Goal Progress
             </h3>
             <div className="flex items-center justify-center gap-8">
-              <ProgressRing percent={stats.dailyGoalProgress} size={100} strokeWidth={7} color="#34d399" label="Today" />
+              <ProgressRing percent={stats.dailyGoalProgress} size={100} strokeWidth={7} color="#d8a442" label="Today" />
               <div className="space-y-3">
                 <div>
-                  <p className="text-[11px] text-dark-400">Target</p>
-                  <p className="text-lg font-bold text-white">{stats.dailyGoal}h</p>
+                  <p className="text-[11px] text-[#94a3b8]">Target</p>
+                  <p className="text-lg font-bold text-[#f5f5f7]">{stats.dailyGoal}h</p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-dark-400">Studied</p>
-                  <p className="text-lg font-bold text-neon-green">{stats.todayHours}h</p>
+                  <p className="text-[11px] text-[#94a3b8]">Studied</p>
+                  <p className="text-lg font-bold text-[#f5f5f7]">{stats.todayHours}h</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* 14-Day Trend */}
-          <div className="analytics-card glass gradient-border rounded-2xl p-6">
-            <h3 className="text-sm font-semibold text-white mb-5 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-accent-400" /> 14-Day Study Trend
+          <div className="analytics-card bg-[#191922] border border-[rgba(255,255,255,0.08)] rounded-2xl p-6">
+            <h3 className="text-sm font-semibold text-[#f2d894] mb-5 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-[#d8a442]" /> 14-Day Study Trend
             </h3>
             <div className="flex justify-center">
-              <MiniLineChart data={stats.lineData} width={Math.min(500, window.innerWidth - 120)} height={80} color="#8b5cf6" />
+              <MiniLineChart data={stats.lineData} width={Math.min(500, window.innerWidth - 120)} height={80} color="#d8a442" />
             </div>
           </div>
         </div>

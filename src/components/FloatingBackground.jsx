@@ -72,11 +72,11 @@ const FloatingBackground = React.memo(function FloatingBackground() {
     <div ref={containerRef} className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
       {/* Grid */}
       <div
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 opacity-[0.05]"
         style={{
           backgroundImage: `
-            linear-gradient(rgba(99,102,241,0.3) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(99,102,241,0.3) 1px, transparent 1px)
+            linear-gradient(rgba(184,134,11,0.3) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(184,134,11,0.3) 1px, transparent 1px)
           `,
           backgroundSize: '60px 60px',
         }}
@@ -86,7 +86,7 @@ const FloatingBackground = React.memo(function FloatingBackground() {
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] opacity-20"
         style={{
-          background: 'radial-gradient(ellipse at center, rgba(99,102,241,0.15) 0%, rgba(139,92,246,0.05) 50%, transparent 80%)',
+          background: 'radial-gradient(ellipse at center, rgba(184,134,11,0.15) 0%, rgba(138,101,8,0.05) 50%, transparent 80%)',
         }}
       />
 
@@ -115,8 +115,8 @@ const FloatingBackground = React.memo(function FloatingBackground() {
           style={{
             width: 2 + Math.random() * 3 + 'px',
             height: 2 + Math.random() * 3 + 'px',
-            background: snippetColors[i % snippetColors.length],
-            boxShadow: `0 0 6px ${snippetColors[i % snippetColors.length]}`,
+            background: '#b8860b',
+            boxShadow: `0 1px 2px rgba(0,0,0,0.5)`,
             opacity: 0,
           }}
         />

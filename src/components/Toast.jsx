@@ -11,10 +11,10 @@ const icons = {
 };
 
 const colors = {
-  success: 'border-neon-green/30 text-neon-green',
-  error: 'border-neon-rose/30 text-neon-rose',
-  info: 'border-brand-400/30 text-brand-400',
-  warning: 'border-neon-amber/30 text-neon-amber',
+  success: 'border-[#4a7c3f] text-[#4a7c3f]',
+  error: 'border-[#8b3a3a] text-[#8b3a3a]',
+  info: 'border-[#d8a442] text-[#d8a442]',
+  warning: 'border-[#d8a442] text-[#d8a442]',
 };
 
 function ToastItem({ toast, onRemove }) {
@@ -44,12 +44,13 @@ function ToastItem({ toast, onRemove }) {
   return (
     <div
       ref={ref}
-      className={`glass border ${colors[toast.toastType] || colors.info} rounded-xl px-4 py-3 flex items-center gap-3 min-w-[280px] max-w-[400px]`}
+      className={`border ${colors[toast.toastType] || colors.info} rounded-xl px-4 py-3 flex items-center gap-3 min-w-[280px] max-w-[400px] shadow-md`}
+      style={{background: '#18181f'}}
     >
       <Icon className="w-5 h-5 shrink-0" />
-      <span className="text-sm text-dark-100 flex-1">{toast.message}</span>
-      <button onClick={handleClose} className="text-dark-400 hover:text-white transition-colors cursor-pointer">
-        <X className="w-4 h-4" />
+      <span className="text-sm text-[#f5f5f7] flex-1 font-medium" style={{textShadow: 'none'}}>{toast.message}</span>
+      <button onClick={handleClose} className="text-[#94a3b8] hover:text-[#f5f5f7] transition-colors cursor-pointer">
+        <X className="w-4 h-4 text-[#d8a442]" />
       </button>
     </div>
   );

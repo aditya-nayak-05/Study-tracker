@@ -94,6 +94,9 @@ export function formatDuration(totalSeconds) {
  * @returns {number} 0–100
  */
 export function calcVideoProgress(currentTime, duration) {
-  if (!duration || duration <= 0) return 0;
-  return Math.min(100, Math.round(((currentTime || 0) / duration) * 10000) / 100);
+  if (!duration || duration <= 0 || isNaN(duration) || isNaN(currentTime)) return 0;
+  const curr = Math.max(0, Number(currentTime) || 0);
+  const dur = Number(duration);
+  if (dur <= 0) return 0;
+  return Math.min(100, Math.max(0, Math.round((curr / dur) * 10000) / 100));
 }

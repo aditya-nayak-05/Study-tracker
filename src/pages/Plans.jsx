@@ -12,8 +12,8 @@ import { calculateProgress, getAllTasksInPlan, formatDate } from '../utils/helpe
 
 const PLAN_COLORS = ['#6366f1', '#8b5cf6', '#ec4899', '#f43f5e', '#f97316', '#eab308', '#22c55e', '#06b6d4', '#3b82f6'];
 
-const cardStyle = { background: '#12122a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '1rem' };
-const inputStyle = { background: '#161625', border: '1px solid rgba(255,255,255,0.12)', color: '#d0d0e0', borderRadius: '0.75rem' };
+const cardStyle = { background: 'linear-gradient(145deg, #191922, #111116)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem', boxShadow: '0 4px 12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)' };
+const inputStyle = { background: '#101014', border: '1px solid rgba(255,255,255,0.1)', color: '#f5f5f7', borderRadius: '0.75rem', boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.05)' };
 
 export default function Plans() {
   const { state, dispatch, showToast } = useStudy();
@@ -94,7 +94,7 @@ export default function Plans() {
         <button
           onClick={() => setShowCreate(true)}
           className="flex items-center gap-2 px-5 py-3 text-sm font-medium transition-all active:scale-[0.97] cursor-pointer shrink-0"
-          style={{ background: 'linear-gradient(to right, #6366f1, #8b5cf6)', color: '#fff', borderRadius: '0.75rem' }}
+          style={{ background: 'linear-gradient(180deg, #d4a843, #b8860b, #a07010)', color: '#f5e6d0', borderRadius: '0.75rem' }}
         >
           <Plus className="w-4 h-4" /> New Plan
         </button>
@@ -102,12 +102,12 @@ export default function Plans() {
 
       {/* Create Plan Modal */}
       {showCreate && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(5,5,10,0.85)' }} onClick={() => setShowCreate(false)}>
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4" style={{ background: 'rgba(26,18,11,0.85)' }} onClick={() => setShowCreate(false)}>
           <form
             onClick={(e) => e.stopPropagation()}
             onSubmit={handleCreate}
             className="rounded-2xl p-6 w-full max-w-md space-y-4"
-            style={{ background: '#10101e', border: '1px solid rgba(99,102,241,0.25)', boxShadow: '0 0 60px rgba(99,102,241,0.1)' }}
+            style={{ background: 'linear-gradient(145deg, #2d1f14, #221811)', border: '1px solid rgba(184,134,11,0.25)', boxShadow: '0 0 60px rgba(184,134,11,0.1)' }}
           >
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-white">Create New Plan</h2>
@@ -123,7 +123,7 @@ export default function Plans() {
                 ))}
               </div>
             </div>
-            <button type="submit" className="w-full py-2.5 text-sm font-semibold cursor-pointer" style={{ background: 'linear-gradient(to right, #6366f1, #8b5cf6)', color: '#fff', borderRadius: '0.75rem' }}>Create Plan</button>
+            <button type="submit" className="w-full py-2.5 text-sm font-semibold cursor-pointer" style={{ background: 'linear-gradient(180deg, #d4a843, #b8860b, #a07010)', color: '#f5e6d0', borderRadius: '0.75rem' }}>Create Plan</button>
           </form>
         </div>
       )}
@@ -168,14 +168,14 @@ export default function Plans() {
 
                 <button
                   className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
-                  style={{ background: '#1e1e35' }}
+                  style={{ background: '#3a2a1a' }}
                   onClick={(e) => { e.stopPropagation(); setMenuOpen(menuOpen === plan.id ? null : plan.id); }}
                 >
                   <MoreHorizontal className="w-4 h-4" style={{ color: '#8888aa' }} />
                 </button>
 
                 {menuOpen === plan.id && (
-                  <div className="absolute top-10 right-3 rounded-xl py-1 w-40 z-50 shadow-xl" style={{ background: '#161625', border: '1px solid rgba(255,255,255,0.1)' }} onClick={(e) => e.stopPropagation()}>
+                  <div className="absolute top-10 right-3 rounded-xl py-1 w-40 z-50 shadow-xl" style={{ background: '#1a120b', border: '1px solid rgba(184,134,11,0.12)' }} onClick={(e) => e.stopPropagation()}>
                     <button onClick={() => handleAction('pin', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-white/5 cursor-pointer" style={{ color: '#aaaac8' }}>
                       {plan.pinned ? <PinOff className="w-3.5 h-3.5" /> : <Pin className="w-3.5 h-3.5" />}
                       {plan.pinned ? 'Unpin' : 'Pin'}

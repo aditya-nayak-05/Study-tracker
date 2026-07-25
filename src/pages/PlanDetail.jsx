@@ -15,8 +15,8 @@ import {
 } from 'lucide-react';
 import { extractVideoId, isValidYoutubeUrl, calcVideoProgress } from '../utils/youtube';
 
-const cardStyle = { background: '#12122a', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '1rem' };
-const inputStyle = { background: '#161625', border: '1px solid rgba(255,255,255,0.12)', color: '#d0d0e0' };
+const cardStyle = { background: 'linear-gradient(145deg, #191922, #111116)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem', boxShadow: '0 4px 12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)' };
+const inputStyle = { background: '#101014', border: '1px solid rgba(255,255,255,0.1)', color: '#f5f5f7', boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.05)' };
 
 export default function PlanDetail() {
   const { planId } = useParams();
@@ -169,7 +169,7 @@ export default function PlanDetail() {
 
   const btnStyle = (active) => ({
     padding: '0.5rem 1rem', borderRadius: '0.5rem', fontSize: '0.8rem', fontWeight: 500, cursor: 'pointer',
-    background: active ? 'rgba(99,102,241,0.2)' : 'transparent', color: active ? '#818cf8' : '#8888aa',
+    background: active ? 'rgba(184,134,11,0.2)' : 'transparent', color: active ? '#d4a843' : '#a08060',
   });
 
   return (
@@ -297,7 +297,7 @@ export default function PlanDetail() {
 
                                               if (isEditing) {
                                                 return (
-                                                  <form key={task.id} onSubmit={(e) => handleEditTaskSave(e, task)} className="mt-2 space-y-2 p-3 rounded-lg border border-white/5" style={{ background: '#0c0c18' }}>
+                                                  <form key={task.id} onSubmit={(e) => handleEditTaskSave(e, task)} className="mt-2 space-y-2 p-3 rounded-lg border border-white/5" style={{ background: '#1e1408' }}>
                                                     <div>
                                                       <label className="text-[10px] text-[#8888aa] block mb-1">Task Title</label>
                                                       <input type="text" value={editingTaskName} onChange={(e) => setEditingTaskName(e.target.value)} className="w-full px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} autoFocus />
@@ -308,7 +308,7 @@ export default function PlanDetail() {
                                                     </div>
                                                     <div className="flex gap-2 justify-end">
                                                       <button type="submit" className="px-2.5 py-1 rounded text-[10px] font-semibold cursor-pointer" style={{ background: '#34d399', color: '#12122a' }}>Save</button>
-                                                      <button type="button" onClick={() => setEditingTaskId(null)} className="px-2.5 py-1 rounded text-[10px] font-semibold cursor-pointer" style={{ background: '#1e1e35', color: '#8888aa' }}>Cancel</button>
+                                                      <button type="button" onClick={() => setEditingTaskId(null)} className="px-2.5 py-1 rounded text-[10px] font-semibold cursor-pointer" style={{ background: '#3a2a1a', color: '#a08060' }}>Cancel</button>
                                                     </div>
                                                   </form>
                                                 );
@@ -358,7 +358,7 @@ export default function PlanDetail() {
                                             })}
 
                                             {addTaskDay === day.id ? (
-                                              <form onSubmit={(e) => handleAddTask(e, day.id)} className="mt-1 p-3 rounded-lg space-y-2 border border-white/5" style={{ background: '#161625' }}>
+                                              <form onSubmit={(e) => handleAddTask(e, day.id)} className="mt-1 p-3 rounded-lg space-y-2 border border-white/5" style={{ background: '#1a120b' }}>
                                                 <div>
                                                   <label className="text-[10px] text-[#8888aa] block mb-1">Task Title</label>
                                                   <input type="text" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} placeholder="e.g. Learn Python Loops" autoFocus
@@ -371,7 +371,7 @@ export default function PlanDetail() {
                                                 </div>
                                                 <div className="flex gap-2 justify-end">
                                                   <button type="submit" className="px-2.5 py-1 rounded text-[10px] font-semibold cursor-pointer" style={{ background: '#34d399', color: '#12122a' }}>Add Task</button>
-                                                  <button type="button" onClick={() => { setAddTaskDay(null); setNewItemName(''); setNewYoutubeUrl(''); }} className="px-2.5 py-1 rounded text-[10px] font-semibold cursor-pointer" style={{ background: '#1e1e35', color: '#8888aa' }}>Cancel</button>
+                                                  <button type="button" onClick={() => { setAddTaskDay(null); setNewItemName(''); setNewYoutubeUrl(''); }} className="px-2.5 py-1 rounded text-[10px] font-semibold cursor-pointer" style={{ background: '#3a2a1a', color: '#a08060' }}>Cancel</button>
                                                 </div>
                                               </form>
                                             ) : (
@@ -423,7 +423,7 @@ export default function PlanDetail() {
                   <form onSubmit={handleAddMonth} className="p-4 flex gap-2" style={cardStyle}>
                     <input type="text" value={addMonthName} onChange={(e) => setAddMonthName(e.target.value)} placeholder="Month name" autoFocus
                       className="flex-1 px-3 py-2 text-sm rounded-xl focus:outline-none" style={{ ...inputStyle }} />
-                    <button type="submit" className="px-4 py-2 rounded-xl text-sm cursor-pointer" style={{ background: 'rgba(99,102,241,0.2)', color: '#818cf8' }}>Add</button>
+                    <button type="submit" className="px-4 py-2 rounded-xl text-sm cursor-pointer" style={{ background: 'rgba(184,134,11,0.2)', color: '#d4a843' }}>Add</button>
                     <button type="button" onClick={() => setShowAddMonth(false)} className="px-3 py-2 rounded-xl cursor-pointer" style={{ color: '#5a5a88' }}><X className="w-4 h-4" /></button>
                   </form>
                 ) : (

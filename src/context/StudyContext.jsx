@@ -371,7 +371,6 @@ function reducer(state, action) {
         return {
           ...p,
           months: updatedMonths,
-          activities: [...p.activities, { id: generateId(), type: 'date-change', message: `Updated dates starting from Day`, timestamp: new Date().toISOString() }],
           updatedAt: new Date().toISOString(),
         };
       });
@@ -395,14 +394,14 @@ function reducer(state, action) {
         if (p.id !== action.payload.planId) return p;
         return {
           ...p,
-          months: p.months.map((m) => ({
+          months: (p.months || []).map((m) => ({
             ...m,
-            weeks: m.weeks.map((w) => ({
+            weeks: (m.weeks || []).map((w) => ({
               ...w,
-              days: w.days.map((d) => (d.id === action.payload.dayId ? { ...d, tasks: [...d.tasks, newTask] } : d)),
+              days: (w.days || []).map((d) => (d.id === action.payload.dayId ? { ...d, tasks: [...(d.tasks || []), newTask] } : d)),
             })),
           })),
-          activities: [...p.activities, { id: generateId(), type: 'add', message: `Added task "${newTask.title}"`, timestamp: new Date().toISOString() }],
+          activities: [...(p.activities || []), { id: generateId(), type: 'add', message: `Added task "${newTask.title}"`, timestamp: new Date().toISOString() }],
           updatedAt: new Date().toISOString(),
         };
       });
@@ -414,13 +413,13 @@ function reducer(state, action) {
         if (p.id !== action.payload.planId) return p;
         return {
           ...p,
-          months: p.months.map((m) => ({
+          months: (p.months || []).map((m) => ({
             ...m,
-            weeks: m.weeks.map((w) => ({
+            weeks: (m.weeks || []).map((w) => ({
               ...w,
-              days: w.days.map((d) => ({
+              days: (w.days || []).map((d) => ({
                 ...d,
-                tasks: d.tasks.map((t) => (t.id === action.payload.taskId ? { ...t, ...action.payload.updates } : t)),
+                tasks: (d.tasks || []).map((t) => (t.id === action.payload.taskId ? { ...t, ...action.payload.updates } : t)),
               })),
             })),
           })),
@@ -438,13 +437,13 @@ function reducer(state, action) {
         if (p.id !== action.payload.planId) return p;
         return {
           ...p,
-          months: p.months.map((m) => ({
+          months: (p.months || []).map((m) => ({
             ...m,
-            weeks: m.weeks.map((w) => ({
+            weeks: (m.weeks || []).map((w) => ({
               ...w,
-              days: w.days.map((d) => ({
+              days: (w.days || []).map((d) => ({
                 ...d,
-                tasks: d.tasks.map((t) => {
+                tasks: (d.tasks || []).map((t) => {
                   if (t.id === action.payload.taskId) {
                     taskName = t.title;
                     newStatus = cycle[t.status] || 'in-progress';
@@ -455,7 +454,7 @@ function reducer(state, action) {
               })),
             })),
           })),
-          activities: [...p.activities, { id: generateId(), type: 'status', message: `Task "${taskName}" → ${newStatus || 'updated'}`, timestamp: new Date().toISOString() }],
+          activities: [...(p.activities || []), { id: generateId(), type: 'status', message: `Task "${taskName}" → ${newStatus || 'updated'}`, timestamp: new Date().toISOString() }],
           updatedAt: new Date().toISOString(),
         };
       });
@@ -467,11 +466,11 @@ function reducer(state, action) {
         if (p.id !== action.payload.planId) return p;
         return {
           ...p,
-          months: p.months.map((m) => ({
+          months: (p.months || []).map((m) => ({
             ...m,
-            weeks: m.weeks.map((w) => ({
+            weeks: (m.weeks || []).map((w) => ({
               ...w,
-              days: w.days.map((d) => ({ ...d, tasks: d.tasks.filter((t) => t.id !== action.payload.taskId) })),
+              days: (w.days || []).map((d) => ({ ...d, tasks: (d.tasks || []).filter((t) => t.id !== action.payload.taskId) })),
             })),
           })),
           updatedAt: new Date().toISOString(),
