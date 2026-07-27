@@ -163,7 +163,7 @@ function StudyTimer({
     statusColor = '#38a169';
     statusLabel = 'Active';
   } else if (hasStarted) {
-    statusColor = '#ed8936';
+    statusColor = 'var(--accent-orange)';
     statusLabel = 'Paused';
   } else {
     statusColor = '#718096';
@@ -200,7 +200,7 @@ function StudyTimer({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Timer size={compact ? 16 : 20} color="#ed8936" />
+          <Timer size={compact ? 16 : 20} color="var(--accent-orange)" />
           <span
             style={{
               fontWeight: 600,
@@ -255,7 +255,7 @@ function StudyTimer({
             cy={size / 2}
             r={radius}
             fill="none"
-            stroke="#ed8936"
+            stroke="var(--accent-orange)"
             strokeWidth={RING_STROKE}
             strokeLinecap="round"
             strokeDasharray={circumference}
@@ -280,7 +280,7 @@ function StudyTimer({
               fontWeight: 700,
               fontSize: compact ? '0.95rem' : '1.5rem',
               letterSpacing: '0.04em',
-              color: '#ed8936',
+              color: 'var(--accent-orange)',
               textShadow: 'none',
             }}
           >

@@ -24,12 +24,12 @@ const iconMap = {
 
 const colorMap = {
   create: 'text-[#38a169] bg-[#38a169]/15',
-  add: 'text-[#ed8936] bg-[#ed8936]/15',
+  add: 'text-accent-primary bg-[var(--accent-orange)]/15',
   delete: 'text-[#e53e3e] bg-[#e53e3e]/15',
-  status: 'text-[#ed8936] bg-[#ed8936]/15',
-  study: 'text-[#ed8936] bg-[#ed8936]/15',
+  status: 'text-accent-primary bg-[var(--accent-orange)]/15',
+  study: 'text-accent-primary bg-[var(--accent-orange)]/15',
   import: 'text-[#38a169] bg-[#38a169]/15',
-  profile: 'text-[#ed8936] bg-[#ed8936]/15',
+  profile: 'text-accent-primary bg-[var(--accent-orange)]/15',
   default: 'text-[#718096] bg-[#cbd5e0]/30',
 };
 

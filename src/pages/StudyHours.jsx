@@ -47,7 +47,7 @@ export default function StudyHours() {
         {/* Pomodoro */}
         <div className="sh-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6 flex flex-col items-center" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
           <h3 className="text-sm font-semibold text-[#1a202c] mb-6 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-[#ed8936]" /> Pomodoro Timer
+            <Clock className="w-4 h-4 text-accent-primary" /> Pomodoro Timer
           </h3>
           <PomodoroTimer />
         </div>
@@ -55,7 +55,7 @@ export default function StudyHours() {
         {/* Manual Logger */}
         <div className="sh-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
           <h3 className="text-sm font-semibold text-[#1a202c] mb-5 flex items-center gap-2">
-            <Plus className="w-4 h-4 text-[#ed8936]" /> Log Study Hours
+            <Plus className="w-4 h-4 text-accent-primary" /> Log Study Hours
           </h3>
           <form onSubmit={handleLog} className="space-y-4">
             <div>
@@ -99,7 +99,7 @@ export default function StudyHours() {
         {/* History */}
         <div className="sh-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
           <h3 className="text-sm font-semibold text-[#1a202c] mb-4 flex items-center gap-2">
-            <BookOpen className="w-4 h-4 text-[#ed8936]" /> Study History
+            <BookOpen className="w-4 h-4 text-accent-primary" /> Study History
           </h3>
           <div className="max-h-[400px] overflow-y-auto space-y-3 pr-1">
             {history.length === 0 ? (
@@ -110,7 +110,7 @@ export default function StudyHours() {
                 return (
                   <div key={entry.id} className="flex items-center gap-3 py-2.5 px-3 rounded-xl transition-all group" style={{ background: '#e6ebf2', boxShadow: '3px 3px 6px rgba(163, 177, 198, 0.4), -3px -3px 6px rgba(255, 255, 255, 0.8)', border: '1px solid rgba(255,255,255,0.7)' }}>
                     <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={{ background: '#e6ebf2', boxShadow: 'inset 2px 2px 4px rgba(163, 177, 198, 0.5), inset -2px -2px 4px rgba(255, 255, 255, 0.9)' }}>
-                      <Clock className="w-4 h-4 text-[#ed8936]" />
+                      <Clock className="w-4 h-4 text-accent-primary" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm text-[#1a202c] font-semibold">{entry.hours}h {entry.minutes}m</p>

@@ -29,13 +29,13 @@ function TreeNode({ label, level = 0, children, progress, status, isToday, defau
   const statusIcon = status === 'completed' ? (
     <CheckCircle2 className="w-3.5 h-3.5 text-[#38a169] shrink-0" />
   ) : status === 'in-progress' ? (
-    <Clock className="w-3.5 h-3.5 text-[#ed8936] shrink-0" />
+    <Clock className="w-3.5 h-3.5 text-accent-primary shrink-0" />
   ) : (
     <Circle className="w-3.5 h-3.5 text-[#718096] shrink-0" />
   );
 
   const folderIcon = hasChildren ? (
-    open ? <FolderOpen className="w-4 h-4 text-[#ed8936] shrink-0" /> : <Folder className="w-4 h-4 text-[#718096] shrink-0" />
+    open ? <FolderOpen className="w-4 h-4 text-accent-primary shrink-0" /> : <Folder className="w-4 h-4 text-[#718096] shrink-0" />
   ) : (
     <FileText className="w-4 h-4 text-[#718096] shrink-0" />
   );
@@ -44,7 +44,7 @@ function TreeNode({ label, level = 0, children, progress, status, isToday, defau
     <div>
       <button
         onClick={toggle}
-        className={`w-full flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-[#ebf0f7] transition-all text-left group cursor-pointer ${isToday ? 'bg-[#ed8936]/15 border border-[#ed8936]/30 shadow-sm' : ''}`}
+        className={`w-full flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-[#ebf0f7] transition-all text-left group cursor-pointer ${isToday ? 'bg-[var(--accent-orange)]/15 border border-[var(--accent-orange)]/30 shadow-sm' : ''}`}
         style={{ paddingLeft: level * 20 + 8 }}
       >
         {hasChildren ? (
@@ -137,7 +137,7 @@ const TreeView = React.memo(function TreeView({ plan, onTaskClick }) {
                           <button
                             onClick={(e) => { e.stopPropagation(); navigate(`/learn/${plan.id}/${task.id}`); }}
                             className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium cursor-pointer shrink-0"
-                            style={{ background: '#e6ebf2', color: '#ed8936', border: '1px solid rgba(255,255,255,0.7)', boxShadow: '2px 2px 5px rgba(163, 177, 198, 0.4), -2px -2px 5px rgba(255, 255, 255, 0.8)' }}
+                            style={{ background: '#e6ebf2', color: 'var(--accent-orange)', border: '1px solid rgba(255,255,255,0.7)', boxShadow: '2px 2px 5px rgba(163, 177, 198, 0.4), -2px -2px 5px rgba(255, 255, 255, 0.8)' }}
                           >
                             <Play className="w-2.5 h-2.5" /> Watch
                           </button>

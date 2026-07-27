@@ -47,7 +47,7 @@ export default function CreateProfileModal() {
 
   const updateField = (field, value) => setForm((f) => ({ ...f, [field]: value }));
 
-  const inputClass = "w-full px-4 py-3 rounded-xl bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] text-[#1a202c] placeholder-[#718096] focus:outline-none focus:border-[#ed8936] focus:ring-2 focus:ring-[#ed8936]/30 transition-all text-sm inset-field shadow-[inset_3px_3px_6px_rgba(163,177,198,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.9)]";
+  const inputClass = "w-full px-4 py-3 rounded-xl bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] text-[#1a202c] placeholder-[#718096] focus:outline-none focus:border-[var(--accent-orange)] focus:ring-2 focus:ring-[#ed8936]/30 transition-all text-sm inset-field shadow-[inset_3px_3px_6px_rgba(163,177,198,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.9)]";
 
   return (
     <div ref={modalRef} className="fixed inset-0 z-[200] flex items-center justify-center p-4 backdrop-blur-sm" style={{ background: 'rgba(26, 32, 44, 0.6)' }}>
@@ -68,11 +68,11 @@ export default function CreateProfileModal() {
 
         {/* Avatar */}
         <div className="flex justify-center">
-          <label className="relative w-24 h-24 rounded-full bg-[#e6ebf2] border-2 border-dashed border-[rgba(163,177,198,0.5)] hover:border-[#ed8936] transition-colors flex items-center justify-center cursor-pointer overflow-hidden group inset-field shadow-[inset_3px_3px_6px_rgba(163,177,198,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.9)]">
+          <label className="relative w-24 h-24 rounded-full bg-[#e6ebf2] border-2 border-dashed border-[rgba(163,177,198,0.5)] hover:border-[var(--accent-orange)] transition-colors flex items-center justify-center cursor-pointer overflow-hidden group inset-field shadow-[inset_3px_3px_6px_rgba(163,177,198,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.9)]">
             {form.avatar ? (
               <img src={form.avatar} alt="" className="w-full h-full object-cover" />
             ) : (
-              <Camera className="w-8 h-8 text-[#718096] group-hover:text-[#ed8936] transition-colors" />
+              <Camera className="w-8 h-8 text-[#718096] group-hover:text-accent-primary transition-colors" />
             )}
             <input type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
             <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -84,7 +84,7 @@ export default function CreateProfileModal() {
         {/* Name */}
         <div>
           <label className="flex items-center gap-1.5 text-sm font-semibold text-[#2d3748] mb-2" style={{textShadow: 'none'}}>
-            <User className="w-4 h-4 text-[#ed8936]" />Name <span className="text-[#e53e3e]">*</span>
+            <User className="w-4 h-4 text-accent-primary" />Name <span className="text-[#e53e3e]">*</span>
           </label>
           <input
             type="text"
@@ -150,7 +150,7 @@ export default function CreateProfileModal() {
         {/* Learning Goal */}
         <div>
           <label className="flex items-center gap-1.5 text-sm font-semibold text-[#2d3748] mb-2" style={{textShadow: 'none'}}>
-            <BookOpen className="w-4 h-4 text-[#ed8936]" />Learning Goal
+            <BookOpen className="w-4 h-4 text-accent-primary" />Learning Goal
           </label>
           <input
             type="text"

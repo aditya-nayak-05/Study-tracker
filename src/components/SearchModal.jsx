@@ -78,7 +78,7 @@ export default function SearchModal({ onClose }) {
           className="flex items-center gap-3 px-5 py-4 border-b border-[rgba(163,177,198,0.3)] bg-[#e6ebf2] inset-field"
           style={{ boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' }}
         >
-          <Search className="w-5 h-5 text-[#ed8936] shrink-0" />
+          <Search className="w-5 h-5 text-accent-primary shrink-0" />
           <input
             ref={inputRef}
             type="text"
@@ -88,7 +88,7 @@ export default function SearchModal({ onClose }) {
             className="flex-1 bg-transparent text-[#1a202c] placeholder-[#718096] focus:outline-none text-sm font-medium"
           />
           <button onClick={onClose} className="text-[#718096] hover:text-[#1a202c] transition-colors cursor-pointer">
-            <X className="w-4 h-4 text-[#ed8936]" />
+            <X className="w-4 h-4 text-accent-primary" />
           </button>
         </div>
 
@@ -103,12 +103,12 @@ export default function SearchModal({ onClose }) {
               <button
                 key={i}
                 onClick={() => handleSelect(item)}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#ebf0f7] transition-all text-left group cursor-pointer border border-transparent hover:border-[#ed8936]"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#ebf0f7] transition-all text-left group cursor-pointer border border-transparent hover:border-[var(--accent-orange)]"
               >
-                <Icon className="w-4 h-4 text-[#ed8936] shrink-0" />
-                <span className="text-sm text-[#1a202c] flex-1 truncate group-hover:text-[#ed8936] font-semibold">{item.label}</span>
+                <Icon className="w-4 h-4 text-accent-primary shrink-0" />
+                <span className="text-sm text-[#1a202c] flex-1 truncate group-hover:text-accent-primary font-semibold">{item.label}</span>
                 <span className="text-[10px] uppercase tracking-wider text-[#718096] bg-[#e6ebf2] border border-[rgba(163,177,198,0.3)] px-2 py-0.5 rounded font-semibold">{item.type}</span>
-                <ArrowRight className="w-3.5 h-3.5 text-[#ed8936] opacity-0 group-hover:opacity-100 transition-opacity" />
+                <ArrowRight className="w-3.5 h-3.5 text-accent-primary opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
             );
           })}

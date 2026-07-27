@@ -160,14 +160,14 @@ export default function CalendarPage() {
       {/* Stats strip */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
         <div className="p-4 rounded-xl flex items-center gap-3" style={cardStyle}>
-          <CalendarDays className="w-5 h-5" style={{ color: '#ed8936' }} />
+          <CalendarDays className="w-5 h-5" style={{ color: 'var(--accent-orange)' }} />
           <div>
             <p className="text-lg font-bold text-[#1a202c]">{totalDatesWithTasks}</p>
             <p className="text-[11px]" style={{ color: '#718096' }}>Scheduled days</p>
           </div>
         </div>
         <div className="p-4 rounded-xl flex items-center gap-3" style={cardStyle}>
-          <BookOpen className="w-5 h-5" style={{ color: '#ed8936' }} />
+          <BookOpen className="w-5 h-5" style={{ color: 'var(--accent-orange)' }} />
           <div>
             <p className="text-lg font-bold text-[#1a202c]">{(state.plans || []).length}</p>
             <p className="text-[11px]" style={{ color: '#718096' }}>Active plans</p>
@@ -181,7 +181,7 @@ export default function CalendarPage() {
           </div>
         </div>
         <div className="p-4 rounded-xl flex items-center gap-3" style={cardStyle}>
-          <Clock className="w-5 h-5" style={{ color: '#ed8936' }} />
+          <Clock className="w-5 h-5" style={{ color: 'var(--accent-orange)' }} />
           <div>
             <p className="text-lg font-bold text-[#1a202c]">{dateStats.hours > 0 ? `${Math.round(dateStats.hours * 10) / 10}h` : '0h'}</p>
             <p className="text-[11px]" style={{ color: '#718096' }}>Hours studied</p>
@@ -204,10 +204,10 @@ export default function CalendarPage() {
             className="px-4 py-2 rounded-lg text-xs transition-all cursor-pointer font-medium" style={{ color: '#2d3748', background: '#e6ebf2', boxShadow: '3px 3px 6px rgba(163, 177, 198, 0.6), -3px -3px 6px rgba(255, 255, 255, 0.8)', border: '1px solid rgba(255,255,255,0.7)' }}>Today</button>
           <button onClick={() => setView('month')}
             className="px-4 py-2 rounded-lg text-xs font-medium cursor-pointer transition-all"
-            style={{ background: '#e6ebf2', boxShadow: view === 'month' ? 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' : '3px 3px 6px rgba(163, 177, 198, 0.6), -3px -3px 6px rgba(255, 255, 255, 0.8)', color: view === 'month' ? '#ed8936' : '#718096', border: '1px solid rgba(255,255,255,0.7)' }}>Month</button>
+            style={{ background: '#e6ebf2', boxShadow: view === 'month' ? 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' : '3px 3px 6px rgba(163, 177, 198, 0.6), -3px -3px 6px rgba(255, 255, 255, 0.8)', color: view === 'month' ? 'var(--accent-orange)' : '#718096', border: '1px solid rgba(255,255,255,0.7)' }}>Month</button>
           <button onClick={() => setView('week')}
             className="px-4 py-2 rounded-lg text-xs font-medium cursor-pointer transition-all"
-            style={{ background: '#e6ebf2', boxShadow: view === 'week' ? 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' : '3px 3px 6px rgba(163, 177, 198, 0.6), -3px -3px 6px rgba(255, 255, 255, 0.8)', color: view === 'week' ? '#ed8936' : '#718096', border: '1px solid rgba(255,255,255,0.7)' }}>Week</button>
+            style={{ background: '#e6ebf2', boxShadow: view === 'week' ? 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' : '3px 3px 6px rgba(163, 177, 198, 0.6), -3px -3px 6px rgba(255, 255, 255, 0.8)', color: view === 'week' ? 'var(--accent-orange)' : '#718096', border: '1px solid rgba(255,255,255,0.7)' }}>Week</button>
         </div>
       </div>
 
@@ -259,7 +259,7 @@ export default function CalendarPage() {
                     onClick={() => setSelectedDate(day)}
                   >
                     <span className="text-xs font-medium" style={{
-                      color: isToday ? '#ed8936' : isCurrentMonth ? '#1a202c' : '#a0aec0',
+                      color: isToday ? 'var(--accent-orange)' : isCurrentMonth ? '#1a202c' : '#a0aec0',
                       fontWeight: isToday ? 700 : 500,
                     }}>
                       {day.getDate()}
@@ -269,8 +269,8 @@ export default function CalendarPage() {
                       <div className="flex gap-1 mt-1.5 flex-wrap">
                         {planColors.slice(0, 4).map((c, j) => (
                           <div key={j} className="w-2 h-2 rounded-full shrink-0" style={{
-                            background: allDone ? '#38a169' : c || '#ed8936',
-                            boxShadow: `0 0 4px ${allDone ? 'rgba(56, 161, 105, 0.4)' : (c || '#ed8936') + '40'}`,
+                            background: allDone ? '#38a169' : c || 'var(--accent-orange)',
+                            boxShadow: `0 0 4px ${allDone ? 'rgba(56, 161, 105, 0.4)' : (c || 'var(--accent-orange)') + '40'}`,
                           }} />
                         ))}
                         {planColors.length > 4 && <span className="text-[8px]" style={{ color: '#718096' }}>+{planColors.length - 4}</span>}
@@ -284,10 +284,10 @@ export default function CalendarPage() {
                     )}
 
                     {hours > 0 && (
-                      <span className="text-[9px] font-semibold" style={{ color: '#ed8936' }}>{Math.round(hours * 10) / 10}h</span>
+                      <span className="text-[9px] font-semibold" style={{ color: 'var(--accent-orange)' }}>{Math.round(hours * 10) / 10}h</span>
                     )}
 
-                    {isOverdue && <div className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style={{ background: '#ed8936', boxShadow: '0 0 6px rgba(237,137,54,0.6)' }} />}
+                    {isOverdue && <div className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full" style={{ background: 'var(--accent-orange)', boxShadow: '0 0 6px rgba(237,137,54,0.6)' }} />}
                   </button>
                 );
               })}
@@ -354,7 +354,7 @@ export default function CalendarPage() {
                             {task.status === 'completed' ? (
                               <CheckCircle2 className="w-4 h-4 shrink-0" style={{ color: '#38a169' }} />
                             ) : task.status === 'in-progress' ? (
-                              <AlertCircle className="w-4 h-4 shrink-0" style={{ color: '#ed8936' }} />
+                              <AlertCircle className="w-4 h-4 shrink-0" style={{ color: 'var(--accent-orange)' }} />
                             ) : (
                               <Circle className="w-4 h-4 shrink-0" style={{ color: '#a0aec0' }} />
                             )}
@@ -373,7 +373,7 @@ export default function CalendarPage() {
 
             {dateStats.hours > 0 && (
               <div className="mt-5 pt-4 flex items-center gap-2" style={{ borderTop: '1px solid rgba(163, 177, 198, 0.3)' }}>
-                <Clock className="w-4 h-4" style={{ color: '#ed8936' }} />
+                <Clock className="w-4 h-4" style={{ color: 'var(--accent-orange)' }} />
                 <span className="text-xs font-medium" style={{ color: '#718096' }}>{Math.round(dateStats.hours * 10) / 10} hours studied</span>
               </div>
             )}

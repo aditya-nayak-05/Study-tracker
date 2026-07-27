@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import { calculateProgress, getAllTasksInPlan, formatDate } from '../utils/helpers';
 
-const PLAN_COLORS = ['#38a169', '#319795', '#3182ce', '#6366f1', '#8b5cf6', '#d69e2e', '#ed8936', '#e53e3e', '#d53f8c'];
+const PLAN_COLORS = ['#38a169', '#319795', '#3182ce', '#6366f1', '#8b5cf6', '#d69e2e', 'var(--accent-orange)', '#e53e3e', '#d53f8c'];
 
 const cardStyle = {
   background: '#e6ebf2',
@@ -35,7 +35,7 @@ export default function Plans() {
   const [search, setSearch] = useState('');
   const [showCreate, setShowCreate] = useState(false);
   const [menuOpen, setMenuOpen] = useState(null);
-  const [newPlan, setNewPlan] = useState({ name: '', description: '', category: 'general', color: '#ed8936' });
+  const [newPlan, setNewPlan] = useState({ name: '', description: '', category: 'general', color: 'var(--accent-orange)' });
 
   const filteredPlans = (state.plans || [])
     .filter((p) => !p.archived)
@@ -57,7 +57,7 @@ export default function Plans() {
     dispatch({ type: 'ADD_PLAN', payload: newPlan });
     dispatch({ type: 'ADD_GLOBAL_ACTIVITY', payload: { type: 'create', message: `Created plan "${newPlan.name}"` } });
     showToast(`Plan "${newPlan.name}" created`, 'success');
-    setNewPlan({ name: '', description: '', category: 'general', color: '#ed8936' });
+    setNewPlan({ name: '', description: '', category: 'general', color: 'var(--accent-orange)' });
     setShowCreate(false);
   }, [newPlan, dispatch, showToast]);
 
@@ -156,7 +156,7 @@ export default function Plans() {
                 style={cardStyle}
                 onClick={() => openPlan(plan)}
               >
-                {plan.pinned && <Pin className="absolute top-3 right-3 w-3.5 h-3.5" style={{ color: '#ed8936' }} />}
+                {plan.pinned && <Pin className="absolute top-3 right-3 w-3.5 h-3.5" style={{ color: 'var(--accent-orange)' }} />}
 
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-3 h-3 rounded-full shrink-0" style={{ background: plan.color, boxShadow: `0 0 8px ${plan.color}60` }} />
@@ -167,7 +167,7 @@ export default function Plans() {
 
                 <div className="flex items-center gap-2 mb-3">
                   <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: '#e6ebf2', boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
-                    <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: plan.color || '#ed8936' }} />
+                    <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: plan.color || 'var(--accent-orange)' }} />
                   </div>
                   <span className="text-[11px] font-mono" style={{ color: '#718096' }}>{progress}%</span>
                 </div>

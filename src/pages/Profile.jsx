@@ -132,7 +132,7 @@ export default function Profile() {
                   {profile.bio && <p className="text-sm text-[#718096] mt-2">{profile.bio}</p>}
                   {profile.learningGoal && (
                     <div className="flex items-center gap-2 mt-2 text-xs text-[#718096]">
-                      <Target className="w-3.5 h-3.5 text-[#ed8936]" />
+                      <Target className="w-3.5 h-3.5 text-accent-primary" />
                       <span>{profile.learningGoal}</span>
                     </div>
                   )}
@@ -146,11 +146,11 @@ export default function Profile() {
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {[
-            { label: 'Total Hours', value: stats.totalHours, suffix: 'h', icon: Clock, color: '#ed8936' },
-            { label: 'Plans', value: stats.totalPlans, suffix: '', icon: BookOpen, color: '#ed8936' },
+            { label: 'Total Hours', value: stats.totalHours, suffix: 'h', icon: Clock, color: 'var(--accent-orange)' },
+            { label: 'Plans', value: stats.totalPlans, suffix: '', icon: BookOpen, color: 'var(--accent-orange)' },
             { label: 'Tasks Done', value: stats.completedTasks, suffix: '', icon: Target, color: '#38a169' },
-            { label: 'Streak', value: stats.streak, suffix: 'd', icon: Flame, color: '#ed8936' },
-            { label: 'Badges', value: stats.badges.length, suffix: '', icon: Award, color: '#ed8936' },
+            { label: 'Streak', value: stats.streak, suffix: 'd', icon: Flame, color: 'var(--accent-orange)' },
+            { label: 'Badges', value: stats.badges.length, suffix: '', icon: Award, color: 'var(--accent-orange)' },
           ].map((s) => (
             <div key={s.label} className="profile-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-4 text-center" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
               <s.icon className="w-5 h-5 mx-auto mb-2" style={{ color: s.color }} />
@@ -163,7 +163,7 @@ export default function Profile() {
         {/* Badges */}
         <div className="profile-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
           <h3 className="text-sm font-semibold text-[#1a202c] mb-4 flex items-center gap-2">
-            <Award className="w-4 h-4 text-[#ed8936]" /> Achievements
+            <Award className="w-4 h-4 text-accent-primary" /> Achievements
           </h3>
           {stats.badges.length === 0 ? (
             <p className="text-[#718096] text-sm text-center py-6">Start studying to unlock badges!</p>

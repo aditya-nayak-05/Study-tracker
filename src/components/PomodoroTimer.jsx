@@ -90,7 +90,7 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
             ref={circleRef}
             cx={svgSize / 2} cy={svgSize / 2} r={radius}
             fill="none"
-            stroke={mode === 'work' ? '#ed8936' : '#38a169'}
+            stroke={mode === 'work' ? 'var(--accent-orange)' : '#38a169'}
             strokeWidth={compact ? 4 : 6}
             strokeLinecap="round"
             strokeDasharray={circumference}
@@ -99,7 +99,7 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className={`font-mono font-bold text-[#ed8936] ${compact ? 'text-lg' : 'text-3xl'}`} style={{textShadow: 'none'}}>
+          <span className={`font-mono font-bold text-accent-primary ${compact ? 'text-lg' : 'text-3xl'}`} style={{textShadow: 'none'}}>
             {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
           </span>
           <span className={`text-[#718096] capitalize font-medium ${compact ? 'text-[10px]' : 'text-xs'}`}>
@@ -114,8 +114,8 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
           onClick={toggle}
           className={`p-2.5 rounded-xl cursor-pointer transition-all leather-btn ${
             running
-              ? 'bg-[#e6ebf2] text-[#ed8936] border border-[#ed8936]'
-              : 'bg-[#e6ebf2] text-[#ed8936] border border-[rgba(255,255,255,0.7)]'
+              ? 'bg-[#e6ebf2] text-accent-primary border border-[var(--accent-orange)]'
+              : 'bg-[#e6ebf2] text-accent-primary border border-[rgba(255,255,255,0.7)]'
           }`}
           style={{
             boxShadow: running
@@ -136,7 +136,7 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
 
       {!compact && sessionCount > 0 && (
         <p className="text-[11px] text-[#718096] flex items-center gap-1 font-medium">
-          <Coffee className="w-3 h-3 text-[#ed8936]" /> {sessionCount} session{sessionCount !== 1 ? 's' : ''} today
+          <Coffee className="w-3 h-3 text-accent-primary" /> {sessionCount} session{sessionCount !== 1 ? 's' : ''} today
         </p>
       )}
     </div>

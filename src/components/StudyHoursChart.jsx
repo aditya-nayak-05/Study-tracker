@@ -257,7 +257,7 @@ export default function StudyHoursChart() {
   }, [activeRange, currentDate]);
 
   // Memoize tooltip props so the extracted CustomTooltipContent doesn't remount
-  const planColor = activePlan?.color || '#ed8936';
+  const planColor = activePlan?.color || 'var(--accent-orange)';
   const renderTooltip = useCallback(
     (props) => <CustomTooltipContent {...props} activeRange={activeRange} planColor={planColor} />,
     [activeRange, planColor]
@@ -270,7 +270,7 @@ export default function StudyHoursChart() {
         <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[rgba(163,177,198,0.3)] pb-5">
           <div>
             <h2 className="text-base font-bold text-[#1a202c] flex items-center gap-2">
-              <Clock className="w-5 h-5" style={{ color: activePlan?.color || '#ed8936' }} /> Study Hours
+              <Clock className="w-5 h-5" style={{ color: activePlan?.color || 'var(--accent-orange)' }} /> Study Hours
             </h2>
             <p className="text-xs text-[#718096]">Your study activity over time</p>
           </div>
@@ -288,7 +288,7 @@ export default function StudyHoursChart() {
                 className="px-4 py-1.5 rounded-lg text-xs cursor-pointer transition-all border border-transparent"
                 style={{
                   background: activeRange === tab.id ? '#e6ebf2' : 'transparent',
-                  color: activeRange === tab.id ? '#ed8936' : '#718096',
+                  color: activeRange === tab.id ? 'var(--accent-orange)' : '#718096',
                   boxShadow: activeRange === tab.id ? '3px 3px 7px rgba(163, 177, 198, 0.6), -3px -3px 7px rgba(255, 255, 255, 0.85)' : 'none',
                   fontWeight: activeRange === tab.id ? '700' : '500'
                 }}
@@ -357,8 +357,8 @@ export default function StudyHoursChart() {
               <LineChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                 <defs>
                   <linearGradient id="chartGlow" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={activePlan?.color || '#ed8936'} stopOpacity="0.2" />
-                    <stop offset="100%" stopColor={activePlan?.color || '#ed8936'} stopOpacity="0" />
+                    <stop offset="0%" stopColor={activePlan?.color || 'var(--accent-orange)'} stopOpacity="0.2" />
+                    <stop offset="100%" stopColor={activePlan?.color || 'var(--accent-orange)'} stopOpacity="0" />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(163, 177, 198, 0.25)" />
@@ -380,14 +380,14 @@ export default function StudyHoursChart() {
                 <Line
                   type="monotone"
                   dataKey="studyHours"
-                  stroke={activePlan?.color || '#ed8936'}
+                  stroke={activePlan?.color || 'var(--accent-orange)'}
                   strokeWidth={2.5}
                   dot={false}
                   activeDot={{
                     r: 5,
                     stroke: '#e6ebf2',
                     strokeWidth: 2,
-                    fill: activePlan?.color || '#ed8936'
+                    fill: activePlan?.color || 'var(--accent-orange)'
                   }}
                   style={{ filter: `drop-shadow(2px 2px 4px rgba(163, 177, 198, 0.5))` }}
                 />

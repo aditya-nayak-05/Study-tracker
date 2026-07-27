@@ -95,7 +95,7 @@ export default function Settings() {
         {/* Pomodoro Settings */}
         <div className="settings-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
           <h3 className="text-sm font-semibold text-[#1a202c] mb-4 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-[#ed8936]" /> Pomodoro Settings
+            <Clock className="w-4 h-4 text-accent-primary" /> Pomodoro Settings
           </h3>
           <div className="grid grid-cols-3 gap-4">
             <div>
@@ -123,7 +123,7 @@ export default function Settings() {
         <div className="settings-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <Zap className="w-4 h-4 text-[#ed8936]" />
+              <Zap className="w-4 h-4 text-accent-primary" />
               <div>
                 <h3 className="text-sm font-semibold text-[#1a202c]">Animations</h3>
                 <p className="text-xs text-[#718096]">Toggle GSAP animations globally</p>
@@ -142,7 +142,7 @@ export default function Settings() {
         {/* Import / Export */}
         <div className="settings-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
           <h3 className="text-sm font-semibold text-[#1a202c] mb-4 flex items-center gap-2">
-            <Database className="w-4 h-4 text-[#ed8936]" /> Data Management
+            <Database className="w-4 h-4 text-accent-primary" /> Data Management
           </h3>
           <div className="space-y-3">
             <div className="flex items-center justify-between py-2">
@@ -168,7 +168,7 @@ export default function Settings() {
             <div className="pt-3 border-t border-[rgba(163,177,198,0.3)]">
               <p className="text-xs text-[#718096] mb-2">Import a study plan from CSV/Excel</p>
               <input type="file" ref={importFileRef} accept=".csv,.xlsx,.xls" onChange={handleImportPlan} className="hidden" />
-              <button onClick={() => importFileRef.current?.click()} className="flex items-center gap-2 px-4 py-2 rounded-xl text-[#ed8936] text-sm transition-all cursor-pointer font-medium" style={{ background: '#e6ebf2', boxShadow: '3px 3px 6px rgba(163, 177, 198, 0.5), -3px -3px 6px rgba(255, 255, 255, 0.8)', border: '1px solid rgba(255,255,255,0.7)' }}>
+              <button onClick={() => importFileRef.current?.click()} className="flex items-center gap-2 px-4 py-2 rounded-xl text-accent-primary text-sm transition-all cursor-pointer font-medium" style={{ background: '#e6ebf2', boxShadow: '3px 3px 6px rgba(163, 177, 198, 0.5), -3px -3px 6px rgba(255, 255, 255, 0.8)', border: '1px solid rgba(255,255,255,0.7)' }}>
                 <FileUp className="w-4 h-4" /> Import Plan (CSV/Excel)
               </button>
             </div>

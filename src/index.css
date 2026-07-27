@@ -20,7 +20,14 @@
   --neu-shadow-raised: 7px 7px 15px rgba(163, 177, 198, 0.6), -7px -7px 15px rgba(255, 255, 255, 0.85);
   --neu-shadow-inset: inset 3px 3px 6px rgba(163, 177, 198, 0.55), inset -3px -3px 6px rgba(255, 255, 255, 0.9);
   --neu-shadow-hover: 9px 9px 18px rgba(163, 177, 198, 0.65), -9px -9px 18px rgba(255, 255, 255, 0.95);
-  --accent-orange: #ed8936;
+  
+  /* Dynamic Monochromatic Accent Colors (Black in Light Mode) */
+  --accent-orange: #000000;
+  --accent-orange-bright: #1a202c;
+  --accent-btn-bg: linear-gradient(135deg, #1a202c 0%, #000000 100%);
+  --accent-btn-text: #ffffff;
+  --ribbon-bg: linear-gradient(180deg, #1a202c 0%, #000000 100%);
+  
   --accent-green: #38a169;
   --accent-blue: #3182ce;
   --spine-border: #cbd5e0;
@@ -41,7 +48,14 @@
   --neu-shadow-raised: 6px 6px 16px rgba(0, 0, 0, 0.8), -4px -4px 12px rgba(255, 255, 255, 0.03);
   --neu-shadow-inset: inset 3px 3px 6px rgba(0, 0, 0, 0.8), inset -2px -2px 4px rgba(255, 255, 255, 0.03);
   --neu-shadow-hover: 8px 8px 18px rgba(0, 0, 0, 0.9), -4px -4px 14px rgba(255, 255, 255, 0.05);
-  --accent-orange: #ed8936;
+
+  /* Dynamic Monochromatic Accent Colors (White in Dark Mode) */
+  --accent-orange: #ffffff;
+  --accent-orange-bright: #f5f5f7;
+  --accent-btn-bg: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
+  --accent-btn-text: #090a10;
+  --ribbon-bg: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
+
   --accent-green: #38a169;
   --accent-blue: #4299e1;
   --spine-border: #090a10;
@@ -95,7 +109,7 @@ body {
   right: 50px;
   width: 22px;
   height: 85px;
-  background: linear-gradient(180deg, #ed8936 0%, #dd6b20 100%);
+  background: var(--ribbon-bg);
   border-radius: 0 0 3px 3px;
   box-shadow: 2px 4px 10px rgba(0,0,0,0.3);
   z-index: 30;
@@ -181,30 +195,26 @@ body {
 }
 
 /* ═══════════════════════════════════════════
-   BUTTONS (3D Skeuomorphic Buttons)
+   BUTTONS (3D Skeuomorphic Dynamic Buttons)
    ═══════════════════════════════════════════ */
 .brass-btn {
-  background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
-  color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: var(--accent-btn-bg);
+  color: var(--accent-btn-text);
+  border: 1px solid var(--neu-border);
   border-radius: 0.85rem;
   font-weight: 700;
   cursor: pointer;
-  box-shadow:
-    4px 4px 10px rgba(0,0,0,0.3),
-    inset 0 1px 0 rgba(255,255,255,0.4);
-  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-shadow: var(--neu-shadow-raised);
   transition: all 0.15s ease;
 }
 
 .brass-btn:hover {
-  background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
-  box-shadow: 5px 5px 12px rgba(0,0,0,0.4);
+  box-shadow: var(--neu-shadow-hover);
 }
 
 .brass-btn:active {
   transform: translateY(1px);
-  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--neu-shadow-inset);
 }
 
 .leather-btn {
@@ -243,7 +253,7 @@ body {
   border-color: var(--accent-orange);
   box-shadow:
     var(--neu-shadow-inset),
-    0 0 0 3px rgba(237, 137, 54, 0.25);
+    0 0 0 3px rgba(120, 120, 120, 0.2);
 }
 
 .inset-field::placeholder {
@@ -256,6 +266,7 @@ body {
 .text-main { color: var(--neu-text-main); }
 .text-sub { color: var(--neu-text-sub); }
 .text-muted { color: var(--neu-text-muted); }
+.text-accent-primary { color: var(--accent-orange) !important; }
 
 .emboss-text {
   color: var(--neu-text-main);
@@ -267,7 +278,7 @@ body {
 
 .gold-text, .text-gradient {
   color: var(--accent-orange);
-  background: linear-gradient(135deg, #ed8936, #dd6b20);
+  background: linear-gradient(135deg, var(--accent-orange), var(--neu-text-sub));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -284,7 +295,7 @@ body {
 }
 
 .progress-tube-fill {
-  background: linear-gradient(90deg, #ed8936 0%, #dd6b20 100%);
+  background: var(--accent-btn-bg);
   border-radius: 0.65rem;
   box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }

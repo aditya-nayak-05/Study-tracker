@@ -47,7 +47,7 @@ const ProgressBar = React.memo(function ProgressBar() {
           style={{ width: 0, background: 'linear-gradient(90deg, #ed8936 0%, #dd6b20 100%)' }}
         />
       </div>
-      <span ref={countRef} className="text-xs text-[#ed8936] font-mono font-bold whitespace-nowrap" style={{textShadow: 'none'}}>
+      <span ref={countRef} className="text-xs text-accent-primary font-mono font-bold whitespace-nowrap" style={{textShadow: 'none'}}>
         {completed}/{total} ({percent}%)
       </span>
     </div>

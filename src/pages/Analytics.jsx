@@ -114,15 +114,15 @@ export default function Analytics() {
   }, [state.globalStudyHours, state.profile]);
 
   const statCards = [
-    { label: "Today's Hours", value: stats.todayHours, suffix: 'h', icon: Clock, color: '#ed8936' },
-    { label: "Yesterday", value: stats.yesterdayHours, suffix: 'h', icon: Clock, color: '#ed8936' },
-    { label: "This Week", value: stats.weeklyHours, suffix: 'h', icon: Calendar, color: '#ed8936' },
-    { label: "This Month", value: stats.monthlyHours, suffix: 'h', icon: Calendar, color: '#ed8936' },
+    { label: "Today's Hours", value: stats.todayHours, suffix: 'h', icon: Clock, color: 'var(--accent-orange)' },
+    { label: "Yesterday", value: stats.yesterdayHours, suffix: 'h', icon: Clock, color: 'var(--accent-orange)' },
+    { label: "This Week", value: stats.weeklyHours, suffix: 'h', icon: Calendar, color: 'var(--accent-orange)' },
+    { label: "This Month", value: stats.monthlyHours, suffix: 'h', icon: Calendar, color: 'var(--accent-orange)' },
     { label: "Total Hours", value: stats.totalHours, suffix: 'h', icon: TrendingUp, color: '#38a169' },
-    { label: "Average/Day", value: stats.averageHours, suffix: 'h', icon: BarChart3, color: '#ed8936' },
-    { label: "Longest Session", value: stats.longestSession, suffix: 'm', icon: Award, color: '#ed8936' },
-    { label: "Shortest Session", value: stats.shortestSession, suffix: 'm', icon: Target, color: '#ed8936' },
-    { label: "Current Streak", value: stats.currentStreak, suffix: ' days', icon: Flame, color: '#ed8936' },
+    { label: "Average/Day", value: stats.averageHours, suffix: 'h', icon: BarChart3, color: 'var(--accent-orange)' },
+    { label: "Longest Session", value: stats.longestSession, suffix: 'm', icon: Award, color: 'var(--accent-orange)' },
+    { label: "Shortest Session", value: stats.shortestSession, suffix: 'm', icon: Target, color: 'var(--accent-orange)' },
+    { label: "Current Streak", value: stats.currentStreak, suffix: ' days', icon: Flame, color: 'var(--accent-orange)' },
     { label: "Best Streak", value: stats.bestStreak, suffix: ' days', icon: Award, color: '#38a169' },
   ];
 
@@ -152,10 +152,10 @@ export default function Analytics() {
           {/* Daily Goal Progress */}
           <div className="analytics-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
             <h3 className="text-sm font-semibold text-[#1a202c] mb-5 flex items-center gap-2">
-              <Target className="w-4 h-4 text-[#ed8936]" /> Daily Goal Progress
+              <Target className="w-4 h-4 text-accent-primary" /> Daily Goal Progress
             </h3>
             <div className="flex items-center justify-center gap-8">
-              <ProgressRing percent={stats.dailyGoalProgress} size={100} strokeWidth={7} color="#ed8936" label="Today" />
+              <ProgressRing percent={stats.dailyGoalProgress} size={100} strokeWidth={7} color="var(--accent-orange)" label="Today" />
               <div className="space-y-3">
                 <div>
                   <p className="text-[11px] text-[#718096]">Target</p>
@@ -172,10 +172,10 @@ export default function Analytics() {
           {/* 14-Day Trend */}
           <div className="analytics-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
             <h3 className="text-sm font-semibold text-[#1a202c] mb-5 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-[#ed8936]" /> 14-Day Study Trend
+              <TrendingUp className="w-4 h-4 text-accent-primary" /> 14-Day Study Trend
             </h3>
             <div className="flex justify-center">
-              <MiniLineChart data={stats.lineData} width={Math.min(500, window.innerWidth - 120)} height={80} color="#ed8936" />
+              <MiniLineChart data={stats.lineData} width={Math.min(500, window.innerWidth - 120)} height={80} color="var(--accent-orange)" />
             </div>
           </div>
         </div>

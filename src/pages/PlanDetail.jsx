@@ -183,7 +183,7 @@ export default function PlanDetail() {
   const btnStyle = (active) => ({
     padding: '0.5rem 1rem', borderRadius: '0.75rem', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer',
     background: active ? '#e6ebf2' : 'transparent',
-    color: active ? '#ed8936' : '#718096',
+    color: active ? 'var(--accent-orange)' : '#718096',
     boxShadow: active ? 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' : 'none',
     border: active ? '1px solid rgba(255, 255, 255, 0.6)' : '1px solid transparent',
   });
@@ -199,13 +199,13 @@ export default function PlanDetail() {
             </button>
             {editingName ? (
               <div className="flex items-center gap-2">
-                <input type="text" value={planName} onChange={(e) => setPlanName(e.target.value)} className="px-3 py-1.5 rounded-lg text-lg font-semibold focus:outline-none" style={{ ...inputStyle, borderColor: '#ed8936' }} autoFocus onKeyDown={(e) => e.key === 'Enter' && handleRenameSave()} />
+                <input type="text" value={planName} onChange={(e) => setPlanName(e.target.value)} className="px-3 py-1.5 rounded-lg text-lg font-semibold focus:outline-none" style={{ ...inputStyle, borderColor: 'var(--accent-orange)' }} autoFocus onKeyDown={(e) => e.key === 'Enter' && handleRenameSave()} />
                 <button onClick={handleRenameSave} className="cursor-pointer" style={{ color: '#38a169' }}><Check className="w-5 h-5" /></button>
                 <button onClick={() => setEditingName(false)} className="cursor-pointer" style={{ color: '#718096' }}><X className="w-5 h-5" /></button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full" style={{ background: plan.color || '#ed8936' }} />
+                <div className="w-3 h-3 rounded-full" style={{ background: plan.color || 'var(--accent-orange)' }} />
                 <h1 className="text-xl font-bold text-[#1a202c]">{plan.name}</h1>
                 <button onClick={() => { setEditingName(true); setPlanName(plan.name); }} className="cursor-pointer" style={{ color: '#718096' }}><Edit3 className="w-4 h-4" /></button>
               </div>
@@ -221,7 +221,7 @@ export default function PlanDetail() {
 
         {/* Stats Bar */}
         <div className="flex items-center gap-8 mb-8 flex-wrap">
-          <ProgressRing percent={stats.progress} size={56} strokeWidth={4} color={plan.color || '#ed8936'} />
+          <ProgressRing percent={stats.progress} size={56} strokeWidth={4} color={plan.color || 'var(--accent-orange)'} />
           <div>
             <p className="text-xs" style={{ color: '#718096' }}>Completed</p>
             <p className="text-lg font-bold text-[#1a202c]">{stats.completed} / {stats.total}</p>
@@ -262,7 +262,7 @@ export default function PlanDetail() {
                           <p className="text-[11px]" style={{ color: '#718096' }}>{mTasks.length} tasks · {mProgress}%</p>
                         </div>
                         <div className="w-20 h-1.5 rounded-full overflow-hidden" style={{ background: '#cbd5e0' }}>
-                          <div className="h-full rounded-full transition-all" style={{ width: `${mProgress}%`, background: plan.color || '#ed8936' }} />
+                          <div className="h-full rounded-full transition-all" style={{ width: `${mProgress}%`, background: plan.color || 'var(--accent-orange)' }} />
                         </div>
                         <button onClick={(e) => { e.stopPropagation(); dispatch({ type: 'DELETE_MONTH', payload: { planId: plan.id, monthId: month.id } }); showToast('Month deleted', 'info'); }}
                           className="p-1 cursor-pointer" style={{ color: '#718096' }}><Trash2 className="w-3.5 h-3.5" /></button>
@@ -336,14 +336,14 @@ export default function PlanDetail() {
                                                     <button onClick={() => dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: plan.id, taskId: task.id } })}
                                                       className="w-3.5 h-3.5 rounded-full border-2 shrink-0 cursor-pointer transition-all"
                                                       style={{
-                                                        borderColor: task.status === 'completed' ? '#38a169' : task.status === 'in-progress' ? '#ed8936' : '#cbd5e0',
+                                                        borderColor: task.status === 'completed' ? '#38a169' : task.status === 'in-progress' ? 'var(--accent-orange)' : '#cbd5e0',
                                                         background: task.status === 'completed' ? '#38a169' : task.status === 'in-progress' ? 'rgba(237,137,54,0.15)' : 'transparent',
                                                       }} />
                                                     <span className="text-xs flex-1 truncate" style={{ color: task.status === 'completed' ? '#718096' : '#1a202c', textDecoration: task.status === 'completed' ? 'line-through' : 'none' }}>{task.title}</span>
                                                     {videoId && (
                                                       <button onClick={() => navigate(`/learn/${plan.id}/${task.id}`)}
                                                         className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium cursor-pointer transition-all shrink-0"
-                                                        style={{ background: 'rgba(237,137,54,0.15)', color: '#ed8936' }}>
+                                                        style={{ background: 'rgba(237,137,54,0.15)', color: 'var(--accent-orange)' }}>
                                                         <Play className="w-3 h-3" /> Watch
                                                       </button>
                                                     )}
@@ -357,14 +357,14 @@ export default function PlanDetail() {
                                                   </div>
                                                   {task.youtubeUrl && (
                                                     <div className="ml-6 mt-1 flex items-center gap-1 text-[9px]" style={{ color: '#718096' }}>
-                                                      <Youtube className="w-2.5 h-2.5 shrink-0 text-[#ed8936]" />
+                                                      <Youtube className="w-2.5 h-2.5 shrink-0 text-accent-primary" />
                                                       <span className="truncate">{task.youtubeUrl}</span>
                                                     </div>
                                                   )}
                                                   {vp && vp.progress > 0 && (
                                                     <div className="ml-6 mt-1 flex items-center gap-2">
                                                       <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: '#cbd5e0' }}>
-                                                        <div className="h-full rounded-full" style={{ width: `${Math.min(100, vp.progress)}%`, background: vp.progress >= 95 ? '#38a169' : '#ed8936' }} />
+                                                        <div className="h-full rounded-full" style={{ width: `${Math.min(100, vp.progress)}%`, background: vp.progress >= 95 ? '#38a169' : 'var(--accent-orange)' }} />
                                                       </div>
                                                       <span className="text-[9px]" style={{ color: '#718096' }}>{Math.round(vp.progress)}% watched</span>
                                                     </div>
@@ -443,7 +443,7 @@ export default function PlanDetail() {
                     <button type="button" onClick={() => setShowAddMonth(false)} className="leather-btn px-3 py-2 cursor-pointer" style={{ color: '#718096' }}><X className="w-4 h-4" /></button>
                   </form>
                 ) : (
-                  <button onClick={() => setShowAddMonth(true)} className="w-full py-3 text-sm flex items-center justify-center gap-2 transition-all cursor-pointer hover:border-[#ed8936]" style={{ borderRadius: '1rem', border: '2px dashed #cbd5e0', color: '#718096' }}>
+                  <button onClick={() => setShowAddMonth(true)} className="w-full py-3 text-sm flex items-center justify-center gap-2 transition-all cursor-pointer hover:border-[var(--accent-orange)]" style={{ borderRadius: '1rem', border: '2px dashed #cbd5e0', color: '#718096' }}>
                     <FolderPlus className="w-4 h-4" /> Add Month
                   </button>
                 )}

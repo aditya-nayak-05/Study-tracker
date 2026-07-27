@@ -373,7 +373,7 @@ const spinnerStyle = {
   width: 40,
   height: 40,
   border: '3px solid rgba(163, 177, 198, 0.3)',
-  borderTopColor: '#ed8936',
+  borderTopColor: 'var(--accent-orange)',
   borderRadius: '50%',
   animation: 'yt-player-spin 0.8s linear infinite',
 };

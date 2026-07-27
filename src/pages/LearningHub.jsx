@@ -172,7 +172,7 @@ export default function LearningHub() {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
           <h2 className="text-xl font-bold text-[#1a202c] flex items-center gap-2">
-            <Youtube className="w-6 h-6 text-[#ed8936]" /> YouTube Learning Hub
+            <Youtube className="w-6 h-6 text-accent-primary" /> YouTube Learning Hub
           </h2>
           <p className="text-xs text-[#718096]">Track tutorials and video study sessions across all plans</p>
         </div>
@@ -186,7 +186,7 @@ export default function LearningHub() {
         </div>
         <div className="p-4 flex flex-col items-center justify-center text-center" style={cardStyle}>
           <span className="text-[10px] uppercase font-bold text-[#718096] mb-0.5">In Progress</span>
-          <span className="text-xl font-bold text-[#ed8936]">{stats.watching}</span>
+          <span className="text-xl font-bold text-accent-primary">{stats.watching}</span>
         </div>
         <div className="p-4 flex flex-col items-center justify-center text-center" style={cardStyle}>
           <span className="text-[10px] uppercase font-bold text-[#718096] mb-0.5">Completed</span>
@@ -289,7 +289,7 @@ export default function LearningHub() {
                   }}
                 />
                 <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all duration-300">
-                  <div className="p-3.5 rounded-full bg-[#ed8936] text-white shadow-lg transform translate-y-3 group-hover:translate-y-0 transition-all duration-300">
+                  <div className="p-3.5 rounded-full bg-[var(--accent-orange)] text-white shadow-lg transform translate-y-3 group-hover:translate-y-0 transition-all duration-300">
                     <Play className="w-5 h-5 fill-current" />
                   </div>
                 </div>
@@ -301,7 +301,7 @@ export default function LearningHub() {
                 {/* Embedded Progress Bar */}
                 {item.progress > 0 && (
                   <div className="absolute bottom-0 left-0 right-0 h-1 bg.cbd5e0 overflow-hidden" style={{ background: '#cbd5e0' }}>
-                    <div className="h-full bg-[#ed8936]" style={{ width: `${item.progress}%` }} />
+                    <div className="h-full bg-[var(--accent-orange)]" style={{ width: `${item.progress}%` }} />
                   </div>
                 )}
               </div>
@@ -309,15 +309,15 @@ export default function LearningHub() {
               {/* Info Area */}
               <div className="p-4 flex-1 flex flex-col">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="w-2 h-2 rounded-full shrink-0" style={{ background: item.planColor || '#ed8936' }} />
+                  <span className="w-2 h-2 rounded-full shrink-0" style={{ background: item.planColor || 'var(--accent-orange)' }} />
                   <span className="text-[10px] text-[#718096] truncate">{item.planName}</span>
                 </div>
-                <h4 className="text-xs font-bold text-[#1a202c] line-clamp-2 leading-snug group-hover:text-[#ed8936] transition-colors mb-2">
+                <h4 className="text-xs font-bold text-[#1a202c] line-clamp-2 leading-snug group-hover:text-accent-primary transition-colors mb-2">
                   {item.taskTitle}
                 </h4>
 
                 <div className="mt-auto pt-3 border-t border-[rgba(163,177,198,0.3)] flex items-center justify-between text-[10px] text-[#718096]">
-                  <span className="capitalize font-semibold" style={{ color: item.status === 'completed' ? '#38a169' : item.status === 'watching' ? '#ed8936' : '#718096' }}>
+                  <span className="capitalize font-semibold" style={{ color: item.status === 'completed' ? '#38a169' : item.status === 'watching' ? 'var(--accent-orange)' : '#718096' }}>
                     {item.status.replace('-', ' ')}
                   </span>
                   <span>

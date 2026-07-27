@@ -13,8 +13,8 @@ const icons = {
 const colors = {
   success: 'border-[#38a169] text-[#38a169]',
   error: 'border-[#e53e3e] text-[#e53e3e]',
-  info: 'border-[#ed8936] text-[#ed8936]',
-  warning: 'border-[#ed8936] text-[#ed8936]',
+  info: 'border-[var(--accent-orange)] text-accent-primary',
+  warning: 'border-[var(--accent-orange)] text-accent-primary',
 };
 
 function ToastItem({ toast, onRemove }) {
@@ -49,7 +49,7 @@ function ToastItem({ toast, onRemove }) {
       <Icon className="w-5 h-5 shrink-0" />
       <span className="text-sm text-main flex-1 font-semibold" style={{textShadow: 'none'}}>{toast.message}</span>
       <button onClick={handleClose} className="text-muted hover:text-main transition-colors cursor-pointer">
-        <X className="w-4 h-4 text-[#ed8936]" />
+        <X className="w-4 h-4 text-accent-primary" />
       </button>
     </div>
   );

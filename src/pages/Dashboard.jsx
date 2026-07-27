@@ -176,12 +176,12 @@ export default function Dashboard() {
   }, [recentPlan, recentTask, navigate, showToast]);
 
   const quickActions = [
-    { label: 'New Plan', icon: Plus, color: '#ed8936', action: () => navigate('/plans') },
+    { label: 'New Plan', icon: Plus, color: 'var(--accent-orange)', action: () => navigate('/plans') },
     { label: 'Continue', icon: Play, color: '#38a169', action: () => activePlan && navigate(`/plans/${activePlan.id}`) },
-    { label: 'Pomodoro', icon: Clock, color: '#ed8936', action: () => navigate('/study-hours') },
+    { label: 'Pomodoro', icon: Clock, color: 'var(--accent-orange)', action: () => navigate('/study-hours') },
     { label: 'Log Hours', icon: Clock, color: '#319795', action: () => navigate('/study-hours') },
     { label: 'Resume Video', icon: Youtube, isSpecial: true, action: handleResumeVideo },
-    { label: 'Add Task', icon: CheckSquare, color: '#ed8936', action: () => navigate('/plans') },
+    { label: 'Add Task', icon: CheckSquare, color: 'var(--accent-orange)', action: () => navigate('/plans') },
     { label: 'Calendar', icon: Calendar, color: '#e53e3e', action: () => navigate('/calendar') },
     { label: 'Analytics', icon: BarChart3, color: '#319795', action: () => navigate('/analytics') },
     { label: 'Profile', icon: User, color: '#dd6b20', action: () => navigate('/profile') },
@@ -238,7 +238,7 @@ export default function Dashboard() {
                   <qa.icon className="w-5 h-5 text-white" />
                 </div>
                 <span className={qa.isSpecial 
-                  ? "text-[11px] font-bold text-[#ed8936]"
+                  ? "text-[11px] font-bold text-accent-primary"
                   : "text-[11px] text-[#718096] group-hover:text-[#1a202c] transition-colors"
                 }>
                   {qa.label}
@@ -253,7 +253,7 @@ export default function Dashboard() {
           {/* Today's Hours */}
           <div className="dash-card p-6">
             <div className="flex items-center gap-2 mb-3">
-              <Clock className="w-4 h-4 text-[#ed8936]" />
+              <Clock className="w-4 h-4 text-accent-primary" />
               <span className="text-xs font-medium text-[#718096]">Today's Hours</span>
             </div>
             <div className="flex items-end gap-2">
@@ -271,7 +271,7 @@ export default function Dashboard() {
           {/* Tasks Completed */}
           <div className="dash-card p-6">
             <div className="flex items-center gap-2 mb-3">
-              <CheckSquare className="w-4 h-4 text-[#ed8936]" />
+              <CheckSquare className="w-4 h-4 text-accent-primary" />
               <span className="text-xs font-medium text-[#718096]">Tasks Done</span>
             </div>
             <div className="flex items-end gap-2">
@@ -289,7 +289,7 @@ export default function Dashboard() {
           {/* Streak */}
           <div className="dash-card p-6">
             <div className="flex items-center gap-2 mb-3">
-              <Flame className="w-4 h-4 text-[#ed8936]" />
+              <Flame className="w-4 h-4 text-accent-primary" />
               <span className="text-xs font-medium text-[#718096]">Study Streak</span>
             </div>
             <AnimatedCounter value={stats.streak} suffix=" days" className="text-2xl font-bold text-[#1a202c]" />
@@ -300,12 +300,12 @@ export default function Dashboard() {
           <div className="dash-card flex items-center justify-between p-6">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <Target className="w-4 h-4 text-[#ed8936]" />
+                <Target className="w-4 h-4 text-accent-primary" />
                 <span className="text-xs font-medium text-[#718096]">Overall</span>
               </div>
               <AnimatedCounter value={stats.overallProgress} suffix="%" className="text-2xl font-bold text-[#1a202c]" />
             </div>
-            <ProgressRing percent={stats.overallProgress} size={64} strokeWidth={5} color="#ed8936" />
+            <ProgressRing percent={stats.overallProgress} size={64} strokeWidth={5} color="var(--accent-orange)" />
           </div>
         </div>
 
@@ -315,12 +315,12 @@ export default function Dashboard() {
           <div className="dash-card lg:col-span-2 p-6">
             <div className="flex items-center justify-between mb-5">
               <h3 className="text-sm font-semibold text-[#1a202c] flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-[#ed8936]" /> Weekly Study Hours
+                <TrendingUp className="w-4 h-4 text-accent-primary" /> Weekly Study Hours
               </h3>
-              {stats.weeklyLine.length > 0 && <MiniLineChart data={stats.weeklyLine} width={80} height={24} color="#ed8936" />}
+              {stats.weeklyLine.length > 0 && <MiniLineChart data={stats.weeklyLine} width={80} height={24} color="var(--accent-orange)" />}
             </div>
             {stats.weekData.length > 0 ? (
-              <BarChart data={stats.weekData} maxHeight={100} barColor="#ed8936" />
+              <BarChart data={stats.weekData} maxHeight={100} barColor="var(--accent-orange)" />
             ) : (
               <p className="text-sm text-center py-8 text-[#718096]">No study data yet</p>
             )}
@@ -329,7 +329,7 @@ export default function Dashboard() {
           {/* Pomodoro Timer */}
           <div className="dash-card flex flex-col items-center justify-center p-6">
             <h3 className="text-sm font-semibold text-[#1a202c] mb-4 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-[#ed8936]" /> Pomodoro
+              <Clock className="w-4 h-4 text-accent-primary" /> Pomodoro
             </h3>
             <PomodoroTimer compact />
           </div>
@@ -339,17 +339,17 @@ export default function Dashboard() {
         {(learningStats.activeSession || learningStats.recentTutorials.length > 0) && (
           <div className="dash-card p-6 mb-5">
             <h3 className="text-sm font-semibold text-[#1a202c] mb-4 flex items-center gap-2">
-              <Youtube className="w-4 h-4 text-[#ed8936]" /> Continue Learning
+              <Youtube className="w-4 h-4 text-accent-primary" /> Continue Learning
             </h3>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Active Session Card */}
               {learningStats.activeSession && learningStats.activeSessionTask && (
-                <div className="md:col-span-3 p-4 mb-2 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-[#ed8936]/40 inset-field">
+                <div className="md:col-span-3 p-4 mb-2 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-[var(--accent-orange)]/40 inset-field">
                   <div className="flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full bg-[#ed8936] animate-ping" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[var(--accent-orange)] animate-ping" />
                     <div>
-                      <span className="text-[10px] text-[#ed8936] font-bold uppercase tracking-wider">Active Study Session</span>
+                      <span className="text-[10px] text-accent-primary font-bold uppercase tracking-wider">Active Study Session</span>
                       <h4 className="text-xs font-bold text-main leading-tight">{learningStats.activeSessionTask.title}</h4>
                       <p className="text-[10px] text-muted mt-0.5">Time logged: {formatDuration(learningStats.activeSession.duration)}</p>
                     </div>
@@ -378,11 +378,11 @@ export default function Dashboard() {
                     </div>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <span className="text-[9px] uppercase font-bold tracking-wider text-[#ed8936]">{plan.name}</span>
+                    <span className="text-[9px] uppercase font-bold tracking-wider text-accent-primary">{plan.name}</span>
                     <h4 className="text-xs font-bold text-[#1a202c] truncate leading-tight mt-0.5">{task.title}</h4>
                     <div className="flex items-center gap-2 mt-2">
                       <div className="flex-1 h-1.5 rounded-full overflow-hidden bg-[#e6ebf2]" style={{ boxShadow: 'inset 1px 1px 3px rgba(163,177,198,0.5), inset -1px -1px 3px rgba(255,255,255,0.8)' }}>
-                        <div className="h-full rounded-full bg-[#ed8936]" style={{ width: `${progress}%` }} />
+                        <div className="h-full rounded-full bg-[var(--accent-orange)]" style={{ width: `${progress}%` }} />
                       </div>
                       <span className="text-[9px] text-[#718096]">{Math.round(progress)}%</span>
                     </div>
@@ -398,7 +398,7 @@ export default function Dashboard() {
           {/* Today's Tasks */}
           <div className="dash-card p-6">
             <h3 className="text-sm font-semibold text-[#1a202c] mb-4 flex items-center gap-2">
-              <CheckSquare className="w-4 h-4 text-[#ed8936]" /> Today's Tasks
+              <CheckSquare className="w-4 h-4 text-accent-primary" /> Today's Tasks
             </h3>
             {(!stats.todayTasks || stats.todayTasks.length === 0) ? (
               <p className="text-sm text-center py-4 text-[#718096]">No tasks for today</p>
@@ -410,7 +410,7 @@ export default function Dashboard() {
                       onClick={() => dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: activePlan.id, taskId: task.id } })}
                       className="w-4 h-4 rounded-full border-2 shrink-0 cursor-pointer transition-all"
                       style={{
-                        borderColor: task.status === 'completed' ? '#38a169' : task.status === 'in-progress' ? '#ed8936' : '#cbd5e0',
+                        borderColor: task.status === 'completed' ? '#38a169' : task.status === 'in-progress' ? 'var(--accent-orange)' : '#cbd5e0',
                         background: task.status === 'completed' ? '#38a169' : 'transparent',
                       }}
                     />
@@ -439,7 +439,7 @@ export default function Dashboard() {
           {/* Quick Notes */}
           <div className="dash-card p-6 relative">
             <h3 className="text-sm font-semibold text-[#1a202c] mb-4 flex items-center gap-2">
-              <StickyNote className="w-4 h-4 text-[#ed8936]" /> Quick Notes
+              <StickyNote className="w-4 h-4 text-accent-primary" /> Quick Notes
             </h3>
             <textarea
               value={quickNote}
@@ -453,7 +453,7 @@ export default function Dashboard() {
           {/* Recent Activity */}
           <div className="dash-card p-6">
             <h3 className="text-sm font-semibold text-[#1a202c] mb-4 flex items-center gap-2">
-              <Flame className="w-4 h-4 text-[#ed8936]" /> Recent Activity
+              <Flame className="w-4 h-4 text-accent-primary" /> Recent Activity
             </h3>
             <div className="max-h-[240px] overflow-y-auto">
               <ActivityTimeline

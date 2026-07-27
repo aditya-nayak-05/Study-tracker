@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 
-export const BarChart = React.memo(function BarChart({ data = [], maxHeight = 120, barColor = '#ed8936' }) {
+export const BarChart = React.memo(function BarChart({ data = [], maxHeight = 120, barColor = 'var(--accent-orange)' }) {
   const barsRef = useRef([]);
   const maxVal = Math.max(...data.map((d) => d.value), 1);
 
@@ -31,7 +31,7 @@ export const BarChart = React.memo(function BarChart({ data = [], maxHeight = 12
   );
 });
 
-export const ProgressRing = React.memo(function ProgressRing({ percent = 0, size = 80, strokeWidth = 6, color = '#ed8936', label = '' }) {
+export const ProgressRing = React.memo(function ProgressRing({ percent = 0, size = 80, strokeWidth = 6, color = 'var(--accent-orange)', label = '' }) {
   const circleRef = useRef(null);
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -88,7 +88,7 @@ export const AnimatedCounter = React.memo(function AnimatedCounter({ value = 0, 
   return <span ref={ref} className={className}>{value}{suffix}</span>;
 });
 
-export const MiniLineChart = React.memo(function MiniLineChart({ data = [], width = 200, height = 50, color = '#ed8936' }) {
+export const MiniLineChart = React.memo(function MiniLineChart({ data = [], width = 200, height = 50, color = 'var(--accent-orange)' }) {
   const pathRef = useRef(null);
   const maxVal = Math.max(...data, 1);
   const step = width / Math.max(data.length - 1, 1);

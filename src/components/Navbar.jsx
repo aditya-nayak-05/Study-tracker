@@ -95,7 +95,7 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
     <div className="hidden xl:flex items-center gap-5.5 mx-10 flex-1 justify-center max-w-4xl">
       {/* Today Task */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center gap-2 group transition-all duration-300 hover:border-[#ed8936] shrink-0" 
+        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center gap-2 group transition-all duration-300 hover:border-[var(--accent-orange)] shrink-0" 
         style={{ 
           background: '#e6ebf2',
           boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
@@ -104,12 +104,12 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
         }}
       >
         <span className="text-[#718096] font-medium" style={{textShadow: 'none'}}>Today task:</span>
-        <span className="text-[#1a202c] font-semibold max-w-[140px] truncate group-hover:text-[#ed8936] transition-colors" title={task.title}>{task.title}</span>
+        <span className="text-[#1a202c] font-semibold max-w-[140px] truncate group-hover:text-accent-primary transition-colors" title={task.title}>{task.title}</span>
       </div>
 
       {/* Current Plan Progress Bar */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center gap-3 transition-all duration-300 hover:border-[#ed8936] flex-1 max-w-[220px]" 
+        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center gap-3 transition-all duration-300 hover:border-[var(--accent-orange)] flex-1 max-w-[220px]" 
         style={{ 
           background: '#e6ebf2',
           boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
@@ -131,25 +131,25 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
 
       {/* Today Total Study Hours - ALWAYS 100% OPACITY */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center gap-2 transition-all duration-300 hover:border-[#ed8936] shrink-0" 
+        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center gap-2 transition-all duration-300 hover:border-[var(--accent-orange)] shrink-0" 
         style={{ 
           background: '#e6ebf2',
           boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' 
         }}
       >
         <span className="text-[#718096] font-medium" style={{textShadow: 'none'}}>Today hours:</span>
-        <span className="text-[#ed8936] font-extrabold">{todayHours}</span>
+        <span className="text-accent-primary font-extrabold">{todayHours}</span>
       </div>
 
       {/* Current Time in India (IST) - ALWAYS 100% OPACITY */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center justify-center transition-all duration-300 hover:border-[#ed8936] shrink-0" 
+        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center justify-center transition-all duration-300 hover:border-[var(--accent-orange)] shrink-0" 
         style={{ 
           background: '#e6ebf2',
           boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' 
         }}
       >
-        <span className="text-[#ed8936] font-extrabold font-mono tracking-wider text-center">{istTime}</span>
+        <span className="text-accent-primary font-extrabold font-mono tracking-wider text-center">{istTime}</span>
       </div>
     </div>
   );
@@ -267,9 +267,9 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
         {/* Search */}
         <button
           onClick={onSearchOpen}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-muted hover:text-main hover:border-[#ed8936] transition-all text-sm cursor-pointer inset-field"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-muted hover:text-main hover:border-[var(--accent-orange)] transition-all text-sm cursor-pointer inset-field"
         >
-          <Search className="w-4 h-4 text-[#ed8936]" />
+          <Search className="w-4 h-4 text-accent-primary" />
           <span className="hidden sm:inline">Search</span>
           <kbd className="hidden sm:inline text-[10px] px-1.5 py-0.5 rounded border border-[rgba(163,177,198,0.4)] text-muted ml-2">⌘K</kbd>
         </button>
@@ -289,7 +289,7 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
           className="relative p-2 rounded-lg text-muted transition-all cursor-pointer inset-field"
         >
           {(state.settings?.themeMode || 'light') === 'dark' ? (
-            <Sun className="w-5 h-5 text-[#ed8936] transition-transform duration-300 hover:rotate-45" />
+            <Sun className="w-5 h-5 text-accent-primary transition-transform duration-300 hover:rotate-45" />
           ) : (
             <Moon className="w-5 h-5 text-[#3182ce] transition-transform duration-300 hover:-rotate-12" />
           )}
@@ -300,7 +300,7 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
           className="relative p-2 rounded-lg text-[#718096] bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] hover:text-[#1a202c] transition-all cursor-pointer inset-field"
           style={{ boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' }}
         >
-          <Bell className="w-5 h-5 text-[#ed8936]" />
+          <Bell className="w-5 h-5 text-accent-primary" />
           {notifications.length > 0 && (
             <span className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-[#38a169] border border-[#e6ebf2]" />
           )}

@@ -123,13 +123,13 @@ const Sidebar = React.memo(function Sidebar() {
               onClick={() => handleNavClick(item.path)}
               className={`w-full flex items-center transition-all duration-300 group cursor-pointer binder-tab
                 ${collapsed ? 'justify-center p-3.5 rounded-xl' : 'gap-3 px-4 py-3'}
-                ${isActive ? 'active text-[#ed8936]' : 'text-[#718096] hover:text-[#1a202c]'}`}
+                ${isActive ? 'active text-accent-primary' : 'text-[#718096] hover:text-[#1a202c]'}`}
             >
               <Icon className={`shrink-0 transition-all duration-300 group-hover:scale-110
                 ${collapsed ? 'w-6 h-6' : 'w-4 h-4'}
                 ${isActive 
-                  ? 'text-[#ed8936]' 
-                  : 'text-[#718096] group-hover:text-[#ed8936]'
+                  ? 'text-accent-primary' 
+                  : 'text-[#718096] group-hover:text-accent-primary'
                 }`} 
               />
               {!collapsed && (
@@ -157,7 +157,7 @@ const Sidebar = React.memo(function Sidebar() {
                 }}
                 className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[#718096] hover:bg-[#ebf0f7] hover:text-[#1a202c] transition-all text-sm"
               >
-                <Pin className="w-3.5 h-3.5 text-[#ed8936] shrink-0" />
+                <Pin className="w-3.5 h-3.5 text-accent-primary shrink-0" />
                 <span className="truncate">{plan.name}</span>
               </button>
             ))}
