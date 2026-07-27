@@ -223,10 +223,10 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
       ref={navRef}
       className="h-[4.5rem] border-b border-[rgba(163,177,198,0.3)] flex items-center justify-between px-8 sticky top-0 z-30 transition-all duration-500"
       style={{ 
-        background: showCinemaControls ? '#e6ebf2' : 'transparent', 
+        background: showCinemaControls ? 'var(--neu-header-bg)' : 'transparent', 
         backdropFilter: showCinemaControls ? 'blur(12px)' : 'none', 
-        borderBottomColor: showCinemaControls ? 'rgba(163,177,198,0.3)' : 'transparent', 
-        boxShadow: showCinemaControls ? '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' : 'none' 
+        borderBottomColor: showCinemaControls ? 'var(--neu-border-subtle)' : 'transparent', 
+        boxShadow: showCinemaControls ? 'var(--neu-shadow-raised)' : 'none' 
       }}
     >
       {/* Breadcrumbs */}
@@ -239,8 +239,8 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
       >
         {breadcrumbs.map((crumb, i) => (
           <React.Fragment key={i}>
-            {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-[#718096]" />}
-            <span className={i === breadcrumbs.length - 1 ? 'text-[#1a202c] font-semibold' : 'text-[#718096]'} style={{textShadow: 'none'}}>
+            {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-muted" />}
+            <span className={i === breadcrumbs.length - 1 ? 'text-main font-semibold' : 'text-muted'} style={{textShadow: 'none'}}>
               {crumb}
             </span>
           </React.Fragment>
@@ -267,12 +267,11 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
         {/* Search */}
         <button
           onClick={onSearchOpen}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[rgba(255,255,255,0.7)] text-[#718096] bg-[#e6ebf2] hover:text-[#1a202c] hover:border-[#ed8936] transition-all text-sm cursor-pointer inset-field"
-          style={{ boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)', color: '#1a202c' }}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-muted hover:text-main hover:border-[#ed8936] transition-all text-sm cursor-pointer inset-field"
         >
           <Search className="w-4 h-4 text-[#ed8936]" />
           <span className="hidden sm:inline">Search</span>
-          <kbd className="hidden sm:inline text-[10px] px-1.5 py-0.5 rounded bg-[#e6ebf2] border border-[rgba(163,177,198,0.4)] text-[#718096] ml-2">⌘K</kbd>
+          <kbd className="hidden sm:inline text-[10px] px-1.5 py-0.5 rounded border border-[rgba(163,177,198,0.4)] text-muted ml-2">⌘K</kbd>
         </button>
 
         {/* Theme Switcher Button */}
@@ -287,8 +286,7 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
             showToast(`Switched to ${nextTheme === 'dark' ? 'Dark' : 'Light'} theme 🌓`, 'info');
           }}
           title={`Switch to ${(state.settings?.themeMode || 'light') === 'dark' ? 'Light' : 'Dark'} mode`}
-          className="relative p-2 rounded-lg text-[#718096] bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] hover:text-[#1a202c] transition-all cursor-pointer inset-field"
-          style={{ boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' }}
+          className="relative p-2 rounded-lg text-muted transition-all cursor-pointer inset-field"
         >
           {(state.settings?.themeMode || 'light') === 'dark' ? (
             <Sun className="w-5 h-5 text-[#ed8936] transition-transform duration-300 hover:rotate-45" />

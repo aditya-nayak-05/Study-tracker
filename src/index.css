@@ -3,21 +3,48 @@
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
 
-  /* Ultra-Clean Light Soft Skeuomorphism Palette */
-  --color-neu-bg: #e6ebf2;
-  --color-neu-surface: #e6ebf2;
-  --color-neu-card: #e6ebf2;
-  --color-neu-dark-shadow: rgba(163, 177, 198, 0.6);
-  --color-neu-light-shadow: rgba(255, 255, 255, 0.85);
+:root, [data-theme="light"] {
+  --neu-bg: #e6ebf2;
+  --neu-page-bg: #e6ebf2;
+  --neu-card-bg: #e6ebf2;
+  --neu-sidebar-bg: #e6ebf2;
+  --neu-header-bg: #e6ebf2;
+  --neu-inset-bg: #e6ebf2;
+  --neu-text-main: #1a202c;
+  --neu-text-sub: #4a5568;
+  --neu-text-muted: #718096;
+  --neu-border: rgba(255, 255, 255, 0.7);
+  --neu-border-subtle: rgba(163, 177, 198, 0.3);
+  --neu-shadow-raised: 7px 7px 15px rgba(163, 177, 198, 0.6), -7px -7px 15px rgba(255, 255, 255, 0.85);
+  --neu-shadow-inset: inset 3px 3px 6px rgba(163, 177, 198, 0.55), inset -3px -3px 6px rgba(255, 255, 255, 0.9);
+  --neu-shadow-hover: 9px 9px 18px rgba(163, 177, 198, 0.65), -9px -9px 18px rgba(255, 255, 255, 0.95);
+  --accent-orange: #ed8936;
+  --accent-green: #38a169;
+  --accent-blue: #3182ce;
+  --spine-border: #cbd5e0;
+}
 
-  --color-text-primary: #1a202c;
-  --color-text-secondary: #4a5568;
-  --color-text-muted: #718096;
-
-  --color-accent-green: #38a169;
-  --color-accent-orange: #ed8936;
-  --color-accent-teal: #319795;
+[data-theme="dark"] {
+  --neu-bg: #0d0f17;
+  --neu-page-bg: #131622;
+  --neu-card-bg: #181b26;
+  --neu-sidebar-bg: #131622;
+  --neu-header-bg: #131622;
+  --neu-inset-bg: #0e1017;
+  --neu-text-main: #f5f5f7;
+  --neu-text-sub: #cbd5e1;
+  --neu-text-muted: #94a3b8;
+  --neu-border: rgba(255, 255, 255, 0.08);
+  --neu-border-subtle: rgba(255, 255, 255, 0.06);
+  --neu-shadow-raised: 6px 6px 16px rgba(0, 0, 0, 0.8), -4px -4px 12px rgba(255, 255, 255, 0.03);
+  --neu-shadow-inset: inset 3px 3px 6px rgba(0, 0, 0, 0.8), inset -2px -2px 4px rgba(255, 255, 255, 0.03);
+  --neu-shadow-hover: 8px 8px 18px rgba(0, 0, 0, 0.9), -4px -4px 14px rgba(255, 255, 255, 0.05);
+  --accent-orange: #ed8936;
+  --accent-green: #38a169;
+  --accent-blue: #4299e1;
+  --spine-border: #090a10;
 }
 
 * {
@@ -32,13 +59,12 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: #e6ebf2;
-  background-image:
-    radial-gradient(ellipse at 50% 10%, #edf2f7 0%, #e6ebf2 85%);
-  color: #2d3748;
+  background-color: var(--neu-bg);
+  color: var(--neu-text-main);
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #root {
@@ -46,22 +72,20 @@ body {
 }
 
 /* ═══════════════════════════════════════════
-   LIGHT SOFT SKEUOMORPHIC JOURNAL (Raised Surface)
+   SKEUOMORPHIC JOURNAL PAGE
    ═══════════════════════════════════════════ */
 .journal-page, .notebook-page {
-  background-color: #e6ebf2;
+  background-color: var(--neu-page-bg);
   background-image:
     linear-gradient(90deg, transparent 52px, rgba(226, 100, 100, 0.3) 52px, rgba(226, 100, 100, 0.3) 54px, transparent 54px),
-    linear-gradient(rgba(163, 177, 198, 0.15) 1px, transparent 1px);
+    linear-gradient(var(--neu-border-subtle) 1px, transparent 1px);
   background-size: 100% 100%, 100% 28px;
   border-radius: 1.25rem;
-  border-left: 8px solid #d0d7de;
-  color: #1a202c;
-  box-shadow:
-    10px 10px 24px rgba(163, 177, 198, 0.65),
-    -10px -10px 24px rgba(255, 255, 255, 0.9),
-    inset 2px 2px 4px rgba(255, 255, 255, 0.6);
+  border-left: 8px solid var(--spine-border);
+  color: var(--neu-text-main);
+  box-shadow: var(--neu-shadow-raised);
   position: relative;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Ribbon Bookmark */
@@ -73,7 +97,7 @@ body {
   height: 85px;
   background: linear-gradient(180deg, #ed8936 0%, #dd6b20 100%);
   border-radius: 0 0 3px 3px;
-  box-shadow: 2px 4px 10px rgba(163, 177, 198, 0.5);
+  box-shadow: 2px 4px 10px rgba(0,0,0,0.3);
   z-index: 30;
   pointer-events: none;
 }
@@ -85,7 +109,7 @@ body {
   left: 0;
   border-left: 11px solid transparent;
   border-right: 11px solid transparent;
-  border-bottom: 9px solid #e6ebf2;
+  border-bottom: 9px solid var(--neu-page-bg);
 }
 
 /* ═══════════════════════════════════════════
@@ -97,70 +121,67 @@ body {
   background: linear-gradient(180deg, #ffffff 0%, #cbd5e0 50%, #a0aec0 100%);
   border-radius: 10px;
   box-shadow:
-    2px 3px 6px rgba(163, 177, 198, 0.6),
+    2px 3px 6px rgba(0,0,0,0.4),
     inset 0 2px 2px rgba(255,255,255,0.9);
   position: relative;
 }
 
 /* ═══════════════════════════════════════════
-   LIGHT SOFT SKEUOMORPHIC CARDS (Raised 3D)
+   SKEUOMORPHIC CARDS (Raised 3D)
    ═══════════════════════════════════════════ */
 .leather-card, .paper-card, .dash-card, .sh-card, .profile-card, .settings-card, .tutorial-card, .neu-card {
-  background: #e6ebf2;
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: var(--neu-card-bg);
+  border: 1px solid var(--neu-border);
   border-radius: 1.25rem;
-  color: #1a202c;
-  box-shadow:
-    7px 7px 15px rgba(163, 177, 198, 0.6),
-    -7px -7px 15px rgba(255, 255, 255, 0.85);
+  color: var(--neu-text-main);
+  box-shadow: var(--neu-shadow-raised);
   position: relative;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Glass fallback compatibility */
 .glass {
-  background: #e6ebf2 !important;
-  border: 1px solid rgba(255, 255, 255, 0.7) !important;
-  color: #1a202c !important;
-  box-shadow: 7px 7px 15px rgba(163, 177, 198, 0.6), -7px -7px 15px rgba(255, 255, 255, 0.85) !important;
+  background: var(--neu-card-bg) !important;
+  border: 1px solid var(--neu-border) !important;
+  color: var(--neu-text-main) !important;
+  box-shadow: var(--neu-shadow-raised) !important;
 }
 
 .glass-hover:hover {
-  background: #ebf0f7 !important;
-  box-shadow: 9px 9px 18px rgba(163, 177, 198, 0.65), -9px -9px 18px rgba(255, 255, 255, 0.95) !important;
+  box-shadow: var(--neu-shadow-hover) !important;
 }
 
 /* ═══════════════════════════════════════════
-   LIGHT SKEUOMORPHIC SIDEBAR
+   SIDEBAR & TABS
    ═══════════════════════════════════════════ */
 .wood-panel {
-  background: #e6ebf2;
-  border-right: 1px solid rgba(163, 177, 198, 0.3);
-  box-shadow: 6px 0 16px rgba(163, 177, 198, 0.45);
+  background: var(--neu-sidebar-bg);
+  border-right: 1px solid var(--neu-border-subtle);
+  box-shadow: 6px 0 16px rgba(0,0,0,0.15);
+  transition: background-color 0.3s ease;
 }
 
 .binder-tab {
-  background: #e6ebf2;
-  color: #4a5568;
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  border-left: 4px solid #cbd5e0;
+  background: var(--neu-card-bg);
+  color: var(--neu-text-sub);
+  border: 1px solid var(--neu-border);
+  border-left: 4px solid var(--neu-border-subtle);
   border-radius: 0.75rem;
   font-weight: 600;
-  box-shadow: 4px 4px 8px rgba(163, 177, 198, 0.5), -4px -4px 8px rgba(255, 255, 255, 0.8);
+  box-shadow: var(--neu-shadow-raised);
   transition: all 0.2s ease;
   position: relative;
 }
 
 .binder-tab.active {
-  background: #e6ebf2;
-  color: #2b6cb0;
-  border-left: 5px solid #3182ce;
-  box-shadow:
-    inset 3px 3px 6px rgba(163, 177, 198, 0.5),
-    inset -3px -3px 6px rgba(255, 255, 255, 0.8);
+  background: var(--neu-card-bg);
+  color: var(--accent-orange);
+  border-left: 5px solid var(--accent-orange);
+  box-shadow: var(--neu-shadow-inset);
 }
 
 /* ═══════════════════════════════════════════
-   BUTTONS (3D Light Soft Skeuomorphic Buttons)
+   BUTTONS (3D Skeuomorphic Buttons)
    ═══════════════════════════════════════════ */
 .brass-btn {
   background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
@@ -170,8 +191,7 @@ body {
   font-weight: 700;
   cursor: pointer;
   box-shadow:
-    5px 5px 12px rgba(163, 177, 198, 0.6),
-    -5px -5px 12px rgba(255, 255, 255, 0.8),
+    4px 4px 10px rgba(0,0,0,0.3),
     inset 0 1px 0 rgba(255,255,255,0.4);
   text-shadow: 0 1px 2px rgba(0,0,0,0.2);
   transition: all 0.15s ease;
@@ -179,7 +199,7 @@ body {
 
 .brass-btn:hover {
   background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
-  box-shadow: 6px 6px 14px rgba(163, 177, 198, 0.7), -6px -6px 14px rgba(255, 255, 255, 0.9);
+  box-shadow: 5px 5px 12px rgba(0,0,0,0.4);
 }
 
 .brass-btn:active {
@@ -188,65 +208,65 @@ body {
 }
 
 .leather-btn {
-  background: #e6ebf2;
-  color: #2d3748;
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: var(--neu-card-bg);
+  color: var(--neu-text-main);
+  border: 1px solid var(--neu-border);
   border-radius: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85);
+  box-shadow: var(--neu-shadow-raised);
   transition: all 0.15s ease;
 }
 
 .leather-btn:hover {
-  background: #ebf0f7;
-  color: #1a202c;
+  box-shadow: var(--neu-shadow-hover);
 }
 
 .leather-btn:active {
-  box-shadow: inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.8);
+  box-shadow: var(--neu-shadow-inset);
 }
 
 /* ═══════════════════════════════════════════
    SUNKEN INSET INPUT FIELDS (Carved 3D)
    ═══════════════════════════════════════════ */
 .inset-field {
-  background: #e6ebf2;
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  background: var(--neu-inset-bg);
+  border: 1px solid var(--neu-border);
   border-radius: 0.75rem;
-  color: #1a202c;
-  box-shadow:
-    inset 4px 4px 8px rgba(163, 177, 198, 0.5),
-    inset -4px -4px 8px rgba(255, 255, 255, 0.9);
+  color: var(--neu-text-main);
+  box-shadow: var(--neu-shadow-inset);
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 .inset-field:focus {
   outline: none;
-  border-color: #3182ce;
+  border-color: var(--accent-orange);
   box-shadow:
-    inset 4px 4px 8px rgba(163, 177, 198, 0.5),
-    inset -4px -4px 8px rgba(255, 255, 255, 0.9),
-    0 0 0 3px rgba(49, 130, 206, 0.25);
+    var(--neu-shadow-inset),
+    0 0 0 3px rgba(237, 137, 54, 0.25);
 }
 
 .inset-field::placeholder {
-  color: #a0aec0;
+  color: var(--neu-text-muted);
 }
 
 /* ═══════════════════════════════════════════
-   TEXT EFFECTS
+   TEXT EFFECTS & UTILITIES
    ═══════════════════════════════════════════ */
+.text-main { color: var(--neu-text-main); }
+.text-sub { color: var(--neu-text-sub); }
+.text-muted { color: var(--neu-text-muted); }
+
 .emboss-text {
-  color: #1a202c;
-  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
+  color: var(--neu-text-main);
 }
 
 .deboss-text {
-  color: #718096;
+  color: var(--neu-text-muted);
 }
 
 .gold-text, .text-gradient {
-  color: #ed8936;
+  color: var(--accent-orange);
   background: linear-gradient(135deg, #ed8936, #dd6b20);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -257,96 +277,16 @@ body {
    PROGRESS TUBE
    ═══════════════════════════════════════════ */
 .progress-tube {
-  background: #e6ebf2;
+  background: var(--neu-inset-bg);
   border-radius: 0.75rem;
-  box-shadow: inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.8);
+  box-shadow: var(--neu-shadow-inset);
   overflow: hidden;
 }
 
 .progress-tube-fill {
   background: linear-gradient(90deg, #ed8936 0%, #dd6b20 100%);
   border-radius: 0.65rem;
-  box-shadow: 2px 2px 4px rgba(163, 177, 198, 0.4);
-}
-
-/* ═══════════════════════════════════════════
-   DARK MODE SKEUOMORPHISM (data-theme="dark")
-   ═══════════════════════════════════════════ */
-[data-theme="dark"] body {
-  background-color: #0d0f17;
-  background-image: radial-gradient(ellipse at 50% 10%, #161926 0%, #0d0f17 85%);
-  color: #f5f5f7;
-}
-
-[data-theme="dark"] .journal-page, 
-[data-theme="dark"] .notebook-page {
-  background-color: #131622;
-  background-image:
-    linear-gradient(90deg, transparent 52px, rgba(220, 60, 60, 0.4) 52px, rgba(220, 60, 60, 0.4) 54px, transparent 54px),
-    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  border-left: 8px solid #090a10;
-  color: #f5f5f7;
-  box-shadow:
-    8px 8px 24px rgba(0, 0, 0, 0.9),
-    -4px -4px 16px rgba(255, 255, 255, 0.03);
-}
-
-[data-theme="dark"] .leather-card, 
-[data-theme="dark"] .paper-card, 
-[data-theme="dark"] .dash-card, 
-[data-theme="dark"] .sh-card, 
-[data-theme="dark"] .profile-card, 
-[data-theme="dark"] .settings-card, 
-[data-theme="dark"] .tutorial-card, 
-[data-theme="dark"] .neu-card {
-  background: #181b26;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #f5f5f7;
-  box-shadow:
-    6px 6px 16px rgba(0, 0, 0, 0.8),
-    -4px -4px 12px rgba(255, 255, 255, 0.03);
-}
-
-[data-theme="dark"] .wood-panel {
-  background: #131622;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 6px 0 16px rgba(0, 0, 0, 0.8);
-}
-
-[data-theme="dark"] .binder-tab {
-  background: #181b26;
-  color: #cbd5e1;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.7);
-}
-
-[data-theme="dark"] .binder-tab.active {
-  background: #202534;
-  color: #f6ad55;
-  border-left: 5px solid #ed8936;
-  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.8);
-}
-
-[data-theme="dark"] .inset-field {
-  background: #0e1017;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #f5f5f7;
-  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.8), inset -2px -2px 4px rgba(255, 255, 255, 0.03);
-}
-
-[data-theme="dark"] .inset-field::placeholder {
-  color: #64748b;
-}
-
-[data-theme="dark"] .leather-btn {
-  background: #181b26;
-  color: #f5f5f7;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.7);
-}
-
-[data-theme="dark"] .leather-btn:hover {
-  background: #202534;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
 /* ═══════════════════════════════════════════
@@ -358,18 +298,15 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #e6ebf2;
+  background: var(--neu-bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
+  background: var(--neu-text-muted);
   border-radius: 4px;
+  opacity: 0.5;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a0aec0;
-}
-
-input, textarea, select {
-  color-scheme: light;
+  background: var(--neu-text-sub);
 }

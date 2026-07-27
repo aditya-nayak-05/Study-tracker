@@ -345,13 +345,13 @@ export default function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {/* Active Session Card */}
               {learningStats.activeSession && learningStats.activeSessionTask && (
-                <div className="md:col-span-3 p-4 mb-2 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-[#ed8936]/40 bg-[#e6ebf2]" style={{ boxShadow: 'inset 2px 2px 5px rgba(163,177,198,0.4), inset -2px -2px 5px rgba(255,255,255,0.8)' }}>
+                <div className="md:col-span-3 p-4 mb-2 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-[#ed8936]/40 inset-field">
                   <div className="flex items-center gap-3">
                     <div className="w-2.5 h-2.5 rounded-full bg-[#ed8936] animate-ping" />
                     <div>
                       <span className="text-[10px] text-[#ed8936] font-bold uppercase tracking-wider">Active Study Session</span>
-                      <h4 className="text-xs font-bold text-[#1a202c] leading-tight">{learningStats.activeSessionTask.title}</h4>
-                      <p className="text-[10px] text-[#718096] mt-0.5">Time logged: {formatDuration(learningStats.activeSession.duration)}</p>
+                      <h4 className="text-xs font-bold text-main leading-tight">{learningStats.activeSessionTask.title}</h4>
+                      <p className="text-[10px] text-muted mt-0.5">Time logged: {formatDuration(learningStats.activeSession.duration)}</p>
                     </div>
                   </div>
                   <button

@@ -97,9 +97,6 @@ const Sidebar = React.memo(function Sidebar() {
       className="fixed left-0 top-0 h-screen flex flex-col z-40 overflow-hidden transition-all duration-500 wood-panel"
       style={{ 
         width: collapsed ? 72 : 260, 
-        background: '#e6ebf2', 
-        borderRight: '1px solid rgba(163, 177, 198, 0.3)',
-        boxShadow: '6px 0 16px rgba(163, 177, 198, 0.45)',
         opacity: showCinemaControls ? 1 : 0,
         pointerEvents: showCinemaControls ? 'auto' : 'none'
       }}
@@ -110,7 +107,7 @@ const Sidebar = React.memo(function Sidebar() {
           <Sparkles className="w-4 h-4 text-white" />
         </div>
         {!collapsed && (
-          <span className="text-lg font-bold text-[#1a202c] whitespace-nowrap" style={{textShadow: 'none'}}>StudyFlow</span>
+          <span className="text-lg font-bold text-main whitespace-nowrap" style={{textShadow: 'none'}}>StudyFlow</span>
         )}
       </div>
 

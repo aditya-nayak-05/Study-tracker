@@ -45,15 +45,10 @@ function ToastItem({ toast, onRemove }) {
     <div
       ref={ref}
       className={`border ${colors[toast.toastType] || colors.info} rounded-xl px-4 py-3 flex items-center gap-3 min-w-[280px] max-w-[400px] leather-card`}
-      style={{
-        background: '#e6ebf2',
-        border: '1px solid rgba(255,255,255,0.7)',
-        boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
-      }}
     >
       <Icon className="w-5 h-5 shrink-0" />
-      <span className="text-sm text-[#1a202c] flex-1 font-semibold" style={{textShadow: 'none'}}>{toast.message}</span>
-      <button onClick={handleClose} className="text-[#718096] hover:text-[#1a202c] transition-colors cursor-pointer">
+      <span className="text-sm text-main flex-1 font-semibold" style={{textShadow: 'none'}}>{toast.message}</span>
+      <button onClick={handleClose} className="text-muted hover:text-main transition-colors cursor-pointer">
         <X className="w-4 h-4 text-[#ed8936]" />
       </button>
     </div>
