@@ -21,6 +21,7 @@ const DEFAULT_SETTINGS = {
   pomodoroBreak: 5,
   pomodoroLongBreak: 15,
   sidebarCollapsed: false,
+  fontFamily: "'Inter', sans-serif",
 };
 
 const DEFAULT_UI = {

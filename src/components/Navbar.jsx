@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
-import { Search, Bell, ChevronRight, Sun, Moon } from 'lucide-react';
+import { Search, Bell, ChevronRight, Sun, Moon, Type } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
+import FontPickerModal from './FontPickerModal';
 
 const pageNames = {
   '/': 'Dashboard',
@@ -160,6 +161,7 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
   const location = useLocation();
   const navRef = useRef(null);
   const [notifications] = useState([]);
+  const [fontPickerOpen, setFontPickerOpen] = useState(false);
 
   const [showCinemaControls, setShowCinemaControls] = useState(true);
   const isLearnPage = location.pathname.startsWith('/learn/');
@@ -274,6 +276,16 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
           <kbd className="hidden sm:inline text-[10px] px-1.5 py-0.5 rounded border border-[rgba(163,177,198,0.4)] text-muted ml-2">⌘K</kbd>
         </button>
 
+        {/* Font Change Button */}
+        <button 
+          onClick={() => setFontPickerOpen(true)}
+          title="Change Typography Font (14 fonts available)"
+          className="relative px-2.5 py-1.5 rounded-lg text-muted transition-all cursor-pointer inset-field flex items-center gap-1.5"
+        >
+          <Type className="w-4 h-4 text-accent-primary" />
+          <span className="hidden md:inline text-xs font-semibold text-main">Font</span>
+        </button>
+
         {/* Theme Switcher Button */}
         <button 
           onClick={() => {
@@ -297,18 +309,17 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
 
         {/* Notifications */}
         <button 
-          className="relative p-2 rounded-lg text-[#718096] bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] hover:text-[#1a202c] transition-all cursor-pointer inset-field"
-          style={{ boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' }}
+          className="relative p-2 rounded-lg text-muted transition-all cursor-pointer inset-field"
         >
           <Bell className="w-5 h-5 text-accent-primary" />
           {notifications.length > 0 && (
-            <span className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-[#38a169] border border-[#e6ebf2]" />
+            <span className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-[#38a169] border border-[var(--neu-bg)]" />
           )}
         </button>
 
         {/* Profile */}
         {state.profile && (
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#ed8936] to-[#dd6b20] flex items-center justify-center text-white text-sm font-semibold overflow-hidden border border-white/50 shadow-sm">
+          <div className="w-8 h-8 rounded-full brass-btn flex items-center justify-center text-sm font-semibold overflow-hidden shadow-sm">
             {state.profile.avatar ? (
               <img src={state.profile.avatar} alt="" className="w-full h-full object-cover" />
             ) : (
@@ -317,6 +328,8 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
           </div>
         )}
       </div>
+
+      {fontPickerOpen && <FontPickerModal onClose={() => setFontPickerOpen(false)} />}
     </header>
   );
 });

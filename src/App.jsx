@@ -117,6 +117,11 @@ function AppContent() {
     document.documentElement.setAttribute('data-theme', themeMode);
   }, [themeMode]);
 
+  const fontFamily = state.settings?.fontFamily || "'Inter', sans-serif";
+  useEffect(() => {
+    document.body.style.fontFamily = fontFamily;
+  }, [fontFamily]);
+
   // Initial loading
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);

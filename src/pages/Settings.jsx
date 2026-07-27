@@ -4,9 +4,10 @@ import { useStudy } from '../context/StudyContext';
 import DashboardLayout from '../layouts/DashboardLayout';
 import * as storage from '../utils/storage';
 import { exportToCSV, exportToExcel, exportToPDF, importFromCSV, importFromExcel, buildPlanFromImport } from '../utils/exportImport';
+import { availableFonts } from '../data/fonts';
 import {
   Settings as SettingsIcon, Trash2, Download, Upload, Zap, Clock,
-  AlertTriangle, FileDown, FileUp, Database, HardDrive,
+  AlertTriangle, FileDown, FileUp, Database, HardDrive, Type, Check,
 } from 'lucide-react';
 
 export default function Settings() {
@@ -116,6 +117,42 @@ export default function Settings() {
                 onChange={(e) => updateSetting('pomodoroLongBreak', parseInt(e.target.value) || 15)}
                 className="w-full px-3 py-2 rounded-xl text-[#1a202c] text-sm focus:outline-none" style={{ background: '#e6ebf2', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)', border: '1px solid rgba(255,255,255,0.6)' }} />
             </div>
+          </div>
+        </div>
+
+        {/* Font Selection */}
+        <div className="settings-card neu-card p-6">
+          <div className="flex items-center gap-3 mb-4">
+            <Type className="w-5 h-5 text-accent-primary" />
+            <div>
+              <h3 className="text-sm font-semibold text-main">Typography Theme</h3>
+              <p className="text-xs text-muted">Select from 14 Google Fonts (including 4 Handwritten styles)</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            {availableFonts.map((f) => {
+              const isSelected = (settings.fontFamily || "'Inter', sans-serif") === f.family;
+              return (
+                <button
+                  key={f.name}
+                  onClick={() => {
+                    updateSetting('fontFamily', f.family);
+                    showToast(`Font updated to ${f.name} ✍️`, 'success');
+                  }}
+                  className={`p-3 rounded-xl text-left transition-all cursor-pointer flex items-center justify-between border ${
+                    isSelected ? 'binder-tab active' : 'neu-card hover:border-[var(--accent-orange)]'
+                  }`}
+                >
+                  <div>
+                    <span className="text-sm font-semibold text-main block" style={{ fontFamily: f.family }}>
+                      {f.name}
+                    </span>
+                    <span className="text-[10px] text-muted">{f.category}</span>
+                  </div>
+                  {isSelected && <Check className="w-4 h-4 text-accent-primary shrink-0" />}
+                </button>
+              );
+            })}
           </div>
         </div>
 
