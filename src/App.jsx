@@ -112,6 +112,11 @@ function AppContent() {
   const [loading, setLoading] = useState(true);
   const [searchOpen, setSearchOpen] = useState(false);
 
+  const themeMode = state.settings?.themeMode || 'light';
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', themeMode);
+  }, [themeMode]);
+
   // Initial loading
   useEffect(() => {
     const timer = setTimeout(() => setLoading(false), 800);

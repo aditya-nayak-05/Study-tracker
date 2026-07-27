@@ -264,9 +264,89 @@ body {
 }
 
 .progress-tube-fill {
-  background: linear-gradient(90deg, #4299e1 0%, #3182ce 100%);
+  background: linear-gradient(90deg, #ed8936 0%, #dd6b20 100%);
   border-radius: 0.65rem;
   box-shadow: 2px 2px 4px rgba(163, 177, 198, 0.4);
+}
+
+/* ═══════════════════════════════════════════
+   DARK MODE SKEUOMORPHISM (data-theme="dark")
+   ═══════════════════════════════════════════ */
+[data-theme="dark"] body {
+  background-color: #0d0f17;
+  background-image: radial-gradient(ellipse at 50% 10%, #161926 0%, #0d0f17 85%);
+  color: #f5f5f7;
+}
+
+[data-theme="dark"] .journal-page, 
+[data-theme="dark"] .notebook-page {
+  background-color: #131622;
+  background-image:
+    linear-gradient(90deg, transparent 52px, rgba(220, 60, 60, 0.4) 52px, rgba(220, 60, 60, 0.4) 54px, transparent 54px),
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  border-left: 8px solid #090a10;
+  color: #f5f5f7;
+  box-shadow:
+    8px 8px 24px rgba(0, 0, 0, 0.9),
+    -4px -4px 16px rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .leather-card, 
+[data-theme="dark"] .paper-card, 
+[data-theme="dark"] .dash-card, 
+[data-theme="dark"] .sh-card, 
+[data-theme="dark"] .profile-card, 
+[data-theme="dark"] .settings-card, 
+[data-theme="dark"] .tutorial-card, 
+[data-theme="dark"] .neu-card {
+  background: #181b26;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #f5f5f7;
+  box-shadow:
+    6px 6px 16px rgba(0, 0, 0, 0.8),
+    -4px -4px 12px rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .wood-panel {
+  background: #131622;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 6px 0 16px rgba(0, 0, 0, 0.8);
+}
+
+[data-theme="dark"] .binder-tab {
+  background: #181b26;
+  color: #cbd5e1;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .binder-tab.active {
+  background: #202534;
+  color: #f6ad55;
+  border-left: 5px solid #ed8936;
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.8);
+}
+
+[data-theme="dark"] .inset-field {
+  background: #0e1017;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f5f5f7;
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.8), inset -2px -2px 4px rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .inset-field::placeholder {
+  color: #64748b;
+}
+
+[data-theme="dark"] .leather-btn {
+  background: #181b26;
+  color: #f5f5f7;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .leather-btn:hover {
+  background: #202534;
 }
 
 /* ═══════════════════════════════════════════

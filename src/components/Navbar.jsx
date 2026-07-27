@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
-import { Search, Bell, ChevronRight } from 'lucide-react';
+import { Search, Bell, ChevronRight, Sun, Moon } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 
 const pageNames = {
@@ -156,7 +156,7 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
 }
 
 const Navbar = React.memo(function Navbar({ onSearchOpen }) {
-  const { state } = useStudy();
+  const { state, dispatch, showToast } = useStudy();
   const location = useLocation();
   const navRef = useRef(null);
   const [notifications] = useState([]);
@@ -273,6 +273,28 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
           <Search className="w-4 h-4 text-[#ed8936]" />
           <span className="hidden sm:inline">Search</span>
           <kbd className="hidden sm:inline text-[10px] px-1.5 py-0.5 rounded bg-[#e6ebf2] border border-[rgba(163,177,198,0.4)] text-[#718096] ml-2">⌘K</kbd>
+        </button>
+
+        {/* Theme Switcher Button */}
+        <button 
+          onClick={() => {
+            const currentTheme = state.settings?.themeMode || 'light';
+            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            dispatch({
+              type: 'UPDATE_SETTINGS',
+              payload: { themeMode: nextTheme }
+            });
+            showToast(`Switched to ${nextTheme === 'dark' ? 'Dark' : 'Light'} theme 🌓`, 'info');
+          }}
+          title={`Switch to ${(state.settings?.themeMode || 'light') === 'dark' ? 'Light' : 'Dark'} mode`}
+          className="relative p-2 rounded-lg text-[#718096] bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] hover:text-[#1a202c] transition-all cursor-pointer inset-field"
+          style={{ boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' }}
+        >
+          {(state.settings?.themeMode || 'light') === 'dark' ? (
+            <Sun className="w-5 h-5 text-[#ed8936] transition-transform duration-300 hover:rotate-45" />
+          ) : (
+            <Moon className="w-5 h-5 text-[#3182ce] transition-transform duration-300 hover:-rotate-12" />
+          )}
         </button>
 
         {/* Notifications */}
