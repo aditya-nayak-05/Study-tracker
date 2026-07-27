@@ -280,18 +280,16 @@ function YouTubePlayer({
   return (
     <div
       ref={containerRef}
-      className={className}
+      className={`leather-card ${className}`}
       style={{
-        background: '#18181f',
-        border: '12px solid rgba(255,255,255,0.08)',
-        borderStyle: 'ridge',
-        borderColor: 'rgba(255,255,255,0.08)',
-        borderRadius: '4px',
+        background: '#e6ebf2',
+        border: '1px solid rgba(255,255,255,0.7)',
+        borderRadius: '1rem',
         overflow: 'hidden',
         position: 'relative',
         width: '100%',
         aspectRatio: '16 / 9',
-        boxShadow: 'none',
+        boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
         ...style,
       }}
     >
@@ -305,7 +303,7 @@ function YouTubePlayer({
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 10,
-            background: '#18181f',
+            background: '#e6ebf2',
           }}
         >
           <div style={spinnerStyle}>
@@ -325,8 +323,8 @@ function YouTubePlayer({
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 10,
-            background: '#18181f',
-            color: '#8b3a3a',
+            background: '#e6ebf2',
+            color: '#e53e3e',
             padding: '2rem',
             textAlign: 'center',
             gap: '0.75rem',
@@ -346,7 +344,7 @@ function YouTubePlayer({
             <line x1="12" y1="8" x2="12" y2="12" />
             <line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
-          <p style={{ margin: 0, fontSize: '0.95rem', color: '#94a3b8' }}>
+          <p style={{ margin: 0, fontSize: '0.95rem', color: '#718096' }}>
             {error}
           </p>
         </div>
@@ -374,8 +372,8 @@ const spinnerKeyframes = `
 const spinnerStyle = {
   width: 40,
   height: 40,
-  border: '3px solid rgba(255,255,255,0.08)',
-  borderTopColor: '#d8a442',
+  border: '3px solid rgba(163, 177, 198, 0.3)',
+  borderTopColor: '#ed8936',
   borderRadius: '50%',
   animation: 'yt-player-spin 0.8s linear infinite',
 };

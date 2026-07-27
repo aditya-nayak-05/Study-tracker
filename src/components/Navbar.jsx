@@ -95,53 +95,61 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
     <div className="hidden xl:flex items-center gap-5.5 mx-10 flex-1 justify-center max-w-4xl">
       {/* Today Task */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.08)] flex items-center gap-2 group transition-all duration-300 hover:border-[#d8a442] shrink-0" 
+        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center gap-2 group transition-all duration-300 hover:border-[#ed8936] shrink-0" 
         style={{ 
-          background: '#18181f',
+          background: '#e6ebf2',
+          boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
           opacity: showCinemaControls ? 1 : 0,
           pointerEvents: showCinemaControls ? 'auto' : 'none'
         }}
       >
-        <span className="text-[#94a3b8] font-medium" style={{textShadow: 'none'}}>Today task:</span>
-        <span className="text-[#f5f5f7] font-semibold max-w-[140px] truncate group-hover:text-[#d8a442] transition-colors" title={task.title}>{task.title}</span>
+        <span className="text-[#718096] font-medium" style={{textShadow: 'none'}}>Today task:</span>
+        <span className="text-[#1a202c] font-semibold max-w-[140px] truncate group-hover:text-[#ed8936] transition-colors" title={task.title}>{task.title}</span>
       </div>
 
       {/* Current Plan Progress Bar */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.08)] flex items-center gap-3 transition-all duration-300 hover:border-[#d8a442] flex-1 max-w-[220px]" 
+        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center gap-3 transition-all duration-300 hover:border-[#ed8936] flex-1 max-w-[220px]" 
         style={{ 
-          background: '#18181f',
+          background: '#e6ebf2',
+          boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
           opacity: showCinemaControls ? 1 : 0,
           pointerEvents: showCinemaControls ? 'auto' : 'none'
         }}
       >
-        <span className="text-[#94a3b8] font-medium shrink-0" style={{textShadow: 'none'}}>Progress:</span>
+        <span className="text-[#718096] font-medium shrink-0" style={{textShadow: 'none'}}>Progress:</span>
         <div className="flex items-center gap-2 w-full">
-          <div className="h-1.5 rounded-full bg-[#18181f] overflow-hidden flex-1 relative shadow-inner">
+          <div className="h-2 rounded-full bg-[#e6ebf2] overflow-hidden flex-1 relative" style={{ boxShadow: 'inset 2px 2px 4px rgba(163, 177, 198, 0.5), inset -2px -2px 4px rgba(255, 255, 255, 0.9)' }}>
             <div 
-              className="h-full rounded-full bg-[#d8a442] transition-all duration-500" 
+              className="h-full rounded-full bg-gradient-to-r from-[#ed8936] to-[#dd6b20] transition-all duration-500" 
               style={{ width: `${progressPercent}%` }} 
             />
           </div>
-          <span className="text-[#f5f5f7] font-bold shrink-0">{progressPercent}%</span>
+          <span className="text-[#1a202c] font-bold shrink-0">{progressPercent}%</span>
         </div>
       </div>
 
       {/* Today Total Study Hours - ALWAYS 100% OPACITY */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.08)] flex items-center gap-2 transition-all duration-300 hover:border-[#d8a442] shrink-0" 
-        style={{ background: '#18181f' }}
+        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center gap-2 transition-all duration-300 hover:border-[#ed8936] shrink-0" 
+        style={{ 
+          background: '#e6ebf2',
+          boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' 
+        }}
       >
-        <span className="text-[#94a3b8] font-medium" style={{textShadow: 'none'}}>Today hours:</span>
-        <span className="text-[#d8a442] font-extrabold">{todayHours}</span>
+        <span className="text-[#718096] font-medium" style={{textShadow: 'none'}}>Today hours:</span>
+        <span className="text-[#ed8936] font-extrabold">{todayHours}</span>
       </div>
 
       {/* Current Time in India (IST) - ALWAYS 100% OPACITY */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.08)] flex items-center justify-center transition-all duration-300 hover:border-[#d8a442] shrink-0" 
-        style={{ background: '#18181f' }}
+        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center justify-center transition-all duration-300 hover:border-[#ed8936] shrink-0" 
+        style={{ 
+          background: '#e6ebf2',
+          boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' 
+        }}
       >
-        <span className="text-[#d8a442] font-extrabold font-mono tracking-wider text-center">{istTime}</span>
+        <span className="text-[#ed8936] font-extrabold font-mono tracking-wider text-center">{istTime}</span>
       </div>
     </div>
   );
@@ -213,8 +221,13 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
   return (
     <header
       ref={navRef}
-      className="h-[4.5rem] border-b border-[rgba(255,255,255,0.08)] flex items-center justify-between px-8 sticky top-0 z-30 transition-all duration-500"
-      style={{ background: showCinemaControls ? '#18181f' : 'transparent', backdropFilter: showCinemaControls ? 'blur(12px)' : 'none', borderBottomColor: showCinemaControls ? 'rgba(255,255,255,0.08)' : 'transparent', boxShadow: showCinemaControls ? '0 2px 10px rgba(0,0,0,0.05)' : 'none' }}
+      className="h-[4.5rem] border-b border-[rgba(163,177,198,0.3)] flex items-center justify-between px-8 sticky top-0 z-30 transition-all duration-500"
+      style={{ 
+        background: showCinemaControls ? '#e6ebf2' : 'transparent', 
+        backdropFilter: showCinemaControls ? 'blur(12px)' : 'none', 
+        borderBottomColor: showCinemaControls ? 'rgba(163,177,198,0.3)' : 'transparent', 
+        boxShadow: showCinemaControls ? '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' : 'none' 
+      }}
     >
       {/* Breadcrumbs */}
       <div 
@@ -226,8 +239,8 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
       >
         {breadcrumbs.map((crumb, i) => (
           <React.Fragment key={i}>
-            {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-[#94a3b8]" />}
-            <span className={i === breadcrumbs.length - 1 ? 'text-[#f5f5f7] font-medium' : 'text-[#94a3b8]'} style={{textShadow: 'none'}}>
+            {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-[#718096]" />}
+            <span className={i === breadcrumbs.length - 1 ? 'text-[#1a202c] font-semibold' : 'text-[#718096]'} style={{textShadow: 'none'}}>
               {crumb}
             </span>
           </React.Fragment>
@@ -254,24 +267,28 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
         {/* Search */}
         <button
           onClick={onSearchOpen}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[rgba(255,255,255,0.08)] text-[#94a3b8] bg-[#18181f] hover:text-[#f5f5f7] hover:bg-[#18181f] hover:border-[#d8a442] transition-all text-sm cursor-pointer shadow-sm inset-field"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[rgba(255,255,255,0.7)] text-[#718096] bg-[#e6ebf2] hover:text-[#1a202c] hover:border-[#ed8936] transition-all text-sm cursor-pointer inset-field"
+          style={{ boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)', color: '#1a202c' }}
         >
-          <Search className="w-4 h-4 text-[#d8a442]" />
+          <Search className="w-4 h-4 text-[#ed8936]" />
           <span className="hidden sm:inline">Search</span>
-          <kbd className="hidden sm:inline text-[10px] px-1.5 py-0.5 rounded bg-[#18181f] border border-[rgba(255,255,255,0.08)] text-[#94a3b8] ml-2">⌘K</kbd>
+          <kbd className="hidden sm:inline text-[10px] px-1.5 py-0.5 rounded bg-[#e6ebf2] border border-[rgba(163,177,198,0.4)] text-[#718096] ml-2">⌘K</kbd>
         </button>
 
         {/* Notifications */}
-        <button className="relative p-2 rounded-lg text-[#94a3b8] bg-[#18181f] border border-[rgba(255,255,255,0.08)] hover:text-[#f5f5f7] hover:bg-[#18181f] transition-all cursor-pointer shadow-sm inset-field">
-          <Bell className="w-5 h-5 text-[#d8a442]" />
+        <button 
+          className="relative p-2 rounded-lg text-[#718096] bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] hover:text-[#1a202c] transition-all cursor-pointer inset-field"
+          style={{ boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' }}
+        >
+          <Bell className="w-5 h-5 text-[#ed8936]" />
           {notifications.length > 0 && (
-            <span className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-[#8b3a3a] border border-[#18181f]" />
+            <span className="absolute top-0 right-0 w-2.5 h-2.5 rounded-full bg-[#38a169] border border-[#e6ebf2]" />
           )}
         </button>
 
         {/* Profile */}
         {state.profile && (
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#d8a442] to-[#d8a442] flex items-center justify-center text-[#18181f] text-sm font-semibold overflow-hidden border border-[rgba(255,255,255,0.08)] shadow-sm">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#ed8936] to-[#dd6b20] flex items-center justify-center text-white text-sm font-semibold overflow-hidden border border-white/50 shadow-sm">
             {state.profile.avatar ? (
               <img src={state.profile.avatar} alt="" className="w-full h-full object-cover" />
             ) : (

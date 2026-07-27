@@ -27,44 +27,44 @@ function TreeNode({ label, level = 0, children, progress, status, isToday, defau
   }, [open]);
 
   const statusIcon = status === 'completed' ? (
-    <CheckCircle2 className="w-3.5 h-3.5 text-[#4a7c3f] shrink-0" />
+    <CheckCircle2 className="w-3.5 h-3.5 text-[#38a169] shrink-0" />
   ) : status === 'in-progress' ? (
-    <Clock className="w-3.5 h-3.5 text-[#d8a442] shrink-0" />
+    <Clock className="w-3.5 h-3.5 text-[#ed8936] shrink-0" />
   ) : (
-    <Circle className="w-3.5 h-3.5 text-[#94a3b8] shrink-0" />
+    <Circle className="w-3.5 h-3.5 text-[#718096] shrink-0" />
   );
 
   const folderIcon = hasChildren ? (
-    open ? <FolderOpen className="w-4 h-4 text-[#d8a442] shrink-0" /> : <Folder className="w-4 h-4 text-[#94a3b8] shrink-0" />
+    open ? <FolderOpen className="w-4 h-4 text-[#ed8936] shrink-0" /> : <Folder className="w-4 h-4 text-[#718096] shrink-0" />
   ) : (
-    <FileText className="w-4 h-4 text-[#94a3b8] shrink-0" />
+    <FileText className="w-4 h-4 text-[#718096] shrink-0" />
   );
 
   return (
     <div>
       <button
         onClick={toggle}
-        className={`w-full flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-[#18181f] transition-all text-left group cursor-pointer ${isToday ? 'bg-[#d8a442]/10 border border-[rgba(255,255,255,0.08)]' : ''}`}
+        className={`w-full flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-[#ebf0f7] transition-all text-left group cursor-pointer ${isToday ? 'bg-[#ed8936]/15 border border-[#ed8936]/30 shadow-sm' : ''}`}
         style={{ paddingLeft: level * 20 + 8 }}
       >
         {hasChildren ? (
-          open ? <ChevronDown className="w-3.5 h-3.5 text-[#94a3b8] shrink-0" /> : <ChevronRight className="w-3.5 h-3.5 text-[#94a3b8] shrink-0" />
+          open ? <ChevronDown className="w-3.5 h-3.5 text-[#718096] shrink-0" /> : <ChevronRight className="w-3.5 h-3.5 text-[#718096] shrink-0" />
         ) : (
           <span className="w-3.5 shrink-0" />
         )}
         {folderIcon}
-        <span className={`text-sm flex-1 truncate ${status === 'completed' ? 'text-[#94a3b8] line-through' : 'text-[#f5f5f7]'}`}>
+        <span className={`text-sm flex-1 truncate ${status === 'completed' ? 'text-[#718096] line-through' : 'text-[#1a202c]'}`}>
           {label}
         </span>
         {progress !== undefined && progress !== null && (
           <div className="flex items-center gap-2 shrink-0">
-            <div className="w-16 h-1 bg-[rgba(255,255,255,0.08)] rounded-full overflow-hidden">
+            <div className="w-16 h-1.5 bg-[#cbd5e0] rounded-full overflow-hidden shadow-inner">
               <div
-                className="h-full rounded-full bg-gradient-to-r from-[#d8a442] to-[#f2d894] transition-all duration-500"
+                className="h-full rounded-full bg-gradient-to-r from-[#ed8936] to-[#f6ad55] transition-all duration-500"
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <span className="text-[10px] font-mono text-[#94a3b8] w-8 text-right">{progress}%</span>
+            <span className="text-[10px] font-mono text-[#718096] w-8 text-right">{progress}%</span>
           </div>
         )}
         {!hasChildren && statusIcon}
@@ -137,7 +137,7 @@ const TreeView = React.memo(function TreeView({ plan, onTaskClick }) {
                           <button
                             onClick={(e) => { e.stopPropagation(); navigate(`/learn/${plan.id}/${task.id}`); }}
                             className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium cursor-pointer shrink-0"
-                            style={{ background: 'rgba(139,58,58,0.1)', color: '#8b3a3a' }}
+                            style={{ background: '#e6ebf2', color: '#ed8936', border: '1px solid rgba(255,255,255,0.7)', boxShadow: '2px 2px 5px rgba(163, 177, 198, 0.4), -2px -2px 5px rgba(255, 255, 255, 0.8)' }}
                           >
                             <Play className="w-2.5 h-2.5" /> Watch
                           </button>

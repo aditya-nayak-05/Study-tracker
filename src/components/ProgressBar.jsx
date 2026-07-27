@@ -33,18 +33,21 @@ const ProgressBar = React.memo(function ProgressBar() {
   return (
     <div
       ref={barRef}
-      className="fixed bottom-0 left-0 right-0 h-12 border-t border-[rgba(255,255,255,0.08)] flex items-center px-8 gap-5 z-50 shadow-[0_-4px_12px_rgba(0,0,0,0.05)]"
-      style={{background: '#18181f'}}
+      className="fixed bottom-0 left-0 right-0 h-12 border-t border-[rgba(163,177,198,0.3)] flex items-center px-8 gap-5 z-50"
+      style={{ background: '#e6ebf2', boxShadow: '0 -4px 12px rgba(163, 177, 198, 0.35)' }}
     >
-      <span className="text-xs text-[#f5f5f7] font-medium truncate max-w-[200px]" style={{textShadow: 'none'}}>{activePlan.name}</span>
-      <div className="flex-1 h-2 bg-[#191922] rounded-full overflow-hidden border border-[rgba(255,255,255,0.08)] shadow-inner relative">
+      <span className="text-xs text-[#1a202c] font-semibold truncate max-w-[200px]" style={{textShadow: 'none'}}>{activePlan.name}</span>
+      <div 
+        className="flex-1 h-2 bg-[#e6ebf2] rounded-full overflow-hidden border border-[rgba(255,255,255,0.7)] relative progress-tube"
+        style={{ boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' }}
+      >
         <div
           ref={fillRef}
           className="h-full rounded-full"
-          style={{ width: 0, background: '#d8a442' }}
+          style={{ width: 0, background: 'linear-gradient(90deg, #ed8936 0%, #dd6b20 100%)' }}
         />
       </div>
-      <span ref={countRef} className="text-xs text-[#d8a442] font-mono whitespace-nowrap" style={{textShadow: 'none'}}>
+      <span ref={countRef} className="text-xs text-[#ed8936] font-mono font-bold whitespace-nowrap" style={{textShadow: 'none'}}>
         {completed}/{total} ({percent}%)
       </span>
     </div>

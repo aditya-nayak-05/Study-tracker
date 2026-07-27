@@ -84,13 +84,13 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
         <svg width={svgSize} height={svgSize} className="-rotate-90">
           <circle
             cx={svgSize / 2} cy={svgSize / 2} r={radius}
-            fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={compact ? 4 : 6}
+            fill="none" stroke="rgba(163, 177, 198, 0.3)" strokeWidth={compact ? 4 : 6}
           />
           <circle
             ref={circleRef}
             cx={svgSize / 2} cy={svgSize / 2} r={radius}
             fill="none"
-            stroke={mode === 'work' ? '#d8a442' : '#4a7c3f'}
+            stroke={mode === 'work' ? '#ed8936' : '#38a169'}
             strokeWidth={compact ? 4 : 6}
             strokeLinecap="round"
             strokeDasharray={circumference}
@@ -99,10 +99,10 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className={`font-mono font-bold text-[#d8a442] ${compact ? 'text-lg' : 'text-3xl'}`} style={{textShadow: 'none'}}>
+          <span className={`font-mono font-bold text-[#ed8936] ${compact ? 'text-lg' : 'text-3xl'}`} style={{textShadow: 'none'}}>
             {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
           </span>
-          <span className={`text-[#94a3b8] capitalize ${compact ? 'text-[10px]' : 'text-xs'}`}>
+          <span className={`text-[#718096] capitalize font-medium ${compact ? 'text-[10px]' : 'text-xs'}`}>
             {mode === 'work' ? 'Focus' : 'Break'}
           </span>
         </div>
@@ -112,25 +112,31 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
       <div className="flex items-center gap-2">
         <button
           onClick={toggle}
-          className={`p-2.5 rounded-xl cursor-pointer transition-all shadow-sm ${
+          className={`p-2.5 rounded-xl cursor-pointer transition-all leather-btn ${
             running
-              ? 'bg-[#18181f] text-[#d8a442] border border-[#d8a442] hover:bg-[#18181f]'
-              : 'bg-[#18181f] text-[#d8a442] border border-[rgba(255,255,255,0.08)] hover:bg-[#18181f]'
+              ? 'bg-[#e6ebf2] text-[#ed8936] border border-[#ed8936]'
+              : 'bg-[#e6ebf2] text-[#ed8936] border border-[rgba(255,255,255,0.7)]'
           }`}
+          style={{
+            boxShadow: running
+              ? 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.8)'
+              : '4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85)'
+          }}
         >
           {running ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
         </button>
         <button
           onClick={reset}
-          className="p-2.5 rounded-xl bg-[#18181f] text-[#94a3b8] border border-[rgba(255,255,255,0.08)] hover:text-[#f5f5f7] hover:bg-[#18181f] transition-all cursor-pointer shadow-sm"
+          className="p-2.5 rounded-xl bg-[#e6ebf2] text-[#718096] border border-[rgba(255,255,255,0.7)] hover:text-[#1a202c] transition-all cursor-pointer leather-btn"
+          style={{ boxShadow: '4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85)' }}
         >
           <RotateCcw className="w-4 h-4" />
         </button>
       </div>
 
       {!compact && sessionCount > 0 && (
-        <p className="text-[11px] text-[#94a3b8] flex items-center gap-1">
-          <Coffee className="w-3 h-3 text-[#d8a442]" /> {sessionCount} session{sessionCount !== 1 ? 's' : ''} today
+        <p className="text-[11px] text-[#718096] flex items-center gap-1 font-medium">
+          <Coffee className="w-3 h-3 text-[#ed8936]" /> {sessionCount} session{sessionCount !== 1 ? 's' : ''} today
         </p>
       )}
     </div>

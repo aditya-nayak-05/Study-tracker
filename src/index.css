@@ -4,21 +4,20 @@
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 
-  /* Matt Black & Stitches Palette */
-  --color-matt-dark: #09090b;
-  --color-matt-mid: #121216;
-  --color-matt-card: #18181f;
-  --color-matt-light: #22222c;
+  /* Ultra-Clean Light Soft Skeuomorphism Palette */
+  --color-neu-bg: #e6ebf2;
+  --color-neu-surface: #e6ebf2;
+  --color-neu-card: #e6ebf2;
+  --color-neu-dark-shadow: rgba(163, 177, 198, 0.6);
+  --color-neu-light-shadow: rgba(255, 255, 255, 0.85);
 
-  --color-gold-primary: #d8a442;
-  --color-gold-bright: #f2d894;
-  --color-gold-dark: #9e7518;
+  --color-text-primary: #1a202c;
+  --color-text-secondary: #4a5568;
+  --color-text-muted: #718096;
 
-  --color-text-primary: #f5f5f7;
-  --color-text-secondary: #cbd5e1;
-  --color-text-muted: #94a3b8;
-
-  --color-stitch: rgba(212, 168, 67, 0.35);
+  --color-accent-green: #38a169;
+  --color-accent-orange: #ed8936;
+  --color-accent-teal: #319795;
 }
 
 * {
@@ -33,11 +32,10 @@ html {
 
 body {
   font-family: var(--font-sans);
-  background-color: #09090b;
+  background-color: #e6ebf2;
   background-image:
-    radial-gradient(ellipse at 50% 20%, #14141a 0%, #09090b 85%),
-    repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0px, rgba(255,255,255,0.01) 2px, transparent 2px, transparent 6px);
-  color: #f5f5f7;
+    radial-gradient(ellipse at 50% 10%, #edf2f7 0%, #e6ebf2 85%);
+  color: #2d3748;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -48,37 +46,22 @@ body {
 }
 
 /* ═══════════════════════════════════════════
-   MATT BLACK JOURNAL (Stitched Pages)
+   LIGHT SOFT SKEUOMORPHIC JOURNAL (Raised Surface)
    ═══════════════════════════════════════════ */
 .journal-page, .notebook-page {
-  background-color: #121217;
+  background-color: #e6ebf2;
   background-image:
-    /* Red Stitched Margin Line */
-    linear-gradient(90deg, transparent 52px, rgba(220, 60, 60, 0.4) 52px, rgba(220, 60, 60, 0.4) 54px, transparent 54px),
-    /* Faint ruling lines */
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(90deg, transparent 52px, rgba(226, 100, 100, 0.3) 52px, rgba(226, 100, 100, 0.3) 54px, transparent 54px),
+    linear-gradient(rgba(163, 177, 198, 0.15) 1px, transparent 1px);
   background-size: 100% 100%, 100% 28px;
-  border-radius: 4px 18px 18px 4px;
-  border-left: 8px solid #070709;
-  color: #f5f5f7;
+  border-radius: 1.25rem;
+  border-left: 8px solid #d0d7de;
+  color: #1a202c;
   box-shadow:
-    2px 2px 0 #181820,
-    3px 3px 0 #101015,
-    4px 4px 0 #09090c,
-    8px 16px 30px rgba(0, 0, 0, 0.95),
-    inset 30px 0 35px -15px rgba(0, 0, 0, 0.8);
+    10px 10px 24px rgba(163, 177, 198, 0.65),
+    -10px -10px 24px rgba(255, 255, 255, 0.9),
+    inset 2px 2px 4px rgba(255, 255, 255, 0.6);
   position: relative;
-}
-
-/* Gold Stitched Inner Border around Journal Page */
-.journal-page::after {
-  content: "";
-  position: absolute;
-  inset: 8px;
-  border: 1.5px dashed rgba(212, 168, 67, 0.25);
-  border-radius: 12px;
-  pointer-events: none;
-  z-index: 10;
 }
 
 /* Ribbon Bookmark */
@@ -88,9 +71,9 @@ body {
   right: 50px;
   width: 22px;
   height: 85px;
-  background: linear-gradient(180deg, #d8a442 0%, #a07420 100%);
+  background: linear-gradient(180deg, #ed8936 0%, #dd6b20 100%);
   border-radius: 0 0 3px 3px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+  box-shadow: 2px 4px 10px rgba(163, 177, 198, 0.5);
   z-index: 30;
   pointer-events: none;
 }
@@ -102,7 +85,7 @@ body {
   left: 0;
   border-left: 11px solid transparent;
   border-right: 11px solid transparent;
-  border-bottom: 9px solid #121217;
+  border-bottom: 9px solid #e6ebf2;
 }
 
 /* ═══════════════════════════════════════════
@@ -111,183 +94,160 @@ body {
 .spiral-ring {
   width: 32px;
   height: 14px;
-  background: linear-gradient(180deg, #f2d894 0%, #d8a442 45%, #755210 80%, #d8a442 100%);
+  background: linear-gradient(180deg, #ffffff 0%, #cbd5e0 50%, #a0aec0 100%);
   border-radius: 10px;
   box-shadow:
-    0 3px 6px rgba(0,0,0,0.8),
-    inset 0 2px 2px rgba(255,255,255,0.6);
+    2px 3px 6px rgba(163, 177, 198, 0.6),
+    inset 0 2px 2px rgba(255,255,255,0.9);
   position: relative;
 }
 
 /* ═══════════════════════════════════════════
-   MATT BLACK STITCHED CARDS
+   LIGHT SOFT SKEUOMORPHIC CARDS (Raised 3D)
    ═══════════════════════════════════════════ */
-.leather-card, .paper-card, .dash-card, .sh-card, .profile-card, .settings-card, .tutorial-card {
-  background: linear-gradient(145deg, #191922 0%, #111116 100%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  color: #f5f5f7;
+.leather-card, .paper-card, .dash-card, .sh-card, .profile-card, .settings-card, .tutorial-card, .neu-card {
+  background: #e6ebf2;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 1.25rem;
+  color: #1a202c;
   box-shadow:
-    0 4px 16px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    7px 7px 15px rgba(163, 177, 198, 0.6),
+    -7px -7px 15px rgba(255, 255, 255, 0.85);
   position: relative;
-}
-
-/* Gold Stitches Accent on Cards */
-.leather-card::after, .paper-card::after, .dash-card::after, .sh-card::after, .profile-card::after, .settings-card::after {
-  content: "";
-  position: absolute;
-  inset: 6px;
-  border: 1.5px dashed rgba(212, 168, 67, 0.3);
-  border-radius: 8px;
-  pointer-events: none;
 }
 
 /* Glass fallback compatibility */
 .glass {
-  background: linear-gradient(145deg, #191922, #111116) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  color: #f5f5f7 !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6) !important;
+  background: #e6ebf2 !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  color: #1a202c !important;
+  box-shadow: 7px 7px 15px rgba(163, 177, 198, 0.6), -7px -7px 15px rgba(255, 255, 255, 0.85) !important;
 }
 
 .glass-hover:hover {
-  background: linear-gradient(145deg, #22222e, #181820) !important;
+  background: #ebf0f7 !important;
+  box-shadow: 9px 9px 18px rgba(163, 177, 198, 0.65), -9px -9px 18px rgba(255, 255, 255, 0.95) !important;
 }
 
 /* ═══════════════════════════════════════════
-   MATT BLACK SIDEBAR (Stitched Tabs)
+   LIGHT SKEUOMORPHIC SIDEBAR
    ═══════════════════════════════════════════ */
 .wood-panel {
-  background: linear-gradient(180deg, #0e0e12 0%, #07070a 100%);
-  border-right: 2px solid #040406;
-  box-shadow: 4px 0 20px rgba(0,0,0,0.8);
+  background: #e6ebf2;
+  border-right: 1px solid rgba(163, 177, 198, 0.3);
+  box-shadow: 6px 0 16px rgba(163, 177, 198, 0.45);
 }
 
 .binder-tab {
-  background: linear-gradient(90deg, #181820 0%, #121217 100%);
-  color: #cbd5e1;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-left: 4px solid #475569;
-  border-radius: 0 8px 8px 0;
+  background: #e6ebf2;
+  color: #4a5568;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-left: 4px solid #cbd5e0;
+  border-radius: 0.75rem;
   font-weight: 600;
-  box-shadow: 2px 2px 6px rgba(0,0,0,0.4);
+  box-shadow: 4px 4px 8px rgba(163, 177, 198, 0.5), -4px -4px 8px rgba(255, 255, 255, 0.8);
   transition: all 0.2s ease;
   position: relative;
 }
 
-.binder-tab::after {
-  content: "";
-  position: absolute;
-  inset: 4px 4px 4px 8px;
-  border: 1px dashed rgba(212, 168, 67, 0.2);
-  border-radius: 0 5px 5px 0;
-  pointer-events: none;
-}
-
 .binder-tab.active {
-  background: linear-gradient(90deg, #222230 0%, #161622 100%);
-  color: #f2d894;
-  border-color: rgba(212, 168, 67, 0.4);
-  border-left: 5px solid #d8a442;
+  background: #e6ebf2;
+  color: #2b6cb0;
+  border-left: 5px solid #3182ce;
   box-shadow:
-    3px 4px 12px rgba(0,0,0,0.7),
-    inset 0 1px 0 rgba(255,255,255,0.15);
-  transform: translateX(4px);
-}
-
-.binder-tab.active::after {
-  border-color: rgba(212, 168, 67, 0.45);
+    inset 3px 3px 6px rgba(163, 177, 198, 0.5),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.8);
 }
 
 /* ═══════════════════════════════════════════
-   BUTTONS (3D Brass & Matt Black Stitched)
+   BUTTONS (3D Light Soft Skeuomorphic Buttons)
    ═══════════════════════════════════════════ */
 .brass-btn {
-  background: linear-gradient(180deg, #ebd47a 0%, #d8a442 50%, #a07420 100%);
-  color: #09090b;
-  border: 1px solid #755210;
-  border-radius: 8px;
+  background: linear-gradient(135deg, #ed8936 0%, #dd6b20 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 0.85rem;
   font-weight: 700;
   cursor: pointer;
   box-shadow:
-    0 3px 8px rgba(0,0,0,0.5),
-    inset 0 1px 0 rgba(255,255,255,0.6);
-  text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+    5px 5px 12px rgba(163, 177, 198, 0.6),
+    -5px -5px 12px rgba(255, 255, 255, 0.8),
+    inset 0 1px 0 rgba(255,255,255,0.4);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
   transition: all 0.15s ease;
 }
 
 .brass-btn:hover {
-  background: linear-gradient(180deg, #f5e49e 0%, #e2b04c 50%, #b88612 100%);
-  box-shadow: 0 4px 12px rgba(216,164,66,0.4), inset 0 1px 0 rgba(255,255,255,0.7);
+  background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+  box-shadow: 6px 6px 14px rgba(163, 177, 198, 0.7), -6px -6px 14px rgba(255, 255, 255, 0.9);
 }
 
 .brass-btn:active {
   transform: translateY(1px);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.3);
 }
 
 .leather-btn {
-  background: linear-gradient(180deg, #22222c 0%, #16161f 100%);
-  color: #f5f5f7;
-  border: 1px solid rgba(212, 168, 67, 0.3);
-  border-radius: 8px;
+  background: #e6ebf2;
+  color: #2d3748;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.08);
+  box-shadow: 4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85);
   transition: all 0.15s ease;
 }
 
 .leather-btn:hover {
-  background: linear-gradient(180deg, #2c2c3a 0%, #1e1e2a 100%);
-  border-color: rgba(212, 168, 67, 0.5);
+  background: #ebf0f7;
+  color: #1a202c;
 }
 
 .leather-btn:active {
-  transform: translateY(1px);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+  box-shadow: inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.8);
 }
 
 /* ═══════════════════════════════════════════
-   CARVED MATT INSET INPUT FIELDS
+   SUNKEN INSET INPUT FIELDS (Carved 3D)
    ═══════════════════════════════════════════ */
 .inset-field {
-  background: #101014;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-  color: #f5f5f7;
+  background: #e6ebf2;
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 0.75rem;
+  color: #1a202c;
   box-shadow:
-    inset 0 2px 6px rgba(0,0,0,0.7),
-    0 1px 0 rgba(255,255,255,0.05);
+    inset 4px 4px 8px rgba(163, 177, 198, 0.5),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.9);
 }
 
 .inset-field:focus {
   outline: none;
-  border-color: #d8a442;
+  border-color: #3182ce;
   box-shadow:
-    inset 0 2px 6px rgba(0,0,0,0.7),
-    0 0 8px rgba(216,164,66,0.3);
+    inset 4px 4px 8px rgba(163, 177, 198, 0.5),
+    inset -4px -4px 8px rgba(255, 255, 255, 0.9),
+    0 0 0 3px rgba(49, 130, 206, 0.25);
 }
 
 .inset-field::placeholder {
-  color: #64748b;
+  color: #a0aec0;
 }
 
 /* ═══════════════════════════════════════════
-   TEXT & INK EFFECTS
+   TEXT EFFECTS
    ═══════════════════════════════════════════ */
 .emboss-text {
-  color: #f5f5f7;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.9);
+  color: #1a202c;
+  text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.8);
 }
 
 .deboss-text {
-  color: #94a3b8;
+  color: #718096;
 }
 
 .gold-text, .text-gradient {
-  color: #f2d894;
-  background: linear-gradient(135deg, #f2d894, #d8a442, #a07420);
+  color: #ed8936;
+  background: linear-gradient(135deg, #ed8936, #dd6b20);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -297,17 +257,16 @@ body {
    PROGRESS TUBE
    ═══════════════════════════════════════════ */
 .progress-tube {
-  background: #101014;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 2px 4px rgba(0,0,0,0.8);
+  background: #e6ebf2;
+  border-radius: 0.75rem;
+  box-shadow: inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.8);
   overflow: hidden;
 }
 
 .progress-tube-fill {
-  background: linear-gradient(180deg, #f2d894 0%, #d8a442 50%, #9e7518 100%);
-  border-radius: 5px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.4);
+  background: linear-gradient(90deg, #4299e1 0%, #3182ce 100%);
+  border-radius: 0.65rem;
+  box-shadow: 2px 2px 4px rgba(163, 177, 198, 0.4);
 }
 
 /* ═══════════════════════════════════════════
@@ -319,19 +278,18 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #09090b;
+  background: #e6ebf2;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #22222c;
+  background: #cbd5e0;
   border-radius: 4px;
-  border: 1px solid rgba(212, 168, 67, 0.2);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2e2e3c;
+  background: #a0aec0;
 }
 
 input, textarea, select {
-  color-scheme: dark;
+  color-scheme: light;
 }

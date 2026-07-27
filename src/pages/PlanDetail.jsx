@@ -15,8 +15,21 @@ import {
 } from 'lucide-react';
 import { extractVideoId, isValidYoutubeUrl, calcVideoProgress } from '../utils/youtube';
 
-const cardStyle = { background: 'linear-gradient(145deg, #191922, #111116)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem', boxShadow: '0 4px 12px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.06)' };
-const inputStyle = { background: '#101014', border: '1px solid rgba(255,255,255,0.1)', color: '#f5f5f7', boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.7), 0 1px 0 rgba(255,255,255,0.05)' };
+const cardStyle = {
+  background: '#e6ebf2',
+  border: '1px solid rgba(255, 255, 255, 0.7)',
+  borderRadius: '1.25rem',
+  boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
+  color: '#1a202c',
+};
+
+const inputStyle = {
+  background: '#e6ebf2',
+  border: '1px solid rgba(255, 255, 255, 0.6)',
+  color: '#1a202c',
+  borderRadius: '0.75rem',
+  boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)',
+};
 
 export default function PlanDetail() {
   const { planId } = useParams();
@@ -168,8 +181,11 @@ export default function PlanDetail() {
   };
 
   const btnStyle = (active) => ({
-    padding: '0.5rem 1rem', borderRadius: '0.5rem', fontSize: '0.8rem', fontWeight: 500, cursor: 'pointer',
-    background: active ? 'rgba(184,134,11,0.2)' : 'transparent', color: active ? '#d4a843' : '#a08060',
+    padding: '0.5rem 1rem', borderRadius: '0.75rem', fontSize: '0.8rem', fontWeight: 600, cursor: 'pointer',
+    background: active ? '#e6ebf2' : 'transparent',
+    color: active ? '#ed8936' : '#718096',
+    boxShadow: active ? 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' : 'none',
+    border: active ? '1px solid rgba(255, 255, 255, 0.6)' : '1px solid transparent',
   });
 
   return (
@@ -178,37 +194,37 @@ export default function PlanDetail() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate('/plans')} className="p-2 rounded-xl hover:bg-white/5 transition-all cursor-pointer" style={{ color: '#8888aa' }}>
+            <button onClick={() => navigate('/plans')} className="p-2 rounded-xl hover:bg-[#dce3ed] transition-all cursor-pointer" style={{ color: '#718096' }}>
               <ChevronLeft className="w-5 h-5" />
             </button>
             {editingName ? (
               <div className="flex items-center gap-2">
-                <input type="text" value={planName} onChange={(e) => setPlanName(e.target.value)} className="px-3 py-1.5 rounded-lg text-lg font-semibold focus:outline-none" style={{ ...inputStyle, borderColor: 'rgba(99,102,241,0.4)' }} autoFocus onKeyDown={(e) => e.key === 'Enter' && handleRenameSave()} />
-                <button onClick={handleRenameSave} className="cursor-pointer" style={{ color: '#34d399' }}><Check className="w-5 h-5" /></button>
-                <button onClick={() => setEditingName(false)} className="cursor-pointer" style={{ color: '#5a5a88' }}><X className="w-5 h-5" /></button>
+                <input type="text" value={planName} onChange={(e) => setPlanName(e.target.value)} className="px-3 py-1.5 rounded-lg text-lg font-semibold focus:outline-none" style={{ ...inputStyle, borderColor: '#ed8936' }} autoFocus onKeyDown={(e) => e.key === 'Enter' && handleRenameSave()} />
+                <button onClick={handleRenameSave} className="cursor-pointer" style={{ color: '#38a169' }}><Check className="w-5 h-5" /></button>
+                <button onClick={() => setEditingName(false)} className="cursor-pointer" style={{ color: '#718096' }}><X className="w-5 h-5" /></button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full" style={{ background: plan.color }} />
-                <h1 className="text-xl font-bold text-white">{plan.name}</h1>
-                <button onClick={() => { setEditingName(true); setPlanName(plan.name); }} className="cursor-pointer" style={{ color: '#5a5a88' }}><Edit3 className="w-4 h-4" /></button>
+                <div className="w-3 h-3 rounded-full" style={{ background: plan.color || '#ed8936' }} />
+                <h1 className="text-xl font-bold text-[#1a202c]">{plan.name}</h1>
+                <button onClick={() => { setEditingName(true); setPlanName(plan.name); }} className="cursor-pointer" style={{ color: '#718096' }}><Edit3 className="w-4 h-4" /></button>
               </div>
             )}
           </div>
           <div className="flex items-center gap-2">
             <input type="file" ref={fileInputRef} accept=".csv,.xlsx,.xls" onChange={handleImport} className="hidden" />
-            <button onClick={() => fileInputRef.current?.click()} className="p-2 rounded-xl hover:bg-white/5 cursor-pointer" style={{ color: '#8888aa' }} title="Import"><FileUp className="w-4 h-4" /></button>
-            <button onClick={() => exportToPDF(plan)} className="p-2 rounded-xl hover:bg-white/5 cursor-pointer" style={{ color: '#8888aa' }} title="PDF"><FileDown className="w-4 h-4" /></button>
-            <button onClick={() => exportToExcel(plan)} className="p-2 rounded-xl hover:bg-white/5 cursor-pointer" style={{ color: '#8888aa' }} title="Excel"><FileDown className="w-4 h-4" /></button>
+            <button onClick={() => fileInputRef.current?.click()} className="p-2 rounded-xl hover:bg-[#dce3ed] cursor-pointer" style={{ color: '#718096' }} title="Import"><FileUp className="w-4 h-4" /></button>
+            <button onClick={() => exportToPDF(plan)} className="p-2 rounded-xl hover:bg-[#dce3ed] cursor-pointer" style={{ color: '#718096' }} title="PDF"><FileDown className="w-4 h-4" /></button>
+            <button onClick={() => exportToExcel(plan)} className="p-2 rounded-xl hover:bg-[#dce3ed] cursor-pointer" style={{ color: '#718096' }} title="Excel"><FileDown className="w-4 h-4" /></button>
           </div>
         </div>
 
         {/* Stats Bar */}
         <div className="flex items-center gap-8 mb-8 flex-wrap">
-          <ProgressRing percent={stats.progress} size={56} strokeWidth={4} color={plan.color} />
+          <ProgressRing percent={stats.progress} size={56} strokeWidth={4} color={plan.color || '#ed8936'} />
           <div>
-            <p className="text-xs" style={{ color: '#5a5a88' }}>Completed</p>
-            <p className="text-lg font-bold text-white">{stats.completed} / {stats.total}</p>
+            <p className="text-xs" style={{ color: '#718096' }}>Completed</p>
+            <p className="text-lg font-bold text-[#1a202c]">{stats.completed} / {stats.total}</p>
           </div>
           <div className="flex gap-2">
             <button onClick={() => setView('tree')} style={btnStyle(view === 'tree')}>Tree</button>
@@ -239,17 +255,17 @@ export default function PlanDetail() {
 
                   return (
                     <div key={month.id} className="overflow-hidden" style={cardStyle}>
-                      <button className="w-full flex items-center gap-3 p-5 hover:bg-white/5 transition-all cursor-pointer" onClick={() => setExpandedMonth(expandedMonth === month.id ? null : month.id)}>
-                        <GripVertical className="w-4 h-4" style={{ color: '#3d3d65' }} />
+                      <button className="w-full flex items-center gap-3 p-5 hover:bg-[#ebf0f7] transition-all cursor-pointer" onClick={() => setExpandedMonth(expandedMonth === month.id ? null : month.id)}>
+                        <GripVertical className="w-4 h-4" style={{ color: '#a0aec0' }} />
                         <div className="flex-1 text-left">
-                          <h3 className="text-sm font-semibold text-white">{month.name}</h3>
-                          <p className="text-[11px]" style={{ color: '#5a5a88' }}>{mTasks.length} tasks · {mProgress}%</p>
+                          <h3 className="text-sm font-semibold text-[#1a202c]">{month.name}</h3>
+                          <p className="text-[11px]" style={{ color: '#718096' }}>{mTasks.length} tasks · {mProgress}%</p>
                         </div>
-                        <div className="w-20 h-1.5 rounded-full overflow-hidden" style={{ background: '#1e1e35' }}>
-                          <div className="h-full rounded-full transition-all" style={{ width: `${mProgress}%`, background: '#6366f1' }} />
+                        <div className="w-20 h-1.5 rounded-full overflow-hidden" style={{ background: '#cbd5e0' }}>
+                          <div className="h-full rounded-full transition-all" style={{ width: `${mProgress}%`, background: plan.color || '#ed8936' }} />
                         </div>
                         <button onClick={(e) => { e.stopPropagation(); dispatch({ type: 'DELETE_MONTH', payload: { planId: plan.id, monthId: month.id } }); showToast('Month deleted', 'info'); }}
-                          className="p-1 cursor-pointer" style={{ color: '#5a5a88' }}><Trash2 className="w-3.5 h-3.5" /></button>
+                          className="p-1 cursor-pointer" style={{ color: '#718096' }}><Trash2 className="w-3.5 h-3.5" /></button>
                       </button>
 
                       {expandedMonth === month.id && (
@@ -260,32 +276,32 @@ export default function PlanDetail() {
                             const wCompleted = wTasks.filter((t) => t.status === 'completed').length;
 
                             return (
-                              <div key={week.id} className="ml-4 pl-4" style={{ borderLeft: '1px solid rgba(255,255,255,0.08)' }}>
-                                <button className="w-full flex items-center gap-2 py-2 hover:bg-white/5 rounded-lg px-2 transition-all cursor-pointer" onClick={() => setExpandedWeek(expandedWeek === week.id ? null : week.id)}>
-                                  <GripVertical className="w-3.5 h-3.5" style={{ color: '#3d3d65' }} />
-                                  <span className="text-sm flex-1 text-left" style={{ color: '#d0d0e0' }}>{week.name}</span>
-                                  <span className="text-[10px]" style={{ color: '#5a5a88' }}>{wCompleted}/{wTasks.length}</span>
+                              <div key={week.id} className="ml-4 pl-4" style={{ borderLeft: '1px solid rgba(163, 177, 198, 0.3)' }}>
+                                <button className="w-full flex items-center gap-2 py-2 hover:bg-[#ebf0f7] rounded-lg px-2 transition-all cursor-pointer" onClick={() => setExpandedWeek(expandedWeek === week.id ? null : week.id)}>
+                                  <GripVertical className="w-3.5 h-3.5" style={{ color: '#a0aec0' }} />
+                                  <span className="text-sm flex-1 text-left" style={{ color: '#2d3748' }}>{week.name}</span>
+                                  <span className="text-[10px]" style={{ color: '#718096' }}>{wCompleted}/{wTasks.length}</span>
                                   <button onClick={(e) => { e.stopPropagation(); dispatch({ type: 'DELETE_WEEK', payload: { planId: plan.id, weekId: week.id } }); }}
-                                    className="p-1 cursor-pointer" style={{ color: '#3d3d65' }}><Trash2 className="w-3 h-3" /></button>
+                                    className="p-1 cursor-pointer" style={{ color: '#a0aec0' }}><Trash2 className="w-3 h-3" /></button>
                                 </button>
 
                                 {expandedWeek === week.id && (
                                   <div className="ml-4 space-y-1 mt-1">
                                     {(week.days || []).map((day) => (
-                                      <div key={day.id} className="pl-3" style={{ borderLeft: '1px solid rgba(255,255,255,0.06)' }}>
-                                        <button className="w-full flex items-center gap-2 py-1.5 hover:bg-white/5 rounded-lg px-2 transition-all cursor-pointer" onClick={() => setExpandedDay(expandedDay === day.id ? null : day.id)}>
-                                          <GripVertical className="w-3 h-3" style={{ color: '#3d3d65' }} />
-                                          <span className="text-sm flex-1 text-left" style={{ color: '#d0d0e0' }}>{day.name}</span>
+                                      <div key={day.id} className="pl-3" style={{ borderLeft: '1px solid rgba(163, 177, 198, 0.2)' }}>
+                                        <button className="w-full flex items-center gap-2 py-1.5 hover:bg-[#ebf0f7] rounded-lg px-2 transition-all cursor-pointer" onClick={() => setExpandedDay(expandedDay === day.id ? null : day.id)}>
+                                          <GripVertical className="w-3 h-3" style={{ color: '#a0aec0' }} />
+                                          <span className="text-sm flex-1 text-left" style={{ color: '#2d3748' }}>{day.name}</span>
                                           {editingDate === day.id ? (
                                             <input type="date" defaultValue={day.date} className="rounded px-2 py-0.5 text-xs" style={{ ...inputStyle }} onClick={(e) => e.stopPropagation()}
                                               onChange={(e) => handleDateChange(day.id, e.target.value)} onBlur={() => setEditingDate(null)} autoFocus />
                                           ) : (
-                                            <button onClick={(e) => { e.stopPropagation(); setEditingDate(day.id); }} className="text-[10px] cursor-pointer" style={{ color: '#5a5a88' }}>
+                                            <button onClick={(e) => { e.stopPropagation(); setEditingDate(day.id); }} className="text-[10px] cursor-pointer" style={{ color: '#718096' }}>
                                               {day.date || 'Set date'}
                                             </button>
                                           )}
                                           <button onClick={(e) => { e.stopPropagation(); dispatch({ type: 'DELETE_DAY', payload: { planId: plan.id, dayId: day.id } }); }}
-                                            className="p-1 cursor-pointer" style={{ color: '#3d3d65' }}><Trash2 className="w-3 h-3" /></button>
+                                            className="p-1 cursor-pointer" style={{ color: '#a0aec0' }}><Trash2 className="w-3 h-3" /></button>
                                         </button>
 
                                         {expandedDay === day.id && (
@@ -297,37 +313,37 @@ export default function PlanDetail() {
 
                                               if (isEditing) {
                                                 return (
-                                                  <form key={task.id} onSubmit={(e) => handleEditTaskSave(e, task)} className="mt-2 space-y-2 p-3 rounded-lg border border-white/5" style={{ background: '#1e1408' }}>
+                                                  <form key={task.id} onSubmit={(e) => handleEditTaskSave(e, task)} className="mt-2 space-y-2 p-3 rounded-lg border border-white/70" style={{ background: '#e6ebf2', boxShadow: 'inset 2px 2px 5px rgba(163,177,198,0.5), inset -2px -2px 5px rgba(255,255,255,0.8)' }}>
                                                     <div>
-                                                      <label className="text-[10px] text-[#8888aa] block mb-1">Task Title</label>
+                                                      <label className="text-[10px] text-[#718096] block mb-1">Task Title</label>
                                                       <input type="text" value={editingTaskName} onChange={(e) => setEditingTaskName(e.target.value)} className="w-full px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} autoFocus />
                                                     </div>
                                                     <div>
-                                                      <label className="text-[10px] text-[#8888aa] block mb-1">YouTube URL</label>
+                                                      <label className="text-[10px] text-[#718096] block mb-1">YouTube URL</label>
                                                       <input type="text" value={editingTaskUrl} onChange={(e) => setEditingTaskUrl(e.target.value)} placeholder="Paste YouTube URL here..." className="w-full px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} />
                                                     </div>
                                                     <div className="flex gap-2 justify-end">
-                                                      <button type="submit" className="px-2.5 py-1 rounded text-[10px] font-semibold cursor-pointer" style={{ background: '#34d399', color: '#12122a' }}>Save</button>
-                                                      <button type="button" onClick={() => setEditingTaskId(null)} className="px-2.5 py-1 rounded text-[10px] font-semibold cursor-pointer" style={{ background: '#3a2a1a', color: '#a08060' }}>Cancel</button>
+                                                      <button type="submit" className="brass-btn px-2.5 py-1 text-[10px] cursor-pointer">Save</button>
+                                                      <button type="button" onClick={() => setEditingTaskId(null)} className="leather-btn px-2.5 py-1 text-[10px] cursor-pointer">Cancel</button>
                                                     </div>
                                                   </form>
                                                 );
                                               }
 
                                               return (
-                                                <div key={task.id} className="py-1.5 px-2 rounded-lg hover:bg-white/5 group">
+                                                <div key={task.id} className="py-1.5 px-2 rounded-lg hover:bg-[#ebf0f7] group">
                                                   <div className="flex items-center gap-2">
                                                     <button onClick={() => dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: plan.id, taskId: task.id } })}
                                                       className="w-3.5 h-3.5 rounded-full border-2 shrink-0 cursor-pointer transition-all"
                                                       style={{
-                                                        borderColor: task.status === 'completed' ? '#34d399' : task.status === 'in-progress' ? '#fbbf24' : '#5a5a88',
-                                                        background: task.status === 'completed' ? '#34d399' : task.status === 'in-progress' ? 'rgba(251,191,36,0.2)' : 'transparent',
+                                                        borderColor: task.status === 'completed' ? '#38a169' : task.status === 'in-progress' ? '#ed8936' : '#cbd5e0',
+                                                        background: task.status === 'completed' ? '#38a169' : task.status === 'in-progress' ? 'rgba(237,137,54,0.15)' : 'transparent',
                                                       }} />
-                                                    <span className="text-xs flex-1 truncate" style={{ color: task.status === 'completed' ? '#5a5a88' : '#d0d0e0', textDecoration: task.status === 'completed' ? 'line-through' : 'none' }}>{task.title}</span>
+                                                    <span className="text-xs flex-1 truncate" style={{ color: task.status === 'completed' ? '#718096' : '#1a202c', textDecoration: task.status === 'completed' ? 'line-through' : 'none' }}>{task.title}</span>
                                                     {videoId && (
                                                       <button onClick={() => navigate(`/learn/${plan.id}/${task.id}`)}
                                                         className="flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-medium cursor-pointer transition-all shrink-0"
-                                                        style={{ background: 'rgba(239,68,68,0.1)', color: '#f87171' }}>
+                                                        style={{ background: 'rgba(237,137,54,0.15)', color: '#ed8936' }}>
                                                         <Play className="w-3 h-3" /> Watch
                                                       </button>
                                                     )}
@@ -335,22 +351,22 @@ export default function PlanDetail() {
                                                       setEditingTaskId(task.id);
                                                       setEditingTaskName(task.title);
                                                       setEditingTaskUrl(task.youtubeUrl || '');
-                                                    }} className="p-0.5 opacity-0 group-hover:opacity-100 cursor-pointer text-[#8888aa] hover:text-white"><Edit3 className="w-3 h-3" /></button>
+                                                    }} className="p-0.5 opacity-0 group-hover:opacity-100 cursor-pointer text-[#718096] hover:text-[#1a202c]"><Edit3 className="w-3 h-3" /></button>
                                                     <button onClick={() => dispatch({ type: 'DELETE_TASK', payload: { planId: plan.id, taskId: task.id } })}
-                                                      className="p-0.5 opacity-0 group-hover:opacity-100 cursor-pointer" style={{ color: '#fb7185' }}><Trash2 className="w-3 h-3" /></button>
+                                                      className="p-0.5 opacity-0 group-hover:opacity-100 cursor-pointer" style={{ color: '#e53e3e' }}><Trash2 className="w-3 h-3" /></button>
                                                   </div>
                                                   {task.youtubeUrl && (
-                                                    <div className="ml-6 mt-1 flex items-center gap-1 text-[9px]" style={{ color: '#5a5a88' }}>
-                                                      <Youtube className="w-2.5 h-2.5 shrink-0" />
+                                                    <div className="ml-6 mt-1 flex items-center gap-1 text-[9px]" style={{ color: '#718096' }}>
+                                                      <Youtube className="w-2.5 h-2.5 shrink-0 text-[#ed8936]" />
                                                       <span className="truncate">{task.youtubeUrl}</span>
                                                     </div>
                                                   )}
                                                   {vp && vp.progress > 0 && (
                                                     <div className="ml-6 mt-1 flex items-center gap-2">
-                                                      <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: '#1e1e35' }}>
-                                                        <div className="h-full rounded-full" style={{ width: `${Math.min(100, vp.progress)}%`, background: vp.progress >= 95 ? '#34d399' : '#6366f1' }} />
+                                                      <div className="flex-1 h-1 rounded-full overflow-hidden" style={{ background: '#cbd5e0' }}>
+                                                        <div className="h-full rounded-full" style={{ width: `${Math.min(100, vp.progress)}%`, background: vp.progress >= 95 ? '#38a169' : '#ed8936' }} />
                                                       </div>
-                                                      <span className="text-[9px]" style={{ color: '#5a5a88' }}>{Math.round(vp.progress)}% watched</span>
+                                                      <span className="text-[9px]" style={{ color: '#718096' }}>{Math.round(vp.progress)}% watched</span>
                                                     </div>
                                                   )}
                                                 </div>
@@ -358,24 +374,24 @@ export default function PlanDetail() {
                                             })}
 
                                             {addTaskDay === day.id ? (
-                                              <form onSubmit={(e) => handleAddTask(e, day.id)} className="mt-1 p-3 rounded-lg space-y-2 border border-white/5" style={{ background: '#1a120b' }}>
+                                              <form onSubmit={(e) => handleAddTask(e, day.id)} className="mt-1 p-3 rounded-lg space-y-2 border border-white/70" style={{ background: '#e6ebf2', boxShadow: 'inset 2px 2px 5px rgba(163,177,198,0.5), inset -2px -2px 5px rgba(255,255,255,0.8)' }}>
                                                 <div>
-                                                  <label className="text-[10px] text-[#8888aa] block mb-1">Task Title</label>
+                                                  <label className="text-[10px] text-[#718096] block mb-1">Task Title</label>
                                                   <input type="text" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} placeholder="e.g. Learn Python Loops" autoFocus
                                                     className="w-full px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} />
                                                 </div>
                                                 <div>
-                                                  <label className="text-[10px] text-[#8888aa] block mb-1">YouTube URL (Optional)</label>
+                                                  <label className="text-[10px] text-[#718096] block mb-1">YouTube URL (Optional)</label>
                                                   <input type="text" value={newYoutubeUrl} onChange={(e) => setNewYoutubeUrl(e.target.value)} placeholder="https://www.youtube.com/watch?v=..."
                                                     className="w-full px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} />
                                                 </div>
                                                 <div className="flex gap-2 justify-end">
-                                                  <button type="submit" className="px-2.5 py-1 rounded text-[10px] font-semibold cursor-pointer" style={{ background: '#34d399', color: '#12122a' }}>Add Task</button>
-                                                  <button type="button" onClick={() => { setAddTaskDay(null); setNewItemName(''); setNewYoutubeUrl(''); }} className="px-2.5 py-1 rounded text-[10px] font-semibold cursor-pointer" style={{ background: '#3a2a1a', color: '#a08060' }}>Cancel</button>
+                                                  <button type="submit" className="brass-btn px-2.5 py-1 text-[10px] cursor-pointer">Add Task</button>
+                                                  <button type="button" onClick={() => { setAddTaskDay(null); setNewItemName(''); setNewYoutubeUrl(''); }} className="leather-btn px-2.5 py-1 text-[10px] cursor-pointer">Cancel</button>
                                                 </div>
                                               </form>
                                             ) : (
-                                              <button onClick={() => { setAddTaskDay(day.id); setNewItemName(''); setNewYoutubeUrl(''); }} className="flex items-center gap-1 text-[11px] cursor-pointer ml-6" style={{ color: '#5a5a88' }}>
+                                              <button onClick={() => { setAddTaskDay(day.id); setNewItemName(''); setNewYoutubeUrl(''); }} className="flex items-center gap-1 text-[11px] cursor-pointer ml-6" style={{ color: '#718096' }}>
                                                 <Plus className="w-3 h-3" /> Add Task
                                               </button>
                                             )}
@@ -387,11 +403,11 @@ export default function PlanDetail() {
                                       <form onSubmit={(e) => handleAddDay(e, week.id)} className="flex gap-1 mt-1 ml-4">
                                         <input type="text" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} placeholder="Day name" autoFocus
                                           className="flex-1 px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} />
-                                        <button type="submit" className="cursor-pointer" style={{ color: '#34d399' }}><Check className="w-4 h-4" /></button>
-                                        <button type="button" onClick={() => { setAddDayWeek(null); setNewItemName(''); }} className="cursor-pointer" style={{ color: '#5a5a88' }}><X className="w-4 h-4" /></button>
+                                        <button type="submit" className="cursor-pointer" style={{ color: '#38a169' }}><Check className="w-4 h-4" /></button>
+                                        <button type="button" onClick={() => { setAddDayWeek(null); setNewItemName(''); }} className="cursor-pointer" style={{ color: '#718096' }}><X className="w-4 h-4" /></button>
                                       </form>
                                     ) : (
-                                      <button onClick={() => { setAddDayWeek(week.id); setNewItemName(''); }} className="flex items-center gap-1 text-[11px] cursor-pointer mt-1 ml-4" style={{ color: '#5a5a88' }}>
+                                      <button onClick={() => { setAddDayWeek(week.id); setNewItemName(''); }} className="flex items-center gap-1 text-[11px] cursor-pointer mt-1 ml-4" style={{ color: '#718096' }}>
                                         <Plus className="w-3 h-3" /> Add Day
                                       </button>
                                     )}
@@ -404,11 +420,11 @@ export default function PlanDetail() {
                             <form onSubmit={(e) => handleAddWeek(e, month.id)} className="flex gap-1 mt-2 ml-4">
                               <input type="text" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} placeholder="Week name" autoFocus
                                 className="flex-1 px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} />
-                              <button type="submit" className="cursor-pointer" style={{ color: '#34d399' }}><Check className="w-4 h-4" /></button>
-                              <button type="button" onClick={() => { setAddWeekMonth(null); setNewItemName(''); }} className="cursor-pointer" style={{ color: '#5a5a88' }}><X className="w-4 h-4" /></button>
+                              <button type="submit" className="cursor-pointer" style={{ color: '#38a169' }}><Check className="w-4 h-4" /></button>
+                              <button type="button" onClick={() => { setAddWeekMonth(null); setNewItemName(''); }} className="cursor-pointer" style={{ color: '#718096' }}><X className="w-4 h-4" /></button>
                             </form>
                           ) : (
-                            <button onClick={() => { setAddWeekMonth(month.id); setNewItemName(''); }} className="flex items-center gap-1 text-xs cursor-pointer mt-2 ml-4" style={{ color: '#5a5a88' }}>
+                            <button onClick={() => { setAddWeekMonth(month.id); setNewItemName(''); }} className="flex items-center gap-1 text-xs cursor-pointer mt-2 ml-4" style={{ color: '#718096' }}>
                               <Plus className="w-3.5 h-3.5" /> Add Week
                             </button>
                           )}
@@ -423,11 +439,11 @@ export default function PlanDetail() {
                   <form onSubmit={handleAddMonth} className="p-4 flex gap-2" style={cardStyle}>
                     <input type="text" value={addMonthName} onChange={(e) => setAddMonthName(e.target.value)} placeholder="Month name" autoFocus
                       className="flex-1 px-3 py-2 text-sm rounded-xl focus:outline-none" style={{ ...inputStyle }} />
-                    <button type="submit" className="px-4 py-2 rounded-xl text-sm cursor-pointer" style={{ background: 'rgba(184,134,11,0.2)', color: '#d4a843' }}>Add</button>
-                    <button type="button" onClick={() => setShowAddMonth(false)} className="px-3 py-2 rounded-xl cursor-pointer" style={{ color: '#5a5a88' }}><X className="w-4 h-4" /></button>
+                    <button type="submit" className="brass-btn px-4 py-2 text-sm cursor-pointer">Add</button>
+                    <button type="button" onClick={() => setShowAddMonth(false)} className="leather-btn px-3 py-2 cursor-pointer" style={{ color: '#718096' }}><X className="w-4 h-4" /></button>
                   </form>
                 ) : (
-                  <button onClick={() => setShowAddMonth(true)} className="w-full py-3 text-sm flex items-center justify-center gap-2 transition-all cursor-pointer" style={{ borderRadius: '1rem', border: '2px dashed #2a2a4a', color: '#5a5a88' }}>
+                  <button onClick={() => setShowAddMonth(true)} className="w-full py-3 text-sm flex items-center justify-center gap-2 transition-all cursor-pointer hover:border-[#ed8936]" style={{ borderRadius: '1rem', border: '2px dashed #cbd5e0', color: '#718096' }}>
                     <FolderPlus className="w-4 h-4" /> Add Month
                   </button>
                 )}
@@ -438,17 +454,17 @@ export default function PlanDetail() {
           {/* Sidebar */}
           <div className="space-y-5">
             <div className="p-6" style={cardStyle}>
-              <h3 className="text-sm font-semibold text-white mb-4">Plan Info</h3>
+              <h3 className="text-sm font-semibold text-[#1a202c] mb-4">Plan Info</h3>
               <div className="space-y-3 text-xs">
-                <div className="flex justify-between"><span style={{ color: '#5a5a88' }}>Created</span><span style={{ color: '#aaaac8' }}>{formatDate(plan.createdAt)}</span></div>
-                <div className="flex justify-between"><span style={{ color: '#5a5a88' }}>Months</span><span style={{ color: '#aaaac8' }}>{plan.months?.length || 0}</span></div>
-                <div className="flex justify-between"><span style={{ color: '#5a5a88' }}>Tasks</span><span style={{ color: '#aaaac8' }}>{stats.total}</span></div>
-                <div className="flex justify-between"><span style={{ color: '#5a5a88' }}>Completed</span><span style={{ color: '#34d399' }}>{stats.completed}</span></div>
+                <div className="flex justify-between"><span style={{ color: '#718096' }}>Created</span><span style={{ color: '#2d3748' }}>{formatDate(plan.createdAt)}</span></div>
+                <div className="flex justify-between"><span style={{ color: '#718096' }}>Months</span><span style={{ color: '#2d3748' }}>{plan.months?.length || 0}</span></div>
+                <div className="flex justify-between"><span style={{ color: '#718096' }}>Tasks</span><span style={{ color: '#2d3748' }}>{stats.total}</span></div>
+                <div className="flex justify-between"><span style={{ color: '#718096' }}>Completed</span><span style={{ color: '#38a169' }}>{stats.completed}</span></div>
               </div>
             </div>
 
             <div className="p-6" style={cardStyle}>
-              <h3 className="text-sm font-semibold text-white mb-4">Activity</h3>
+              <h3 className="text-sm font-semibold text-[#1a202c] mb-4">Activity</h3>
               <ActivityTimeline activities={[...(plan.activities || [])].reverse()} maxItems={8} />
             </div>
           </div>

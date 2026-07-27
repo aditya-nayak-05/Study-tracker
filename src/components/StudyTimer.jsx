@@ -160,13 +160,13 @@ function StudyTimer({
   /* ── status indicator ──────────────────────────────────── */
   let statusColor, statusLabel;
   if (isRunning) {
-    statusColor = '#22c55e';
+    statusColor = '#38a169';
     statusLabel = 'Active';
   } else if (hasStarted) {
-    statusColor = '#f59e0b';
+    statusColor = '#ed8936';
     statusLabel = 'Paused';
   } else {
-    statusColor = '#6b7280';
+    statusColor = '#718096';
     statusLabel = 'Idle';
   }
 
@@ -175,19 +175,19 @@ function StudyTimer({
     <div
       ref={containerRef}
       style={{
-        background: '#18181f',
-        border: '1px solid rgba(255,255,255,0.08)',
-        borderRadius: '1rem',
+        background: '#e6ebf2',
+        border: '1px solid rgba(255,255,255,0.7)',
+        borderRadius: '1.25rem',
         padding: compact ? '1rem' : '1.5rem',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
         gap: compact ? '0.75rem' : '1.25rem',
         fontFamily: "'Inter', sans-serif",
-        color: '#f5f5f7',
+        color: '#1a202c',
         width: '100%',
         boxSizing: 'border-box',
-        boxShadow: 'none',
+        boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
       }}
     >
       {/* header */}
@@ -200,14 +200,14 @@ function StudyTimer({
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <Timer size={compact ? 16 : 20} color="#d8a442" />
+          <Timer size={compact ? 16 : 20} color="#ed8936" />
           <span
             style={{
               fontWeight: 600,
               fontSize: compact ? '0.85rem' : '1rem',
               letterSpacing: '0.02em',
               textShadow: 'none',
-              color: '#f5f5f7',
+              color: '#1a202c',
             }}
           >
             Study Timer
@@ -226,7 +226,7 @@ function StudyTimer({
               boxShadow: `0 0 6px ${statusColor}`,
             }}
           />
-          <span style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
+          <span style={{ fontSize: '0.75rem', color: '#718096' }}>
             {statusLabel}
           </span>
         </div>
@@ -245,7 +245,7 @@ function StudyTimer({
             cy={size / 2}
             r={radius}
             fill="none"
-            stroke="#18181f"
+            stroke="rgba(163, 177, 198, 0.3)"
             strokeWidth={RING_STROKE}
             style={{ filter: 'none' }}
           />
@@ -255,7 +255,7 @@ function StudyTimer({
             cy={size / 2}
             r={radius}
             fill="none"
-            stroke="#d8a442"
+            stroke="#ed8936"
             strokeWidth={RING_STROKE}
             strokeLinecap="round"
             strokeDasharray={circumference}
@@ -280,7 +280,7 @@ function StudyTimer({
               fontWeight: 700,
               fontSize: compact ? '0.95rem' : '1.5rem',
               letterSpacing: '0.04em',
-              color: '#d8a442',
+              color: '#ed8936',
               textShadow: 'none',
             }}
           >
@@ -303,7 +303,7 @@ function StudyTimer({
           <ControlButton
             icon={<Play size={16} />}
             label="Start"
-            bg="linear-gradient(to bottom, #d8a442, #d8a442)"
+            bg="linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)"
             onClick={handleStart}
             compact={compact}
           />
@@ -314,14 +314,14 @@ function StudyTimer({
             <ControlButton
               icon={<Pause size={16} />}
               label="Pause"
-              bg="linear-gradient(to bottom, #d8a442, #d8a442)"
+              bg="linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)"
               onClick={handlePause}
               compact={compact}
             />
             <ControlButton
               icon={<Square size={16} />}
               label="Finish"
-              bg="linear-gradient(to bottom, #4a7c3f, #2d5a27)"
+              bg="linear-gradient(135deg, #38a169 0%, #2f855a 100%)"
               onClick={handleFinish}
               compact={compact}
             />
@@ -333,21 +333,21 @@ function StudyTimer({
             <ControlButton
               icon={<Play size={16} />}
               label="Resume"
-              bg="linear-gradient(to bottom, #d8a442, #d8a442)"
+              bg="linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)"
               onClick={handleResume}
               compact={compact}
             />
             <ControlButton
               icon={<RotateCcw size={16} />}
               label="Reset"
-              bg="linear-gradient(to bottom, #8b3a3a, #5c2626)"
+              bg="linear-gradient(135deg, #e53e3e 0%, #c53030 100%)"
               onClick={handleReset}
               compact={compact}
             />
             <ControlButton
               icon={<Square size={16} />}
               label="Finish"
-              bg="linear-gradient(to bottom, #4a7c3f, #2d5a27)"
+              bg="linear-gradient(135deg, #38a169 0%, #2f855a 100%)"
               onClick={handleFinish}
               compact={compact}
             />
@@ -364,25 +364,24 @@ function ControlButton({ icon, label, bg, onClick, compact }) {
     <button
       type="button"
       onClick={onClick}
+      className="brass-btn"
       style={{
         display: 'inline-flex',
         alignItems: 'center',
         gap: '0.35rem',
         background: bg,
-        color: '#18181f',
-        border: '1px solid #9e7518',
-        borderRadius: '0.5rem',
+        color: '#ffffff',
+        border: '1px solid rgba(255, 255, 255, 0.4)',
+        borderRadius: '0.75rem',
         padding: compact ? '0.3rem 0.6rem' : '0.45rem 0.85rem',
         fontSize: compact ? '0.7rem' : '0.8rem',
         fontWeight: 700,
         cursor: 'pointer',
         transition: 'all 0.15s',
         letterSpacing: '0.02em',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        boxShadow: '4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85)',
         textShadow: 'none',
       }}
-      onMouseEnter={(e) => (e.currentTarget.style.filter = 'brightness(1.15)')}
-      onMouseLeave={(e) => (e.currentTarget.style.filter = 'none')}
     >
       {icon}
       {label}

@@ -11,10 +11,10 @@ const icons = {
 };
 
 const colors = {
-  success: 'border-[#4a7c3f] text-[#4a7c3f]',
-  error: 'border-[#8b3a3a] text-[#8b3a3a]',
-  info: 'border-[#d8a442] text-[#d8a442]',
-  warning: 'border-[#d8a442] text-[#d8a442]',
+  success: 'border-[#38a169] text-[#38a169]',
+  error: 'border-[#e53e3e] text-[#e53e3e]',
+  info: 'border-[#ed8936] text-[#ed8936]',
+  warning: 'border-[#ed8936] text-[#ed8936]',
 };
 
 function ToastItem({ toast, onRemove }) {
@@ -44,13 +44,17 @@ function ToastItem({ toast, onRemove }) {
   return (
     <div
       ref={ref}
-      className={`border ${colors[toast.toastType] || colors.info} rounded-xl px-4 py-3 flex items-center gap-3 min-w-[280px] max-w-[400px] shadow-md`}
-      style={{background: '#18181f'}}
+      className={`border ${colors[toast.toastType] || colors.info} rounded-xl px-4 py-3 flex items-center gap-3 min-w-[280px] max-w-[400px] leather-card`}
+      style={{
+        background: '#e6ebf2',
+        border: '1px solid rgba(255,255,255,0.7)',
+        boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
+      }}
     >
       <Icon className="w-5 h-5 shrink-0" />
-      <span className="text-sm text-[#f5f5f7] flex-1 font-medium" style={{textShadow: 'none'}}>{toast.message}</span>
-      <button onClick={handleClose} className="text-[#94a3b8] hover:text-[#f5f5f7] transition-colors cursor-pointer">
-        <X className="w-4 h-4 text-[#d8a442]" />
+      <span className="text-sm text-[#1a202c] flex-1 font-semibold" style={{textShadow: 'none'}}>{toast.message}</span>
+      <button onClick={handleClose} className="text-[#718096] hover:text-[#1a202c] transition-colors cursor-pointer">
+        <X className="w-4 h-4 text-[#ed8936]" />
       </button>
     </div>
   );

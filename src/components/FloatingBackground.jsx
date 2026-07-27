@@ -97,8 +97,7 @@ const FloatingBackground = React.memo(function FloatingBackground() {
           ref={(el) => (snippetRefs.current[i] = el)}
           className="absolute font-mono text-[10px] sm:text-xs whitespace-nowrap select-none"
           style={{
-            color: snippetColors[i % snippetColors.length],
-            textShadow: `0 0 8px ${snippetColors[i % snippetColors.length]}`,
+            color: '#4a5568',
             opacity: 0,
           }}
         >
@@ -115,8 +114,8 @@ const FloatingBackground = React.memo(function FloatingBackground() {
           style={{
             width: 2 + Math.random() * 3 + 'px',
             height: 2 + Math.random() * 3 + 'px',
-            background: '#b8860b',
-            boxShadow: `0 1px 2px rgba(0,0,0,0.5)`,
+            background: '#a0aec0',
+            boxShadow: `0 1px 2px rgba(163,177,198,0.5)`,
             opacity: 0,
           }}
         />

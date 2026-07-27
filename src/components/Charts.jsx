@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 
-export const BarChart = React.memo(function BarChart({ data = [], maxHeight = 120, barColor = '#d8a442' }) {
+export const BarChart = React.memo(function BarChart({ data = [], maxHeight = 120, barColor = '#ed8936' }) {
   const barsRef = useRef([]);
   const maxVal = Math.max(...data.map((d) => d.value), 1);
 
@@ -21,17 +21,17 @@ export const BarChart = React.memo(function BarChart({ data = [], maxHeight = 12
           <div
             ref={(el) => (barsRef.current[i] = el)}
             className="rounded-t-md w-6 sm:w-8 transition-all"
-            style={{ background: `linear-gradient(to top, ${barColor}, ${barColor}88)`, height: 0 }}
+            style={{ background: `linear-gradient(to top, ${barColor}, ${barColor}88)`, height: 0, boxShadow: '2px 2px 5px rgba(163, 177, 198, 0.4)' }}
             title={`${item.label}: ${item.value}`}
           />
-          <span className="text-[9px] text-[#94a3b8] whitespace-nowrap">{item.label}</span>
+          <span className="text-[9px] text-[#718096] whitespace-nowrap">{item.label}</span>
         </div>
       ))}
     </div>
   );
 });
 
-export const ProgressRing = React.memo(function ProgressRing({ percent = 0, size = 80, strokeWidth = 6, color = '#d8a442', label = '' }) {
+export const ProgressRing = React.memo(function ProgressRing({ percent = 0, size = 80, strokeWidth = 6, color = '#ed8936', label = '' }) {
   const circleRef = useRef(null);
   const radius = (size - strokeWidth) / 2;
   const circumference = 2 * Math.PI * radius;
@@ -49,18 +49,18 @@ export const ProgressRing = React.memo(function ProgressRing({ percent = 0, size
   return (
     <div className="relative inline-flex items-center justify-center">
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={strokeWidth} />
+        <circle cx={size / 2} cy={size / 2} r={radius} fill="none" stroke="rgba(163, 177, 198, 0.3)" strokeWidth={strokeWidth} />
         <circle
           ref={circleRef}
           cx={size / 2} cy={size / 2} r={radius}
           fill="none" stroke={color} strokeWidth={strokeWidth} strokeLinecap="round"
           strokeDasharray={circumference} strokeDashoffset={circumference}
-          style={{ filter: `drop-shadow(0 0 6px ${color}50)` }}
+          style={{ filter: `drop-shadow(2px 2px 4px rgba(163, 177, 198, 0.5))` }}
         />
       </svg>
       <div className="absolute flex flex-col items-center">
-        <span className="text-sm font-bold text-[#f5f5f7]">{percent}%</span>
-        {label && <span className="text-[9px] text-[#94a3b8]">{label}</span>}
+        <span className="text-sm font-bold text-[#1a202c]">{percent}%</span>
+        {label && <span className="text-[9px] text-[#718096]">{label}</span>}
       </div>
     </div>
   );
@@ -88,7 +88,7 @@ export const AnimatedCounter = React.memo(function AnimatedCounter({ value = 0, 
   return <span ref={ref} className={className}>{value}{suffix}</span>;
 });
 
-export const MiniLineChart = React.memo(function MiniLineChart({ data = [], width = 200, height = 50, color = '#d8a442' }) {
+export const MiniLineChart = React.memo(function MiniLineChart({ data = [], width = 200, height = 50, color = '#ed8936' }) {
   const pathRef = useRef(null);
   const maxVal = Math.max(...data, 1);
   const step = width / Math.max(data.length - 1, 1);
@@ -118,7 +118,7 @@ export const MiniLineChart = React.memo(function MiniLineChart({ data = [], widt
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeDasharray={width * 3}
-        style={{ filter: `drop-shadow(0 0 4px ${color}50)` }}
+        style={{ filter: `drop-shadow(2px 2px 4px rgba(163, 177, 198, 0.4))` }}
       />
     </svg>
   );

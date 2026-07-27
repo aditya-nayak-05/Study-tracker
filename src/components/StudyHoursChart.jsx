@@ -37,7 +37,7 @@ import { useNavigate } from 'react-router-dom';
 
 // ── Custom Card Components ──
 export const Card = ({ children, className = '', style = {} }) => (
-  <div className={`rounded-2xl p-6 ${className}`} style={{ background: 'linear-gradient(145deg, #191922, #111116)', border: '1px solid rgba(255,255,255,0.08)', ...style }}>
+  <div className={`rounded-2xl p-6 ${className}`} style={{ background: '#e6ebf2', boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)', border: '1px solid rgba(255,255,255,0.7)', color: '#1a202c', ...style }}>
     {children}
   </div>
 );
@@ -85,11 +85,11 @@ const CustomTooltipContent = React.memo(({ active, payload, activeRange, planCol
   }
 
   return (
-    <div className="p-3 rounded-xl border border-[rgba(255,255,255,0.08)] shadow-xl" style={{ background: '#18181f', minWidth: '120px' }}>
-      <p className="text-[10px] text-[#94a3b8] mb-1 font-medium">{labelDetail}</p>
+    <div className="p-3 rounded-xl border border-[rgba(255,255,255,0.7)]" style={{ background: '#e6ebf2', minWidth: '120px', boxShadow: '4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85)' }}>
+      <p className="text-[10px] text-[#718096] mb-1 font-medium">{labelDetail}</p>
       <div className="flex items-center gap-1.5 mt-0.5">
         <div className="w-2 h-2 rounded-full" style={{ background: planColor }} />
-        <span className="text-xs font-bold text-[#f5f5f7]">{formatStudyHours(payload[0].value)}</span>
+        <span className="text-xs font-bold text-[#1a202c]">{formatStudyHours(payload[0].value)}</span>
       </div>
     </div>
   );
@@ -257,7 +257,7 @@ export default function StudyHoursChart() {
   }, [activeRange, currentDate]);
 
   // Memoize tooltip props so the extracted CustomTooltipContent doesn't remount
-  const planColor = activePlan?.color || '#d8a442';
+  const planColor = activePlan?.color || '#ed8936';
   const renderTooltip = useCallback(
     (props) => <CustomTooltipContent {...props} activeRange={activeRange} planColor={planColor} />,
     [activeRange, planColor]
@@ -267,16 +267,16 @@ export default function StudyHoursChart() {
     <div ref={containerRef} className="space-y-4">
       <Card>
         {/* Header */}
-        <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[rgba(255,255,255,0.08)] pb-5">
+        <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[rgba(163,177,198,0.3)] pb-5">
           <div>
-            <h2 className="text-base font-bold text-[#f5f5f7] flex items-center gap-2">
-              <Clock className="w-5 h-5" style={{ color: activePlan?.color || '#d8a442' }} /> Study Hours
+            <h2 className="text-base font-bold text-[#1a202c] flex items-center gap-2">
+              <Clock className="w-5 h-5" style={{ color: activePlan?.color || '#ed8936' }} /> Study Hours
             </h2>
-            <p className="text-xs text-[#94a3b8]">Your study activity over time</p>
+            <p className="text-xs text-[#718096]">Your study activity over time</p>
           </div>
 
           {/* Daily / Weekly / Monthly Picker */}
-          <div className="flex gap-1.5 p-1 rounded-xl" style={{ background: '#18181f' }}>
+          <div className="flex gap-1.5 p-1 rounded-xl" style={{ background: '#e6ebf2', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.8)' }}>
             {[
               { id: 'daily', label: 'Daily' },
               { id: 'weekly', label: 'Weekly' },
@@ -285,10 +285,12 @@ export default function StudyHoursChart() {
               <button
                 key={tab.id}
                 onClick={() => { setActiveRange(tab.id); handleGoToToday(); }}
-                className="px-4 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all border border-transparent"
+                className="px-4 py-1.5 rounded-lg text-xs cursor-pointer transition-all border border-transparent"
                 style={{
-                  background: activeRange === tab.id ? 'rgba(255,255,255,0.08)' : 'transparent',
-                  color: activeRange === tab.id ? '#f5f5f7' : '#94a3b8'
+                  background: activeRange === tab.id ? '#e6ebf2' : 'transparent',
+                  color: activeRange === tab.id ? '#ed8936' : '#718096',
+                  boxShadow: activeRange === tab.id ? '3px 3px 7px rgba(163, 177, 198, 0.6), -3px -3px 7px rgba(255, 255, 255, 0.85)' : 'none',
+                  fontWeight: activeRange === tab.id ? '700' : '500'
                 }}
               >
                 {tab.label}
@@ -301,13 +303,21 @@ export default function StudyHoursChart() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-5 mb-6">
           {/* Navigation */}
           <div className="flex items-center gap-2.5">
-            <button onClick={handlePrev} className="p-2 rounded-xl border border-[rgba(255,255,255,0.08)] hover:bg-[#d8a442]/5 text-[#94a3b8] hover:text-[#f5f5f7] cursor-pointer transition-all">
+            <button
+              onClick={handlePrev}
+              className="p-2 rounded-xl border border-[rgba(255,255,255,0.7)] hover:bg-[#ebf0f7] text-[#718096] hover:text-[#1a202c] cursor-pointer transition-all"
+              style={{ background: '#e6ebf2', boxShadow: '3px 3px 7px rgba(163, 177, 198, 0.5), -3px -3px 7px rgba(255, 255, 255, 0.85)' }}
+            >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-xs font-bold text-[#f5f5f7] tracking-wide min-w-[140px] text-center">
+            <span className="text-xs font-bold text-[#1a202c] tracking-wide min-w-[140px] text-center">
               {dateRangeLabel}
             </span>
-            <button onClick={handleNext} className="p-2 rounded-xl border border-[rgba(255,255,255,0.08)] hover:bg-[#d8a442]/5 text-[#94a3b8] hover:text-[#f5f5f7] cursor-pointer transition-all">
+            <button
+              onClick={handleNext}
+              className="p-2 rounded-xl border border-[rgba(255,255,255,0.7)] hover:bg-[#ebf0f7] text-[#718096] hover:text-[#1a202c] cursor-pointer transition-all"
+              style={{ background: '#e6ebf2', boxShadow: '3px 3px 7px rgba(163, 177, 198, 0.5), -3px -3px 7px rgba(255, 255, 255, 0.85)' }}
+            >
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
@@ -315,14 +325,14 @@ export default function StudyHoursChart() {
           {/* Metrics block */}
           <div className="flex gap-6">
             <div>
-              <span className="text-[10px] uppercase font-bold text-[#94a3b8] block mb-0.5">Total Study Time</span>
-              <span className="text-base font-extrabold text-[#f5f5f7]">{metrics.total}</span>
+              <span className="text-[10px] uppercase font-bold text-[#718096] block mb-0.5">Total Study Time</span>
+              <span className="text-base font-extrabold text-[#1a202c]">{metrics.total}</span>
             </div>
             <div>
-              <span className="text-[10px] uppercase font-bold text-[#94a3b8] block mb-0.5">
+              <span className="text-[10px] uppercase font-bold text-[#718096] block mb-0.5">
                 {activeRange === 'daily' ? 'Daily Average' : activeRange === 'weekly' ? 'Weekly Average' : 'Monthly Average'}
               </span>
-              <span className="text-base font-extrabold text-[#f5f5f7]">{metrics.avg}</span>
+              <span className="text-base font-extrabold text-[#1a202c]">{metrics.avg}</span>
             </div>
           </div>
         </div>
@@ -330,14 +340,14 @@ export default function StudyHoursChart() {
         {/* Content area: Chart or Empty State */}
         <CardContent className="h-64 w-full">
           {metrics.rawTotal === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center p-6 border border-dashed border-[rgba(255,255,255,0.08)] rounded-2xl" style={{ background: 'rgba(216,164,66,0.05)' }}>
-              <Clock className="w-10 h-10 text-[#94a3b8] mb-3" />
-              <h4 className="text-sm font-bold text-[#f5f5f7] mb-1">No study data yet</h4>
-              <p className="text-xs text-[#94a3b8] mb-4 max-w-sm">Complete a study session or log hours manually to see your study activity here.</p>
+            <div className="h-full flex flex-col items-center justify-center text-center p-6 border border-dashed border-[rgba(163,177,198,0.4)] rounded-2xl" style={{ background: '#e6ebf2', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.3), inset -3px -3px 6px rgba(255, 255, 255, 0.7)' }}>
+              <Clock className="w-10 h-10 text-[#718096] mb-3" />
+              <h4 className="text-sm font-bold text-[#1a202c] mb-1">No study data yet</h4>
+              <p className="text-xs text-[#718096] mb-4 max-w-sm">Complete a study session or log hours manually to see your study activity here.</p>
               <button
                 onClick={() => navigate('/learn')}
-                className="px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-all text-[#18181f] hover:-translate-y-0.5"
-                style={{ background: 'linear-gradient(to right, #d8a442, #f2d894)' }}
+                className="px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-all text-white hover:-translate-y-0.5"
+                style={{ background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)', boxShadow: '4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85)' }}
               >
                 <Play className="w-3.5 h-3.5 fill-current" /> Start Studying
               </button>
@@ -347,39 +357,39 @@ export default function StudyHoursChart() {
               <LineChart data={chartData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                 <defs>
                   <linearGradient id="chartGlow" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor={activePlan?.color || '#d8a442'} stopOpacity="0.15" />
-                    <stop offset="100%" stopColor={activePlan?.color || '#d8a442'} stopOpacity="0" />
+                    <stop offset="0%" stopColor={activePlan?.color || '#ed8936'} stopOpacity="0.2" />
+                    <stop offset="100%" stopColor={activePlan?.color || '#ed8936'} stopOpacity="0" />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.08)" />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(163, 177, 198, 0.25)" />
                 <XAxis
                   dataKey="label"
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
-                  tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 500 }}
+                  tick={{ fill: '#718096', fontSize: 10, fontWeight: 500 }}
                 />
                 <YAxis
                   tickLine={false}
                   axisLine={false}
                   tickMargin={8}
-                  tick={{ fill: '#94a3b8', fontSize: 10, fontWeight: 500 }}
+                  tick={{ fill: '#718096', fontSize: 10, fontWeight: 500 }}
                   tickFormatter={(val) => val > 0 ? `${val}h` : '0'}
                 />
-                <Tooltip content={renderTooltip} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
+                <Tooltip content={renderTooltip} cursor={{ stroke: 'rgba(163, 177, 198, 0.4)', strokeWidth: 1 }} />
                 <Line
                   type="monotone"
                   dataKey="studyHours"
-                  stroke={activePlan?.color || '#d8a442'}
+                  stroke={activePlan?.color || '#ed8936'}
                   strokeWidth={2.5}
                   dot={false}
                   activeDot={{
                     r: 5,
-                    stroke: '#18181f',
+                    stroke: '#e6ebf2',
                     strokeWidth: 2,
-                    fill: activePlan?.color || '#d8a442'
+                    fill: activePlan?.color || '#ed8936'
                   }}
-                  style={{ filter: `drop-shadow(0 0 6px ${(activePlan?.color || '#d8a442')}88)` }}
+                  style={{ filter: `drop-shadow(2px 2px 4px rgba(163, 177, 198, 0.5))` }}
                 />
               </LineChart>
             </ResponsiveContainer>

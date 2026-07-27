@@ -47,8 +47,8 @@ const DashboardLayout = React.memo(function DashboardLayout({ children, title, s
       <div 
         className="absolute top-0 right-0 w-8 h-8 pointer-events-none z-20"
         style={{
-          background: 'linear-gradient(225deg, #09090b 50%, #1e1e28 50%)',
-          boxShadow: '-2px 2px 5px rgba(0,0,0,0.6)',
+          background: 'linear-gradient(225deg, #cbd5e0 50%, #e6ebf2 50%)',
+          boxShadow: '-2px 2px 5px rgba(163, 177, 198, 0.5)',
           borderBottomLeftRadius: '4px',
         }}
       />
@@ -67,13 +67,13 @@ const DashboardLayout = React.memo(function DashboardLayout({ children, title, s
         <div ref={headerRef} style={{ marginBottom: '2rem', paddingBottom: '0.5rem', paddingLeft: '1rem' }}>
           {title && (
             <h1 
-              className="text-2xl sm:text-3xl font-extrabold text-[#f2d894] tracking-tight"
+              className="text-2xl sm:text-3xl font-extrabold text-[#1a202c] tracking-tight"
             >
               {title}
             </h1>
           )}
           {subtitle && (
-            <p className="text-xs sm:text-sm text-[#cbd5e1] mt-1 font-medium">
+            <p className="text-xs sm:text-sm text-[#718096] mt-1 font-medium">
               {subtitle}
             </p>
           )}
