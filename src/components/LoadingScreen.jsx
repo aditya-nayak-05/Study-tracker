@@ -1,5 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
+import logoImg from '../assets/logo.png';
 
 const LoadingScreen = React.memo(function LoadingScreen() {
   const containerRef = useRef(null);
@@ -24,7 +25,7 @@ const LoadingScreen = React.memo(function LoadingScreen() {
     <div ref={containerRef} className="fixed inset-0 z-[300] flex flex-col items-center justify-center" style={{ background: '#1a120b' }}>
       <div className="flex flex-col items-center gap-3 mb-6">
         <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-[#d4a843] shadow-2xl">
-          <img src="/logo.png" alt="Study Tracker Logo" className="w-full h-full object-cover" />
+          <img src={logoImg} alt="Study Tracker Logo" className="w-full h-full object-cover" />
         </div>
         <span className="text-2xl font-black uppercase tracking-wider" style={{ color: '#f5e6d0', textShadow: '0 1px 1px rgba(0,0,0,0.5), 0 -1px 0 rgba(255,255,255,0.06)' }}>Study Tracker</span>
       </div>

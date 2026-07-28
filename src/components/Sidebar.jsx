@@ -5,7 +5,7 @@ import {
   LayoutDashboard, BookOpen, Calendar, BarChart3, Clock, User, Settings,
   ChevronLeft, ChevronRight, Pin, Sparkles, Youtube,
 } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import logoImg from '../assets/logo.png';
 
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
@@ -104,7 +104,7 @@ const Sidebar = React.memo(function Sidebar() {
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 h-[4.5rem] border-b border-[var(--neu-border-subtle)] shrink-0">
         <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 border-2 border-[var(--accent-orange)] shadow-md overflow-hidden bg-black/20">
-          <img src="/logo.png" alt="Study Tracker Logo" className="w-full h-full object-cover rounded-full" />
+          <img src={logoImg} alt="Study Tracker Logo" className="w-full h-full object-cover rounded-full" />
         </div>
         {!collapsed && (
           <span className="text-base font-extrabold text-main whitespace-nowrap tracking-tight" style={{textShadow: 'none'}}>Study Tracker</span>

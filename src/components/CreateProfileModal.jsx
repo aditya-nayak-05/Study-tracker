@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
 import { Camera, User, Target, BookOpen } from 'lucide-react';
+import logoImg from '../assets/logo.png';
 
 export default function CreateProfileModal() {
   const { dispatch, showToast } = useStudy();
@@ -63,7 +64,7 @@ export default function CreateProfileModal() {
       >
         <div className="text-center flex flex-col items-center">
           <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[var(--accent-orange)] shadow-lg mb-3">
-            <img src="/logo.png" alt="Study Tracker Logo" className="w-full h-full object-cover" />
+            <img src={logoImg} alt="Study Tracker Logo" className="w-full h-full object-cover" />
           </div>
           <h1 className="text-2xl font-black text-main mb-1 tracking-tight" style={{textShadow: 'none'}}>Welcome to Study Tracker</h1>
           <p className="text-muted text-xs font-semibold uppercase tracking-wider">Set up your profile to get started</p>
