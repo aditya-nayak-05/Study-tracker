@@ -21,7 +21,10 @@
   --neu-shadow-inset: inset 3px 3px 6px rgba(163, 177, 198, 0.55), inset -3px -3px 6px rgba(255, 255, 255, 0.9);
   --neu-shadow-hover: 9px 9px 18px rgba(163, 177, 198, 0.65), -9px -9px 18px rgba(255, 255, 255, 0.95);
   
-  /* Dynamic Monochromatic Accent Colors (Black in Light Mode) */
+  /* Refined Premium Button Glow & Shadows (Light Mode) */
+  --btn-glow-shadow: 4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85);
+  --btn-glow-hover: 6px 8px 16px rgba(163, 177, 198, 0.6), -6px -8px 16px rgba(255, 255, 255, 0.95);
+
   --accent-orange: #000000;
   --accent-orange-bright: #1a202c;
   --accent-btn-bg: linear-gradient(135deg, #1a202c 0%, #000000 100%);
@@ -49,7 +52,10 @@
   --neu-shadow-inset: inset 3px 3px 6px rgba(0, 0, 0, 0.8), inset -2px -2px 4px rgba(255, 255, 255, 0.03);
   --neu-shadow-hover: 8px 8px 18px rgba(0, 0, 0, 0.9), -4px -4px 14px rgba(255, 255, 255, 0.05);
 
-  /* Dynamic Monochromatic Accent Colors (White in Dark Mode) */
+  /* Refined Premium Button Glow & Shadows (Dark Mode - Ultra-Sleek Ambient Halo Glow!) */
+  --btn-glow-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  --btn-glow-hover: 0 6px 20px rgba(0, 0, 0, 0.85), 0 0 14px rgba(255, 255, 255, 0.22), 0 0 0 1px rgba(255, 255, 255, 0.35);
+
   --accent-orange: #ffffff;
   --accent-orange-bright: #f5f5f7;
   --accent-btn-bg: linear-gradient(135deg, #ffffff 0%, #e2e8f0 100%);
@@ -182,9 +188,14 @@ body {
   border-left: 4px solid var(--neu-border-subtle);
   border-radius: 0.75rem;
   font-weight: 600;
-  box-shadow: var(--neu-shadow-raised);
-  transition: all 0.2s ease;
+  box-shadow: var(--btn-glow-shadow);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   position: relative;
+}
+
+.binder-tab:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--btn-glow-hover);
 }
 
 .binder-tab.active {
@@ -195,8 +206,23 @@ body {
 }
 
 /* ═══════════════════════════════════════════
-   BUTTONS (3D Skeuomorphic Dynamic Buttons)
+   UNIVERSAL BUTTON ANIMATION & GLOW SYSTEM
    ═══════════════════════════════════════════ */
+button, .brass-btn, .leather-btn {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+button:hover:not(:disabled), .brass-btn:hover, .leather-btn:hover {
+  transform: translateY(-2px);
+}
+
+button:active:not(:disabled), .brass-btn:active, .leather-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+/* Brass 3D Button */
 .brass-btn {
   background: var(--accent-btn-bg);
   color: var(--accent-btn-text);
@@ -204,19 +230,18 @@ body {
   border-radius: 0.85rem;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: var(--neu-shadow-raised);
-  transition: all 0.15s ease;
+  box-shadow: var(--btn-glow-shadow);
 }
 
 .brass-btn:hover {
-  box-shadow: var(--neu-shadow-hover);
+  box-shadow: var(--btn-glow-hover);
 }
 
 .brass-btn:active {
-  transform: translateY(1px);
   box-shadow: var(--neu-shadow-inset);
 }
 
+/* Leather / Skeuomorphic Button */
 .leather-btn {
   background: var(--neu-card-bg);
   color: var(--neu-text-main);
@@ -224,16 +249,37 @@ body {
   border-radius: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: var(--neu-shadow-raised);
-  transition: all 0.15s ease;
+  box-shadow: var(--btn-glow-shadow);
 }
 
 .leather-btn:hover {
-  box-shadow: var(--neu-shadow-hover);
+  box-shadow: var(--btn-glow-hover);
 }
 
 .leather-btn:active {
   box-shadow: var(--neu-shadow-inset);
+}
+
+/* Subtle Shimmer Glass Light Pass Animation on Hover */
+.brass-btn::after, .leather-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.25) 50%, transparent 100%);
+  transform: skewX(-20deg);
+  pointer-events: none;
+}
+
+.brass-btn:hover::after, .leather-btn:hover::after {
+  animation: buttonShimmerSweep 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes buttonShimmerSweep {
+  0% { left: -150%; }
+  100% { left: 150%; }
 }
 
 /* ═══════════════════════════════════════════
@@ -245,7 +291,7 @@ body {
   border-radius: 0.75rem;
   color: var(--neu-text-main);
   box-shadow: var(--neu-shadow-inset);
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.22s ease;
 }
 
 .inset-field:focus {

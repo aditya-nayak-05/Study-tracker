@@ -109,26 +109,20 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
       </div>
 
       {/* Controls */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         <button
           onClick={toggle}
-          className={`p-2.5 rounded-xl cursor-pointer transition-all leather-btn ${
+          className={`p-3 rounded-xl cursor-pointer transition-all leather-btn flex items-center justify-center ${
             running
-              ? 'bg-[#e6ebf2] text-accent-primary border border-[var(--accent-orange)]'
-              : 'bg-[#e6ebf2] text-accent-primary border border-[rgba(255,255,255,0.7)]'
+              ? 'border-2 border-[var(--accent-orange)] text-accent-primary'
+              : 'text-accent-primary'
           }`}
-          style={{
-            boxShadow: running
-              ? 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.8)'
-              : '4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85)'
-          }}
         >
           {running ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
         </button>
         <button
           onClick={reset}
-          className="p-2.5 rounded-xl bg-[#e6ebf2] text-[#718096] border border-[rgba(255,255,255,0.7)] hover:text-[#1a202c] transition-all cursor-pointer leather-btn"
-          style={{ boxShadow: '4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85)' }}
+          className="p-3 rounded-xl text-muted hover:text-main transition-all cursor-pointer leather-btn flex items-center justify-center"
         >
           <RotateCcw className="w-4 h-4" />
         </button>
