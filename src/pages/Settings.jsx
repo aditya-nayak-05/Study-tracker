@@ -5,9 +5,10 @@ import DashboardLayout from '../layouts/DashboardLayout';
 import * as storage from '../utils/storage';
 import { exportToCSV, exportToExcel, exportToPDF, importFromCSV, importFromExcel, buildPlanFromImport } from '../utils/exportImport';
 import { availableFonts } from '../data/fonts';
+import InstallPWAButton from '../components/InstallPWAButton';
 import {
   Settings as SettingsIcon, Trash2, Download, Upload, Zap, Clock,
-  AlertTriangle, FileDown, FileUp, Database, HardDrive, Type, Check,
+  AlertTriangle, FileDown, FileUp, Database, HardDrive, Type, Check, Laptop,
 } from 'lucide-react';
 
 export default function Settings() {
@@ -117,6 +118,20 @@ export default function Settings() {
                 onChange={(e) => updateSetting('pomodoroLongBreak', parseInt(e.target.value) || 15)}
                 className="w-full px-3 py-2 rounded-xl text-[#1a202c] text-sm focus:outline-none" style={{ background: '#e6ebf2', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)', border: '1px solid rgba(255,255,255,0.6)' }} />
             </div>
+          </div>
+        </div>
+
+        {/* Desktop App Installation */}
+        <div className="settings-card neu-card p-6">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Laptop className="w-5 h-5 text-accent-primary" />
+              <div>
+                <h3 className="text-sm font-semibold text-main">Desktop Application</h3>
+                <p className="text-xs text-muted">Install StudyFlow to your desktop taskbar/dock for standalone offline use</p>
+              </div>
+            </div>
+            <InstallPWAButton variant="settings" />
           </div>
         </div>
 

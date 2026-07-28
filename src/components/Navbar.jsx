@@ -4,6 +4,7 @@ import { useStudy } from '../context/StudyContext';
 import { Search, Bell, ChevronRight, Sun, Moon, Type } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import FontPickerModal from './FontPickerModal';
+import InstallPWAButton from './InstallPWAButton';
 
 const pageNames = {
   '/': 'Dashboard',
@@ -266,6 +267,9 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
           pointerEvents: showCinemaControls ? 'auto' : 'none'
         }}
       >
+        {/* Install Desktop App Button */}
+        <InstallPWAButton variant="navbar" />
+
         {/* Search */}
         <button
           onClick={onSearchOpen}
