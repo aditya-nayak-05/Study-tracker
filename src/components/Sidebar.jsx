@@ -5,6 +5,7 @@ import {
   LayoutDashboard, BookOpen, Calendar, BarChart3, Clock, User, Settings,
   ChevronLeft, ChevronRight, Pin, Sparkles, Youtube,
 } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import logoImg from '../assets/logo.png';
 
 const navItems = [
