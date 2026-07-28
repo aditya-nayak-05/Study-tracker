@@ -135,9 +135,9 @@ export default function Analytics() {
             <div key={card.label} className="analytics-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-4" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
               <div className="flex items-center gap-2 mb-2">
                 <card.icon className="w-4 h-4" style={{ color: card.color }} />
-                <span className="text-[11px] text-[#718096] font-medium">{card.label}</span>
+                <span className="text-[11px] text-muted font-medium">{card.label}</span>
               </div>
-              <AnimatedCounter value={card.value} suffix={card.suffix} className="text-xl font-bold text-[#1a202c]" />
+              <AnimatedCounter value={card.value} suffix={card.suffix} className="text-xl font-bold text-main" />
             </div>
           ))}
         </div>
@@ -151,19 +151,19 @@ export default function Analytics() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Daily Goal Progress */}
           <div className="analytics-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
-            <h3 className="text-sm font-semibold text-[#1a202c] mb-5 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-main mb-5 flex items-center gap-2">
               <Target className="w-4 h-4 text-accent-primary" /> Daily Goal Progress
             </h3>
             <div className="flex items-center justify-center gap-8">
               <ProgressRing percent={stats.dailyGoalProgress} size={100} strokeWidth={7} color="var(--accent-orange)" label="Today" />
               <div className="space-y-3">
                 <div>
-                  <p className="text-[11px] text-[#718096]">Target</p>
-                  <p className="text-lg font-bold text-[#1a202c]">{stats.dailyGoal}h</p>
+                  <p className="text-[11px] text-muted">Target</p>
+                  <p className="text-lg font-bold text-main">{stats.dailyGoal}h</p>
                 </div>
                 <div>
-                  <p className="text-[11px] text-[#718096]">Studied</p>
-                  <p className="text-lg font-bold text-[#1a202c]">{stats.todayHours}h</p>
+                  <p className="text-[11px] text-muted">Studied</p>
+                  <p className="text-lg font-bold text-main">{stats.todayHours}h</p>
                 </div>
               </div>
             </div>
@@ -171,7 +171,7 @@ export default function Analytics() {
 
           {/* 14-Day Trend */}
           <div className="analytics-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
-            <h3 className="text-sm font-semibold text-[#1a202c] mb-5 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-main mb-5 flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-accent-primary" /> 14-Day Study Trend
             </h3>
             <div className="flex justify-center">

@@ -291,8 +291,8 @@ export default function Learning() {
       <DashboardLayout>
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center" ref={containerRef}>
           <AlertTriangle className="w-12 h-12 text-[#e53e3e] mb-3" />
-          <h2 className="text-lg font-semibold text-[#1a202c] mb-2">Task or Plan Not Found</h2>
-          <p className="text-sm text-[#718096] mb-6">The requested study task does not exist or has been deleted.</p>
+          <h2 className="text-lg font-semibold text-main mb-2">Task or Plan Not Found</h2>
+          <p className="text-sm text-muted mb-6">The requested study task does not exist or has been deleted.</p>
           <button onClick={() => navigate('/plans')} className="px-5 py-2.5 rounded-xl text-xs cursor-pointer font-medium" style={buttonStyle}>
             Back to Plans
           </button>
@@ -306,8 +306,8 @@ export default function Learning() {
       <DashboardLayout>
         <div className="flex flex-col items-center justify-center min-h-[60vh] text-center" ref={containerRef}>
           <Video className="w-12 h-12 text-[#3182ce] mb-3" />
-          <h2 className="text-lg font-semibold text-[#1a202c] mb-2">No Tutorial Link Added</h2>
-          <p className="text-sm text-[#718096] mb-6">This task does not have a YouTube tutorial link assigned yet.</p>
+          <h2 className="text-lg font-semibold text-main mb-2">No Tutorial Link Added</h2>
+          <p className="text-sm text-muted mb-6">This task does not have a YouTube tutorial link assigned yet.</p>
           <button onClick={() => navigate(`/plans/${planId}`)} className="px-5 py-2.5 rounded-xl text-xs cursor-pointer font-medium" style={buttonStyle}>
             Edit Task to Add URL
           </button>
@@ -323,8 +323,8 @@ export default function Learning() {
           <div className="flex items-start gap-3">
             <AlertTriangle className="w-5 h-5 text-accent-primary shrink-0 mt-0.5" />
             <div>
-              <h4 className="text-sm font-semibold text-[#1a202c]">Unfinished Session Active</h4>
-              <p className="text-xs text-[#718096]">You currently have another study session running for a different task.</p>
+              <h4 className="text-sm font-semibold text-main">Unfinished Session Active</h4>
+              <p className="text-xs text-muted">You currently have another study session running for a different task.</p>
             </div>
           </div>
           <button onClick={handleEndDifferentSession} className="px-4 py-2 rounded-lg text-xs font-semibold shrink-0 cursor-pointer text-accent-primary border border-[var(--accent-orange)]/40 hover:bg-[var(--accent-orange)]/10 transition-all">
@@ -344,8 +344,8 @@ export default function Learning() {
           <div className="w-16 h-16 rounded-2xl bg-[var(--accent-orange)]/10 flex items-center justify-center mx-auto mb-8 border border-[var(--accent-orange)]/20 shadow-sm animate-pulse">
             <Video className="w-8 h-8 text-accent-primary" />
           </div>
-          <h3 className="text-xl font-extrabold text-[#1a202c] mb-4 tracking-wide">Resume Tutorial?</h3>
-          <p className="text-sm text-[#718096] mb-10 leading-relaxed">
+          <h3 className="text-xl font-extrabold text-main mb-4 tracking-wide">Resume Tutorial?</h3>
+          <p className="text-sm text-muted mb-10 leading-relaxed">
             You previously watched this video up to <strong className="text-accent-primary font-extrabold text-base bg-[var(--accent-orange)]/10 px-2 py-0.5 rounded-lg ml-1">{formatDuration(savedProgress.currentTime)}</strong>.<br />
             Would you like to pick up where you left off or start fresh?
           </p>
@@ -389,12 +389,12 @@ export default function Learning() {
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl cursor-pointer transition-all text-[#718096] border border-white/70" style={{ background: '#e6ebf2', boxShadow: '3px 3px 6px rgba(163,177,198,0.5), -3px -3px 6px rgba(255,255,255,0.8)' }}>
+                  <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl cursor-pointer transition-all text-muted border border-white/70" style={{ background: '#e6ebf2', boxShadow: '3px 3px 6px rgba(163,177,198,0.5), -3px -3px 6px rgba(255,255,255,0.8)' }}>
                     <ArrowLeft className="w-4 h-4" />
                   </button>
                   <div>
                     <span className="text-[10px] uppercase font-bold tracking-wider block" style={{ color: plan.color || 'var(--accent-orange)' }}>{plan.name}</span>
-                    <h2 className="text-base font-bold text-[#1a202c] leading-tight">{task.title}</h2>
+                    <h2 className="text-base font-bold text-main leading-tight">{task.title}</h2>
                   </div>
                 </div>
               </div>
@@ -492,8 +492,8 @@ export default function Learning() {
                 }}
               >
                 <div className="flex flex-col items-center gap-1 animate-bounce">
-                  <span className="text-[9px] uppercase font-bold tracking-wider text-[#718096]">Scroll Down for Notes & Actions</span>
-                  <svg className="w-3.5 h-3.5 text-[#718096]" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
+                  <span className="text-[9px] uppercase font-bold tracking-wider text-muted">Scroll Down for Notes & Actions</span>
+                  <svg className="w-3.5 h-3.5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                   </svg>
                 </div>
@@ -523,7 +523,7 @@ export default function Learning() {
 
               {/* Timer 2: Pomodoro Timer */}
               <div style={{ ...cardStyle, padding: '1.25rem 1rem' }} className="flex flex-col items-center justify-center">
-                <div className="flex items-center gap-2 mb-2 w-full justify-start text-xs font-semibold text-[#1a202c]">
+                <div className="flex items-center gap-2 mb-2 w-full justify-start text-xs font-semibold text-main">
                   <Clock className="w-4 h-4 text-accent-primary" /> Pomodoro Timer
                 </div>
                 <PomodoroTimer compact={true} />
@@ -537,8 +537,8 @@ export default function Learning() {
             <div className="lg:col-span-2 space-y-6">
               {/* Title & Info Card */}
               <div className="p-6" style={cardStyle}>
-                <h3 className="text-base font-semibold text-[#1a202c] mb-1">{task.title}</h3>
-                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-[#718096]">
+                <h3 className="text-base font-semibold text-main mb-1">{task.title}</h3>
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-muted">
                   <span className="flex items-center gap-1"><BookOpen className="w-3.5 h-3.5" /> {plan.name}</span>
                   <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" /> Estimated: {task.estimatedTime || 1}h</span>
                   <span className="capitalize" style={{ color: task.status === 'completed' ? '#38a169' : task.status === 'in-progress' ? 'var(--accent-orange)' : '#718096' }}>Status: {task.status.replace('-', ' ')}</span>
@@ -547,7 +547,7 @@ export default function Learning() {
 
               {/* Notes System */}
               <div className="p-6 flex flex-col" style={cardStyle}>
-                <h3 className="text-sm font-semibold text-[#1a202c] mb-3 flex items-center gap-2">
+                <h3 className="text-sm font-semibold text-main mb-3 flex items-center gap-2">
                   <MessageSquare className="w-4 h-4 text-accent-primary" /> Study Notes
                 </h3>
                 {state.activeSessionId && currentSession?.taskId === taskId ? (
@@ -555,11 +555,11 @@ export default function Learning() {
                     value={notesText}
                     onChange={handleNotesChange}
                     placeholder="Take detailed notes here while watching the tutorial..."
-                    className="w-full h-40 p-4 rounded-xl text-sm focus:outline-none resize-none leading-relaxed inset-field text-[#1a202c]"
+                    className="w-full h-40 p-4 rounded-xl text-sm focus:outline-none resize-none leading-relaxed inset-field text-main"
                   />
                 ) : (
                   <div className="text-center py-8 rounded-xl" style={{ background: '#e6ebf2', boxShadow: 'inset 2px 2px 5px rgba(163,177,198,0.5), inset -2px -2px 5px rgba(255,255,255,0.8)' }}>
-                    <p className="text-xs text-[#718096] mb-3">You must start a study session to take notes</p>
+                    <p className="text-xs text-muted mb-3">You must start a study session to take notes</p>
                     <button onClick={handleStartSession} className="px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer" style={buttonStyle}>
                       Start Study Session
                     </button>
@@ -572,29 +572,29 @@ export default function Learning() {
             <div className="space-y-6">
               {/* Video Progress Card */}
               <div className="p-6" style={cardStyle}>
-                <h3 className="text-sm font-semibold text-[#1a202c] mb-4">Video Progress</h3>
+                <h3 className="text-sm font-semibold text-main mb-4">Video Progress</h3>
                 {savedProgress ? (
                   <div className="space-y-3">
                     <div className="flex justify-between items-center text-xs">
-                      <span className="text-[#718096]">Completed</span>
-                      <span className="font-semibold text-[#1a202c]">{Math.round(savedProgress.progress)}%</span>
+                      <span className="text-muted">Completed</span>
+                      <span className="font-semibold text-main">{Math.round(savedProgress.progress)}%</span>
                     </div>
                     <div className="h-2 rounded-full overflow-hidden w-full bg-[#e6ebf2]" style={{ boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
                       <div className="h-full rounded-full transition-all duration-300" style={{ width: `${savedProgress.progress}%`, background: savedProgress.progress >= 95 ? '#38a169' : 'var(--accent-orange)' }} />
                     </div>
-                    <div className="flex justify-between items-center text-[10px] text-[#718096]">
+                    <div className="flex justify-between items-center text-[10px] text-muted">
                       <span>{formatDuration(savedProgress.currentTime)}</span>
                       <span>{formatDuration(savedProgress.duration)}</span>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-xs text-[#718096] text-center py-2">Start watching to track video progress</p>
+                  <p className="text-xs text-muted text-center py-2">Start watching to track video progress</p>
                 )}
               </div>
 
               {/* Quick Actions */}
               <div className="p-6" style={cardStyle}>
-                <h3 className="text-sm font-semibold text-[#1a202c] mb-4">Quick Actions</h3>
+                <h3 className="text-sm font-semibold text-main mb-4">Quick Actions</h3>
                 <div className="space-y-2.5">
                   {!state.activeSessionId && (
                     <button onClick={handleStartSession} className="w-full py-2.5 rounded-xl text-xs font-semibold cursor-pointer flex items-center justify-center gap-2" style={buttonStyle}>

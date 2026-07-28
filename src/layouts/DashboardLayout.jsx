@@ -67,13 +67,13 @@ const DashboardLayout = React.memo(function DashboardLayout({ children, title, s
         <div ref={headerRef} style={{ marginBottom: '2rem', paddingBottom: '0.5rem', paddingLeft: '1rem' }}>
           {title && (
             <h1 
-              className="text-2xl sm:text-3xl font-extrabold text-[#1a202c] tracking-tight"
+              className="text-2xl sm:text-3xl font-extrabold text-main tracking-tight"
             >
               {title}
             </h1>
           )}
           {subtitle && (
-            <p className="text-xs sm:text-sm text-[#718096] mt-1 font-medium">
+            <p className="text-xs sm:text-sm text-muted mt-1 font-medium">
               {subtitle}
             </p>
           )}

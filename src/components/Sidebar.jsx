@@ -123,13 +123,13 @@ const Sidebar = React.memo(function Sidebar() {
               onClick={() => handleNavClick(item.path)}
               className={`w-full flex items-center transition-all duration-300 group cursor-pointer binder-tab
                 ${collapsed ? 'justify-center p-3.5 rounded-xl' : 'gap-3 px-4 py-3'}
-                ${isActive ? 'active text-accent-primary' : 'text-[#718096] hover:text-[#1a202c]'}`}
+                ${isActive ? 'active text-accent-primary' : 'text-muted hover:text-main'}`}
             >
               <Icon className={`shrink-0 transition-all duration-300 group-hover:scale-110
                 ${collapsed ? 'w-6 h-6' : 'w-4 h-4'}
                 ${isActive 
                   ? 'text-accent-primary' 
-                  : 'text-[#718096] group-hover:text-accent-primary'
+                  : 'text-muted group-hover:text-accent-primary'
                 }`} 
               />
               {!collapsed && (
@@ -147,7 +147,7 @@ const Sidebar = React.memo(function Sidebar() {
         {/* Pinned plans */}
         {pinnedPlans.length > 0 && !collapsed && (
           <div className="pt-4 mt-4 border-t border-[rgba(163,177,198,0.3)]">
-            <p className="px-4 text-[10px] font-semibold uppercase tracking-wider text-[#718096] mb-3" style={{textShadow: 'none'}}>Pinned Plans</p>
+            <p className="px-4 text-[10px] font-semibold uppercase tracking-wider text-muted mb-3" style={{textShadow: 'none'}}>Pinned Plans</p>
             {pinnedPlans.map((plan) => (
               <button
                 key={plan.id}
@@ -155,7 +155,7 @@ const Sidebar = React.memo(function Sidebar() {
                   dispatch({ type: 'SET_UI', payload: { activePlanId: plan.id } });
                   navigate(`/plans/${plan.id}`);
                 }}
-                className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-[#718096] hover:bg-[#ebf0f7] hover:text-[#1a202c] transition-all text-sm"
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-muted hover:bg-[#ebf0f7] hover:text-main transition-all text-sm"
               >
                 <Pin className="w-3.5 h-3.5 text-accent-primary shrink-0" />
                 <span className="truncate">{plan.name}</span>
@@ -168,7 +168,7 @@ const Sidebar = React.memo(function Sidebar() {
       {/* Collapse toggle */}
       <button
         onClick={toggleCollapse}
-        className="h-12 border-t border-[rgba(163,177,198,0.3)] flex items-center justify-center text-[#718096] hover:text-[#1a202c] hover:bg-[#ebf0f7] transition-all shrink-0 cursor-pointer"
+        className="h-12 border-t border-[rgba(163,177,198,0.3)] flex items-center justify-center text-muted hover:text-main hover:bg-[#ebf0f7] transition-all shrink-0 cursor-pointer"
       >
         {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
       </button>

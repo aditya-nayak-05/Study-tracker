@@ -102,7 +102,7 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
           <span className={`font-mono font-bold text-accent-primary ${compact ? 'text-lg' : 'text-3xl'}`} style={{textShadow: 'none'}}>
             {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
           </span>
-          <span className={`text-[#718096] capitalize font-medium ${compact ? 'text-[10px]' : 'text-xs'}`}>
+          <span className={`text-muted capitalize font-medium ${compact ? 'text-[10px]' : 'text-xs'}`}>
             {mode === 'work' ? 'Focus' : 'Break'}
           </span>
         </div>
@@ -129,7 +129,7 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
       </div>
 
       {!compact && sessionCount > 0 && (
-        <p className="text-[11px] text-[#718096] flex items-center gap-1 font-medium">
+        <p className="text-[11px] text-muted flex items-center gap-1 font-medium">
           <Coffee className="w-3 h-3 text-accent-primary" /> {sessionCount} session{sessionCount !== 1 ? 's' : ''} today
         </p>
       )}

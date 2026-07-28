@@ -122,7 +122,7 @@ export default function Plans() {
             style={{ ...cardStyle, boxShadow: '10px 10px 25px rgba(163,177,198,0.7), -10px -10px 25px rgba(255,255,255,0.9)' }}
           >
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-[#1a202c]">Create New Plan</h2>
+              <h2 className="text-lg font-semibold text-main">Create New Plan</h2>
               <button type="button" onClick={() => setShowCreate(false)} className="cursor-pointer" style={{ color: '#718096' }}><X className="w-5 h-5" /></button>
             </div>
             <input type="text" value={newPlan.name} onChange={(e) => setNewPlan({ ...newPlan, name: e.target.value })} placeholder="Plan name" required className="w-full px-4 py-2.5 text-sm focus:outline-none" style={{ ...inputStyle }} />
@@ -160,7 +160,7 @@ export default function Plans() {
 
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-3 h-3 rounded-full shrink-0" style={{ background: plan.color, boxShadow: `0 0 8px ${plan.color}60` }} />
-                  <h3 className="text-base font-semibold text-[#1a202c] truncate">{plan.name}</h3>
+                  <h3 className="text-base font-semibold text-main truncate">{plan.name}</h3>
                 </div>
 
                 {plan.description && <p className="text-xs mb-3 line-clamp-2" style={{ color: '#718096' }}>{plan.description}</p>}

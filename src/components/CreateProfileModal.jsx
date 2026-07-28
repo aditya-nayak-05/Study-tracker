@@ -47,7 +47,7 @@ export default function CreateProfileModal() {
 
   const updateField = (field, value) => setForm((f) => ({ ...f, [field]: value }));
 
-  const inputClass = "w-full px-4 py-3 rounded-xl bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] text-[#1a202c] placeholder-[#718096] focus:outline-none focus:border-[var(--accent-orange)] focus:ring-2 focus:ring-[#ed8936]/30 transition-all text-sm inset-field shadow-[inset_3px_3px_6px_rgba(163,177,198,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.9)]";
+  const inputClass = "w-full px-4 py-3 rounded-xl bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] text-main placeholder-[#718096] focus:outline-none focus:border-[var(--accent-orange)] focus:ring-2 focus:ring-[#ed8936]/30 transition-all text-sm inset-field shadow-[inset_3px_3px_6px_rgba(163,177,198,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.9)]";
 
   return (
     <div ref={modalRef} className="fixed inset-0 z-[200] flex items-center justify-center p-4 backdrop-blur-sm" style={{ background: 'rgba(26, 32, 44, 0.6)' }}>
@@ -62,8 +62,8 @@ export default function CreateProfileModal() {
         }}
       >
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-[#1a202c] mb-2" style={{textShadow: 'none'}}>Welcome to StudyFlow</h1>
-          <p className="text-[#718096] text-sm">Set up your profile to get started</p>
+          <h1 className="text-2xl font-bold text-main mb-2" style={{textShadow: 'none'}}>Welcome to StudyFlow</h1>
+          <p className="text-muted text-sm">Set up your profile to get started</p>
         </div>
 
         {/* Avatar */}
@@ -72,18 +72,18 @@ export default function CreateProfileModal() {
             {form.avatar ? (
               <img src={form.avatar} alt="" className="w-full h-full object-cover" />
             ) : (
-              <Camera className="w-8 h-8 text-[#718096] group-hover:text-accent-primary transition-colors" />
+              <Camera className="w-8 h-8 text-muted group-hover:text-accent-primary transition-colors" />
             )}
             <input type="file" accept="image/*" onChange={handleAvatarUpload} className="hidden" />
             <div className="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <Camera className="w-5 h-5 text-[#1a202c]" />
+              <Camera className="w-5 h-5 text-main" />
             </div>
           </label>
         </div>
 
         {/* Name */}
         <div>
-          <label className="flex items-center gap-1.5 text-sm font-semibold text-[#2d3748] mb-2" style={{textShadow: 'none'}}>
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-main mb-2" style={{textShadow: 'none'}}>
             <User className="w-4 h-4 text-accent-primary" />Name <span className="text-[#e53e3e]">*</span>
           </label>
           <input
@@ -98,7 +98,7 @@ export default function CreateProfileModal() {
 
         {/* Username */}
         <div>
-          <label className="block text-sm font-semibold text-[#2d3748] mb-2" style={{textShadow: 'none'}}>Username</label>
+          <label className="block text-sm font-semibold text-main mb-2" style={{textShadow: 'none'}}>Username</label>
           <input
             type="text"
             value={form.username}
@@ -110,7 +110,7 @@ export default function CreateProfileModal() {
 
         {/* Email */}
         <div>
-          <label className="block text-sm font-semibold text-[#2d3748] mb-2" style={{textShadow: 'none'}}>Email (optional)</label>
+          <label className="block text-sm font-semibold text-main mb-2" style={{textShadow: 'none'}}>Email (optional)</label>
           <input
             type="email"
             value={form.email}
@@ -122,7 +122,7 @@ export default function CreateProfileModal() {
 
         {/* Bio */}
         <div>
-          <label className="block text-sm font-semibold text-[#2d3748] mb-2" style={{textShadow: 'none'}}>Bio</label>
+          <label className="block text-sm font-semibold text-main mb-2" style={{textShadow: 'none'}}>Bio</label>
           <textarea
             value={form.bio}
             onChange={(e) => updateField('bio', e.target.value)}
@@ -134,7 +134,7 @@ export default function CreateProfileModal() {
 
         {/* Daily Goal */}
         <div>
-          <label className="flex items-center gap-1.5 text-sm font-semibold text-[#2d3748] mb-2" style={{textShadow: 'none'}}>
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-main mb-2" style={{textShadow: 'none'}}>
             <Target className="w-4 h-4 text-[#38a169]" />Daily Study Goal (hours)
           </label>
           <input
@@ -149,7 +149,7 @@ export default function CreateProfileModal() {
 
         {/* Learning Goal */}
         <div>
-          <label className="flex items-center gap-1.5 text-sm font-semibold text-[#2d3748] mb-2" style={{textShadow: 'none'}}>
+          <label className="flex items-center gap-1.5 text-sm font-semibold text-main mb-2" style={{textShadow: 'none'}}>
             <BookOpen className="w-4 h-4 text-accent-primary" />Learning Goal
           </label>
           <input

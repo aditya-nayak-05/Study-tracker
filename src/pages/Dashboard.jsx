@@ -222,7 +222,7 @@ export default function Dashboard() {
               <button
                 key={qa.label}
                 onClick={qa.action}
-                className="flex flex-col items-center gap-2 p-2.5 rounded-xl hover:bg-[#ebf0f7] transition-all group cursor-pointer"
+                className="flex flex-col items-center gap-2 p-2.5 rounded-xl hover:bg-[var(--neu-border-subtle)] transition-all group cursor-pointer"
               >
                 <div
                   className={qa.isSpecial 
@@ -239,7 +239,7 @@ export default function Dashboard() {
                 </div>
                 <span className={qa.isSpecial 
                   ? "text-[11px] font-bold text-accent-primary"
-                  : "text-[11px] text-[#718096] group-hover:text-[#1a202c] transition-colors"
+                  : "text-[11px] text-muted group-hover:text-main transition-colors"
                 }>
                   {qa.label}
                 </span>
@@ -254,13 +254,13 @@ export default function Dashboard() {
           <div className="dash-card p-6">
             <div className="flex items-center gap-2 mb-3">
               <Clock className="w-4 h-4 text-accent-primary" />
-              <span className="text-xs font-medium text-[#718096]">Today's Hours</span>
+              <span className="text-xs font-medium text-muted">Today's Hours</span>
             </div>
             <div className="flex items-end gap-2">
-              <AnimatedCounter value={stats.todayHours} suffix="h" className="text-2xl font-bold text-[#1a202c]" />
-              <span className="text-xs mb-1 text-[#718096]">/ {stats.dailyGoal}h</span>
+              <AnimatedCounter value={stats.todayHours} suffix="h" className="text-2xl font-bold text-main" />
+              <span className="text-xs mb-1 text-muted">/ {stats.dailyGoal}h</span>
             </div>
-            <div className="mt-3 h-2 rounded-full overflow-hidden bg-[#e6ebf2]" style={{ boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
+            <div className="mt-3 h-2 rounded-full overflow-hidden neu-card" style={{ boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
               <div
                 className="h-full rounded-full transition-all duration-700 bg-gradient-to-r from-[#ed8936] to-[#dd6b20]"
                 style={{ width: `${Math.min(100, (stats.todayHours / stats.dailyGoal) * 100)}%` }}
@@ -272,13 +272,13 @@ export default function Dashboard() {
           <div className="dash-card p-6">
             <div className="flex items-center gap-2 mb-3">
               <CheckSquare className="w-4 h-4 text-accent-primary" />
-              <span className="text-xs font-medium text-[#718096]">Tasks Done</span>
+              <span className="text-xs font-medium text-muted">Tasks Done</span>
             </div>
             <div className="flex items-end gap-2">
-              <AnimatedCounter value={stats.completedTasks} className="text-2xl font-bold text-[#1a202c]" />
-              <span className="text-xs mb-1 text-[#718096]">/ {stats.totalTasks}</span>
+              <AnimatedCounter value={stats.completedTasks} className="text-2xl font-bold text-main" />
+              <span className="text-xs mb-1 text-muted">/ {stats.totalTasks}</span>
             </div>
-            <div className="mt-3 h-2 rounded-full overflow-hidden bg-[#e6ebf2]" style={{ boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
+            <div className="mt-3 h-2 rounded-full overflow-hidden neu-card" style={{ boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
               <div
                 className="h-full rounded-full transition-all duration-700 bg-gradient-to-r from-[#ed8936] to-[#dd6b20]"
                 style={{ width: `${stats.overallProgress}%` }}
@@ -290,10 +290,10 @@ export default function Dashboard() {
           <div className="dash-card p-6">
             <div className="flex items-center gap-2 mb-3">
               <Flame className="w-4 h-4 text-accent-primary" />
-              <span className="text-xs font-medium text-[#718096]">Study Streak</span>
+              <span className="text-xs font-medium text-muted">Study Streak</span>
             </div>
-            <AnimatedCounter value={stats.streak} suffix=" days" className="text-2xl font-bold text-[#1a202c]" />
-            <p className="text-[11px] mt-1 text-[#718096]">Keep going! 🔥</p>
+            <AnimatedCounter value={stats.streak} suffix=" days" className="text-2xl font-bold text-main" />
+            <p className="text-[11px] mt-1 text-muted">Keep going! 🔥</p>
           </div>
 
           {/* Overall Progress */}
@@ -301,9 +301,9 @@ export default function Dashboard() {
             <div>
               <div className="flex items-center gap-2 mb-2">
                 <Target className="w-4 h-4 text-accent-primary" />
-                <span className="text-xs font-medium text-[#718096]">Overall</span>
+                <span className="text-xs font-medium text-muted">Overall</span>
               </div>
-              <AnimatedCounter value={stats.overallProgress} suffix="%" className="text-2xl font-bold text-[#1a202c]" />
+              <AnimatedCounter value={stats.overallProgress} suffix="%" className="text-2xl font-bold text-main" />
             </div>
             <ProgressRing percent={stats.overallProgress} size={64} strokeWidth={5} color="var(--accent-orange)" />
           </div>
@@ -314,7 +314,7 @@ export default function Dashboard() {
           {/* Weekly Study Chart */}
           <div className="dash-card lg:col-span-2 p-6">
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-sm font-semibold text-[#1a202c] flex items-center gap-2">
+              <h3 className="text-sm font-semibold text-main flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-accent-primary" /> Weekly Study Hours
               </h3>
               {stats.weeklyLine.length > 0 && <MiniLineChart data={stats.weeklyLine} width={80} height={24} color="var(--accent-orange)" />}
@@ -322,13 +322,13 @@ export default function Dashboard() {
             {stats.weekData.length > 0 ? (
               <BarChart data={stats.weekData} maxHeight={100} barColor="var(--accent-orange)" />
             ) : (
-              <p className="text-sm text-center py-8 text-[#718096]">No study data yet</p>
+              <p className="text-sm text-center py-8 text-muted">No study data yet</p>
             )}
           </div>
 
           {/* Pomodoro Timer */}
           <div className="dash-card flex flex-col items-center justify-center p-6">
-            <h3 className="text-sm font-semibold text-[#1a202c] mb-4 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-main mb-4 flex items-center gap-2">
               <Clock className="w-4 h-4 text-accent-primary" /> Pomodoro
             </h3>
             <PomodoroTimer compact />
@@ -338,7 +338,7 @@ export default function Dashboard() {
         {/* Continue Learning Section */}
         {(learningStats.activeSession || learningStats.recentTutorials.length > 0) && (
           <div className="dash-card p-6 mb-5">
-            <h3 className="text-sm font-semibold text-[#1a202c] mb-4 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-main mb-4 flex items-center gap-2">
               <Youtube className="w-4 h-4 text-accent-primary" /> Continue Learning
             </h3>
 
@@ -367,7 +367,7 @@ export default function Dashboard() {
               {learningStats.recentTutorials.map(({ task, plan, videoId, progress }) => (
                 <div 
                   key={task.id} 
-                  className="p-3 rounded-xl flex gap-3 cursor-pointer bg-[#e6ebf2] border border-white/70 hover:bg-[#ebf0f7] transition-all"
+                  className="p-3 rounded-xl flex gap-3 cursor-pointer neu-card border border-[var(--neu-border)] hover:bg-[var(--neu-border-subtle)] transition-all"
                   style={{ boxShadow: '4px 4px 10px rgba(163,177,198,0.5), -4px -4px 10px rgba(255,255,255,0.85)' }}
                   onClick={() => navigate(`/learn/${plan.id}/${task.id}`)}
                 >
@@ -379,12 +379,12 @@ export default function Dashboard() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <span className="text-[9px] uppercase font-bold tracking-wider text-accent-primary">{plan.name}</span>
-                    <h4 className="text-xs font-bold text-[#1a202c] truncate leading-tight mt-0.5">{task.title}</h4>
+                    <h4 className="text-xs font-bold text-main truncate leading-tight mt-0.5">{task.title}</h4>
                     <div className="flex items-center gap-2 mt-2">
-                      <div className="flex-1 h-1.5 rounded-full overflow-hidden bg-[#e6ebf2]" style={{ boxShadow: 'inset 1px 1px 3px rgba(163,177,198,0.5), inset -1px -1px 3px rgba(255,255,255,0.8)' }}>
+                      <div className="flex-1 h-1.5 rounded-full overflow-hidden neu-card" style={{ boxShadow: 'inset 1px 1px 3px rgba(163,177,198,0.5), inset -1px -1px 3px rgba(255,255,255,0.8)' }}>
                         <div className="h-full rounded-full bg-[var(--accent-orange)]" style={{ width: `${progress}%` }} />
                       </div>
-                      <span className="text-[9px] text-[#718096]">{Math.round(progress)}%</span>
+                      <span className="text-[9px] text-muted">{Math.round(progress)}%</span>
                     </div>
                   </div>
                 </div>
@@ -397,11 +397,11 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           {/* Today's Tasks */}
           <div className="dash-card p-6">
-            <h3 className="text-sm font-semibold text-[#1a202c] mb-4 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-main mb-4 flex items-center gap-2">
               <CheckSquare className="w-4 h-4 text-accent-primary" /> Today's Tasks
             </h3>
             {(!stats.todayTasks || stats.todayTasks.length === 0) ? (
-              <p className="text-sm text-center py-4 text-[#718096]">No tasks for today</p>
+              <p className="text-sm text-center py-4 text-muted">No tasks for today</p>
             ) : (
               <div className="space-y-2 max-h-[200px] overflow-y-auto">
                 {stats.todayTasks.map((task) => (
@@ -438,7 +438,7 @@ export default function Dashboard() {
 
           {/* Quick Notes */}
           <div className="dash-card p-6 relative">
-            <h3 className="text-sm font-semibold text-[#1a202c] mb-4 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-main mb-4 flex items-center gap-2">
               <StickyNote className="w-4 h-4 text-accent-primary" /> Quick Notes
             </h3>
             <textarea
@@ -446,13 +446,13 @@ export default function Dashboard() {
               onChange={handleNoteChange}
               placeholder="Write notes..."
               rows={6}
-              className="w-full p-3 text-sm focus:outline-none resize-none inset-field text-[#1a202c]"
+              className="w-full p-3 text-sm focus:outline-none resize-none inset-field text-main"
             />
           </div>
 
           {/* Recent Activity */}
           <div className="dash-card p-6">
-            <h3 className="text-sm font-semibold text-[#1a202c] mb-4 flex items-center gap-2">
+            <h3 className="text-sm font-semibold text-main mb-4 flex items-center gap-2">
               <Flame className="w-4 h-4 text-accent-primary" /> Recent Activity
             </h3>
             <div className="max-h-[240px] overflow-y-auto">
@@ -469,9 +469,9 @@ export default function Dashboard() {
           <div className="dash-card p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs mb-1 text-[#718096]">Active Plan</p>
-                <h3 className="text-lg font-semibold text-[#1a202c]">{activePlan.name}</h3>
-                {activePlan.description && <p className="text-sm mt-1 text-[#718096]">{activePlan.description}</p>}
+                <p className="text-xs mb-1 text-muted">Active Plan</p>
+                <h3 className="text-lg font-semibold text-main">{activePlan.name}</h3>
+                {activePlan.description && <p className="text-sm mt-1 text-muted">{activePlan.description}</p>}
               </div>
               <button
                 onClick={() => navigate(`/plans/${activePlan.id}`)}

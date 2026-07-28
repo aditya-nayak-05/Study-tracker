@@ -24,7 +24,7 @@ export const BarChart = React.memo(function BarChart({ data = [], maxHeight = 12
             style={{ background: `linear-gradient(to top, ${barColor}, ${barColor}88)`, height: 0, boxShadow: '2px 2px 5px rgba(163, 177, 198, 0.4)' }}
             title={`${item.label}: ${item.value}`}
           />
-          <span className="text-[9px] text-[#718096] whitespace-nowrap">{item.label}</span>
+          <span className="text-[9px] text-muted whitespace-nowrap">{item.label}</span>
         </div>
       ))}
     </div>
@@ -59,8 +59,8 @@ export const ProgressRing = React.memo(function ProgressRing({ percent = 0, size
         />
       </svg>
       <div className="absolute flex flex-col items-center">
-        <span className="text-sm font-bold text-[#1a202c]">{percent}%</span>
-        {label && <span className="text-[9px] text-[#718096]">{label}</span>}
+        <span className="text-sm font-bold text-main">{percent}%</span>
+        {label && <span className="text-[9px] text-muted">{label}</span>}
       </div>
     </div>
   );

@@ -31,13 +31,13 @@ function TreeNode({ label, level = 0, children, progress, status, isToday, defau
   ) : status === 'in-progress' ? (
     <Clock className="w-3.5 h-3.5 text-accent-primary shrink-0" />
   ) : (
-    <Circle className="w-3.5 h-3.5 text-[#718096] shrink-0" />
+    <Circle className="w-3.5 h-3.5 text-muted shrink-0" />
   );
 
   const folderIcon = hasChildren ? (
-    open ? <FolderOpen className="w-4 h-4 text-accent-primary shrink-0" /> : <Folder className="w-4 h-4 text-[#718096] shrink-0" />
+    open ? <FolderOpen className="w-4 h-4 text-accent-primary shrink-0" /> : <Folder className="w-4 h-4 text-muted shrink-0" />
   ) : (
-    <FileText className="w-4 h-4 text-[#718096] shrink-0" />
+    <FileText className="w-4 h-4 text-muted shrink-0" />
   );
 
   return (
@@ -48,12 +48,12 @@ function TreeNode({ label, level = 0, children, progress, status, isToday, defau
         style={{ paddingLeft: level * 20 + 8 }}
       >
         {hasChildren ? (
-          open ? <ChevronDown className="w-3.5 h-3.5 text-[#718096] shrink-0" /> : <ChevronRight className="w-3.5 h-3.5 text-[#718096] shrink-0" />
+          open ? <ChevronDown className="w-3.5 h-3.5 text-muted shrink-0" /> : <ChevronRight className="w-3.5 h-3.5 text-muted shrink-0" />
         ) : (
           <span className="w-3.5 shrink-0" />
         )}
         {folderIcon}
-        <span className={`text-sm flex-1 truncate ${status === 'completed' ? 'text-[#718096] line-through' : 'text-[#1a202c]'}`}>
+        <span className={`text-sm flex-1 truncate ${status === 'completed' ? 'text-muted line-through' : 'text-main'}`}>
           {label}
         </span>
         {progress !== undefined && progress !== null && (
@@ -64,7 +64,7 @@ function TreeNode({ label, level = 0, children, progress, status, isToday, defau
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <span className="text-[10px] font-mono text-[#718096] w-8 text-right">{progress}%</span>
+            <span className="text-[10px] font-mono text-muted w-8 text-right">{progress}%</span>
           </div>
         )}
         {!hasChildren && statusIcon}

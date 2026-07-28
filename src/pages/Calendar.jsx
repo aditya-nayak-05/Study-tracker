@@ -162,28 +162,28 @@ export default function CalendarPage() {
         <div className="p-4 rounded-xl flex items-center gap-3" style={cardStyle}>
           <CalendarDays className="w-5 h-5" style={{ color: 'var(--accent-orange)' }} />
           <div>
-            <p className="text-lg font-bold text-[#1a202c]">{totalDatesWithTasks}</p>
+            <p className="text-lg font-bold text-main">{totalDatesWithTasks}</p>
             <p className="text-[11px]" style={{ color: '#718096' }}>Scheduled days</p>
           </div>
         </div>
         <div className="p-4 rounded-xl flex items-center gap-3" style={cardStyle}>
           <BookOpen className="w-5 h-5" style={{ color: 'var(--accent-orange)' }} />
           <div>
-            <p className="text-lg font-bold text-[#1a202c]">{(state.plans || []).length}</p>
+            <p className="text-lg font-bold text-main">{(state.plans || []).length}</p>
             <p className="text-[11px]" style={{ color: '#718096' }}>Active plans</p>
           </div>
         </div>
         <div className="p-4 rounded-xl flex items-center gap-3" style={cardStyle}>
           <CheckCircle2 className="w-5 h-5" style={{ color: '#38a169' }} />
           <div>
-            <p className="text-lg font-bold text-[#1a202c]">{dateStats.totalTasks}</p>
+            <p className="text-lg font-bold text-main">{dateStats.totalTasks}</p>
             <p className="text-[11px]" style={{ color: '#718096' }}>Tasks on {selectedDate ? formatDate(selectedDate, 'MMM dd') : 'selected'}</p>
           </div>
         </div>
         <div className="p-4 rounded-xl flex items-center gap-3" style={cardStyle}>
           <Clock className="w-5 h-5" style={{ color: 'var(--accent-orange)' }} />
           <div>
-            <p className="text-lg font-bold text-[#1a202c]">{dateStats.hours > 0 ? `${Math.round(dateStats.hours * 10) / 10}h` : '0h'}</p>
+            <p className="text-lg font-bold text-main">{dateStats.hours > 0 ? `${Math.round(dateStats.hours * 10) / 10}h` : '0h'}</p>
             <p className="text-[11px]" style={{ color: '#718096' }}>Hours studied</p>
           </div>
         </div>
@@ -193,7 +193,7 @@ export default function CalendarPage() {
       <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
         <div className="flex items-center gap-3">
           <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl transition-all cursor-pointer" style={{ color: '#2d3748', background: '#e6ebf2', boxShadow: '3px 3px 6px rgba(163, 177, 198, 0.6), -3px -3px 6px rgba(255, 255, 255, 0.8)', border: '1px solid rgba(255,255,255,0.7)' }}><ChevronLeft className="w-5 h-5" /></button>
-          <h2 className="text-lg font-semibold text-[#1a202c] min-w-[200px] text-center">
+          <h2 className="text-lg font-semibold text-main min-w-[200px] text-center">
             {formatDate(currentDate, view === 'month' ? 'MMMM yyyy' : "'Week of' MMM dd")}
           </h2>
           <button onClick={() => navigate(1)} className="p-2.5 rounded-xl transition-all cursor-pointer" style={{ color: '#2d3748', background: '#e6ebf2', boxShadow: '3px 3px 6px rgba(163, 177, 198, 0.6), -3px -3px 6px rgba(255, 255, 255, 0.8)', border: '1px solid rgba(255,255,255,0.7)' }}><ChevronRight className="w-5 h-5" /></button>
@@ -298,7 +298,7 @@ export default function CalendarPage() {
         {/* Sidebar: Selected Day Detail */}
         <div className="space-y-5">
           <div className="p-6" style={cardStyle}>
-            <h3 className="text-sm font-semibold text-[#1a202c] mb-1">
+            <h3 className="text-sm font-semibold text-main mb-1">
               {selectedDate ? formatDate(selectedDate, 'EEEE') : 'Select a date'}
             </h3>
             <p className="text-xs mb-5" style={{ color: '#718096' }}>
@@ -381,7 +381,7 @@ export default function CalendarPage() {
 
           {/* Legend */}
           <div className="p-5" style={cardStyle}>
-            <h4 className="text-xs font-semibold text-[#1a202c] mb-3">Plan Colors</h4>
+            <h4 className="text-xs font-semibold text-main mb-3">Plan Colors</h4>
             <div className="space-y-2">
               {(state.plans || []).filter((p) => !p.archived).map((plan) => {
                 const allTasks = getAllTasksInPlan(plan);

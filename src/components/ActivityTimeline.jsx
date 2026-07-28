@@ -30,7 +30,7 @@ const colorMap = {
   study: 'text-accent-primary bg-[var(--accent-orange)]/15',
   import: 'text-[#38a169] bg-[#38a169]/15',
   profile: 'text-accent-primary bg-[var(--accent-orange)]/15',
-  default: 'text-[#718096] bg-[#cbd5e0]/30',
+  default: 'text-muted bg-[#cbd5e0]/30',
 };
 
 const ActivityTimeline = React.memo(function ActivityTimeline({ activities = [], maxItems = 15 }) {
@@ -46,7 +46,7 @@ const ActivityTimeline = React.memo(function ActivityTimeline({ activities = [],
   const visibleActivities = activities.slice(0, maxItems);
 
   if (visibleActivities.length === 0) {
-    return <p className="text-[#718096] text-sm text-center py-6">No recent activity</p>;
+    return <p className="text-muted text-sm text-center py-6">No recent activity</p>;
   }
 
   return (
@@ -60,8 +60,8 @@ const ActivityTimeline = React.memo(function ActivityTimeline({ activities = [],
               <Icon className="w-3.5 h-3.5" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm text-[#1a202c] truncate">{activity.message}</p>
-              <p className="text-[11px] text-[#718096]">
+              <p className="text-sm text-main truncate">{activity.message}</p>
+              <p className="text-[11px] text-muted">
                 {activity.timestamp ? formatDistanceToNow(activity.timestamp) : ''}
               </p>
             </div>

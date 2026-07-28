@@ -86,10 +86,10 @@ const CustomTooltipContent = React.memo(({ active, payload, activeRange, planCol
 
   return (
     <div className="p-3 rounded-xl border border-[rgba(255,255,255,0.7)]" style={{ background: '#e6ebf2', minWidth: '120px', boxShadow: '4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85)' }}>
-      <p className="text-[10px] text-[#718096] mb-1 font-medium">{labelDetail}</p>
+      <p className="text-[10px] text-muted mb-1 font-medium">{labelDetail}</p>
       <div className="flex items-center gap-1.5 mt-0.5">
         <div className="w-2 h-2 rounded-full" style={{ background: planColor }} />
-        <span className="text-xs font-bold text-[#1a202c]">{formatStudyHours(payload[0].value)}</span>
+        <span className="text-xs font-bold text-main">{formatStudyHours(payload[0].value)}</span>
       </div>
     </div>
   );
@@ -269,10 +269,10 @@ export default function StudyHoursChart() {
         {/* Header */}
         <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[rgba(163,177,198,0.3)] pb-5">
           <div>
-            <h2 className="text-base font-bold text-[#1a202c] flex items-center gap-2">
+            <h2 className="text-base font-bold text-main flex items-center gap-2">
               <Clock className="w-5 h-5" style={{ color: activePlan?.color || 'var(--accent-orange)' }} /> Study Hours
             </h2>
-            <p className="text-xs text-[#718096]">Your study activity over time</p>
+            <p className="text-xs text-muted">Your study activity over time</p>
           </div>
 
           {/* Daily / Weekly / Monthly Picker */}
@@ -305,17 +305,17 @@ export default function StudyHoursChart() {
           <div className="flex items-center gap-2.5">
             <button
               onClick={handlePrev}
-              className="p-2 rounded-xl border border-[rgba(255,255,255,0.7)] hover:bg-[#ebf0f7] text-[#718096] hover:text-[#1a202c] cursor-pointer transition-all"
+              className="p-2 rounded-xl border border-[rgba(255,255,255,0.7)] hover:bg-[#ebf0f7] text-muted hover:text-main cursor-pointer transition-all"
               style={{ background: '#e6ebf2', boxShadow: '3px 3px 7px rgba(163, 177, 198, 0.5), -3px -3px 7px rgba(255, 255, 255, 0.85)' }}
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <span className="text-xs font-bold text-[#1a202c] tracking-wide min-w-[140px] text-center">
+            <span className="text-xs font-bold text-main tracking-wide min-w-[140px] text-center">
               {dateRangeLabel}
             </span>
             <button
               onClick={handleNext}
-              className="p-2 rounded-xl border border-[rgba(255,255,255,0.7)] hover:bg-[#ebf0f7] text-[#718096] hover:text-[#1a202c] cursor-pointer transition-all"
+              className="p-2 rounded-xl border border-[rgba(255,255,255,0.7)] hover:bg-[#ebf0f7] text-muted hover:text-main cursor-pointer transition-all"
               style={{ background: '#e6ebf2', boxShadow: '3px 3px 7px rgba(163, 177, 198, 0.5), -3px -3px 7px rgba(255, 255, 255, 0.85)' }}
             >
               <ChevronRight className="w-4 h-4" />
@@ -325,14 +325,14 @@ export default function StudyHoursChart() {
           {/* Metrics block */}
           <div className="flex gap-6">
             <div>
-              <span className="text-[10px] uppercase font-bold text-[#718096] block mb-0.5">Total Study Time</span>
-              <span className="text-base font-extrabold text-[#1a202c]">{metrics.total}</span>
+              <span className="text-[10px] uppercase font-bold text-muted block mb-0.5">Total Study Time</span>
+              <span className="text-base font-extrabold text-main">{metrics.total}</span>
             </div>
             <div>
-              <span className="text-[10px] uppercase font-bold text-[#718096] block mb-0.5">
+              <span className="text-[10px] uppercase font-bold text-muted block mb-0.5">
                 {activeRange === 'daily' ? 'Daily Average' : activeRange === 'weekly' ? 'Weekly Average' : 'Monthly Average'}
               </span>
-              <span className="text-base font-extrabold text-[#1a202c]">{metrics.avg}</span>
+              <span className="text-base font-extrabold text-main">{metrics.avg}</span>
             </div>
           </div>
         </div>
@@ -341,9 +341,9 @@ export default function StudyHoursChart() {
         <CardContent className="h-64 w-full">
           {metrics.rawTotal === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center p-6 border border-dashed border-[rgba(163,177,198,0.4)] rounded-2xl" style={{ background: '#e6ebf2', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.3), inset -3px -3px 6px rgba(255, 255, 255, 0.7)' }}>
-              <Clock className="w-10 h-10 text-[#718096] mb-3" />
-              <h4 className="text-sm font-bold text-[#1a202c] mb-1">No study data yet</h4>
-              <p className="text-xs text-[#718096] mb-4 max-w-sm">Complete a study session or log hours manually to see your study activity here.</p>
+              <Clock className="w-10 h-10 text-muted mb-3" />
+              <h4 className="text-sm font-bold text-main mb-1">No study data yet</h4>
+              <p className="text-xs text-muted mb-4 max-w-sm">Complete a study session or log hours manually to see your study activity here.</p>
               <button
                 onClick={() => navigate('/learn')}
                 className="px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-all text-white hover:-translate-y-0.5"

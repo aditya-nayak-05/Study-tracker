@@ -85,9 +85,9 @@ export default function SearchModal({ onClose }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search plans, tasks, days..."
-            className="flex-1 bg-transparent text-[#1a202c] placeholder-[#718096] focus:outline-none text-sm font-medium"
+            className="flex-1 bg-transparent text-main placeholder-[#718096] focus:outline-none text-sm font-medium"
           />
-          <button onClick={onClose} className="text-[#718096] hover:text-[#1a202c] transition-colors cursor-pointer">
+          <button onClick={onClose} className="text-muted hover:text-main transition-colors cursor-pointer">
             <X className="w-4 h-4 text-accent-primary" />
           </button>
         </div>
@@ -95,7 +95,7 @@ export default function SearchModal({ onClose }) {
         {/* Results */}
         <div className="max-h-[40vh] overflow-y-auto p-2">
           {results.length === 0 && query.trim() && (
-            <p className="text-center text-[#718096] text-sm py-8 font-medium">No results found</p>
+            <p className="text-center text-muted text-sm py-8 font-medium">No results found</p>
           )}
           {results.map((item, i) => {
             const Icon = item.icon;
@@ -106,8 +106,8 @@ export default function SearchModal({ onClose }) {
                 className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#ebf0f7] transition-all text-left group cursor-pointer border border-transparent hover:border-[var(--accent-orange)]"
               >
                 <Icon className="w-4 h-4 text-accent-primary shrink-0" />
-                <span className="text-sm text-[#1a202c] flex-1 truncate group-hover:text-accent-primary font-semibold">{item.label}</span>
-                <span className="text-[10px] uppercase tracking-wider text-[#718096] bg-[#e6ebf2] border border-[rgba(163,177,198,0.3)] px-2 py-0.5 rounded font-semibold">{item.type}</span>
+                <span className="text-sm text-main flex-1 truncate group-hover:text-accent-primary font-semibold">{item.label}</span>
+                <span className="text-[10px] uppercase tracking-wider text-muted bg-[#e6ebf2] border border-[rgba(163,177,198,0.3)] px-2 py-0.5 rounded font-semibold">{item.type}</span>
                 <ArrowRight className="w-3.5 h-3.5 text-accent-primary opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
             );
@@ -115,7 +115,7 @@ export default function SearchModal({ onClose }) {
         </div>
 
         {/* Shortcut hint */}
-        <div className="px-5 py-3 border-t border-[rgba(163,177,198,0.3)] flex items-center gap-4 text-[11px] text-[#718096] font-medium">
+        <div className="px-5 py-3 border-t border-[rgba(163,177,198,0.3)] flex items-center gap-4 text-[11px] text-muted font-medium">
           <span><kbd className="px-1.5 py-0.5 rounded bg-[#e6ebf2] border border-[rgba(163,177,198,0.3)]">↑↓</kbd> Navigate</span>
           <span><kbd className="px-1.5 py-0.5 rounded bg-[#e6ebf2] border border-[rgba(163,177,198,0.3)]">↵</kbd> Open</span>
           <span><kbd className="px-1.5 py-0.5 rounded bg-[#e6ebf2] border border-[rgba(163,177,198,0.3)]">Esc</kbd> Close</span>

@@ -171,25 +171,25 @@ export default function LearningHub() {
     <DashboardLayout>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
         <div>
-          <h2 className="text-xl font-bold text-[#1a202c] flex items-center gap-2">
+          <h2 className="text-xl font-bold text-main flex items-center gap-2">
             <Youtube className="w-6 h-6 text-accent-primary" /> YouTube Learning Hub
           </h2>
-          <p className="text-xs text-[#718096]">Track tutorials and video study sessions across all plans</p>
+          <p className="text-xs text-muted">Track tutorials and video study sessions across all plans</p>
         </div>
       </div>
 
       {/* Stats Summary Panel */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="p-4 flex flex-col items-center justify-center text-center" style={cardStyle}>
-          <span className="text-[10px] uppercase font-bold text-[#718096] mb-0.5">Total Tutorials</span>
-          <span className="text-xl font-bold text-[#1a202c]">{stats.total}</span>
+          <span className="text-[10px] uppercase font-bold text-muted mb-0.5">Total Tutorials</span>
+          <span className="text-xl font-bold text-main">{stats.total}</span>
         </div>
         <div className="p-4 flex flex-col items-center justify-center text-center" style={cardStyle}>
-          <span className="text-[10px] uppercase font-bold text-[#718096] mb-0.5">In Progress</span>
+          <span className="text-[10px] uppercase font-bold text-muted mb-0.5">In Progress</span>
           <span className="text-xl font-bold text-accent-primary">{stats.watching}</span>
         </div>
         <div className="p-4 flex flex-col items-center justify-center text-center" style={cardStyle}>
-          <span className="text-[10px] uppercase font-bold text-[#718096] mb-0.5">Completed</span>
+          <span className="text-[10px] uppercase font-bold text-muted mb-0.5">Completed</span>
           <span className="text-xl font-bold text-[#38a169]">{stats.completed}</span>
         </div>
       </div>
@@ -218,7 +218,7 @@ export default function LearningHub() {
 
           {/* Search Field */}
           <div className="relative flex-1 max-w-xs">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-[#718096]" />
+            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
             <input
               type="text"
               placeholder="Search tutorial tasks..."
@@ -232,11 +232,11 @@ export default function LearningHub() {
         <div className="flex flex-col sm:flex-row sm:items-center gap-4 text-xs">
           {/* Plan Filter */}
           <div className="flex items-center gap-2">
-            <span className="text-[#718096]">Filter by Plan:</span>
+            <span className="text-muted">Filter by Plan:</span>
             <select
               value={selectedPlanId}
               onChange={(e) => setSelectedPlanId(e.target.value)}
-              className="px-3 py-1.5 rounded-lg border border-white/60 text-[#1a202c] focus:outline-none inset-field"
+              className="px-3 py-1.5 rounded-lg border border-white/60 text-main focus:outline-none inset-field"
             >
               <option value="all">All Plans</option>
               {plansWithTutorials.map((p) => (
@@ -247,11 +247,11 @@ export default function LearningHub() {
 
           {/* Sorting */}
           <div className="flex items-center gap-2">
-            <span className="text-[#718096]">Sort by:</span>
+            <span className="text-muted">Sort by:</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="px-3 py-1.5 rounded-lg border border-white/60 text-[#1a202c] focus:outline-none inset-field"
+              className="px-3 py-1.5 rounded-lg border border-white/60 text-main focus:outline-none inset-field"
             >
               <option value="recent">Recently Watched</option>
               <option value="progress">Progress %</option>
@@ -264,9 +264,9 @@ export default function LearningHub() {
       {/* Grid List */}
       {filteredTutorials.length === 0 ? (
         <div className="p-12 text-center rounded-2xl flex flex-col items-center justify-center" style={cardStyle}>
-          <Youtube className="w-12 h-12 text-[#718096] mb-3" />
-          <h3 className="text-sm font-semibold text-[#1a202c] mb-1">No tutorials match filters</h3>
-          <p className="text-xs text-[#718096]">Try expanding your search query or selecting a different tab.</p>
+          <Youtube className="w-12 h-12 text-muted mb-3" />
+          <h3 className="text-sm font-semibold text-main mb-1">No tutorials match filters</h3>
+          <p className="text-xs text-muted">Try expanding your search query or selecting a different tab.</p>
         </div>
       ) : (
         <div ref={containerRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -310,13 +310,13 @@ export default function LearningHub() {
               <div className="p-4 flex-1 flex flex-col">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="w-2 h-2 rounded-full shrink-0" style={{ background: item.planColor || 'var(--accent-orange)' }} />
-                  <span className="text-[10px] text-[#718096] truncate">{item.planName}</span>
+                  <span className="text-[10px] text-muted truncate">{item.planName}</span>
                 </div>
-                <h4 className="text-xs font-bold text-[#1a202c] line-clamp-2 leading-snug group-hover:text-accent-primary transition-colors mb-2">
+                <h4 className="text-xs font-bold text-main line-clamp-2 leading-snug group-hover:text-accent-primary transition-colors mb-2">
                   {item.taskTitle}
                 </h4>
 
-                <div className="mt-auto pt-3 border-t border-[rgba(163,177,198,0.3)] flex items-center justify-between text-[10px] text-[#718096]">
+                <div className="mt-auto pt-3 border-t border-[rgba(163,177,198,0.3)] flex items-center justify-between text-[10px] text-muted">
                   <span className="capitalize font-semibold" style={{ color: item.status === 'completed' ? '#38a169' : item.status === 'watching' ? 'var(--accent-orange)' : '#718096' }}>
                     {item.status.replace('-', ' ')}
                   </span>

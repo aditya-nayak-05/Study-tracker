@@ -206,7 +206,7 @@ export default function PlanDetail() {
             ) : (
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full" style={{ background: plan.color || 'var(--accent-orange)' }} />
-                <h1 className="text-xl font-bold text-[#1a202c]">{plan.name}</h1>
+                <h1 className="text-xl font-bold text-main">{plan.name}</h1>
                 <button onClick={() => { setEditingName(true); setPlanName(plan.name); }} className="cursor-pointer" style={{ color: '#718096' }}><Edit3 className="w-4 h-4" /></button>
               </div>
             )}
@@ -224,7 +224,7 @@ export default function PlanDetail() {
           <ProgressRing percent={stats.progress} size={56} strokeWidth={4} color={plan.color || 'var(--accent-orange)'} />
           <div>
             <p className="text-xs" style={{ color: '#718096' }}>Completed</p>
-            <p className="text-lg font-bold text-[#1a202c]">{stats.completed} / {stats.total}</p>
+            <p className="text-lg font-bold text-main">{stats.completed} / {stats.total}</p>
           </div>
           <div className="flex gap-2">
             <button onClick={() => setView('tree')} style={btnStyle(view === 'tree')}>Tree</button>
@@ -258,7 +258,7 @@ export default function PlanDetail() {
                       <button className="w-full flex items-center gap-3 p-5 hover:bg-[#ebf0f7] transition-all cursor-pointer" onClick={() => setExpandedMonth(expandedMonth === month.id ? null : month.id)}>
                         <GripVertical className="w-4 h-4" style={{ color: '#a0aec0' }} />
                         <div className="flex-1 text-left">
-                          <h3 className="text-sm font-semibold text-[#1a202c]">{month.name}</h3>
+                          <h3 className="text-sm font-semibold text-main">{month.name}</h3>
                           <p className="text-[11px]" style={{ color: '#718096' }}>{mTasks.length} tasks · {mProgress}%</p>
                         </div>
                         <div className="w-20 h-1.5 rounded-full overflow-hidden" style={{ background: '#cbd5e0' }}>
@@ -315,11 +315,11 @@ export default function PlanDetail() {
                                                 return (
                                                   <form key={task.id} onSubmit={(e) => handleEditTaskSave(e, task)} className="mt-2 space-y-2 p-3 rounded-lg border border-white/70" style={{ background: '#e6ebf2', boxShadow: 'inset 2px 2px 5px rgba(163,177,198,0.5), inset -2px -2px 5px rgba(255,255,255,0.8)' }}>
                                                     <div>
-                                                      <label className="text-[10px] text-[#718096] block mb-1">Task Title</label>
+                                                      <label className="text-[10px] text-muted block mb-1">Task Title</label>
                                                       <input type="text" value={editingTaskName} onChange={(e) => setEditingTaskName(e.target.value)} className="w-full px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} autoFocus />
                                                     </div>
                                                     <div>
-                                                      <label className="text-[10px] text-[#718096] block mb-1">YouTube URL</label>
+                                                      <label className="text-[10px] text-muted block mb-1">YouTube URL</label>
                                                       <input type="text" value={editingTaskUrl} onChange={(e) => setEditingTaskUrl(e.target.value)} placeholder="Paste YouTube URL here..." className="w-full px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} />
                                                     </div>
                                                     <div className="flex gap-2 justify-end">
@@ -351,7 +351,7 @@ export default function PlanDetail() {
                                                       setEditingTaskId(task.id);
                                                       setEditingTaskName(task.title);
                                                       setEditingTaskUrl(task.youtubeUrl || '');
-                                                    }} className="p-0.5 opacity-0 group-hover:opacity-100 cursor-pointer text-[#718096] hover:text-[#1a202c]"><Edit3 className="w-3 h-3" /></button>
+                                                    }} className="p-0.5 opacity-0 group-hover:opacity-100 cursor-pointer text-muted hover:text-main"><Edit3 className="w-3 h-3" /></button>
                                                     <button onClick={() => dispatch({ type: 'DELETE_TASK', payload: { planId: plan.id, taskId: task.id } })}
                                                       className="p-0.5 opacity-0 group-hover:opacity-100 cursor-pointer" style={{ color: '#e53e3e' }}><Trash2 className="w-3 h-3" /></button>
                                                   </div>
@@ -376,12 +376,12 @@ export default function PlanDetail() {
                                             {addTaskDay === day.id ? (
                                               <form onSubmit={(e) => handleAddTask(e, day.id)} className="mt-1 p-3 rounded-lg space-y-2 border border-white/70" style={{ background: '#e6ebf2', boxShadow: 'inset 2px 2px 5px rgba(163,177,198,0.5), inset -2px -2px 5px rgba(255,255,255,0.8)' }}>
                                                 <div>
-                                                  <label className="text-[10px] text-[#718096] block mb-1">Task Title</label>
+                                                  <label className="text-[10px] text-muted block mb-1">Task Title</label>
                                                   <input type="text" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} placeholder="e.g. Learn Python Loops" autoFocus
                                                     className="w-full px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} />
                                                 </div>
                                                 <div>
-                                                  <label className="text-[10px] text-[#718096] block mb-1">YouTube URL (Optional)</label>
+                                                  <label className="text-[10px] text-muted block mb-1">YouTube URL (Optional)</label>
                                                   <input type="text" value={newYoutubeUrl} onChange={(e) => setNewYoutubeUrl(e.target.value)} placeholder="https://www.youtube.com/watch?v=..."
                                                     className="w-full px-2 py-1 text-xs rounded focus:outline-none" style={{ ...inputStyle }} />
                                                 </div>
@@ -454,7 +454,7 @@ export default function PlanDetail() {
           {/* Sidebar */}
           <div className="space-y-5">
             <div className="p-6" style={cardStyle}>
-              <h3 className="text-sm font-semibold text-[#1a202c] mb-4">Plan Info</h3>
+              <h3 className="text-sm font-semibold text-main mb-4">Plan Info</h3>
               <div className="space-y-3 text-xs">
                 <div className="flex justify-between"><span style={{ color: '#718096' }}>Created</span><span style={{ color: '#2d3748' }}>{formatDate(plan.createdAt)}</span></div>
                 <div className="flex justify-between"><span style={{ color: '#718096' }}>Months</span><span style={{ color: '#2d3748' }}>{plan.months?.length || 0}</span></div>
@@ -464,7 +464,7 @@ export default function PlanDetail() {
             </div>
 
             <div className="p-6" style={cardStyle}>
-              <h3 className="text-sm font-semibold text-[#1a202c] mb-4">Activity</h3>
+              <h3 className="text-sm font-semibold text-main mb-4">Activity</h3>
               <ActivityTimeline activities={[...(plan.activities || [])].reverse()} maxItems={8} />
             </div>
           </div>

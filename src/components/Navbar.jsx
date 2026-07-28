@@ -105,8 +105,8 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
           pointerEvents: showCinemaControls ? 'auto' : 'none'
         }}
       >
-        <span className="text-[#718096] font-medium" style={{textShadow: 'none'}}>Today task:</span>
-        <span className="text-[#1a202c] font-semibold max-w-[140px] truncate group-hover:text-accent-primary transition-colors" title={task.title}>{task.title}</span>
+        <span className="text-muted font-medium" style={{textShadow: 'none'}}>Today task:</span>
+        <span className="text-main font-semibold max-w-[140px] truncate group-hover:text-accent-primary transition-colors" title={task.title}>{task.title}</span>
       </div>
 
       {/* Current Plan Progress Bar */}
@@ -119,7 +119,7 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
           pointerEvents: showCinemaControls ? 'auto' : 'none'
         }}
       >
-        <span className="text-[#718096] font-medium shrink-0" style={{textShadow: 'none'}}>Progress:</span>
+        <span className="text-muted font-medium shrink-0" style={{textShadow: 'none'}}>Progress:</span>
         <div className="flex items-center gap-2 w-full">
           <div className="h-2 rounded-full bg-[#e6ebf2] overflow-hidden flex-1 relative" style={{ boxShadow: 'inset 2px 2px 4px rgba(163, 177, 198, 0.5), inset -2px -2px 4px rgba(255, 255, 255, 0.9)' }}>
             <div 
@@ -127,7 +127,7 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
               style={{ width: `${progressPercent}%` }} 
             />
           </div>
-          <span className="text-[#1a202c] font-bold shrink-0">{progressPercent}%</span>
+          <span className="text-main font-bold shrink-0">{progressPercent}%</span>
         </div>
       </div>
 
@@ -139,7 +139,7 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
           boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' 
         }}
       >
-        <span className="text-[#718096] font-medium" style={{textShadow: 'none'}}>Today hours:</span>
+        <span className="text-muted font-medium" style={{textShadow: 'none'}}>Today hours:</span>
         <span className="text-accent-primary font-extrabold">{todayHours}</span>
       </div>
 
