@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState, useMemo } from 'react';
 import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
 import { Search, Bell, ChevronRight, Palette, Type } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import FontPickerModal from './FontPickerModal';
 import ThemePickerModal from './ThemePickerModal';
 import InstallPWAButton from './InstallPWAButton';
@@ -98,7 +98,7 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
     <div className="hidden xl:flex items-center gap-5.5 mx-10 flex-1 justify-center max-w-4xl">
       {/* Today Task */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[var(--neu-border)] flex items-center gap-2 group transition-all duration-300 hover:border-[var(--accent-orange)] shrink-0" 
+        className="px-4 py-2 rounded-xl border flex items-center gap-2.5 inset-field flex-1 max-w-md truncate"
         style={{ 
           background: 'var(--neu-card-bg)',
           boxShadow: 'var(--neu-shadow-raised)',
@@ -106,13 +106,13 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
           pointerEvents: showCinemaControls ? 'auto' : 'none'
         }}
       >
-        <span className="text-muted font-medium" style={{textShadow: 'none'}}>Today task:</span>
-        <span className="text-main font-semibold max-w-[140px] truncate group-hover:text-accent-primary transition-colors" title={task.title}>{task.title}</span>
+        <span className="text-[10px] uppercase font-bold tracking-wider text-accent-primary shrink-0">Today Task:</span>
+        <span className="text-xs font-semibold text-main truncate">{task.title}</span>
       </div>
 
-      {/* Current Plan Progress Bar */}
+      {/* Course Overall Progress */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[var(--neu-border)] flex items-center gap-3 transition-all duration-300 hover:border-[var(--accent-orange)] flex-1 max-w-[220px]" 
+        className="px-4 py-2 rounded-xl border flex items-center gap-2.5 inset-field shrink-0"
         style={{ 
           background: 'var(--neu-card-bg)',
           boxShadow: 'var(--neu-shadow-raised)',
@@ -120,33 +120,28 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
           pointerEvents: showCinemaControls ? 'auto' : 'none'
         }}
       >
-        <span className="text-muted font-medium shrink-0" style={{textShadow: 'none'}}>Progress:</span>
-        <div className="flex items-center gap-2 w-full">
-          <div className="h-2 rounded-full bg-[var(--neu-card-bg)] overflow-hidden flex-1 relative" style={{ boxShadow: 'inset 2px 2px 4px rgba(163, 177, 198, 0.5), inset -2px -2px 4px rgba(255, 255, 255, 0.9)' }}>
-            <div 
-              className="h-full rounded-full bg-gradient-to-r from-[#ed8936] to-[#dd6b20] transition-all duration-500" 
-              style={{ width: `${progressPercent}%` }} 
-            />
-          </div>
-          <span className="text-main font-bold shrink-0">{progressPercent}%</span>
+        <span className="text-[10px] uppercase font-bold tracking-wider text-accent-primary shrink-0">Course Overall:</span>
+        <div className="w-16 h-2 rounded-full overflow-hidden neu-card" style={{ boxShadow: 'inset 1px 1px 3px rgba(163,177,198,0.5), inset -1px -1px 3px rgba(255,255,255,0.8)' }}>
+          <div className="h-full rounded-full bg-[var(--accent-orange)]" style={{ width: `${progressPercent}%` }} />
         </div>
+        <span className="text-xs font-bold text-main">{progressPercent}%</span>
       </div>
 
-      {/* Today Total Study Hours - ALWAYS 100% OPACITY */}
+      {/* Today's Study Hours */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[var(--neu-border)] flex items-center gap-2 transition-all duration-300 hover:border-[var(--accent-orange)] shrink-0" 
+        className="px-4 py-2 rounded-xl border flex items-center gap-2.5 inset-field shrink-0"
         style={{ 
           background: 'var(--neu-card-bg)',
           boxShadow: 'var(--neu-shadow-raised)' 
         }}
       >
-        <span className="text-muted font-medium" style={{textShadow: 'none'}}>Today hours:</span>
-        <span className="text-accent-primary font-extrabold">{todayHours}</span>
+        <span className="text-[10px] uppercase font-bold tracking-wider text-accent-primary shrink-0">Today's Study Hours:</span>
+        <span className="text-xs font-bold text-main">{todayHours}</span>
       </div>
 
-      {/* Current Time in India (IST) - ALWAYS 100% OPACITY */}
+      {/* IST Time */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[var(--neu-border)] flex items-center justify-center transition-all duration-300 hover:border-[var(--accent-orange)] shrink-0" 
+        className="px-4 py-2 rounded-xl border flex items-center gap-2 inset-field shrink-0"
         style={{ 
           background: 'var(--neu-card-bg)',
           boxShadow: 'var(--neu-shadow-raised)' 
@@ -161,6 +156,7 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
 const Navbar = React.memo(function Navbar({ onSearchOpen }) {
   const { state, dispatch, showToast } = useStudy();
   const location = useLocation();
+  const navigate = useNavigate();
   const navRef = useRef(null);
   const [notifications] = useState([]);
   const [fontPickerOpen, setFontPickerOpen] = useState(false);
