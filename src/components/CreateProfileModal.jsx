@@ -61,9 +61,12 @@ export default function CreateProfileModal() {
           boxShadow: '10px 10px 24px rgba(163, 177, 198, 0.65), -10px -10px 24px rgba(255, 255, 255, 0.9)',
         }}
       >
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-main mb-2" style={{textShadow: 'none'}}>Welcome to StudyFlow</h1>
-          <p className="text-muted text-sm">Set up your profile to get started</p>
+        <div className="text-center flex flex-col items-center">
+          <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-[var(--accent-orange)] shadow-lg mb-3">
+            <img src="/logo.png" alt="Study Tracker Logo" className="w-full h-full object-cover" />
+          </div>
+          <h1 className="text-2xl font-black text-main mb-1 tracking-tight" style={{textShadow: 'none'}}>Welcome to Study Tracker</h1>
+          <p className="text-muted text-xs font-semibold uppercase tracking-wider">Set up your profile to get started</p>
         </div>
 
         {/* Avatar */}

@@ -102,12 +102,12 @@ const Sidebar = React.memo(function Sidebar() {
       }}
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-5 h-[4.5rem] border-b border-[var(--neu-border-subtle)] shrink-0">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#ed8936] to-[#dd6b20] flex items-center justify-center shrink-0 border border-white/50 shadow-sm">
-          <Sparkles className="w-4 h-4 text-white" />
+      <div className="flex items-center gap-3 px-4 h-[4.5rem] border-b border-[var(--neu-border-subtle)] shrink-0">
+        <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 border-2 border-[var(--accent-orange)] shadow-md overflow-hidden bg-black/20">
+          <img src="/logo.png" alt="Study Tracker Logo" className="w-full h-full object-cover rounded-full" />
         </div>
         {!collapsed && (
-          <span className="text-lg font-bold text-main whitespace-nowrap" style={{textShadow: 'none'}}>StudyFlow</span>
+          <span className="text-base font-extrabold text-main whitespace-nowrap tracking-tight" style={{textShadow: 'none'}}>Study Tracker</span>
         )}
       </div>
 
