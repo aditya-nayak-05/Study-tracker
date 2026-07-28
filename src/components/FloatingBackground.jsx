@@ -97,7 +97,7 @@ const FloatingBackground = React.memo(function FloatingBackground() {
           ref={(el) => (snippetRefs.current[i] = el)}
           className="absolute font-mono text-[10px] sm:text-xs whitespace-nowrap select-none"
           style={{
-            color: '#4a5568',
+            color: 'var(--neu-text-sub)',
             opacity: 0,
           }}
         >

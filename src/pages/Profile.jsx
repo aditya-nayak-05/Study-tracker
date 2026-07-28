@@ -87,14 +87,14 @@ export default function Profile() {
     <DashboardLayout title="Profile" subtitle="Your study profile and achievements">
       <div ref={containerRef} className="space-y-6">
         {/* Profile Card */}
-        <div className="profile-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
+        <div className="profile-card bg-[var(--neu-card-bg)] border border-[var(--neu-border)] rounded-2xl p-6" style={{ boxShadow: 'var(--neu-shadow-raised)' }}>
           <div className="flex items-start gap-6 flex-wrap">
             {/* Avatar */}
             <label className="relative w-20 h-20 rounded-2xl overflow-hidden cursor-pointer group shrink-0" style={{ boxShadow: '4px 4px 8px rgba(163, 177, 198, 0.6), -4px -4px 8px rgba(255, 255, 255, 0.8)' }}>
               {(editing ? form.avatar : profile.avatar) ? (
                 <img src={editing ? form.avatar : profile.avatar} alt="" className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-main text-2xl font-bold" style={{ background: '#e6ebf2', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' }}>
+                <div className="w-full h-full flex items-center justify-center text-main text-2xl font-bold" style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)' }}>
                   {profile.name?.charAt(0)?.toUpperCase() || 'U'}
                 </div>
               )}
@@ -108,18 +108,18 @@ export default function Profile() {
             <div className="flex-1">
               {editing ? (
                 <div className="space-y-3">
-                  <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Name" className="w-full px-3 py-2 rounded-xl text-main text-sm focus:outline-none placeholder-[#a0aec0]" style={{ background: '#e6ebf2', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)', border: '1px solid rgba(255,255,255,0.6)' }} />
-                  <input type="text" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} placeholder="Username" className="w-full px-3 py-2 rounded-xl text-main text-sm focus:outline-none placeholder-[#a0aec0]" style={{ background: '#e6ebf2', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)', border: '1px solid rgba(255,255,255,0.6)' }} />
-                  <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Email" className="w-full px-3 py-2 rounded-xl text-main text-sm focus:outline-none placeholder-[#a0aec0]" style={{ background: '#e6ebf2', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)', border: '1px solid rgba(255,255,255,0.6)' }} />
-                  <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="Bio" rows={2} className="w-full px-3 py-2 rounded-xl text-main text-sm focus:outline-none placeholder-[#a0aec0] resize-none" style={{ background: '#e6ebf2', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)', border: '1px solid rgba(255,255,255,0.6)' }} />
-                  <input type="text" value={form.learningGoal} onChange={(e) => setForm({ ...form, learningGoal: e.target.value })} placeholder="Learning Goal" className="w-full px-3 py-2 rounded-xl text-main text-sm focus:outline-none placeholder-[#a0aec0]" style={{ background: '#e6ebf2', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)', border: '1px solid rgba(255,255,255,0.6)' }} />
+                  <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Name" className="w-full px-3 py-2 rounded-xl text-main text-sm focus:outline-none placeholder-[#a0aec0]" style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid rgba(255,255,255,0.6)' }} />
+                  <input type="text" value={form.username} onChange={(e) => setForm({ ...form, username: e.target.value })} placeholder="Username" className="w-full px-3 py-2 rounded-xl text-main text-sm focus:outline-none placeholder-[#a0aec0]" style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid rgba(255,255,255,0.6)' }} />
+                  <input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} placeholder="Email" className="w-full px-3 py-2 rounded-xl text-main text-sm focus:outline-none placeholder-[#a0aec0]" style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid rgba(255,255,255,0.6)' }} />
+                  <textarea value={form.bio} onChange={(e) => setForm({ ...form, bio: e.target.value })} placeholder="Bio" rows={2} className="w-full px-3 py-2 rounded-xl text-main text-sm focus:outline-none placeholder-[#a0aec0] resize-none" style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid rgba(255,255,255,0.6)' }} />
+                  <input type="text" value={form.learningGoal} onChange={(e) => setForm({ ...form, learningGoal: e.target.value })} placeholder="Learning Goal" className="w-full px-3 py-2 rounded-xl text-main text-sm focus:outline-none placeholder-[#a0aec0]" style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid rgba(255,255,255,0.6)' }} />
                   <div>
                     <label className="text-xs text-muted mb-1 block font-medium">Daily Goal (hours)</label>
-                    <input type="number" min={1} max={24} value={form.dailyGoal} onChange={(e) => setForm({ ...form, dailyGoal: parseInt(e.target.value) || 1 })} className="w-24 px-3 py-2 rounded-xl text-main text-sm focus:outline-none" style={{ background: '#e6ebf2', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)', border: '1px solid rgba(255,255,255,0.6)' }} />
+                    <input type="number" min={1} max={24} value={form.dailyGoal} onChange={(e) => setForm({ ...form, dailyGoal: parseInt(e.target.value) || 1 })} className="w-24 px-3 py-2 rounded-xl text-main text-sm focus:outline-none" style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid rgba(255,255,255,0.6)' }} />
                   </div>
                   <div className="flex gap-2">
                     <button onClick={handleSave} className="px-4 py-2 rounded-xl text-white text-sm font-medium cursor-pointer flex items-center gap-1 brass-btn" style={{ background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)', border: '1px solid rgba(255,255,255,0.4)', boxShadow: '4px 4px 8px rgba(163, 177, 198, 0.6), -4px -4px 8px rgba(255, 255, 255, 0.8)' }}><Check className="w-4 h-4" /> Save</button>
-                    <button onClick={() => { setEditing(false); setForm(profile); }} className="px-4 py-2 rounded-xl text-muted hover:text-main text-sm cursor-pointer flex items-center gap-1" style={{ background: '#e6ebf2', boxShadow: '3px 3px 6px rgba(163, 177, 198, 0.5), -3px -3px 6px rgba(255, 255, 255, 0.8)', border: '1px solid rgba(255,255,255,0.7)' }}><X className="w-4 h-4" /> Cancel</button>
+                    <button onClick={() => { setEditing(false); setForm(profile); }} className="px-4 py-2 rounded-xl text-muted hover:text-main text-sm cursor-pointer flex items-center gap-1" style={{ background: 'var(--neu-card-bg)', boxShadow: '3px 3px 6px rgba(163, 177, 198, 0.5), -3px -3px 6px rgba(255, 255, 255, 0.8)', border: '1px solid var(--neu-border)' }}><X className="w-4 h-4" /> Cancel</button>
                   </div>
                 </div>
               ) : (
@@ -152,7 +152,7 @@ export default function Profile() {
             { label: 'Streak', value: stats.streak, suffix: 'd', icon: Flame, color: 'var(--accent-orange)' },
             { label: 'Badges', value: stats.badges.length, suffix: '', icon: Award, color: 'var(--accent-orange)' },
           ].map((s) => (
-            <div key={s.label} className="profile-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-4 text-center" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
+            <div key={s.label} className="profile-card bg-[var(--neu-card-bg)] border border-[var(--neu-border)] rounded-2xl p-4 text-center" style={{ boxShadow: 'var(--neu-shadow-raised)' }}>
               <s.icon className="w-5 h-5 mx-auto mb-2" style={{ color: s.color }} />
               <AnimatedCounter value={s.value} suffix={s.suffix} className="text-lg font-bold text-main block" />
               <p className="text-[10px] text-muted mt-1">{s.label}</p>
@@ -161,7 +161,7 @@ export default function Profile() {
         </div>
 
         {/* Badges */}
-        <div className="profile-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
+        <div className="profile-card bg-[var(--neu-card-bg)] border border-[var(--neu-border)] rounded-2xl p-6" style={{ boxShadow: 'var(--neu-shadow-raised)' }}>
           <h3 className="text-sm font-semibold text-main mb-4 flex items-center gap-2">
             <Award className="w-4 h-4 text-accent-primary" /> Achievements
           </h3>
@@ -170,7 +170,7 @@ export default function Profile() {
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
               {stats.badges.map((badge) => (
-                <div key={badge.name} className="flex flex-col items-center gap-2 p-4 rounded-xl transition-all" style={{ background: '#e6ebf2', boxShadow: '4px 4px 8px rgba(163, 177, 198, 0.5), -4px -4px 8px rgba(255, 255, 255, 0.8)', border: '1px solid rgba(255,255,255,0.7)' }}>
+                <div key={badge.name} className="flex flex-col items-center gap-2 p-4 rounded-xl transition-all" style={{ background: 'var(--neu-card-bg)', boxShadow: '4px 4px 8px rgba(163, 177, 198, 0.5), -4px -4px 8px rgba(255, 255, 255, 0.8)', border: '1px solid var(--neu-border)' }}>
                   <span className="text-2xl">{badge.icon}</span>
                   <span className="text-xs font-medium text-main text-center">{badge.name}</span>
                   <span className="text-[10px] text-muted text-center">{badge.desc}</span>

@@ -13,19 +13,19 @@ import { calculateProgress, getAllTasksInPlan, formatDate } from '../utils/helpe
 const PLAN_COLORS = ['#38a169', '#319795', '#3182ce', '#6366f1', '#8b5cf6', '#d69e2e', 'var(--accent-orange)', '#e53e3e', '#d53f8c'];
 
 const cardStyle = {
-  background: '#e6ebf2',
-  border: '1px solid rgba(255, 255, 255, 0.7)',
+  background: 'var(--neu-card-bg)',
+  border: '1px solid var(--neu-border)',
   borderRadius: '1.25rem',
-  boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
-  color: '#1a202c',
+  boxShadow: 'var(--neu-shadow-raised)',
+  color: 'var(--neu-text-main)',
 };
 
 const inputStyle = {
-  background: '#e6ebf2',
+  background: 'var(--neu-card-bg)',
   border: '1px solid rgba(255, 255, 255, 0.6)',
-  color: '#1a202c',
+  color: 'var(--neu-text-main)',
   borderRadius: '0.75rem',
-  boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)',
+  boxShadow: 'var(--neu-shadow-inset)',
 };
 
 export default function Plans() {
@@ -92,23 +92,22 @@ export default function Plans() {
   return (
     <DashboardLayout title="Study Plans" subtitle="Manage your study roadmaps">
       {/* Header Actions */}
-      <div className="flex items-center gap-4 mb-8">
+      <div className="flex items-center gap-4 mb-8 max-w-2xl mx-auto w-full">
         <div className="flex-1 relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4" style={{ color: '#718096' }} />
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-accent-primary pointer-events-none z-10" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search plans..."
-            className="w-full pl-10 pr-4 py-3 text-sm focus:outline-none"
-            style={{ ...inputStyle }}
+            className="w-full pl-10 pr-6 py-3 text-xs rounded-full focus:outline-none premium-search-input text-center font-bold tracking-wider"
           />
         </div>
         <button
           onClick={() => setShowCreate(true)}
           className="brass-btn flex items-center gap-2 px-5 py-3 text-sm font-medium transition-all active:scale-[0.97] cursor-pointer shrink-0"
         >
-          <Plus className="w-4 h-4" /> New Plan
+          <Plus className="w-4 h-4" /> Create Plan
         </button>
       </div>
 
@@ -123,12 +122,12 @@ export default function Plans() {
           >
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-main">Create New Plan</h2>
-              <button type="button" onClick={() => setShowCreate(false)} className="cursor-pointer" style={{ color: '#718096' }}><X className="w-5 h-5" /></button>
+              <button type="button" onClick={() => setShowCreate(false)} className="cursor-pointer" style={{ color: 'var(--neu-text-muted)' }}><X className="w-5 h-5" /></button>
             </div>
             <input type="text" value={newPlan.name} onChange={(e) => setNewPlan({ ...newPlan, name: e.target.value })} placeholder="Plan name" required className="w-full px-4 py-2.5 text-sm focus:outline-none" style={{ ...inputStyle }} />
             <textarea value={newPlan.description} onChange={(e) => setNewPlan({ ...newPlan, description: e.target.value })} placeholder="Description (optional)" rows={2} className="w-full px-4 py-2.5 text-sm focus:outline-none resize-none" style={{ ...inputStyle }} />
             <div>
-              <label className="text-xs mb-2 block" style={{ color: '#718096' }}>Color</label>
+              <label className="text-xs mb-2 block" style={{ color: 'var(--neu-text-muted)' }}>Color</label>
               <div className="flex gap-2">
                 {PLAN_COLORS.map((c) => (
                   <button key={c} type="button" onClick={() => setNewPlan({ ...newPlan, color: c })} className={`w-7 h-7 rounded-full cursor-pointer transition-transform ${newPlan.color === c ? 'ring-2 ring-[#ed8936] scale-110' : 'hover:scale-110'}`} style={{ background: c }} />
@@ -163,16 +162,16 @@ export default function Plans() {
                   <h3 className="text-base font-semibold text-main truncate">{plan.name}</h3>
                 </div>
 
-                {plan.description && <p className="text-xs mb-3 line-clamp-2" style={{ color: '#718096' }}>{plan.description}</p>}
+                {plan.description && <p className="text-xs mb-3 line-clamp-2" style={{ color: 'var(--neu-text-muted)' }}>{plan.description}</p>}
 
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: '#e6ebf2', boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
+                  <div className="flex-1 h-2 rounded-full overflow-hidden" style={{ background: 'var(--neu-card-bg)', boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
                     <div className="h-full rounded-full transition-all duration-500" style={{ width: `${progress}%`, background: plan.color || 'var(--accent-orange)' }} />
                   </div>
-                  <span className="text-[11px] font-mono" style={{ color: '#718096' }}>{progress}%</span>
+                  <span className="text-[11px] font-mono" style={{ color: 'var(--neu-text-muted)' }}>{progress}%</span>
                 </div>
 
-                <div className="flex items-center gap-4 text-[11px]" style={{ color: '#718096' }}>
+                <div className="flex items-center gap-4 text-[11px]" style={{ color: 'var(--neu-text-muted)' }}>
                   <span>{tasks.length} tasks</span>
                   <span>{plan.months?.length || 0} months</span>
                   <span>{formatDate(plan.createdAt, 'MMM dd')}</span>
@@ -180,22 +179,22 @@ export default function Plans() {
 
                 <button
                   className="absolute top-3 right-3 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all cursor-pointer"
-                  style={{ background: '#e6ebf2', border: '1px solid rgba(255,255,255,0.7)', boxShadow: '3px 3px 6px rgba(163,177,198,0.5), -3px -3px 6px rgba(255,255,255,0.8)' }}
+                  style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)', boxShadow: '3px 3px 6px rgba(163,177,198,0.5), -3px -3px 6px rgba(255,255,255,0.8)' }}
                   onClick={(e) => { e.stopPropagation(); setMenuOpen(menuOpen === plan.id ? null : plan.id); }}
                 >
-                  <MoreHorizontal className="w-4 h-4" style={{ color: '#718096' }} />
+                  <MoreHorizontal className="w-4 h-4" style={{ color: 'var(--neu-text-muted)' }} />
                 </button>
 
                 {menuOpen === plan.id && (
-                  <div className="absolute top-10 right-3 rounded-xl py-1 w-40 z-50 shadow-xl" style={{ background: '#e6ebf2', border: '1px solid rgba(255,255,255,0.8)', boxShadow: '6px 6px 15px rgba(163,177,198,0.6), -6px -6px 15px rgba(255,255,255,0.85)' }} onClick={(e) => e.stopPropagation()}>
-                    <button onClick={() => handleAction('pin', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[#dce3ed] cursor-pointer" style={{ color: '#2d3748' }}>
+                  <div className="absolute top-10 right-3 rounded-xl py-1 w-40 z-50 shadow-xl" style={{ background: 'var(--neu-card-bg)', border: '1px solid rgba(255,255,255,0.8)', boxShadow: '6px 6px 15px rgba(163,177,198,0.6), -6px -6px 15px rgba(255,255,255,0.85)' }} onClick={(e) => e.stopPropagation()}>
+                    <button onClick={() => handleAction('pin', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[#dce3ed] cursor-pointer" style={{ color: 'var(--neu-text-main)' }}>
                       {plan.pinned ? <PinOff className="w-3.5 h-3.5" /> : <Pin className="w-3.5 h-3.5" />}
                       {plan.pinned ? 'Unpin' : 'Pin'}
                     </button>
-                    <button onClick={() => handleAction('duplicate', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[#dce3ed] cursor-pointer" style={{ color: '#2d3748' }}>
+                    <button onClick={() => handleAction('duplicate', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[#dce3ed] cursor-pointer" style={{ color: 'var(--neu-text-main)' }}>
                       <Copy className="w-3.5 h-3.5" /> Duplicate
                     </button>
-                    <button onClick={() => handleAction('archive', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[#dce3ed] cursor-pointer" style={{ color: '#2d3748' }}>
+                    <button onClick={() => handleAction('archive', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[#dce3ed] cursor-pointer" style={{ color: 'var(--neu-text-main)' }}>
                       <Archive className="w-3.5 h-3.5" /> Archive
                     </button>
                     <button onClick={() => handleAction('delete', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[#dce3ed] cursor-pointer" style={{ color: '#e53e3e' }}>

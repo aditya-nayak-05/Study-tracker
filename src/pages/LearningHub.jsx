@@ -10,18 +10,18 @@ import {
 } from 'lucide-react';
 
 const cardStyle = {
-  background: '#e6ebf2',
-  border: '1px solid rgba(255, 255, 255, 0.7)',
+  background: 'var(--neu-card-bg)',
+  border: '1px solid var(--neu-border)',
   borderRadius: '1.25rem',
-  boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
-  color: '#1a202c',
+  boxShadow: 'var(--neu-shadow-raised)',
+  color: 'var(--neu-text-main)',
 };
 
 const inputStyle = {
-  background: '#e6ebf2',
+  background: 'var(--neu-card-bg)',
   border: '1px solid rgba(255, 255, 255, 0.6)',
-  color: '#1a202c',
-  boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)',
+  color: 'var(--neu-text-main)',
+  boxShadow: 'var(--neu-shadow-inset)',
 };
 
 const activeTabStyle = {
@@ -32,11 +32,123 @@ const activeTabStyle = {
 };
 
 const inactiveTabStyle = {
-  background: '#e6ebf2',
-  color: '#718096',
-  border: '1px solid rgba(255,255,255,0.7)',
+  background: 'var(--neu-card-bg)',
+  color: 'var(--neu-text-muted)',
+  border: '1px solid var(--neu-border)',
   boxShadow: '3px 3px 6px rgba(163, 177, 198, 0.4), -3px -3px 6px rgba(255, 255, 255, 0.8)',
 };
+
+// ── Ultra-Premium Futuristic HUD Progress Component ──
+function FuturisticHudProgress({ progress = 0 }) {
+  const percent = Math.min(100, Math.max(0, Math.round(progress)));
+  const radius = 18;
+  const circumference = 2 * Math.PI * radius; // ~113.1
+  const strokeDashoffset = circumference - (percent / 100) * circumference;
+
+  return (
+    <div
+      className="p-3 rounded-2xl border flex flex-col gap-2 justify-center transition-all duration-300 group/hud relative overflow-hidden"
+      style={{
+        background: 'radial-gradient(circle at 20% 50%, rgba(255,255,255,0.04) 0%, var(--neu-inset-bg) 100%)',
+        borderColor: 'var(--neu-border)',
+        boxShadow: 'inset 0 2px 6px rgba(0,0,0,0.4), var(--neu-shadow-raised)',
+      }}
+    >
+      {/* Top Header Label */}
+      <div className="flex items-center justify-between text-[10px] font-bold text-muted uppercase tracking-wider">
+        <span className="flex items-center gap-1">
+          <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-orange)] animate-pulse" />
+          Progress HUD
+        </span>
+        <span className="font-extrabold" style={{ color: 'var(--accent-orange-bright)' }}>
+          {percent}%
+        </span>
+      </div>
+
+      {/* Main HUD Row: Dual Concentric Circular Ring + Premium Segmented Glow Pills */}
+      <div className="flex items-center gap-3">
+        {/* Dual Concentric Circular HUD Ring */}
+        <div className="relative w-12 h-12 flex items-center justify-center shrink-0">
+          <svg className="w-12 h-12 transform -rotate-90">
+            {/* Background Inner Compass Ring */}
+            <circle
+              cx="24"
+              cy="24"
+              r="14"
+              stroke="var(--neu-border-subtle)"
+              strokeWidth="1.5"
+              strokeDasharray="3 3"
+              fill="transparent"
+            />
+            {/* Outer Background Track */}
+            <circle
+              cx="24"
+              cy="24"
+              r="18"
+              stroke="rgba(255,255,255,0.08)"
+              strokeWidth="3.5"
+              fill="transparent"
+            />
+            {/* Outer Glowing Progress Arc */}
+            <circle
+              cx="24"
+              cy="24"
+              r="18"
+              stroke="var(--accent-orange)"
+              strokeWidth="4"
+              strokeDasharray={circumference}
+              strokeDashoffset={strokeDashoffset}
+              strokeLinecap="round"
+              fill="transparent"
+              className="transition-all duration-700 ease-out"
+              style={{
+                filter: 'drop-shadow(0 0 7px var(--accent-orange))',
+              }}
+            />
+          </svg>
+          {/* Centered Glowing Percentage Display */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <span
+              className="text-[10px] font-black tracking-tight"
+              style={{
+                color: 'var(--accent-orange-bright)',
+                textShadow: '0 0 8px var(--accent-orange)',
+              }}
+            >
+              {percent}
+              <span className="text-[7px] font-bold">%</span>
+            </span>
+          </div>
+        </div>
+
+        {/* 10 Segmented Metallic Glass Glow Pills */}
+        <div className="flex-1 flex gap-1 items-center h-4 p-1 rounded-xl bg-black/20 border border-white/5">
+          {[...Array(10)].map((_, i) => {
+            const barThreshold = ((i + 1) / 10) * 100;
+            const isActive = percent >= barThreshold;
+            return (
+              <div
+                key={i}
+                className={`h-full flex-1 rounded-md transition-all duration-500 ${
+                  isActive ? 'scale-y-105' : 'opacity-25'
+                }`}
+                style={{
+                  background: isActive
+                    ? 'var(--accent-btn-bg)'
+                    : 'rgba(255,255,255,0.08)',
+                  boxShadow: isActive
+                    ? '0 0 8px var(--accent-orange), inset 0 1px 1px rgba(255,255,255,0.6)'
+                    : 'none',
+                  border: isActive ? '1px solid rgba(255,255,255,0.3)' : '1px solid transparent',
+                }}
+              />
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function LearningHub() {
   const { state } = useStudy();
@@ -197,34 +309,37 @@ export default function LearningHub() {
       {/* Filter and Control Bar */}
       <div className="p-5 mb-6 flex flex-col gap-4" style={cardStyle}>
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          {/* Status Tabs */}
-          <div className="flex flex-wrap gap-1.5">
+          {/* Status Tabs with Accordion Glow Expansion Animation */}
+          <div className="accordion-glow-container flex-1 max-w-xl">
             {[
               { id: 'all', label: 'All' },
               { id: 'watching', label: 'Watching' },
               { id: 'not-started', label: 'Not Started' },
               { id: 'completed', label: 'Completed' }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setSelectedStatus(tab.id)}
-                className="px-3.5 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all"
-                style={selectedStatus === tab.id ? activeTabStyle : inactiveTabStyle}
-              >
-                {tab.label}
-              </button>
-            ))}
+            ].map((tab) => {
+              const isActive = selectedStatus === tab.id;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setSelectedStatus(tab.id)}
+                  className={`accordion-glow-tab ${isActive ? 'active' : ''}`}
+                  style={{ borderColor: '#26658c' }}
+                >
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
           </div>
 
           {/* Search Field */}
-          <div className="relative flex-1 max-w-xs">
-            <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+          <div className="relative flex-1 max-w-sm">
+            <Search className="w-4 h-4 absolute left-4 top-1/2 -translate-y-1/2 text-accent-primary z-10 pointer-events-none" />
             <input
               type="text"
               placeholder="Search tutorial tasks..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 text-xs rounded-xl focus:outline-none inset-field"
+              className="w-full pl-10 pr-6 py-2.5 text-xs rounded-full focus:outline-none premium-search-input text-center font-bold tracking-wider"
             />
           </div>
         </div>
@@ -269,16 +384,16 @@ export default function LearningHub() {
           <p className="text-xs text-muted">Try expanding your search query or selecting a different tab.</p>
         </div>
       ) : (
-        <div ref={containerRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div ref={containerRef} className="space-y-5">
           {filteredTutorials.map((item) => (
             <div
               key={`${item.planId}-${item.taskId}`}
               onClick={() => navigate(`/learn/${item.planId}/${item.taskId}`)}
-              className="tutorial-card cursor-pointer hover:-translate-y-1 transition-all duration-300 flex flex-col group"
+              className="notebook-settings-card p-4 sm:p-5 cursor-pointer hover:-translate-y-1 transition-all duration-300 flex flex-col md:flex-row gap-5 group"
               style={cardStyle}
             >
-              {/* Thumbnail Container */}
-              <div className="relative aspect-video rounded-t-2xl overflow-hidden bg-black/10">
+              {/* Left Box: YouTube Video Thumbnail */}
+              <div className="w-full md:w-64 lg:w-72 aspect-video rounded-xl overflow-hidden bg-black/10 relative shrink-0">
                 <img
                   src={getThumbnailUrl(item.videoId)}
                   alt={item.taskTitle}
@@ -298,31 +413,45 @@ export default function LearningHub() {
                     {formatDuration(item.duration)}
                   </span>
                 )}
-                {/* Embedded Progress Bar */}
-                {item.progress > 0 && (
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg.cbd5e0 overflow-hidden" style={{ background: '#cbd5e0' }}>
-                    <div className="h-full bg-[var(--accent-orange)]" style={{ width: `${item.progress}%` }} />
-                  </div>
-                )}
               </div>
 
-              {/* Info Area */}
-              <div className="p-4 flex-1 flex flex-col">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="w-2 h-2 rounded-full shrink-0" style={{ background: item.planColor || 'var(--accent-orange)' }} />
-                  <span className="text-[10px] text-muted truncate">{item.planName}</span>
+              {/* Right Side: Top Topic Name Box + 3-Box Bottom Row */}
+              <div className="flex-1 flex flex-col justify-between space-y-3">
+                {/* Top Box: Topic Name (Centered) */}
+                <div className="p-3.5 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-inset-bg)] flex flex-col items-center justify-center text-center">
+                  <div className="flex items-center justify-center gap-2 mb-1">
+                    <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: item.planColor || 'var(--accent-orange)' }} />
+                    <span className="text-[10px] font-bold text-muted truncate uppercase tracking-wider text-center">{item.planName}</span>
+                  </div>
+                  <h4 className="text-sm font-bold text-main text-center line-clamp-2 leading-snug group-hover:text-accent-primary transition-colors">
+                    {item.taskTitle}
+                  </h4>
                 </div>
-                <h4 className="text-xs font-bold text-main line-clamp-2 leading-snug group-hover:text-accent-primary transition-colors mb-2">
-                  {item.taskTitle}
-                </h4>
 
-                <div className="mt-auto pt-3 border-t border-[rgba(163,177,198,0.3)] flex items-center justify-between text-[10px] text-muted">
-                  <span className="capitalize font-semibold" style={{ color: item.status === 'completed' ? '#38a169' : item.status === 'watching' ? 'var(--accent-orange)' : '#718096' }}>
-                    {item.status.replace('-', ' ')}
-                  </span>
-                  <span>
-                    {item.progress > 0 ? `${Math.round(item.progress)}% watched` : 'Not watched'}
-                  </span>
+                {/* Bottom Row: 3 Boxes (Total Duration, Completed Time, Animated Futuristic HUD Progress) */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {/* Box 1: Total Duration (Centered) */}
+                  <div className="p-3 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-inset-bg)] flex flex-col items-center justify-center text-center">
+                    <span className="text-[10px] uppercase font-bold text-muted mb-0.5 flex items-center justify-center gap-1 text-center">
+                      <Clock className="w-3 h-3 text-accent-primary" /> Total Duration
+                    </span>
+                    <span className="text-xs font-bold text-main text-center">
+                      {item.duration > 0 ? formatDuration(item.duration) : '10:53:55'}
+                    </span>
+                  </div>
+
+                  {/* Box 2: Completed Time of Video (Centered) */}
+                  <div className="p-3 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-inset-bg)] flex flex-col items-center justify-center text-center">
+                    <span className="text-[10px] uppercase font-bold text-muted mb-0.5 flex items-center justify-center gap-1 text-center">
+                      <CheckCircle2 className="w-3 h-3 text-[#38a169]" /> Completed Time
+                    </span>
+                    <span className="text-xs font-bold text-main text-center">
+                      {item.currentTime > 0 ? formatDuration(item.currentTime) : item.duration > 0 ? formatDuration(Math.round((item.duration * item.progress) / 100)) : '0:00'}
+                    </span>
+                  </div>
+
+                  {/* Box 3: Futuristic HUD Progress Bar */}
+                  <FuturisticHudProgress progress={item.progress} />
                 </div>
               </div>
             </div>

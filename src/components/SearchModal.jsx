@@ -72,22 +72,19 @@ export default function SearchModal({ onClose }) {
 
   return (
     <div ref={modalRef} className="fixed inset-0 z-[150] flex items-start justify-center pt-[15vh] p-4 backdrop-blur-sm" style={{ background: 'rgba(26, 32, 44, 0.6)' }} onClick={onClose}>
-      <div ref={contentRef} className="rounded-2xl w-full max-w-xl overflow-hidden leather-card" style={{ background: '#e6ebf2', border: '1px solid rgba(255,255,255,0.7)', boxShadow: '10px 10px 24px rgba(163, 177, 198, 0.65), -10px -10px 24px rgba(255, 255, 255, 0.9)' }} onClick={(e) => e.stopPropagation()}>
+      <div ref={contentRef} className="rounded-2xl w-full max-w-xl overflow-hidden leather-card" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)', boxShadow: '10px 10px 24px rgba(163, 177, 198, 0.65), -10px -10px 24px rgba(255, 255, 255, 0.9)' }} onClick={(e) => e.stopPropagation()}>
         {/* Search Input */}
-        <div 
-          className="flex items-center gap-3 px-5 py-4 border-b border-[rgba(163,177,198,0.3)] bg-[#e6ebf2] inset-field"
-          style={{ boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' }}
-        >
-          <Search className="w-5 h-5 text-accent-primary shrink-0" />
+        <div className="relative flex items-center px-4 py-3.5 border-b border-[var(--neu-border-subtle)] bg-[var(--neu-card-bg)]">
+          <Search className="w-4 h-4 text-accent-primary absolute left-7 top-1/2 -translate-y-1/2 pointer-events-none z-10" />
           <input
             ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search plans, tasks, days..."
-            className="flex-1 bg-transparent text-main placeholder-[#718096] focus:outline-none text-sm font-medium"
+            className="w-full pl-10 pr-10 py-2.5 text-xs rounded-full focus:outline-none premium-search-input text-center font-bold tracking-wider"
           />
-          <button onClick={onClose} className="text-muted hover:text-main transition-colors cursor-pointer">
+          <button onClick={onClose} className="absolute right-7 top-1/2 -translate-y-1/2 text-muted hover:text-main transition-colors cursor-pointer z-10">
             <X className="w-4 h-4 text-accent-primary" />
           </button>
         </div>
@@ -107,7 +104,7 @@ export default function SearchModal({ onClose }) {
               >
                 <Icon className="w-4 h-4 text-accent-primary shrink-0" />
                 <span className="text-sm text-main flex-1 truncate group-hover:text-accent-primary font-semibold">{item.label}</span>
-                <span className="text-[10px] uppercase tracking-wider text-muted bg-[#e6ebf2] border border-[rgba(163,177,198,0.3)] px-2 py-0.5 rounded font-semibold">{item.type}</span>
+                <span className="text-[10px] uppercase tracking-wider text-muted bg-[var(--neu-card-bg)] border border-[var(--neu-border-subtle)] px-2 py-0.5 rounded font-semibold">{item.type}</span>
                 <ArrowRight className="w-3.5 h-3.5 text-accent-primary opacity-0 group-hover:opacity-100 transition-opacity" />
               </button>
             );
@@ -115,10 +112,10 @@ export default function SearchModal({ onClose }) {
         </div>
 
         {/* Shortcut hint */}
-        <div className="px-5 py-3 border-t border-[rgba(163,177,198,0.3)] flex items-center gap-4 text-[11px] text-muted font-medium">
-          <span><kbd className="px-1.5 py-0.5 rounded bg-[#e6ebf2] border border-[rgba(163,177,198,0.3)]">↑↓</kbd> Navigate</span>
-          <span><kbd className="px-1.5 py-0.5 rounded bg-[#e6ebf2] border border-[rgba(163,177,198,0.3)]">↵</kbd> Open</span>
-          <span><kbd className="px-1.5 py-0.5 rounded bg-[#e6ebf2] border border-[rgba(163,177,198,0.3)]">Esc</kbd> Close</span>
+        <div className="px-5 py-3 border-t border-[var(--neu-border-subtle)] flex items-center gap-4 text-[11px] text-muted font-medium">
+          <span><kbd className="px-1.5 py-0.5 rounded bg-[var(--neu-card-bg)] border border-[var(--neu-border-subtle)]">↑↓</kbd> Navigate</span>
+          <span><kbd className="px-1.5 py-0.5 rounded bg-[var(--neu-card-bg)] border border-[var(--neu-border-subtle)]">↵</kbd> Open</span>
+          <span><kbd className="px-1.5 py-0.5 rounded bg-[var(--neu-card-bg)] border border-[var(--neu-border-subtle)]">Esc</kbd> Close</span>
         </div>
       </div>
     </div>

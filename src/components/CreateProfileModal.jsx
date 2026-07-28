@@ -47,7 +47,7 @@ export default function CreateProfileModal() {
 
   const updateField = (field, value) => setForm((f) => ({ ...f, [field]: value }));
 
-  const inputClass = "w-full px-4 py-3 rounded-xl bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] text-main placeholder-[#718096] focus:outline-none focus:border-[var(--accent-orange)] focus:ring-2 focus:ring-[#ed8936]/30 transition-all text-sm inset-field shadow-[inset_3px_3px_6px_rgba(163,177,198,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.9)]";
+  const inputClass = "w-full px-4 py-3 rounded-xl bg-[var(--neu-card-bg)] border border-[var(--neu-border)] text-main placeholder-[var(--neu-text-muted)] focus:outline-none focus:border-[var(--accent-orange)] focus:ring-2 focus:ring-[#ed8936]/30 transition-all text-sm inset-field shadow-[inset_3px_3px_6px_rgba(163,177,198,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.9)]";
 
   return (
     <div ref={modalRef} className="fixed inset-0 z-[200] flex items-center justify-center p-4 backdrop-blur-sm" style={{ background: 'rgba(26, 32, 44, 0.6)' }}>
@@ -56,8 +56,8 @@ export default function CreateProfileModal() {
         onSubmit={handleSubmit}
         className="rounded-2xl p-8 w-full max-w-lg space-y-5 max-h-[90vh] overflow-y-auto leather-card"
         style={{
-          background: '#e6ebf2',
-          border: '1px solid rgba(255,255,255,0.7)',
+          background: 'var(--neu-card-bg)',
+          border: '1px solid var(--neu-border)',
           boxShadow: '10px 10px 24px rgba(163, 177, 198, 0.65), -10px -10px 24px rgba(255, 255, 255, 0.9)',
         }}
       >
@@ -68,7 +68,7 @@ export default function CreateProfileModal() {
 
         {/* Avatar */}
         <div className="flex justify-center">
-          <label className="relative w-24 h-24 rounded-full bg-[#e6ebf2] border-2 border-dashed border-[rgba(163,177,198,0.5)] hover:border-[var(--accent-orange)] transition-colors flex items-center justify-center cursor-pointer overflow-hidden group inset-field shadow-[inset_3px_3px_6px_rgba(163,177,198,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.9)]">
+          <label className="relative w-24 h-24 rounded-full bg-[var(--neu-card-bg)] border-2 border-dashed border-[rgba(163,177,198,0.5)] hover:border-[var(--accent-orange)] transition-colors flex items-center justify-center cursor-pointer overflow-hidden group inset-field shadow-[inset_3px_3px_6px_rgba(163,177,198,0.5),inset_-3px_-3px_6px_rgba(255,255,255,0.9)]">
             {form.avatar ? (
               <img src={form.avatar} alt="" className="w-full h-full object-cover" />
             ) : (

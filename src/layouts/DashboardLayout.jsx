@@ -47,7 +47,7 @@ const DashboardLayout = React.memo(function DashboardLayout({ children, title, s
       <div 
         className="absolute top-0 right-0 w-8 h-8 pointer-events-none z-20"
         style={{
-          background: 'linear-gradient(225deg, #cbd5e0 50%, #e6ebf2 50%)',
+          background: 'linear-gradient(225deg, var(--neu-border-subtle) 50%, var(--neu-page-bg) 50%)',
           boxShadow: '-2px 2px 5px rgba(163, 177, 198, 0.5)',
           borderBottomLeftRadius: '4px',
         }}

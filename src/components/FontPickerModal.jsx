@@ -68,7 +68,7 @@ export default function FontPickerModal({ onClose }) {
               <h2 className="text-lg font-bold text-main flex items-center gap-2">
                 Choose Typography Theme
               </h2>
-              <p className="text-xs text-muted">14 Curated Google Fonts (including 4 Handwritten Styles)</p>
+              <p className="text-xs text-muted">22 Google Fonts (Playful, Creative Display & Handwritten Scripts)</p>
             </div>
           </div>
           <button
@@ -81,77 +81,45 @@ export default function FontPickerModal({ onClose }) {
 
         {/* Font List */}
         <div className="flex-1 overflow-y-auto p-5 space-y-6">
-          {/* Handwritten Category Section */}
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Sparkles className="w-4 h-4 text-accent-primary" />
-              <h3 className="text-xs font-bold uppercase tracking-wider text-accent-primary">
-                Handwritten & Script (4 Fonts)
-              </h3>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {availableFonts.filter(f => f.isHandwritten).map((font) => {
-                const isSelected = currentFontFamily === font.family;
-                return (
-                  <button
-                    key={font.name}
-                    onClick={() => handleSelectFont(font)}
-                    className={`p-4 rounded-xl text-left transition-all cursor-pointer flex items-center justify-between gap-3 ${
-                      isSelected ? 'binder-tab active' : 'neu-card hover:border-[var(--accent-orange)]'
-                    }`}
-                  >
-                    <div>
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="text-xs font-semibold px-2 py-0.5 rounded bg-[var(--accent-orange)]/10 text-accent-primary border border-[var(--accent-orange)]/20">
-                          Handwritten
-                        </span>
-                      </div>
-                      <p className="text-lg font-medium text-main" style={{ fontFamily: font.family }}>
-                        {font.name}
-                      </p>
-                      <p className="text-[11px] text-muted mt-0.5" style={{ fontFamily: font.family }}>
-                        The quick brown fox jumps...
-                      </p>
-                    </div>
-                    {isSelected && <Check className="w-5 h-5 text-accent-primary shrink-0" />}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Standard Categories */}
-          {['Sans-Serif', 'Serif', 'Monospace'].map((cat) => (
-            <div key={cat}>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-muted mb-3">
-                {cat} Typography
-              </h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {availableFonts.filter(f => f.category === cat).map((font) => {
-                  const isSelected = currentFontFamily === font.family;
-                  return (
-                    <button
-                      key={font.name}
-                      onClick={() => handleSelectFont(font)}
-                      className={`p-3.5 rounded-xl text-left transition-all cursor-pointer flex items-center justify-between gap-3 ${
-                        isSelected ? 'binder-tab active' : 'neu-card hover:border-[var(--accent-orange)]'
-                      }`}
-                    >
-                      <div>
-                        <p className="text-sm font-semibold text-main" style={{ fontFamily: font.family }}>
-                          {font.name}
-                        </p>
-                        <p className="text-[11px] text-muted mt-0.5" style={{ fontFamily: font.family }}>
-                          StudyFlow Notebook 123
-                        </p>
-                      </div>
-                      {isSelected && <Check className="w-4 h-4 text-accent-primary shrink-0" />}
-                    </button>
-                  );
-                })}
+          {/* Dynamic Categories */}
+          {['Handwritten ✍️', 'Creative & Display 🎨', 'Sans-Serif', 'Monospace 💻'].map((cat) => {
+            const fontsInCat = availableFonts.filter(f => f.category === cat);
+            if (fontsInCat.length === 0) return null;
+            return (
+              <div key={cat}>
+                <div className="flex items-center gap-2 mb-3">
+                  <Sparkles className="w-4 h-4 text-accent-primary" />
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-accent-primary">
+                    {cat} ({fontsInCat.length} Fonts)
+                  </h3>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {fontsInCat.map((font) => {
+                    const isSelected = currentFontFamily === font.family;
+                    return (
+                      <button
+                        key={font.name}
+                        onClick={() => handleSelectFont(font)}
+                        className={`p-3.5 rounded-xl text-left transition-all cursor-pointer flex items-center justify-between gap-3 ${
+                          isSelected ? 'binder-tab active' : 'neu-card hover:border-[var(--accent-orange)]'
+                        }`}
+                      >
+                        <div className="overflow-hidden">
+                          <p className="text-base font-semibold text-main truncate" style={{ fontFamily: font.family }}>
+                            {font.name}
+                          </p>
+                          <p className="text-xs text-muted mt-0.5 truncate" style={{ fontFamily: font.family }}>
+                            StudyFlow Notebook 123
+                          </p>
+                        </div>
+                        {isSelected && <Check className="w-4 h-4 text-accent-primary shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>

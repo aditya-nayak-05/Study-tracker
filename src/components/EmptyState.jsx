@@ -13,7 +13,7 @@ const EmptyState = React.memo(function EmptyState({ title, description, actionLa
 
   return (
     <div ref={ref} className="flex flex-col items-center justify-center py-16 px-4 text-center">
-      <div className="w-16 h-16 rounded-2xl bg-[#e6ebf2] flex items-center justify-center mb-5" style={{ boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.85)' }}>
+      <div className="w-16 h-16 rounded-2xl bg-[var(--neu-card-bg)] flex items-center justify-center mb-5" style={{ boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.85)' }}>
         <Icon className="w-8 h-8 text-muted" />
       </div>
       <h3 className="text-lg font-semibold text-main mb-2">{title}</h3>

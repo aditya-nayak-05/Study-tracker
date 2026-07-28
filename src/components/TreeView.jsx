@@ -137,7 +137,7 @@ const TreeView = React.memo(function TreeView({ plan, onTaskClick }) {
                           <button
                             onClick={(e) => { e.stopPropagation(); navigate(`/learn/${plan.id}/${task.id}`); }}
                             className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium cursor-pointer shrink-0"
-                            style={{ background: '#e6ebf2', color: 'var(--accent-orange)', border: '1px solid rgba(255,255,255,0.7)', boxShadow: '2px 2px 5px rgba(163, 177, 198, 0.4), -2px -2px 5px rgba(255, 255, 255, 0.8)' }}
+                            style={{ background: 'var(--neu-card-bg)', color: 'var(--accent-orange)', border: '1px solid var(--neu-border)', boxShadow: '2px 2px 5px rgba(163, 177, 198, 0.4), -2px -2px 5px rgba(255, 255, 255, 0.8)' }}
                           >
                             <Play className="w-2.5 h-2.5" /> Watch
                           </button>

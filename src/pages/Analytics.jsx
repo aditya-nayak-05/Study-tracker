@@ -132,12 +132,12 @@ export default function Analytics() {
         {/* Stats Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {statCards.map((card) => (
-            <div key={card.label} className="analytics-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-4" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
-              <div className="flex items-center gap-2 mb-2">
-                <card.icon className="w-4 h-4" style={{ color: card.color }} />
-                <span className="text-[11px] text-muted font-medium">{card.label}</span>
+            <div key={card.label} className="analytics-card bg-[var(--neu-card-bg)] border border-[var(--neu-border)] rounded-2xl p-4 flex flex-col items-center justify-center text-center" style={{ boxShadow: 'var(--neu-shadow-raised)' }}>
+              <div className="flex items-center justify-center gap-1.5 mb-2 text-center w-full">
+                <card.icon className="w-3.5 h-3.5 shrink-0" style={{ color: card.color }} />
+                <span className="text-[10px] text-muted font-bold uppercase tracking-wider text-center truncate">{card.label}</span>
               </div>
-              <AnimatedCounter value={card.value} suffix={card.suffix} className="text-xl font-bold text-main" />
+              <AnimatedCounter value={card.value} suffix={card.suffix} className="text-xl font-black text-main text-center" />
             </div>
           ))}
         </div>
@@ -150,7 +150,7 @@ export default function Analytics() {
         {/* Charts Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Daily Goal Progress */}
-          <div className="analytics-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
+          <div className="analytics-card bg-[var(--neu-card-bg)] border border-[var(--neu-border)] rounded-2xl p-6" style={{ boxShadow: 'var(--neu-shadow-raised)' }}>
             <h3 className="text-sm font-semibold text-main mb-5 flex items-center gap-2">
               <Target className="w-4 h-4 text-accent-primary" /> Daily Goal Progress
             </h3>
@@ -170,7 +170,7 @@ export default function Analytics() {
           </div>
 
           {/* 14-Day Trend */}
-          <div className="analytics-card bg-[#e6ebf2] border border-[rgba(255,255,255,0.7)] rounded-2xl p-6" style={{ boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
+          <div className="analytics-card bg-[var(--neu-card-bg)] border border-[var(--neu-border)] rounded-2xl p-6" style={{ boxShadow: 'var(--neu-shadow-raised)' }}>
             <h3 className="text-sm font-semibold text-main mb-5 flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-accent-primary" /> 14-Day Study Trend
             </h3>

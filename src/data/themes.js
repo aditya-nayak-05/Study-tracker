@@ -1,0 +1,98 @@
+export const themes = [
+  {
+    id: 'light',
+    name: 'Classic Light',
+    icon: '☀️',
+    swatches: ['#e6ebf2', '#cbd5e0', '#1a202c', '#000000'],
+  },
+  {
+    id: 'dark',
+    name: 'Midnight Dark',
+    icon: '🌙',
+    swatches: ['#0d0f17', '#181b26', '#f5f5f7', '#ffffff'],
+  },
+  {
+    id: 'auravant',
+    name: 'Auravant AI Blue',
+    icon: '🤖',
+    swatches: ['#0B1220', '#0F1E3A', '#2563FF', '#00E5FF'],
+  },
+  {
+    id: 'sunset',
+    name: 'Sunset Amber',
+    icon: '🌅',
+    swatches: ['#1c0d06', '#EA6113', '#F88F22', '#FBB931'],
+  },
+  {
+    id: 'vampire',
+    name: 'Crimson Noir',
+    icon: '🩸',
+    swatches: ['#0B0B0B', '#1a1a1a', '#8B0D1A', '#F5F2ED'],
+  },
+  {
+    id: 'plum',
+    name: 'Royal Velvet',
+    icon: '🔮',
+    swatches: ['#1f0035', '#350058', '#5a0060', '#c7940e'],
+  },
+  {
+    id: 'cyber',
+    name: 'Cyber Neon',
+    icon: '⚡',
+    swatches: ['#180113', '#9414d1', '#03b2ed', '#fd59ca'],
+  },
+  {
+    id: 'synthwave',
+    name: 'Synthwave Cyan',
+    icon: '🌌',
+    swatches: ['#220038', '#d403e1', '#03ccff', '#09fbff'],
+  },
+  {
+    id: 'ocean',
+    name: 'Ocean Blue',
+    icon: '🌊',
+    swatches: ['#000521', '#011F65', '#0E4EB2', '#2078CF'],
+  },
+  {
+    id: 'forest',
+    name: 'Forest Green',
+    icon: '🌿',
+    swatches: ['#051F20', '#163832', '#8EB69B', '#DAF1DE'],
+  },
+  {
+    id: 'gold',
+    name: 'Midnight Gold',
+    icon: '⚡',
+    swatches: ['#192230', '#3d474e', '#ffcd00', '#2c2f38'],
+  },
+  {
+    id: 'teal',
+    name: 'Teal Breeze',
+    icon: '🐚',
+    swatches: ['#031716', '#0A7075', '#0C969C', '#6BA3BE'],
+  },
+  {
+    id: 'lavender',
+    name: 'Pastel Lavender',
+    icon: '🌸',
+    swatches: ['#e8e0f0', '#C8B6FE', '#B8C0FF', '#FED5FF'],
+  },
+  {
+    id: 'mint',
+    name: 'Mint Emerald',
+    icon: '🍃',
+    swatches: ['#e0f2ec', '#2C98A0', '#4CC8A3', '#89E8AC'],
+  },
+  {
+    id: 'royal',
+    name: 'Deep Sapphire',
+    icon: '👑',
+    swatches: ['#02203c', '#032c4f', '#0f427e', '#4a8af5'],
+  },
+  {
+    id: 'crimson',
+    name: 'Crimson Red',
+    icon: '🔥',
+    swatches: ['#1a0604', '#301008', '#AD2831', '#800E13'],
+  },
+];

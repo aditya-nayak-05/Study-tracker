@@ -12,7 +12,7 @@ const SkeletonLoader = React.memo(function SkeletonLoader({ className = '', coun
 
 export function SkeletonCard() {
   return (
-    <div className="rounded-2xl p-6 space-y-4 animate-pulse border border-[rgba(255,255,255,0.7)]" style={{ background: '#e6ebf2', boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' }}>
+    <div className="rounded-2xl p-6 space-y-4 animate-pulse border border-[var(--neu-border)]" style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-raised)' }}>
       <div className="h-4 bg-[#cbd5e0] rounded w-3/4" />
       <div className="h-3 bg-[#cbd5e0] rounded w-1/2" />
       <div className="h-2 bg-[#cbd5e0] rounded w-full mt-4" />

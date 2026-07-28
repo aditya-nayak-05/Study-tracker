@@ -37,7 +37,7 @@ import { useNavigate } from 'react-router-dom';
 
 // ── Custom Card Components ──
 export const Card = ({ children, className = '', style = {} }) => (
-  <div className={`rounded-2xl p-6 ${className}`} style={{ background: '#e6ebf2', boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)', border: '1px solid rgba(255,255,255,0.7)', color: '#1a202c', ...style }}>
+  <div className={`rounded-2xl p-6 ${className}`} style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-raised)', border: '1px solid var(--neu-border)', color: 'var(--neu-text-main)', ...style }}>
     {children}
   </div>
 );
@@ -85,7 +85,7 @@ const CustomTooltipContent = React.memo(({ active, payload, activeRange, planCol
   }
 
   return (
-    <div className="p-3 rounded-xl border border-[rgba(255,255,255,0.7)]" style={{ background: '#e6ebf2', minWidth: '120px', boxShadow: '4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85)' }}>
+    <div className="p-3 rounded-xl border border-[var(--neu-border)]" style={{ background: 'var(--neu-card-bg)', minWidth: '120px', boxShadow: 'var(--neu-shadow-raised)' }}>
       <p className="text-[10px] text-muted mb-1 font-medium">{labelDetail}</p>
       <div className="flex items-center gap-1.5 mt-0.5">
         <div className="w-2 h-2 rounded-full" style={{ background: planColor }} />
@@ -267,7 +267,7 @@ export default function StudyHoursChart() {
     <div ref={containerRef} className="space-y-4">
       <Card>
         {/* Header */}
-        <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[rgba(163,177,198,0.3)] pb-5">
+        <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-[var(--neu-border-subtle)] pb-5">
           <div>
             <h2 className="text-base font-bold text-main flex items-center gap-2">
               <Clock className="w-5 h-5" style={{ color: activePlan?.color || 'var(--accent-orange)' }} /> Study Hours
@@ -276,7 +276,7 @@ export default function StudyHoursChart() {
           </div>
 
           {/* Daily / Weekly / Monthly Picker */}
-          <div className="flex gap-1.5 p-1 rounded-xl" style={{ background: '#e6ebf2', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.8)' }}>
+          <div className="flex gap-1.5 p-1 rounded-xl" style={{ background: 'var(--neu-card-bg)', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.8)' }}>
             {[
               { id: 'daily', label: 'Daily' },
               { id: 'weekly', label: 'Weekly' },
@@ -287,7 +287,7 @@ export default function StudyHoursChart() {
                 onClick={() => { setActiveRange(tab.id); handleGoToToday(); }}
                 className="px-4 py-1.5 rounded-lg text-xs cursor-pointer transition-all border border-transparent"
                 style={{
-                  background: activeRange === tab.id ? '#e6ebf2' : 'transparent',
+                  background: activeRange === tab.id ? 'var(--neu-card-bg)' : 'transparent',
                   color: activeRange === tab.id ? 'var(--accent-orange)' : '#718096',
                   boxShadow: activeRange === tab.id ? '3px 3px 7px rgba(163, 177, 198, 0.6), -3px -3px 7px rgba(255, 255, 255, 0.85)' : 'none',
                   fontWeight: activeRange === tab.id ? '700' : '500'
@@ -305,8 +305,8 @@ export default function StudyHoursChart() {
           <div className="flex items-center gap-2.5">
             <button
               onClick={handlePrev}
-              className="p-2 rounded-xl border border-[rgba(255,255,255,0.7)] hover:bg-[#ebf0f7] text-muted hover:text-main cursor-pointer transition-all"
-              style={{ background: '#e6ebf2', boxShadow: '3px 3px 7px rgba(163, 177, 198, 0.5), -3px -3px 7px rgba(255, 255, 255, 0.85)' }}
+              className="p-2 rounded-xl border border-[var(--neu-border)] hover:bg-[#ebf0f7] text-muted hover:text-main cursor-pointer transition-all"
+              style={{ background: 'var(--neu-card-bg)', boxShadow: '3px 3px 7px rgba(163, 177, 198, 0.5), -3px -3px 7px rgba(255, 255, 255, 0.85)' }}
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
@@ -315,8 +315,8 @@ export default function StudyHoursChart() {
             </span>
             <button
               onClick={handleNext}
-              className="p-2 rounded-xl border border-[rgba(255,255,255,0.7)] hover:bg-[#ebf0f7] text-muted hover:text-main cursor-pointer transition-all"
-              style={{ background: '#e6ebf2', boxShadow: '3px 3px 7px rgba(163, 177, 198, 0.5), -3px -3px 7px rgba(255, 255, 255, 0.85)' }}
+              className="p-2 rounded-xl border border-[var(--neu-border)] hover:bg-[#ebf0f7] text-muted hover:text-main cursor-pointer transition-all"
+              style={{ background: 'var(--neu-card-bg)', boxShadow: '3px 3px 7px rgba(163, 177, 198, 0.5), -3px -3px 7px rgba(255, 255, 255, 0.85)' }}
             >
               <ChevronRight className="w-4 h-4" />
             </button>
@@ -340,14 +340,14 @@ export default function StudyHoursChart() {
         {/* Content area: Chart or Empty State */}
         <CardContent className="h-64 w-full">
           {metrics.rawTotal === 0 ? (
-            <div className="h-full flex flex-col items-center justify-center text-center p-6 border border-dashed border-[rgba(163,177,198,0.4)] rounded-2xl" style={{ background: '#e6ebf2', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.3), inset -3px -3px 6px rgba(255, 255, 255, 0.7)' }}>
+            <div className="h-full flex flex-col items-center justify-center text-center p-6 border border-dashed border-[rgba(163,177,198,0.4)] rounded-2xl" style={{ background: 'var(--neu-card-bg)', boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.3), inset -3px -3px 6px rgba(255, 255, 255, 0.7)' }}>
               <Clock className="w-10 h-10 text-muted mb-3" />
               <h4 className="text-sm font-bold text-main mb-1">No study data yet</h4>
               <p className="text-xs text-muted mb-4 max-w-sm">Complete a study session or log hours manually to see your study activity here.</p>
               <button
                 onClick={() => navigate('/learn')}
                 className="px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer flex items-center gap-1.5 transition-all text-white hover:-translate-y-0.5"
-                style={{ background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)', boxShadow: '4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85)' }}
+                style={{ background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)', boxShadow: 'var(--neu-shadow-raised)' }}
               >
                 <Play className="w-3.5 h-3.5 fill-current" /> Start Studying
               </button>
@@ -385,7 +385,7 @@ export default function StudyHoursChart() {
                   dot={false}
                   activeDot={{
                     r: 5,
-                    stroke: '#e6ebf2',
+                    stroke: 'var(--neu-card-bg)',
                     strokeWidth: 2,
                     fill: activePlan?.color || 'var(--accent-orange)'
                   }}

@@ -33,13 +33,13 @@ const ProgressBar = React.memo(function ProgressBar() {
   return (
     <div
       ref={barRef}
-      className="fixed bottom-0 left-0 right-0 h-12 border-t border-[rgba(163,177,198,0.3)] flex items-center px-8 gap-5 z-50"
-      style={{ background: '#e6ebf2', boxShadow: '0 -4px 12px rgba(163, 177, 198, 0.35)' }}
+      className="fixed bottom-0 left-0 right-0 h-12 border-t border-[var(--neu-border-subtle)] flex items-center px-8 gap-5 z-50"
+      style={{ background: 'var(--neu-card-bg)', boxShadow: '0 -4px 12px rgba(163, 177, 198, 0.35)' }}
     >
       <span className="text-xs text-main font-semibold truncate max-w-[200px]" style={{textShadow: 'none'}}>{activePlan.name}</span>
       <div 
-        className="flex-1 h-2 bg-[#e6ebf2] rounded-full overflow-hidden border border-[rgba(255,255,255,0.7)] relative progress-tube"
-        style={{ boxShadow: 'inset 3px 3px 6px rgba(163, 177, 198, 0.5), inset -3px -3px 6px rgba(255, 255, 255, 0.9)' }}
+        className="flex-1 h-2 bg-[var(--neu-card-bg)] rounded-full overflow-hidden border border-[var(--neu-border)] relative progress-tube"
+        style={{ boxShadow: 'var(--neu-shadow-inset)' }}
       >
         <div
           ref={fillRef}

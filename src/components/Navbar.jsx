@@ -1,9 +1,10 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
-import { Search, Bell, ChevronRight, Sun, Moon, Type } from 'lucide-react';
+import { Search, Bell, ChevronRight, Palette, Type } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import FontPickerModal from './FontPickerModal';
+import ThemePickerModal from './ThemePickerModal';
 import InstallPWAButton from './InstallPWAButton';
 
 const pageNames = {
@@ -97,10 +98,10 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
     <div className="hidden xl:flex items-center gap-5.5 mx-10 flex-1 justify-center max-w-4xl">
       {/* Today Task */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center gap-2 group transition-all duration-300 hover:border-[var(--accent-orange)] shrink-0" 
+        className="px-3.5 py-2 rounded-xl border border-[var(--neu-border)] flex items-center gap-2 group transition-all duration-300 hover:border-[var(--accent-orange)] shrink-0" 
         style={{ 
-          background: '#e6ebf2',
-          boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
+          background: 'var(--neu-card-bg)',
+          boxShadow: 'var(--neu-shadow-raised)',
           opacity: showCinemaControls ? 1 : 0,
           pointerEvents: showCinemaControls ? 'auto' : 'none'
         }}
@@ -111,17 +112,17 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
 
       {/* Current Plan Progress Bar */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center gap-3 transition-all duration-300 hover:border-[var(--accent-orange)] flex-1 max-w-[220px]" 
+        className="px-3.5 py-2 rounded-xl border border-[var(--neu-border)] flex items-center gap-3 transition-all duration-300 hover:border-[var(--accent-orange)] flex-1 max-w-[220px]" 
         style={{ 
-          background: '#e6ebf2',
-          boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
+          background: 'var(--neu-card-bg)',
+          boxShadow: 'var(--neu-shadow-raised)',
           opacity: showCinemaControls ? 1 : 0,
           pointerEvents: showCinemaControls ? 'auto' : 'none'
         }}
       >
         <span className="text-muted font-medium shrink-0" style={{textShadow: 'none'}}>Progress:</span>
         <div className="flex items-center gap-2 w-full">
-          <div className="h-2 rounded-full bg-[#e6ebf2] overflow-hidden flex-1 relative" style={{ boxShadow: 'inset 2px 2px 4px rgba(163, 177, 198, 0.5), inset -2px -2px 4px rgba(255, 255, 255, 0.9)' }}>
+          <div className="h-2 rounded-full bg-[var(--neu-card-bg)] overflow-hidden flex-1 relative" style={{ boxShadow: 'inset 2px 2px 4px rgba(163, 177, 198, 0.5), inset -2px -2px 4px rgba(255, 255, 255, 0.9)' }}>
             <div 
               className="h-full rounded-full bg-gradient-to-r from-[#ed8936] to-[#dd6b20] transition-all duration-500" 
               style={{ width: `${progressPercent}%` }} 
@@ -133,10 +134,10 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
 
       {/* Today Total Study Hours - ALWAYS 100% OPACITY */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center gap-2 transition-all duration-300 hover:border-[var(--accent-orange)] shrink-0" 
+        className="px-3.5 py-2 rounded-xl border border-[var(--neu-border)] flex items-center gap-2 transition-all duration-300 hover:border-[var(--accent-orange)] shrink-0" 
         style={{ 
-          background: '#e6ebf2',
-          boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' 
+          background: 'var(--neu-card-bg)',
+          boxShadow: 'var(--neu-shadow-raised)' 
         }}
       >
         <span className="text-muted font-medium" style={{textShadow: 'none'}}>Today hours:</span>
@@ -145,10 +146,10 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
 
       {/* Current Time in India (IST) - ALWAYS 100% OPACITY */}
       <div 
-        className="px-3.5 py-2 rounded-xl border border-[rgba(255,255,255,0.7)] flex items-center justify-center transition-all duration-300 hover:border-[var(--accent-orange)] shrink-0" 
+        className="px-3.5 py-2 rounded-xl border border-[var(--neu-border)] flex items-center justify-center transition-all duration-300 hover:border-[var(--accent-orange)] shrink-0" 
         style={{ 
-          background: '#e6ebf2',
-          boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)' 
+          background: 'var(--neu-card-bg)',
+          boxShadow: 'var(--neu-shadow-raised)' 
         }}
       >
         <span className="text-accent-primary font-extrabold font-mono tracking-wider text-center">{istTime}</span>
@@ -163,6 +164,7 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
   const navRef = useRef(null);
   const [notifications] = useState([]);
   const [fontPickerOpen, setFontPickerOpen] = useState(false);
+  const [themePickerOpen, setThemePickerOpen] = useState(false);
 
   const [showCinemaControls, setShowCinemaControls] = useState(true);
   const isLearnPage = location.pathname.startsWith('/learn/');
@@ -224,7 +226,7 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
   return (
     <header
       ref={navRef}
-      className="h-[4.5rem] border-b border-[rgba(163,177,198,0.3)] flex items-center justify-between px-8 sticky top-0 z-30 transition-all duration-500"
+      className="h-[4.5rem] border-b border-[var(--neu-border-subtle)] flex items-center justify-between px-8 sticky top-0 z-30 transition-all duration-500"
       style={{ 
         background: showCinemaControls ? 'var(--neu-header-bg)' : 'transparent', 
         backdropFilter: showCinemaControls ? 'blur(12px)' : 'none', 
@@ -273,6 +275,7 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
         {/* Search */}
         <button
           onClick={onSearchOpen}
+          aria-label="Search plans, tasks, and days"
           className="flex items-center gap-2 px-3 py-1.5 rounded-lg border text-muted hover:text-main hover:border-[var(--accent-orange)] transition-all text-sm cursor-pointer inset-field"
         >
           <Search className="w-4 h-4 text-accent-primary" />
@@ -283,6 +286,7 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
         {/* Font Change Button */}
         <button 
           onClick={() => setFontPickerOpen(true)}
+          aria-label="Change Typography Font (14 fonts available)"
           title="Change Typography Font (14 fonts available)"
           className="relative px-2.5 py-1.5 rounded-lg text-muted transition-all cursor-pointer inset-field flex items-center gap-1.5"
         >
@@ -290,29 +294,19 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
           <span className="hidden md:inline text-xs font-semibold text-main">Font</span>
         </button>
 
-        {/* Theme Switcher Button */}
+        {/* Theme Palette Button */}
         <button 
-          onClick={() => {
-            const currentTheme = state.settings?.themeMode || 'light';
-            const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            dispatch({
-              type: 'UPDATE_SETTINGS',
-              payload: { themeMode: nextTheme }
-            });
-            showToast(`Switched to ${nextTheme === 'dark' ? 'Dark' : 'Light'} theme 🌓`, 'info');
-          }}
-          title={`Switch to ${(state.settings?.themeMode || 'light') === 'dark' ? 'Light' : 'Dark'} mode`}
+          onClick={() => setThemePickerOpen(true)}
+          aria-label="Change Color Theme"
+          title="Change Color Theme"
           className="relative p-2 rounded-lg text-muted transition-all cursor-pointer inset-field"
         >
-          {(state.settings?.themeMode || 'light') === 'dark' ? (
-            <Sun className="w-5 h-5 text-accent-primary transition-transform duration-300 hover:rotate-45" />
-          ) : (
-            <Moon className="w-5 h-5 text-[#3182ce] transition-transform duration-300 hover:-rotate-12" />
-          )}
+          <Palette className="w-5 h-5 text-accent-primary transition-transform duration-300 hover:rotate-12" />
         </button>
 
         {/* Notifications */}
         <button 
+          aria-label="Notifications"
           className="relative p-2 rounded-lg text-muted transition-all cursor-pointer inset-field"
         >
           <Bell className="w-5 h-5 text-accent-primary" />
@@ -323,17 +317,32 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
 
         {/* Profile */}
         {state.profile && (
-          <div className="w-8 h-8 rounded-full brass-btn flex items-center justify-center text-sm font-semibold overflow-hidden shadow-sm">
+          <button
+            aria-label="User Profile"
+            onClick={() => navigate('/profile')}
+            className="w-8 h-8 rounded-full brass-btn flex items-center justify-center text-sm font-semibold overflow-hidden shadow-sm cursor-pointer"
+          >
             {state.profile.avatar ? (
-              <img src={state.profile.avatar} alt="" className="w-full h-full object-cover" />
+              <img src={state.profile.avatar} alt="User Avatar" className="w-full h-full object-cover" />
             ) : (
               state.profile.name?.charAt(0)?.toUpperCase() || 'U'
             )}
-          </div>
+          </button>
         )}
       </div>
 
       {fontPickerOpen && <FontPickerModal onClose={() => setFontPickerOpen(false)} />}
+      {themePickerOpen && (
+        <ThemePickerModal
+          isOpen={themePickerOpen}
+          onClose={() => setThemePickerOpen(false)}
+          currentTheme={state.settings?.themeMode || 'light'}
+          onSelect={(themeId) => {
+            dispatch({ type: 'UPDATE_SETTINGS', payload: { themeMode: themeId } });
+            showToast(`Theme changed to ${themeId} 🎨`, 'info');
+          }}
+        />
+      )}
     </header>
   );
 });

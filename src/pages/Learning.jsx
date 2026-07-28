@@ -14,11 +14,11 @@ import {
 } from 'lucide-react';
 
 const cardStyle = {
-  background: '#e6ebf2',
-  border: '1px solid rgba(255, 255, 255, 0.7)',
+  background: 'var(--neu-card-bg)',
+  border: '1px solid var(--neu-border)',
   borderRadius: '1.25rem',
-  boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
-  color: '#1a202c',
+  boxShadow: 'var(--neu-shadow-raised)',
+  color: 'var(--neu-text-main)',
 };
 
 const buttonStyle = {
@@ -32,13 +32,13 @@ const buttonStyle = {
 };
 
 const secondaryButtonStyle = {
-  background: '#e6ebf2',
-  color: '#2d3748',
-  border: '1px solid rgba(255, 255, 255, 0.7)',
+  background: 'var(--neu-card-bg)',
+  color: 'var(--neu-text-main)',
+  border: '1px solid var(--neu-border)',
   borderRadius: '0.85rem',
   fontWeight: 600,
   cursor: 'pointer',
-  boxShadow: '4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85)',
+  boxShadow: 'var(--neu-shadow-raised)',
 };
 
 export default function Learning() {
@@ -335,9 +335,9 @@ export default function Learning() {
 
       {showResumePrompt ? (
         <div 
-          className="max-w-2xl mx-auto p-12 text-center my-24 rounded-3xl border border-white/70 transition-all duration-300" 
+          className="max-w-2xl mx-auto p-12 text-center my-24 rounded-3xl border border-[var(--neu-border)] transition-all duration-300" 
           style={{ 
-            background: '#e6ebf2', 
+            background: 'var(--neu-card-bg)', 
             boxShadow: '10px 10px 30px rgba(163, 177, 198, 0.7), -10px -10px 30px rgba(255, 255, 255, 0.9)'
           }}
         >
@@ -375,7 +375,7 @@ export default function Learning() {
             onTouchStart={handleCinemaMouseMove}
             onMouseLeave={() => setShowCinemaControls(false)}
             className="relative -mx-[2.5rem] -mt-[2rem] mb-10 w-[calc(100%+5rem)] flex flex-col lg:flex-row gap-6 p-6 overflow-hidden"
-            style={{ minHeight: 'calc(100vh - 4.5rem)', background: '#e6ebf2', borderBottom: '1px solid rgba(163,177,198,0.3)' }}
+            style={{ minHeight: 'calc(100vh - 4.5rem)', background: 'var(--neu-card-bg)', borderBottom: '1px solid rgba(163,177,198,0.3)' }}
           >
             {/* Left Column: Title Bar + Video Player + Scroll Indicator */}
             <div className="flex-1 flex flex-col justify-between h-full min-h-[50vh] lg:min-h-0">
@@ -389,7 +389,7 @@ export default function Learning() {
                 }}
               >
                 <div className="flex items-center gap-3">
-                  <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl cursor-pointer transition-all text-muted border border-white/70" style={{ background: '#e6ebf2', boxShadow: '3px 3px 6px rgba(163,177,198,0.5), -3px -3px 6px rgba(255,255,255,0.8)' }}>
+                  <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl cursor-pointer transition-all text-muted border border-[var(--neu-border)]" style={{ background: 'var(--neu-card-bg)', boxShadow: '3px 3px 6px rgba(163,177,198,0.5), -3px -3px 6px rgba(255,255,255,0.8)' }}>
                     <ArrowLeft className="w-4 h-4" />
                   </button>
                   <div>
@@ -558,7 +558,7 @@ export default function Learning() {
                     className="w-full h-40 p-4 rounded-xl text-sm focus:outline-none resize-none leading-relaxed inset-field text-main"
                   />
                 ) : (
-                  <div className="text-center py-8 rounded-xl" style={{ background: '#e6ebf2', boxShadow: 'inset 2px 2px 5px rgba(163,177,198,0.5), inset -2px -2px 5px rgba(255,255,255,0.8)' }}>
+                  <div className="text-center py-8 rounded-xl" style={{ background: 'var(--neu-card-bg)', boxShadow: 'inset 2px 2px 5px rgba(163,177,198,0.5), inset -2px -2px 5px rgba(255,255,255,0.8)' }}>
                     <p className="text-xs text-muted mb-3">You must start a study session to take notes</p>
                     <button onClick={handleStartSession} className="px-4 py-2 rounded-lg text-xs font-semibold cursor-pointer" style={buttonStyle}>
                       Start Study Session
@@ -579,7 +579,7 @@ export default function Learning() {
                       <span className="text-muted">Completed</span>
                       <span className="font-semibold text-main">{Math.round(savedProgress.progress)}%</span>
                     </div>
-                    <div className="h-2 rounded-full overflow-hidden w-full bg-[#e6ebf2]" style={{ boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
+                    <div className="h-2 rounded-full overflow-hidden w-full bg-[var(--neu-card-bg)]" style={{ boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
                       <div className="h-full rounded-full transition-all duration-300" style={{ width: `${savedProgress.progress}%`, background: savedProgress.progress >= 95 ? '#38a169' : 'var(--accent-orange)' }} />
                     </div>
                     <div className="flex justify-between items-center text-[10px] text-muted">

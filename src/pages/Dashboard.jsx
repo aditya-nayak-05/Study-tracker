@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../layouts/DashboardLayout';
 import PomodoroTimer from '../components/PomodoroTimer';
 import ActivityTimeline from '../components/ActivityTimeline';
+import StylishAnalogClock from '../components/StylishAnalogClock';
 import { ProgressRing, AnimatedCounter, BarChart, MiniLineChart } from '../components/Charts';
 import {
   getGreeting, getAllTasksInPlan, calculateProgress,
@@ -185,7 +186,7 @@ export default function Dashboard() {
     { label: 'Calendar', icon: Calendar, color: '#e53e3e', action: () => navigate('/calendar') },
     { label: 'Analytics', icon: BarChart3, color: '#319795', action: () => navigate('/analytics') },
     { label: 'Profile', icon: User, color: '#dd6b20', action: () => navigate('/profile') },
-    { label: 'Settings', icon: Settings, color: '#718096', action: () => navigate('/settings') },
+    { label: 'Settings', icon: Settings, color: 'var(--neu-text-muted)', action: () => navigate('/settings') },
   ];
 
   const handleQuickTask = useCallback((e) => {
@@ -215,14 +216,14 @@ export default function Dashboard() {
   return (
     <DashboardLayout title={`${getGreeting()}, ${state.profile?.name || 'Student'}`} subtitle="Here's your study overview for today">
       <div ref={cardsRef} className="space-y-8">
-        {/* Quick Actions Bar */}
+        {/* Quick Actions Bar (Centered) */}
         <div className="dash-card p-5">
           <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 gap-3">
             {quickActions.map((qa) => (
               <button
                 key={qa.label}
                 onClick={qa.action}
-                className="flex flex-col items-center gap-2 p-2.5 rounded-xl hover:bg-[var(--neu-border-subtle)] transition-all group cursor-pointer"
+                className="flex flex-col items-center justify-center text-center gap-2 p-2.5 rounded-xl hover:bg-[var(--neu-border-subtle)] transition-all group cursor-pointer"
               >
                 <div
                   className={qa.isSpecial 
@@ -231,15 +232,15 @@ export default function Dashboard() {
                   }
                   style={{ 
                     background: qa.isSpecial 
-                      ? 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)' 
+                      ? 'var(--accent-btn-bg)' 
                       : qa.color 
                   }}
                 >
                   <qa.icon className="w-5 h-5 text-white" />
                 </div>
                 <span className={qa.isSpecial 
-                  ? "text-[11px] font-bold text-accent-primary"
-                  : "text-[11px] text-muted group-hover:text-main transition-colors"
+                  ? "text-[11px] font-bold text-accent-primary text-center"
+                  : "text-[11px] text-muted group-hover:text-main transition-colors text-center font-medium"
                 }>
                   {qa.label}
                 </span>
@@ -248,19 +249,19 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Stats Grid */}
+        {/* Stats Grid (Centered) */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-          {/* Today's Hours */}
-          <div className="dash-card p-6">
-            <div className="flex items-center gap-2 mb-3">
-              <Clock className="w-4 h-4 text-accent-primary" />
-              <span className="text-xs font-medium text-muted">Today's Hours</span>
+          {/* Today's Hours (Centered) */}
+          <div className="dash-card p-6 flex flex-col items-center justify-center text-center">
+            <div className="flex items-center justify-center gap-2 mb-2 text-center w-full">
+              <Clock className="w-4 h-4 text-accent-primary shrink-0" />
+              <span className="text-[11px] font-bold text-muted uppercase tracking-wider text-center">Today's Hours</span>
             </div>
-            <div className="flex items-end gap-2">
-              <AnimatedCounter value={stats.todayHours} suffix="h" className="text-2xl font-bold text-main" />
-              <span className="text-xs mb-1 text-muted">/ {stats.dailyGoal}h</span>
+            <div className="flex items-baseline justify-center gap-1.5 text-center">
+              <AnimatedCounter value={stats.todayHours} suffix="h" className="text-2xl font-black text-main text-center" />
+              <span className="text-xs text-muted font-bold text-center">/ {stats.dailyGoal}h</span>
             </div>
-            <div className="mt-3 h-2 rounded-full overflow-hidden neu-card" style={{ boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
+            <div className="mt-3 h-2 w-full max-w-[160px] rounded-full overflow-hidden neu-card mx-auto" style={{ boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
               <div
                 className="h-full rounded-full transition-all duration-700 bg-gradient-to-r from-[#ed8936] to-[#dd6b20]"
                 style={{ width: `${Math.min(100, (stats.todayHours / stats.dailyGoal) * 100)}%` }}
@@ -268,17 +269,17 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Tasks Completed */}
-          <div className="dash-card p-6">
-            <div className="flex items-center gap-2 mb-3">
-              <CheckSquare className="w-4 h-4 text-accent-primary" />
-              <span className="text-xs font-medium text-muted">Tasks Done</span>
+          {/* Tasks Completed (Centered) */}
+          <div className="dash-card p-6 flex flex-col items-center justify-center text-center">
+            <div className="flex items-center justify-center gap-2 mb-2 text-center w-full">
+              <CheckSquare className="w-4 h-4 text-accent-primary shrink-0" />
+              <span className="text-[11px] font-bold text-muted uppercase tracking-wider text-center">Tasks Done</span>
             </div>
-            <div className="flex items-end gap-2">
-              <AnimatedCounter value={stats.completedTasks} className="text-2xl font-bold text-main" />
-              <span className="text-xs mb-1 text-muted">/ {stats.totalTasks}</span>
+            <div className="flex items-baseline justify-center gap-1.5 text-center">
+              <AnimatedCounter value={stats.completedTasks} className="text-2xl font-black text-main text-center" />
+              <span className="text-xs text-muted font-bold text-center">/ {stats.totalTasks}</span>
             </div>
-            <div className="mt-3 h-2 rounded-full overflow-hidden neu-card" style={{ boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
+            <div className="mt-3 h-2 w-full max-w-[160px] rounded-full overflow-hidden neu-card mx-auto" style={{ boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
               <div
                 className="h-full rounded-full transition-all duration-700 bg-gradient-to-r from-[#ed8936] to-[#dd6b20]"
                 style={{ width: `${stats.overallProgress}%` }}
@@ -286,89 +287,94 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Streak */}
-          <div className="dash-card p-6">
-            <div className="flex items-center gap-2 mb-3">
-              <Flame className="w-4 h-4 text-accent-primary" />
-              <span className="text-xs font-medium text-muted">Study Streak</span>
+          {/* Streak (Centered) */}
+          <div className="dash-card p-6 flex flex-col items-center justify-center text-center">
+            <div className="flex items-center justify-center gap-2 mb-2 text-center w-full">
+              <Flame className="w-4 h-4 text-accent-primary shrink-0" />
+              <span className="text-[11px] font-bold text-muted uppercase tracking-wider text-center">Study Streak</span>
             </div>
-            <AnimatedCounter value={stats.streak} suffix=" days" className="text-2xl font-bold text-main" />
-            <p className="text-[11px] mt-1 text-muted">Keep going! 🔥</p>
+            <AnimatedCounter value={stats.streak} suffix=" days" className="text-2xl font-black text-main text-center" />
+            <p className="text-[11px] font-bold mt-1 text-muted text-center uppercase tracking-wider">Keep going! 🔥</p>
           </div>
 
-          {/* Overall Progress */}
-          <div className="dash-card flex items-center justify-between p-6">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                <Target className="w-4 h-4 text-accent-primary" />
-                <span className="text-xs font-medium text-muted">Overall</span>
-              </div>
-              <AnimatedCounter value={stats.overallProgress} suffix="%" className="text-2xl font-bold text-main" />
+          {/* Overall Progress (Centered) */}
+          <div className="dash-card flex flex-col items-center justify-center p-6 text-center">
+            <div className="flex items-center justify-center gap-2 mb-2 text-center w-full">
+              <Target className="w-4 h-4 text-accent-primary shrink-0" />
+              <span className="text-[11px] font-bold text-muted uppercase tracking-wider text-center">Overall</span>
             </div>
-            <ProgressRing percent={stats.overallProgress} size={64} strokeWidth={5} color="var(--accent-orange)" />
+            <div className="flex items-center justify-center gap-4 text-center mt-1">
+              <AnimatedCounter value={stats.overallProgress} suffix="%" className="text-2xl font-black text-main text-center" />
+              <ProgressRing percent={stats.overallProgress} size={54} strokeWidth={5} color="var(--accent-orange)" />
+            </div>
           </div>
         </div>
 
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {/* Weekly Study Chart */}
-          <div className="dash-card lg:col-span-2 p-6">
-            <div className="flex items-center justify-between mb-5">
-              <h3 className="text-sm font-semibold text-main flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-accent-primary" /> Weekly Study Hours
+          {/* Weekly Study Chart (Centered) */}
+          <div className="dash-card lg:col-span-2 p-6 flex flex-col justify-between">
+            <div className="notebook-header-line flex items-center justify-between text-center">
+              <h3 className="text-sm font-bold text-main flex items-center gap-2 uppercase tracking-wider text-center">
+                <TrendingUp className="w-4 h-4 text-accent-primary shrink-0" /> Weekly Study Hours
               </h3>
               {stats.weeklyLine.length > 0 && <MiniLineChart data={stats.weeklyLine} width={80} height={24} color="var(--accent-orange)" />}
             </div>
             {stats.weekData.length > 0 ? (
               <BarChart data={stats.weekData} maxHeight={100} barColor="var(--accent-orange)" />
             ) : (
-              <p className="text-sm text-center py-8 text-muted">No study data yet</p>
+              <p className="text-sm text-center py-8 text-muted font-bold">No study data yet</p>
             )}
           </div>
 
-          {/* Pomodoro Timer */}
-          <div className="dash-card flex flex-col items-center justify-center p-6">
-            <h3 className="text-sm font-semibold text-main mb-4 flex items-center gap-2">
-              <Clock className="w-4 h-4 text-accent-primary" /> Pomodoro
-            </h3>
+          {/* Pomodoro Timer (Centered) */}
+          <div className="dash-card flex flex-col items-center justify-center p-6 text-center">
+            <div className="notebook-header-line w-full text-center">
+              <h3 className="text-sm font-bold text-main flex items-center justify-center gap-2 text-center uppercase tracking-wider">
+                <Clock className="w-4 h-4 text-accent-primary shrink-0" /> Pomodoro
+              </h3>
+            </div>
             <PomodoroTimer compact />
           </div>
         </div>
 
-        {/* Continue Learning Section */}
+        {/* Continue Learning Section (Centered) */}
         {(learningStats.activeSession || learningStats.recentTutorials.length > 0) && (
           <div className="dash-card p-6 mb-5">
-            <h3 className="text-sm font-semibold text-main mb-4 flex items-center gap-2">
-              <Youtube className="w-4 h-4 text-accent-primary" /> Continue Learning
-            </h3>
+            <div className="notebook-header-line text-center">
+              <h3 className="text-sm font-bold text-main flex items-center justify-center gap-2 text-center uppercase tracking-wider">
+                <Youtube className="w-4 h-4 text-accent-primary shrink-0" /> Continue Learning
+              </h3>
+            </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Active Session Card */}
+              {/* Active Session Card (Centered) */}
               {learningStats.activeSession && learningStats.activeSessionTask && (
-                <div className="md:col-span-3 p-4 mb-2 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-[var(--accent-orange)]/40 inset-field">
-                  <div className="flex items-center gap-3">
-                    <div className="w-2.5 h-2.5 rounded-full bg-[var(--accent-orange)] animate-ping" />
+                <div className="md:col-span-3 p-4 mb-2 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 border border-[var(--accent-orange)]/40 inset-field text-center sm:text-left">
+                  <div className="flex items-center gap-3 text-center sm:text-left">
+                    <div className="w-2.5 h-2.5 rounded-full bg-[var(--accent-orange)] animate-ping shrink-0" />
                     <div>
-                      <span className="text-[10px] text-accent-primary font-bold uppercase tracking-wider">Active Study Session</span>
+                      <span className="text-[10px] text-accent-primary font-bold uppercase tracking-wider block">Active Study Session</span>
                       <h4 className="text-xs font-bold text-main leading-tight">{learningStats.activeSessionTask.title}</h4>
-                      <p className="text-[10px] text-muted mt-0.5">Time logged: {formatDuration(learningStats.activeSession.duration)}</p>
+                      <p className="text-[10px] text-muted mt-0.5 font-semibold">Time logged: {formatDuration(learningStats.activeSession.duration)}</p>
                     </div>
                   </div>
                   <button
                     onClick={() => navigate(`/learn/${learningStats.activeSession.planId}/${learningStats.activeSession.taskId}`)}
-                    className="px-4 py-1.5 rounded-lg text-xs font-semibold cursor-pointer brass-btn shrink-0"
+                    className="px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider cursor-pointer brass-btn shrink-0 mx-auto sm:mx-0"
+                    style={{ background: 'var(--accent-btn-bg)', color: 'var(--accent-btn-text)' }}
                   >
                     Resume Session
                   </button>
                 </div>
               )}
 
-              {/* Recent In-Progress Tutorials */}
+              {/* Recent In-Progress Tutorials (Centered) */}
               {learningStats.recentTutorials.map(({ task, plan, videoId, progress }) => (
                 <div 
                   key={task.id} 
-                  className="p-3 rounded-xl flex gap-3 cursor-pointer neu-card border border-[var(--neu-border)] hover:bg-[var(--neu-border-subtle)] transition-all"
-                  style={{ boxShadow: '4px 4px 10px rgba(163,177,198,0.5), -4px -4px 10px rgba(255,255,255,0.85)' }}
+                  className="p-3 rounded-xl flex items-center gap-3 cursor-pointer neu-card border border-[var(--neu-border)] hover:bg-[var(--neu-border-subtle)] transition-all"
+                  style={{ boxShadow: 'var(--neu-shadow-raised)' }}
                   onClick={() => navigate(`/learn/${plan.id}/${task.id}`)}
                 >
                   <div className="relative w-20 aspect-video rounded-lg overflow-hidden shrink-0 bg-black/10 border border-white/40">
@@ -377,14 +383,14 @@ export default function Dashboard() {
                       <Play className="w-3.5 h-3.5 text-white" />
                     </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <span className="text-[9px] uppercase font-bold tracking-wider text-accent-primary">{plan.name}</span>
-                    <h4 className="text-xs font-bold text-main truncate leading-tight mt-0.5">{task.title}</h4>
+                  <div className="flex-1 min-w-0 text-center">
+                    <span className="text-[9px] uppercase font-bold tracking-wider text-accent-primary block text-center">{plan.name}</span>
+                    <h4 className="text-xs font-bold text-main truncate leading-tight mt-0.5 text-center">{task.title}</h4>
                     <div className="flex items-center gap-2 mt-2">
                       <div className="flex-1 h-1.5 rounded-full overflow-hidden neu-card" style={{ boxShadow: 'inset 1px 1px 3px rgba(163,177,198,0.5), inset -1px -1px 3px rgba(255,255,255,0.8)' }}>
                         <div className="h-full rounded-full bg-[var(--accent-orange)]" style={{ width: `${progress}%` }} />
                       </div>
-                      <span className="text-[9px] text-muted">{Math.round(progress)}%</span>
+                      <span className="text-[9px] text-muted font-bold">{Math.round(progress)}%</span>
                     </div>
                   </div>
                 </div>
@@ -395,67 +401,62 @@ export default function Dashboard() {
 
         {/* Bottom Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {/* Today's Tasks */}
-          <div className="dash-card p-6">
-            <h3 className="text-sm font-semibold text-main mb-4 flex items-center gap-2">
-              <CheckSquare className="w-4 h-4 text-accent-primary" /> Today's Tasks
-            </h3>
-            {(!stats.todayTasks || stats.todayTasks.length === 0) ? (
-              <p className="text-sm text-center py-4 text-muted">No tasks for today</p>
-            ) : (
-              <div className="space-y-2 max-h-[200px] overflow-y-auto">
-                {stats.todayTasks.map((task) => (
-                  <div key={task.id} className="flex items-center gap-3 py-1.5">
-                    <button
-                      onClick={() => dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: activePlan.id, taskId: task.id } })}
-                      className="w-4 h-4 rounded-full border-2 shrink-0 cursor-pointer transition-all"
-                      style={{
-                        borderColor: task.status === 'completed' ? '#38a169' : task.status === 'in-progress' ? 'var(--accent-orange)' : '#cbd5e0',
-                        background: task.status === 'completed' ? '#38a169' : 'transparent',
-                      }}
-                    />
-                    <span className="text-sm truncate" style={{ color: task.status === 'completed' ? '#718096' : '#1a202c', textDecoration: task.status === 'completed' ? 'line-through' : 'none' }}>{task.title}</span>
-                  </div>
-                ))}
+          {/* Today's Tasks (Centered) */}
+          <div className="dash-card p-6 flex flex-col justify-between">
+            <div>
+              <div className="notebook-header-line text-center">
+                <h3 className="text-sm font-bold text-main flex items-center justify-center gap-2 text-center uppercase tracking-wider">
+                  <CheckSquare className="w-4 h-4 text-accent-primary shrink-0" /> Today's Tasks
+                </h3>
               </div>
-            )}
-            {/* Quick Add */}
+              {(!stats.todayTasks || stats.todayTasks.length === 0) ? (
+                <p className="text-xs text-center py-6 text-muted font-bold uppercase tracking-wider">No tasks scheduled for today</p>
+              ) : (
+                <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                  {stats.todayTasks.map((task) => (
+                    <div key={task.id} className="flex items-center justify-center gap-3 py-1.5 text-center">
+                      <button
+                        onClick={() => dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: activePlan.id, taskId: task.id } })}
+                        className="w-4 h-4 rounded-full border-2 shrink-0 cursor-pointer transition-all"
+                        style={{
+                          borderColor: task.status === 'completed' ? '#38a169' : task.status === 'in-progress' ? 'var(--accent-orange)' : '#cbd5e0',
+                          background: task.status === 'completed' ? '#38a169' : 'transparent',
+                        }}
+                      />
+                      <span className="text-xs font-bold truncate text-center" style={{ color: task.status === 'completed' ? '#718096' : 'var(--neu-text-main)', textDecoration: task.status === 'completed' ? 'line-through' : 'none' }}>{task.title}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            {/* Quick Add Task Input (Centered Pill) */}
             {activePlan && (
-              <form onSubmit={handleQuickTask} className="mt-3 flex gap-2">
+              <form onSubmit={handleQuickTask} className="mt-4 flex gap-2 max-w-sm mx-auto w-full">
                 <input
                   type="text"
                   value={quickTask}
                   onChange={(e) => setQuickTask(e.target.value)}
                   placeholder="Quick add task..."
-                  className="flex-1 px-3 py-2 text-xs focus:outline-none inset-field"
+                  className="flex-1 px-4 py-2 text-xs focus:outline-none rounded-full premium-search-input text-center font-bold tracking-wider"
                 />
-                <button type="submit" className="px-3 py-2 text-xs cursor-pointer brass-btn">
+                <button type="submit" className="px-3.5 py-2 text-xs cursor-pointer brass-btn rounded-full shrink-0 flex items-center justify-center">
                   <Plus className="w-3.5 h-3.5" />
                 </button>
               </form>
             )}
           </div>
 
-          {/* Quick Notes */}
-          <div className="dash-card p-6 relative">
-            <h3 className="text-sm font-semibold text-main mb-4 flex items-center gap-2">
-              <StickyNote className="w-4 h-4 text-accent-primary" /> Quick Notes
-            </h3>
-            <textarea
-              value={quickNote}
-              onChange={handleNoteChange}
-              placeholder="Write notes..."
-              rows={6}
-              className="w-full p-3 text-sm focus:outline-none resize-none inset-field text-main"
-            />
-          </div>
+          {/* Stylish Analog Clock (Centered) */}
+          <StylishAnalogClock />
 
-          {/* Recent Activity */}
-          <div className="dash-card p-6">
-            <h3 className="text-sm font-semibold text-main mb-4 flex items-center gap-2">
-              <Flame className="w-4 h-4 text-accent-primary" /> Recent Activity
-            </h3>
-            <div className="max-h-[240px] overflow-y-auto">
+          {/* Recent Activity (Centered) */}
+          <div className="dash-card p-6 flex flex-col justify-between">
+            <div className="notebook-header-line text-center">
+              <h3 className="text-sm font-bold text-main flex items-center justify-center gap-2 text-center uppercase tracking-wider">
+                <Flame className="w-4 h-4 text-accent-primary shrink-0" /> Recent Activity
+              </h3>
+            </div>
+            <div className="max-h-[240px] overflow-y-auto text-center">
               <ActivityTimeline
                 activities={[...(activePlan?.activities || []), ...(state.globalActivities || [])].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))}
                 maxItems={10}
@@ -464,18 +465,19 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Active Plan Card */}
+        {/* Active Plan Card (Centered) */}
         {activePlan && (
-          <div className="dash-card p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs mb-1 text-muted">Active Plan</p>
-                <h3 className="text-lg font-semibold text-main">{activePlan.name}</h3>
-                {activePlan.description && <p className="text-sm mt-1 text-muted">{activePlan.description}</p>}
+          <div className="dash-card p-6 text-center">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+              <div className="text-center sm:text-left">
+                <p className="text-[10px] font-bold uppercase tracking-wider text-muted mb-0.5">Active Plan</p>
+                <h3 className="text-base font-extrabold text-main">{activePlan.name}</h3>
+                {activePlan.description && <p className="text-xs mt-0.5 text-muted font-medium">{activePlan.description}</p>}
               </div>
               <button
                 onClick={() => navigate(`/plans/${activePlan.id}`)}
-                className="px-4 py-2 text-sm font-medium transition-all cursor-pointer brass-btn"
+                className="px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider transition-all cursor-pointer brass-btn shrink-0"
+                style={{ background: 'var(--accent-btn-bg)', color: 'var(--accent-btn-text)' }}
               >
                 Open Plan
               </button>

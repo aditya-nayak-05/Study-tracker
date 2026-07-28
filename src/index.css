@@ -67,6 +67,482 @@
   --spine-border: #090a10;
 }
 
+/* ═══════════════════════════════════════════
+   🌊 OCEAN BLUE THEME
+   Deep navy → electric blue gradients
+   ═══════════════════════════════════════════ */
+[data-theme="ocean"] {
+  --neu-bg: #000521;
+  --neu-page-bg: #020C47;
+  --neu-card-bg: #041260;
+  --neu-sidebar-bg: #010838;
+  --neu-header-bg: #010838;
+  --neu-inset-bg: #000318;
+  --neu-text-main: #e8f0fe;
+  --neu-text-sub: #a0bfef;
+  --neu-text-muted: #6889c4;
+  --neu-border: rgba(32, 120, 207, 0.18);
+  --neu-border-subtle: rgba(14, 78, 178, 0.12);
+  --neu-shadow-raised: 6px 6px 18px rgba(0, 3, 18, 0.85), -4px -4px 12px rgba(14, 78, 178, 0.06);
+  --neu-shadow-inset: inset 3px 3px 7px rgba(0, 3, 18, 0.9), inset -2px -2px 4px rgba(14, 78, 178, 0.05);
+  --neu-shadow-hover: 8px 8px 22px rgba(0, 3, 18, 0.95), -4px -4px 14px rgba(32, 120, 207, 0.08);
+
+  --btn-glow-shadow: 0 4px 14px rgba(0, 5, 33, 0.7), 0 0 0 1px rgba(32, 120, 207, 0.25);
+  --btn-glow-hover: 0 6px 24px rgba(0, 5, 33, 0.9), 0 0 18px rgba(32, 120, 207, 0.35), 0 0 0 1px rgba(32, 120, 207, 0.5);
+
+  --accent-orange: #2078CF;
+  --accent-orange-bright: #3a9aef;
+  --accent-btn-bg: linear-gradient(135deg, #2078CF 0%, #0E4EB2 50%, #011F65 100%);
+  --accent-btn-text: #ffffff;
+  --ribbon-bg: linear-gradient(180deg, #2078CF 0%, #0E4EB2 50%, #011F65 100%);
+
+  --accent-green: #34d399;
+  --accent-blue: #2078CF;
+  --spine-border: #0E4EB2;
+}
+
+/* ═══════════════════════════════════════════
+   🌿 FOREST GREEN THEME
+   Deep emerald → sage mint gradients
+   ═══════════════════════════════════════════ */
+[data-theme="forest"] {
+  --neu-bg: #051F20;
+  --neu-page-bg: #0B2B26;
+  --neu-card-bg: #0f3530;
+  --neu-sidebar-bg: #082622;
+  --neu-header-bg: #082622;
+  --neu-inset-bg: #03161a;
+  --neu-text-main: #DAF1DE;
+  --neu-text-sub: #a8ccb0;
+  --neu-text-muted: #6a9e78;
+  --neu-border: rgba(142, 182, 155, 0.14);
+  --neu-border-subtle: rgba(142, 182, 155, 0.08);
+  --neu-shadow-raised: 6px 6px 18px rgba(3, 16, 14, 0.85), -4px -4px 12px rgba(142, 182, 155, 0.04);
+  --neu-shadow-inset: inset 3px 3px 7px rgba(3, 16, 14, 0.9), inset -2px -2px 4px rgba(142, 182, 155, 0.04);
+  --neu-shadow-hover: 8px 8px 22px rgba(3, 16, 14, 0.95), -4px -4px 14px rgba(142, 182, 155, 0.06);
+
+  --btn-glow-shadow: 0 4px 14px rgba(5, 31, 32, 0.7), 0 0 0 1px rgba(142, 182, 155, 0.2);
+  --btn-glow-hover: 0 6px 24px rgba(5, 31, 32, 0.9), 0 0 18px rgba(142, 182, 155, 0.25), 0 0 0 1px rgba(142, 182, 155, 0.4);
+
+  --accent-orange: #8EB69B;
+  --accent-orange-bright: #b0d4b8;
+  --accent-btn-bg: linear-gradient(135deg, #8EB69B 0%, #235347 50%, #163832 100%);
+  --accent-btn-text: #051F20;
+  --ribbon-bg: linear-gradient(180deg, #8EB69B 0%, #235347 50%, #163832 100%);
+
+  --accent-green: #8EB69B;
+  --accent-blue: #6a9e78;
+  --spine-border: #235347;
+}
+
+/* ═══════════════════════════════════════════
+   ⚡ MIDNIGHT GOLD THEME
+   Charcoal slate → vivid gold gradients
+   ═══════════════════════════════════════════ */
+[data-theme="gold"] {
+  --neu-bg: #141820;
+  --neu-page-bg: #192230;
+  --neu-card-bg: #1f2938;
+  --neu-sidebar-bg: #161c28;
+  --neu-header-bg: #161c28;
+  --neu-inset-bg: #10141c;
+  --neu-text-main: #f5f0e0;
+  --neu-text-sub: #c9c3ab;
+  --neu-text-muted: #8a8675;
+  --neu-border: rgba(255, 205, 0, 0.12);
+  --neu-border-subtle: rgba(255, 205, 0, 0.07);
+  --neu-shadow-raised: 6px 6px 18px rgba(10, 12, 18, 0.85), -4px -4px 12px rgba(255, 205, 0, 0.03);
+  --neu-shadow-inset: inset 3px 3px 7px rgba(10, 12, 18, 0.9), inset -2px -2px 4px rgba(255, 205, 0, 0.03);
+  --neu-shadow-hover: 8px 8px 22px rgba(10, 12, 18, 0.95), -4px -4px 14px rgba(255, 205, 0, 0.06);
+
+  --btn-glow-shadow: 0 4px 14px rgba(25, 34, 48, 0.7), 0 0 0 1px rgba(255, 205, 0, 0.2);
+  --btn-glow-hover: 0 6px 24px rgba(25, 34, 48, 0.9), 0 0 18px rgba(255, 205, 0, 0.3), 0 0 0 1px rgba(255, 205, 0, 0.45);
+
+  --accent-orange: #ffcd00;
+  --accent-orange-bright: #ffe566;
+  --accent-btn-bg: linear-gradient(135deg, #ffcd00 0%, #e6b800 50%, #3d474e 100%);
+  --accent-btn-text: #192230;
+  --ribbon-bg: linear-gradient(180deg, #ffcd00 0%, #e6b800 50%, #3d474e 100%);
+
+  --accent-green: #a3c44a;
+  --accent-blue: #ffcd00;
+  --spine-border: #3d474e;
+}
+
+/* ═══════════════════════════════════════════
+   🐚 TEAL BREEZE THEME
+   Deep teal → bright cyan gradients
+   ═══════════════════════════════════════════ */
+[data-theme="teal"] {
+  --neu-bg: #031716;
+  --neu-page-bg: #042524;
+  --neu-card-bg: #083a38;
+  --neu-sidebar-bg: #032220;
+  --neu-header-bg: #032220;
+  --neu-inset-bg: #021110;
+  --neu-text-main: #e8f4f8;
+  --neu-text-sub: #9cc8d6;
+  --neu-text-muted: #5f9aaa;
+  --neu-border: rgba(12, 150, 156, 0.18);
+  --neu-border-subtle: rgba(12, 150, 156, 0.1);
+  --neu-shadow-raised: 6px 6px 18px rgba(2, 12, 12, 0.85), -4px -4px 12px rgba(12, 150, 156, 0.04);
+  --neu-shadow-inset: inset 3px 3px 7px rgba(2, 12, 12, 0.9), inset -2px -2px 4px rgba(12, 150, 156, 0.04);
+  --neu-shadow-hover: 8px 8px 22px rgba(2, 12, 12, 0.95), -4px -4px 14px rgba(12, 150, 156, 0.06);
+
+  --btn-glow-shadow: 0 4px 14px rgba(3, 23, 22, 0.7), 0 0 0 1px rgba(12, 150, 156, 0.22);
+  --btn-glow-hover: 0 6px 24px rgba(3, 23, 22, 0.9), 0 0 18px rgba(12, 150, 156, 0.3), 0 0 0 1px rgba(12, 150, 156, 0.45);
+
+  --accent-orange: #0C969C;
+  --accent-orange-bright: #15c2c9;
+  --accent-btn-bg: linear-gradient(135deg, #0C969C 0%, #0A7075 50%, #032F30 100%);
+  --accent-btn-text: #e8f4f8;
+  --ribbon-bg: linear-gradient(180deg, #0C969C 0%, #0A7075 50%, #032F30 100%);
+
+  --accent-green: #34d399;
+  --accent-blue: #0C969C;
+  --spine-border: #0A7075;
+}
+
+/* ═══════════════════════════════════════════
+   🌸 PASTEL LAVENDER THEME (Light)
+   Soft lavender-pink pastels
+   ═══════════════════════════════════════════ */
+[data-theme="lavender"] {
+  --neu-bg: #e8e0f0;
+  --neu-page-bg: #ede6f5;
+  --neu-card-bg: #ede6f5;
+  --neu-sidebar-bg: #e4daf0;
+  --neu-header-bg: #e4daf0;
+  --neu-inset-bg: #ddd4ec;
+  --neu-text-main: #2d2640;
+  --neu-text-sub: #5a5070;
+  --neu-text-muted: #8078a0;
+  --neu-border: rgba(255, 255, 255, 0.65);
+  --neu-border-subtle: rgba(180, 160, 210, 0.25);
+  --neu-shadow-raised: 6px 6px 14px rgba(180, 160, 210, 0.45), -6px -6px 14px rgba(255, 255, 255, 0.8);
+  --neu-shadow-inset: inset 3px 3px 6px rgba(180, 160, 210, 0.4), inset -3px -3px 6px rgba(255, 255, 255, 0.85);
+  --neu-shadow-hover: 8px 8px 18px rgba(180, 160, 210, 0.55), -8px -8px 18px rgba(255, 255, 255, 0.9);
+
+  --btn-glow-shadow: 4px 4px 10px rgba(180, 160, 210, 0.4), -4px -4px 10px rgba(255, 255, 255, 0.8);
+  --btn-glow-hover: 6px 8px 16px rgba(180, 160, 210, 0.5), -6px -8px 16px rgba(255, 255, 255, 0.9);
+
+  --accent-orange: #9b7ed8;
+  --accent-orange-bright: #b8a0e8;
+  --accent-btn-bg: linear-gradient(135deg, #C8B6FE 0%, #B8C0FF 100%);
+  --accent-btn-text: #2d2640;
+  --ribbon-bg: linear-gradient(180deg, #C8B6FE 0%, #B8C0FF 100%);
+
+  --accent-green: #7ec89b;
+  --accent-blue: #9b7ed8;
+  --spine-border: #c4b8e0;
+}
+
+/* ═══════════════════════════════════════════
+   🍃 MINT BREEZE THEME (Light)
+   Fresh mint-to-teal gradient accents
+   ═══════════════════════════════════════════ */
+[data-theme="mint"] {
+  --neu-bg: #e0f2ec;
+  --neu-page-bg: #e6f5f0;
+  --neu-card-bg: #e6f5f0;
+  --neu-sidebar-bg: #d8ede6;
+  --neu-header-bg: #d8ede6;
+  --neu-inset-bg: #cfe8e0;
+  --neu-text-main: #163030;
+  --neu-text-sub: #2a5050;
+  --neu-text-muted: #4a8878;
+  --neu-border: rgba(255, 255, 255, 0.6);
+  --neu-border-subtle: rgba(100, 190, 160, 0.2);
+  --neu-shadow-raised: 6px 6px 14px rgba(140, 200, 180, 0.4), -6px -6px 14px rgba(255, 255, 255, 0.85);
+  --neu-shadow-inset: inset 3px 3px 6px rgba(140, 200, 180, 0.35), inset -3px -3px 6px rgba(255, 255, 255, 0.9);
+  --neu-shadow-hover: 8px 8px 18px rgba(140, 200, 180, 0.5), -8px -8px 18px rgba(255, 255, 255, 0.95);
+
+  --btn-glow-shadow: 4px 4px 10px rgba(140, 200, 180, 0.35), -4px -4px 10px rgba(255, 255, 255, 0.8);
+  --btn-glow-hover: 6px 8px 16px rgba(140, 200, 180, 0.45), -6px -8px 16px rgba(255, 255, 255, 0.9);
+
+  --accent-orange: #2C98A0;
+  --accent-orange-bright: #38B2A3;
+  --accent-btn-bg: linear-gradient(135deg, #4CC8A3 0%, #2C98A0 100%);
+  --accent-btn-text: #ffffff;
+  --ribbon-bg: linear-gradient(180deg, #4CC8A3 0%, #2C98A0 100%);
+
+  --accent-green: #4CC8A3;
+  --accent-blue: #2C98A0;
+  --spine-border: #89E8AC;
+}
+
+/* ═══════════════════════════════════════════
+   👑 DEEP ROYAL BLUE THEME (Dark)
+   Deep sapphire → royal blue
+   ═══════════════════════════════════════════ */
+[data-theme="royal"] {
+  --neu-bg: #02203c;
+  --neu-page-bg: #032c4f;
+  --neu-card-bg: #04365e;
+  --neu-sidebar-bg: #022844;
+  --neu-header-bg: #022844;
+  --neu-inset-bg: #011830;
+  --neu-text-main: #dce8f8;
+  --neu-text-sub: #8eaed0;
+  --neu-text-muted: #5a82b0;
+  --neu-border: rgba(15, 66, 126, 0.3);
+  --neu-border-subtle: rgba(15, 66, 126, 0.18);
+  --neu-shadow-raised: 6px 6px 18px rgba(1, 14, 28, 0.85), -4px -4px 12px rgba(15, 66, 126, 0.06);
+  --neu-shadow-inset: inset 3px 3px 7px rgba(1, 14, 28, 0.9), inset -2px -2px 4px rgba(15, 66, 126, 0.05);
+  --neu-shadow-hover: 8px 8px 22px rgba(1, 14, 28, 0.95), -4px -4px 14px rgba(15, 66, 126, 0.08);
+
+  --btn-glow-shadow: 0 4px 14px rgba(2, 32, 60, 0.7), 0 0 0 1px rgba(15, 66, 126, 0.3);
+  --btn-glow-hover: 0 6px 24px rgba(2, 32, 60, 0.9), 0 0 18px rgba(15, 66, 126, 0.35), 0 0 0 1px rgba(15, 66, 126, 0.5);
+
+  --accent-orange: #4a8af5;
+  --accent-orange-bright: #6aa4ff;
+  --accent-btn-bg: linear-gradient(135deg, #0f427e 0%, #081635 100%);
+  --accent-btn-text: #dce8f8;
+  --ribbon-bg: linear-gradient(180deg, #0f427e 0%, #081635 100%);
+
+  --accent-green: #34d399;
+  --accent-blue: #4a8af5;
+  --spine-border: #081635;
+}
+
+/* ═══════════════════════════════════════════
+   🔥 CRIMSON RED THEME (Dark)
+   Deep blood-red → warm crimson
+   ═══════════════════════════════════════════ */
+[data-theme="crimson"] {
+  --neu-bg: #1a0604;
+  --neu-page-bg: #250902;
+  --neu-card-bg: #301008;
+  --neu-sidebar-bg: #200805;
+  --neu-header-bg: #200805;
+  --neu-inset-bg: #120302;
+  --neu-text-main: #f8e0dc;
+  --neu-text-sub: #d0a098;
+  --neu-text-muted: #986860;
+  --neu-border: rgba(173, 40, 49, 0.2);
+  --neu-border-subtle: rgba(173, 40, 49, 0.12);
+  --neu-shadow-raised: 6px 6px 18px rgba(10, 2, 2, 0.85), -4px -4px 12px rgba(173, 40, 49, 0.05);
+  --neu-shadow-inset: inset 3px 3px 7px rgba(10, 2, 2, 0.9), inset -2px -2px 4px rgba(173, 40, 49, 0.04);
+  --neu-shadow-hover: 8px 8px 22px rgba(10, 2, 2, 0.95), -4px -4px 14px rgba(173, 40, 49, 0.07);
+
+  --btn-glow-shadow: 0 4px 14px rgba(26, 6, 4, 0.7), 0 0 0 1px rgba(173, 40, 49, 0.25);
+  --btn-glow-hover: 0 6px 24px rgba(26, 6, 4, 0.9), 0 0 18px rgba(173, 40, 49, 0.3), 0 0 0 1px rgba(173, 40, 49, 0.45);
+
+  --accent-orange: #AD2831;
+  --accent-orange-bright: #d4444e;
+  --accent-btn-bg: linear-gradient(135deg, #AD2831 0%, #800E13 100%);
+  --accent-btn-text: #f8e0dc;
+  --ribbon-bg: linear-gradient(180deg, #AD2831 0%, #640D14 100%);
+
+  --accent-green: #c45a4a;
+  --accent-blue: #AD2831;
+  --spine-border: #640D14;
+}
+
+/* ═══════════════════════════════════════════
+   🌅 SUNSET GLOW THEME (Warm Dark)
+   Warm amber → vivid orange gradients
+   ═══════════════════════════════════════════ */
+[data-theme="sunset"] {
+  --neu-bg: #1c0d06;
+  --neu-page-bg: #28140a;
+  --neu-card-bg: #321b0f;
+  --neu-sidebar-bg: #211007;
+  --neu-header-bg: #211007;
+  --neu-inset-bg: #150904;
+  --neu-text-main: #FFE3B3;
+  --neu-text-sub: #e8b87d;
+  --neu-text-muted: #a67742;
+  --neu-border: rgba(234, 97, 19, 0.2);
+  --neu-border-subtle: rgba(234, 97, 19, 0.1);
+  --neu-shadow-raised: 6px 6px 18px rgba(10, 4, 2, 0.85), -4px -4px 12px rgba(234, 97, 19, 0.04);
+  --neu-shadow-inset: inset 3px 3px 7px rgba(10, 4, 2, 0.9), inset -2px -2px 4px rgba(234, 97, 19, 0.04);
+  --neu-shadow-hover: 8px 8px 22px rgba(10, 4, 2, 0.95), -4px -4px 14px rgba(234, 97, 19, 0.06);
+
+  --btn-glow-shadow: 0 4px 14px rgba(28, 13, 6, 0.7), 0 0 0 1px rgba(234, 97, 19, 0.25);
+  --btn-glow-hover: 0 6px 24px rgba(28, 13, 6, 0.9), 0 0 18px rgba(248, 143, 34, 0.35), 0 0 0 1px rgba(251, 185, 49, 0.5);
+
+  --accent-orange: #EA6113;
+  --accent-orange-bright: #F88F22;
+  --accent-btn-bg: linear-gradient(135deg, #EA6113 0%, #F88F22 50%, #FBB931 100%);
+  --accent-btn-text: #1c0d06;
+  --ribbon-bg: linear-gradient(180deg, #EA6113 0%, #F88F22 50%, #FBB931 100%);
+
+  --accent-green: #FBB931;
+  --accent-blue: #EA6113;
+  --spine-border: #F88F22;
+}
+
+/* ═══════════════════════════════════════════
+   🩸 CRIMSON NOIR THEME (Rich Pitch Black)
+   Pure pitch black → crimson red accents
+   ═══════════════════════════════════════════ */
+[data-theme="vampire"] {
+  --neu-bg: #0B0B0B;
+  --neu-page-bg: #141414;
+  --neu-card-bg: #1a1a1a;
+  --neu-sidebar-bg: #111111;
+  --neu-header-bg: #111111;
+  --neu-inset-bg: #060606;
+  --neu-text-main: #F5F2ED;
+  --neu-text-sub: #c7c2b9;
+  --neu-text-muted: #878278;
+  --neu-border: rgba(139, 13, 26, 0.25);
+  --neu-border-subtle: rgba(139, 13, 26, 0.12);
+  --neu-shadow-raised: 6px 6px 18px rgba(0, 0, 0, 0.9), -4px -4px 12px rgba(139, 13, 26, 0.05);
+  --neu-shadow-inset: inset 3px 3px 7px rgba(0, 0, 0, 0.95), inset -2px -2px 4px rgba(139, 13, 26, 0.04);
+  --neu-shadow-hover: 8px 8px 22px rgba(0, 0, 0, 0.95), -4px -4px 14px rgba(139, 13, 26, 0.08);
+
+  --btn-glow-shadow: 0 4px 14px rgba(11, 11, 11, 0.8), 0 0 0 1px rgba(139, 13, 26, 0.3);
+  --btn-glow-hover: 0 6px 24px rgba(11, 11, 11, 0.95), 0 0 18px rgba(139, 13, 26, 0.4), 0 0 0 1px rgba(184, 25, 43, 0.6);
+
+  --accent-orange: #8B0D1A;
+  --accent-orange-bright: #b8192b;
+  --accent-btn-bg: linear-gradient(135deg, #8B0D1A 0%, #5a060f 100%);
+  --accent-btn-text: #F5F2ED;
+  --ribbon-bg: linear-gradient(180deg, #8B0D1A 0%, #5a060f 100%);
+
+  --accent-green: #34d399;
+  --accent-blue: #8B0D1A;
+  --spine-border: #5a060f;
+}
+
+/* ═══════════════════════════════════════════
+   🔮 ROYAL VELVET THEME (Deep Purple & Gold)
+   Midnight purple → rich gold accents
+   ═══════════════════════════════════════════ */
+[data-theme="plum"] {
+  --neu-bg: #1f0035;
+  --neu-page-bg: #2b0048;
+  --neu-card-bg: #350058;
+  --neu-sidebar-bg: #24003d;
+  --neu-header-bg: #24003d;
+  --neu-inset-bg: #150024;
+  --neu-text-main: #f2e0f8;
+  --neu-text-sub: #c4a2d4;
+  --neu-text-muted: #8a659e;
+  --neu-border: rgba(199, 148, 14, 0.22);
+  --neu-border-subtle: rgba(199, 148, 14, 0.12);
+  --neu-shadow-raised: 6px 6px 18px rgba(15, 0, 26, 0.85), -4px -4px 12px rgba(199, 148, 14, 0.04);
+  --neu-shadow-inset: inset 3px 3px 7px rgba(15, 0, 26, 0.9), inset -2px -2px 4px rgba(199, 148, 14, 0.04);
+  --neu-shadow-hover: 8px 8px 22px rgba(15, 0, 26, 0.95), -4px -4px 14px rgba(199, 148, 14, 0.07);
+
+  --btn-glow-shadow: 0 4px 14px rgba(31, 0, 53, 0.7), 0 0 0 1px rgba(199, 148, 14, 0.25);
+  --btn-glow-hover: 0 6px 24px rgba(31, 0, 53, 0.9), 0 0 18px rgba(199, 148, 14, 0.35), 0 0 0 1px rgba(199, 148, 14, 0.5);
+
+  --accent-orange: #c7940e;
+  --accent-orange-bright: #e6b222;
+  --accent-btn-bg: linear-gradient(135deg, #5a0060 0%, #c7940e 100%);
+  --accent-btn-text: #1f0035;
+  --ribbon-bg: linear-gradient(180deg, #5a0060 0%, #c7940e 100%);
+
+  --accent-green: #34d399;
+  --accent-blue: #c7940e;
+  --spine-border: #5a0060;
+}
+
+/* ═══════════════════════════════════════════
+   ⚡ CYBER NEON THEME (Electric Purple/Cyan)
+   Eggplant → neon cyan & magenta
+   ═══════════════════════════════════════════ */
+[data-theme="cyber"] {
+  --neu-bg: #180113;
+  --neu-page-bg: #280120;
+  --neu-card-bg: #35012a;
+  --neu-sidebar-bg: #20011a;
+  --neu-header-bg: #20011a;
+  --neu-inset-bg: #10000d;
+  --neu-text-main: #fbe6ff;
+  --neu-text-sub: #c58be8;
+  --neu-text-muted: #8c4da8;
+  --neu-border: rgba(148, 20, 209, 0.25);
+  --neu-border-subtle: rgba(3, 178, 237, 0.15);
+  --neu-shadow-raised: 6px 6px 18px rgba(10, 0, 8, 0.85), -4px -4px 12px rgba(148, 20, 209, 0.05);
+  --neu-shadow-inset: inset 3px 3px 7px rgba(10, 0, 8, 0.9), inset -2px -2px 4px rgba(148, 20, 209, 0.04);
+  --neu-shadow-hover: 8px 8px 22px rgba(10, 0, 8, 0.95), -4px -4px 14px rgba(3, 178, 237, 0.08);
+
+  --btn-glow-shadow: 0 4px 14px rgba(24, 1, 19, 0.7), 0 0 0 1px rgba(148, 20, 209, 0.3);
+  --btn-glow-hover: 0 6px 24px rgba(24, 1, 19, 0.9), 0 0 18px rgba(3, 178, 237, 0.4), 0 0 0 1px rgba(253, 89, 202, 0.55);
+
+  --accent-orange: #9414d1;
+  --accent-orange-bright: #03b2ed;
+  --accent-btn-bg: linear-gradient(135deg, #9414d1 0%, #03b2ed 100%);
+  --accent-btn-text: #ffffff;
+  --ribbon-bg: linear-gradient(180deg, #9414d1 0%, #fd59ca 100%);
+
+  --accent-green: #03b2ed;
+  --accent-blue: #9414d1;
+  --spine-border: #450063;
+}
+
+/* ═══════════════════════════════════════════
+   🌌 SYNTHWAVE CYAN THEME (Electric Cyan/Pink)
+   Cosmic purple → electric cyan & magenta
+   ═══════════════════════════════════════════ */
+[data-theme="synthwave"] {
+  --neu-bg: #220038;
+  --neu-page-bg: #300050;
+  --neu-card-bg: #3c0064;
+  --neu-sidebar-bg: #280044;
+  --neu-header-bg: #280044;
+  --neu-inset-bg: #160026;
+  --neu-text-main: #e0fbff;
+  --neu-text-sub: #94dcf2;
+  --neu-text-muted: #5695ab;
+  --neu-border: rgba(3, 204, 255, 0.25);
+  --neu-border-subtle: rgba(212, 3, 225, 0.15);
+  --neu-shadow-raised: 6px 6px 18px rgba(14, 0, 24, 0.85), -4px -4px 12px rgba(3, 204, 255, 0.05);
+  --neu-shadow-inset: inset 3px 3px 7px rgba(14, 0, 24, 0.9), inset -2px -2px 4px rgba(3, 204, 255, 0.04);
+  --neu-shadow-hover: 8px 8px 22px rgba(14, 0, 24, 0.95), -4px -4px 14px rgba(212, 3, 225, 0.08);
+
+  --btn-glow-shadow: 0 4px 14px rgba(34, 0, 56, 0.7), 0 0 0 1px rgba(3, 204, 255, 0.3);
+  --btn-glow-hover: 0 6px 24px rgba(34, 0, 56, 0.9), 0 0 18px rgba(3, 204, 255, 0.45), 0 0 0 1px rgba(212, 3, 225, 0.55);
+
+  --accent-orange: #03ccff;
+  --accent-orange-bright: #09fbff;
+  --accent-btn-bg: linear-gradient(135deg, #d403e1 0%, #03ccff 100%);
+  --accent-btn-text: #ffffff;
+  --ribbon-bg: linear-gradient(180deg, #d403e1 0%, #03ccff 100%);
+
+  --accent-green: #09fbff;
+  --accent-blue: #03ccff;
+  --spine-border: #460071;
+}
+
+/* ═══════════════════════════════════════════
+   🤖 AURAVANT AI THEME (Deep Navy & Electric Cyber Blue)
+   Deep Navy #0B1220 → Navy Blue #0F1E3A → Electric Blue #2563FF → Cyber Blue #00E5FF
+   ═══════════════════════════════════════════ */
+[data-theme="auravant"] {
+  --neu-bg: #0B1220;
+  --neu-page-bg: #0F1E3A;
+  --neu-card-bg: #142647;
+  --neu-sidebar-bg: #0C172B;
+  --neu-header-bg: #0C172B;
+  --neu-inset-bg: #070D18;
+  --neu-text-main: #E5E7EB;
+  --neu-text-sub: #C0C6D4;
+  --neu-text-muted: #8491a8;
+  --neu-border: rgba(37, 99, 255, 0.25);
+  --neu-border-subtle: rgba(0, 229, 255, 0.15);
+  --neu-shadow-raised: 6px 6px 18px rgba(4, 8, 16, 0.85), -4px -4px 12px rgba(37, 99, 255, 0.05);
+  --neu-shadow-inset: inset 3px 3px 7px rgba(4, 8, 16, 0.9), inset -2px -2px 4px rgba(37, 99, 255, 0.04);
+  --neu-shadow-hover: 8px 8px 22px rgba(4, 8, 16, 0.95), -4px -4px 14px rgba(0, 229, 255, 0.08);
+
+  --btn-glow-shadow: 0 4px 14px rgba(11, 18, 32, 0.7), 0 0 0 1px rgba(37, 99, 255, 0.3);
+  --btn-glow-hover: 0 6px 24px rgba(11, 18, 32, 0.9), 0 0 18px rgba(0, 229, 255, 0.45), 0 0 0 1px rgba(37, 99, 255, 0.55);
+
+  --accent-orange: #2563FF;
+  --accent-orange-bright: #00E5FF;
+  --accent-btn-bg: linear-gradient(135deg, #2563FF 0%, #00E5FF 100%);
+  --accent-btn-text: #0B1220;
+  --ribbon-bg: linear-gradient(180deg, #2563FF 0%, #00E5FF 100%);
+
+  --accent-green: #00E5FF;
+  --accent-blue: #2563FF;
+  --spine-border: #0F1E3A;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -147,16 +623,160 @@ body {
 }
 
 /* ═══════════════════════════════════════════
-   SKEUOMORPHIC CARDS (Raised 3D)
+   📖 SKEUOMORPHIC NOTEBOOK CARDS (Site-Wide Lined Aesthetics)
    ═══════════════════════════════════════════ */
-.leather-card, .paper-card, .dash-card, .sh-card, .profile-card, .settings-card, .tutorial-card, .neu-card {
-  background: var(--neu-card-bg);
-  border: 1px solid var(--neu-border);
+.leather-card, .paper-card, .dash-card, .sh-card, .profile-card, .settings-card, .tutorial-card, .neu-card, .analytics-card, .notebook-settings-card {
+  background-color: var(--neu-card-bg);
+  background-image: linear-gradient(var(--neu-border-subtle) 1px, transparent 1px);
+  background-size: 100% 28px;
+  border: 1.5px dashed var(--neu-border-subtle) !important;
   border-radius: 1.25rem;
   color: var(--neu-text-main);
   box-shadow: var(--neu-shadow-raised);
   position: relative;
-  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  overflow: hidden;
+}
+
+.leather-card::before, .paper-card::before, .dash-card::before, .sh-card::before, .profile-card::before, .settings-card::before, .tutorial-card::before, .neu-card::before, .analytics-card::before, .notebook-settings-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 20px;
+  bottom: 0;
+  width: 2px;
+  background: rgba(226, 100, 100, 0.35);
+  pointer-events: none;
+  border-radius: 1px;
+  z-index: 1;
+}
+
+.notebook-header-line {
+  border-bottom: 2px dashed var(--neu-border-subtle);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.notebook-box-divider {
+  border-top: 2px dashed var(--neu-border-subtle);
+}
+
+.notebook-ruled-text {
+  line-height: 28px;
+}
+
+/* ═══════════════════════════════════════════
+   🔍 ULTRA-PREMIUM CENTERED SEARCH BARS
+   ═══════════════════════════════════════════ */
+.premium-search-input {
+  text-align: center !important;
+  font-weight: 700 !important;
+  color: var(--neu-text-main) !important;
+  background: var(--neu-card-bg) !important;
+  border: 1.5px solid var(--neu-border) !important;
+  border-radius: 9999px !important;
+  box-shadow: var(--neu-shadow-inset) !important;
+  transition: all 0.3s ease !important;
+}
+
+.premium-search-input:focus {
+  border-color: var(--accent-orange) !important;
+  box-shadow: var(--neu-shadow-inset), 0 0 10px var(--accent-orange) !important;
+}
+
+.premium-search-input::placeholder {
+  text-align: center !important;
+  color: var(--neu-text-muted) !important;
+  opacity: 0.75 !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  font-size: 0.75rem !important;
+}
+
+/* ═══════════════════════════════════════════
+   ✨ ACCORDION GLOW EXPANSION ("Accordion Glow Expansion")
+   ═══════════════════════════════════════════ */
+.accordion-glow-container {
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  background: var(--neu-card-bg);
+  border: 1.5px solid #26658c !important;
+  border-radius: 9999px;
+  box-shadow: var(--neu-shadow-raised);
+  align-items: center;
+}
+
+.accordion-glow-tab {
+  flex: 1;
+  min-width: 52px;
+  height: 42px;
+  overflow: hidden;
+  cursor: pointer;
+  border-radius: 9999px;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--neu-inset-bg);
+  border: 1.5px solid #26658c !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.accordion-glow-tab:hover, .accordion-glow-tab.active {
+  flex: 3.5;
+  border-color: #26658c !important;
+  background: var(--accent-btn-bg) !important;
+  box-shadow: 0 0 16px rgba(38, 101, 140, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+}
+
+.accordion-glow-tab span {
+  padding: 0.4em 0.8em;
+  text-align: center;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  text-transform: uppercase;
+  color: var(--neu-text-main);
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.accordion-glow-tab:hover span, .accordion-glow-tab.active span {
+  transform: rotate(0deg) scale(1.05);
+  color: var(--accent-btn-text) !important;
+  text-shadow: 0 0 8px rgba(255,255,255,0.4);
+}
+
+/* Date input center alignment override across WebKit/Blink browsers */
+input[type="date"] {
+  text-align: center !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+input[type="date"]::-webkit-date-and-time-value {
+  text-align: center !important;
+  margin: 0 auto !important;
+}
+
+input[type="date"]::-webkit-datetime-edit {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  text-align: center !important;
+  margin: 0 auto !important;
+}
+
+input[type="date"]::-webkit-datetime-edit-fields-wrapper {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 0 auto !important;
 }
 
 /* Glass fallback compatibility */

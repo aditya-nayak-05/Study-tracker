@@ -282,14 +282,14 @@ function YouTubePlayer({
       ref={containerRef}
       className={`leather-card ${className}`}
       style={{
-        background: '#e6ebf2',
-        border: '1px solid rgba(255,255,255,0.7)',
+        background: 'var(--neu-card-bg)',
+        border: '1px solid var(--neu-border)',
         borderRadius: '1rem',
         overflow: 'hidden',
         position: 'relative',
         width: '100%',
         aspectRatio: '16 / 9',
-        boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
+        boxShadow: 'var(--neu-shadow-raised)',
         ...style,
       }}
     >
@@ -303,7 +303,7 @@ function YouTubePlayer({
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 10,
-            background: '#e6ebf2',
+            background: 'var(--neu-card-bg)',
           }}
         >
           <div style={spinnerStyle}>
@@ -323,7 +323,7 @@ function YouTubePlayer({
             alignItems: 'center',
             justifyContent: 'center',
             zIndex: 10,
-            background: '#e6ebf2',
+            background: 'var(--neu-card-bg)',
             color: '#e53e3e',
             padding: '2rem',
             textAlign: 'center',
@@ -344,7 +344,7 @@ function YouTubePlayer({
             <line x1="12" y1="8" x2="12" y2="12" />
             <line x1="12" y1="16" x2="12.01" y2="16" />
           </svg>
-          <p style={{ margin: 0, fontSize: '0.95rem', color: '#718096' }}>
+          <p style={{ margin: 0, fontSize: '0.95rem', color: 'var(--neu-text-muted)' }}>
             {error}
           </p>
         </div>

@@ -102,7 +102,7 @@ const Sidebar = React.memo(function Sidebar() {
       }}
     >
       {/* Logo */}
-      <div className="flex items-center gap-3 px-5 h-[4.5rem] border-b border-[rgba(163,177,198,0.3)] shrink-0">
+      <div className="flex items-center gap-3 px-5 h-[4.5rem] border-b border-[var(--neu-border-subtle)] shrink-0">
         <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#ed8936] to-[#dd6b20] flex items-center justify-center shrink-0 border border-white/50 shadow-sm">
           <Sparkles className="w-4 h-4 text-white" />
         </div>
@@ -146,7 +146,7 @@ const Sidebar = React.memo(function Sidebar() {
 
         {/* Pinned plans */}
         {pinnedPlans.length > 0 && !collapsed && (
-          <div className="pt-4 mt-4 border-t border-[rgba(163,177,198,0.3)]">
+          <div className="pt-4 mt-4 border-t border-[var(--neu-border-subtle)]">
             <p className="px-4 text-[10px] font-semibold uppercase tracking-wider text-muted mb-3" style={{textShadow: 'none'}}>Pinned Plans</p>
             {pinnedPlans.map((plan) => (
               <button
@@ -168,7 +168,7 @@ const Sidebar = React.memo(function Sidebar() {
       {/* Collapse toggle */}
       <button
         onClick={toggleCollapse}
-        className="h-12 border-t border-[rgba(163,177,198,0.3)] flex items-center justify-center text-muted hover:text-main hover:bg-[#ebf0f7] transition-all shrink-0 cursor-pointer"
+        className="h-12 border-t border-[var(--neu-border-subtle)] flex items-center justify-center text-muted hover:text-main hover:bg-[#ebf0f7] transition-all shrink-0 cursor-pointer"
       >
         {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
       </button>

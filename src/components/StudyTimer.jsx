@@ -175,8 +175,8 @@ function StudyTimer({
     <div
       ref={containerRef}
       style={{
-        background: '#e6ebf2',
-        border: '1px solid rgba(255,255,255,0.7)',
+        background: 'var(--neu-card-bg)',
+        border: '1px solid var(--neu-border)',
         borderRadius: '1.25rem',
         padding: compact ? '1rem' : '1.5rem',
         display: 'flex',
@@ -184,10 +184,10 @@ function StudyTimer({
         alignItems: 'center',
         gap: compact ? '0.75rem' : '1.25rem',
         fontFamily: "'Inter', sans-serif",
-        color: '#1a202c',
+        color: 'var(--neu-text-main)',
         width: '100%',
         boxSizing: 'border-box',
-        boxShadow: '6px 6px 14px rgba(163, 177, 198, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.85)',
+        boxShadow: 'var(--neu-shadow-raised)',
       }}
     >
       {/* header */}
@@ -207,7 +207,7 @@ function StudyTimer({
               fontSize: compact ? '0.85rem' : '1rem',
               letterSpacing: '0.02em',
               textShadow: 'none',
-              color: '#1a202c',
+              color: 'var(--neu-text-main)',
             }}
           >
             Study Timer
@@ -226,7 +226,7 @@ function StudyTimer({
               boxShadow: `0 0 6px ${statusColor}`,
             }}
           />
-          <span style={{ fontSize: '0.75rem', color: '#718096' }}>
+          <span style={{ fontSize: '0.75rem', color: 'var(--neu-text-muted)' }}>
             {statusLabel}
           </span>
         </div>
@@ -379,7 +379,7 @@ function ControlButton({ icon, label, bg, onClick, compact }) {
         cursor: 'pointer',
         transition: 'all 0.15s',
         letterSpacing: '0.02em',
-        boxShadow: '4px 4px 10px rgba(163, 177, 198, 0.5), -4px -4px 10px rgba(255, 255, 255, 0.85)',
+        boxShadow: 'var(--neu-shadow-raised)',
         textShadow: 'none',
       }}
     >
