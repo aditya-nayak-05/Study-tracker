@@ -28,7 +28,7 @@ const BookNavItem = React.memo(function BookNavItem({ label, icon: Icon, isActiv
     setTimeout(() => {
       onClick(e);
       setIsOpening(false);
-    }, 380); // 3D Book Opening flip animation
+    }, 450); // 3D Book Page Opening flip animation duration
   };
 
   return (
@@ -36,30 +36,40 @@ const BookNavItem = React.memo(function BookNavItem({ label, icon: Icon, isActiv
       <button
         onClick={handleClick}
         title={label}
-        className={`book-btn-card ${isActive ? 'active-book' : ''} ${isOpening ? 'opening-book' : ''} ${
-          collapsed ? 'p-2 flex flex-col items-center justify-center h-[3.25rem]' : 'p-3 pl-5 min-h-[4rem] flex items-center'
+        className={`book-btn-card ${isActive ? 'active-book' : ''} ${isOpening ? 'is-opening' : ''} ${
+          collapsed ? 'h-[3.5rem]' : 'h-[4.25rem]'
         }`}
       >
-        {/* Left Spine Strip */}
-        <div className="book-spine-strip">
-          <div className="book-spine-highlight" />
+        {/* Inside Paper Pages (Revealed when book cover swings open) */}
+        <div className="book-inner-pages">
+          <div className="book-inside-line" />
+          <div className="book-inside-line short" />
+          <div className="book-inside-title">{label}</div>
         </div>
 
-        {/* Golden Title Plate / Label Badge */}
-        {!collapsed ? (
-          <div className="book-golden-label px-3 py-1.5 flex items-center gap-2 max-w-[90%]">
-            {Icon && <Icon className="w-4 h-4 text-[#3e2723] shrink-0" />}
-            <span className="text-xs font-black text-[#3e2723] truncate uppercase tracking-tight">
-              {label}
-            </span>
+        {/* Front Cover (Rotates open on left spine hinge) */}
+        <div className="book-front-cover">
+          {/* Left Spine Details */}
+          <div className="book-spine-strip">
+            <div className="book-spine-highlight" />
           </div>
-        ) : (
-          <div className="book-golden-label p-1.5 flex items-center justify-center ml-1">
-            {Icon && <Icon className="w-4 h-4 text-[#3e2723]" />}
-          </div>
-        )}
 
-        {/* White Pages at Bottom */}
+          {/* Golden / Theme Title Plate Label Badge */}
+          {!collapsed ? (
+            <div className="book-golden-label px-3 py-1.5 flex items-center gap-2 max-w-[88%]">
+              {Icon && <Icon className="w-4 h-4 shrink-0 text-current" />}
+              <span className="text-xs font-black truncate uppercase tracking-tight text-current">
+                {label}
+              </span>
+            </div>
+          ) : (
+            <div className="book-golden-label p-2 flex items-center justify-center ml-0.5">
+              {Icon && <Icon className="w-4 h-4 text-current" />}
+            </div>
+          )}
+        </div>
+
+        {/* White Paper Pages Edge at Bottom */}
         <div className="book-pages-bottom" />
 
         {/* Hanging Golden Ribbon Bookmark */}
