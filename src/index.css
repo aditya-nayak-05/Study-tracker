@@ -1162,13 +1162,21 @@ button:active:not(:disabled), .brass-btn:active, .leather-btn:active {
   width: 55%;
 }
 
+.book-inside-line.micro {
+  width: 35%;
+}
+
 .book-inside-title {
   font-size: 0.65rem;
   font-weight: 900;
   color: var(--accent-orange);
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.03em;
   margin-top: 0.15rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
 }
 
 /* ── Front Cover (hinged on left spine) ── */

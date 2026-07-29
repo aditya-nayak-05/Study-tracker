@@ -35,11 +35,15 @@ const BookNavItem = React.memo(function BookNavItem({ label, icon: Icon, isActiv
           collapsed ? 'h-[3.25rem]' : 'h-[4rem]'
         }`}
       >
-        {/* Inner pages — always present, visible when cover is open */}
+        {/* Inner pages — visible when cover flips open */}
         <div className="book-inner-pages">
           <div className="book-inside-line" />
           <div className="book-inside-line short" />
-          <div className="book-inside-title">{label}</div>
+          {!collapsed ? (
+            <div className="book-inside-title">{label}</div>
+          ) : (
+            <div className="book-inside-line micro" />
+          )}
         </div>
 
         {/* Front Cover — hinged on left spine */}
@@ -51,15 +55,15 @@ const BookNavItem = React.memo(function BookNavItem({ label, icon: Icon, isActiv
 
           {/* Title badge */}
           {!collapsed ? (
-            <div className="book-golden-label px-2.5 py-1.5 flex items-center gap-2 flex-1 min-w-0">
+            <div className="book-golden-label px-2.5 py-1.5 flex items-center gap-1.5 flex-1 min-w-0 overflow-hidden">
               {Icon && <Icon className="w-3.5 h-3.5 shrink-0 text-current" />}
-              <span className="text-[11px] font-extrabold truncate uppercase tracking-tight text-current leading-none">
+              <span className="text-[11px] font-extrabold truncate uppercase tracking-tight text-current leading-none min-w-0">
                 {label}
               </span>
             </div>
           ) : (
-            <div className="book-golden-label p-1.5 flex items-center justify-center ml-0.5">
-              {Icon && <Icon className="w-4 h-4 text-current" />}
+            <div className="book-golden-label p-1.5 flex items-center justify-center mx-auto shrink-0">
+              {Icon && <Icon className="w-4 h-4 text-current shrink-0" />}
             </div>
           )}
         </div>
