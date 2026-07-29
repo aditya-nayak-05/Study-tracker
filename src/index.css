@@ -604,13 +604,13 @@ body {
 .ribbon-bookmark {
   position: absolute;
   top: -10px;
-  right: 50px;
-  width: 22px;
-  height: 85px;
+  right: 28px;
+  width: 20px;
+  height: 70px;
   background: var(--ribbon-bg);
   border-radius: 0 0 3px 3px;
   box-shadow: 2px 4px 10px rgba(0,0,0,0.3);
-  z-index: 30;
+  z-index: 5;
   pointer-events: none;
 }
 
@@ -619,9 +619,9 @@ body {
   position: absolute;
   bottom: 0;
   left: 0;
-  border-left: 11px solid transparent;
-  border-right: 11px solid transparent;
-  border-bottom: 9px solid var(--neu-page-bg);
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-bottom: 8px solid var(--neu-page-bg);
 }
 
 /* ═══════════════════════════════════════════

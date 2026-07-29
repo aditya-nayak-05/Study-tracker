@@ -40,7 +40,7 @@ const DashboardLayout = React.memo(function DashboardLayout({ children, title, s
   return (
     <div 
       ref={pageRef}
-      className="journal-page p-6 sm:p-8 min-h-[calc(100vh-6rem)] relative overflow-visible"
+      className="journal-page pl-16 pr-8 py-6 sm:pl-20 sm:pr-14 sm:py-8 min-h-[calc(100vh-6rem)] relative overflow-visible"
       style={{ transformOrigin: 'left center', perspective: '1800px' }}
     >
       {/* Dog-Ear Book Page Corner Fold Accent */}
@@ -64,7 +64,7 @@ const DashboardLayout = React.memo(function DashboardLayout({ children, title, s
       </div>
 
       {(title || subtitle) && (
-        <div ref={headerRef} style={{ marginBottom: '2rem', paddingBottom: '0.5rem', paddingLeft: '1rem' }}>
+        <div ref={headerRef} style={{ marginBottom: '2rem', paddingBottom: '0.5rem' }}>
           {title && (
             <h1 
               className="text-2xl sm:text-3xl font-extrabold text-main tracking-tight"
@@ -80,7 +80,7 @@ const DashboardLayout = React.memo(function DashboardLayout({ children, title, s
         </div>
       )}
       
-      <div ref={contentRef} className="pl-4">
+      <div ref={contentRef} className="pl-0">
         {children}
       </div>
     </div>

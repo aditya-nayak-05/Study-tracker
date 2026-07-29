@@ -359,7 +359,7 @@ export default function LearningHub() {
 
   return (
     <DashboardLayout>
-      <div className="p-5 mb-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4" style={cardStyle}>
+      <div className="p-5 pr-14 sm:pr-16 mb-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4" style={cardStyle}>
         <div>
           <h2 className="text-xl font-bold text-main flex items-center gap-2">
             <Youtube className="w-6 h-6 text-accent-primary" /> YouTube Learning Hub
