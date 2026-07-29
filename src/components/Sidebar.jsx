@@ -19,42 +19,37 @@ const navItems = [
   { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
-// 3D Book Button Component matching Reference Image
+// 3D Book Button — active book stays open, previous closes when switching
 const BookNavItem = React.memo(function BookNavItem({ label, icon: Icon, isActive, onClick, collapsed }) {
-  const [isOpening, setIsOpening] = useState(false);
-
-  const handleClick = (e) => {
-    setIsOpening(true);
-    setTimeout(() => {
-      onClick(e);
-      setIsOpening(false);
-    }, 450); // 3D Book Page Opening flip animation duration
+  const handleClick = () => {
+    if (!isActive) onClick();
   };
 
+  // isActive = cover stays open (flipped). Otherwise cover is closed.
   return (
-    <div className="book-btn-wrapper my-2.5">
+    <div className="book-btn-wrapper my-2">
       <button
         onClick={handleClick}
         title={label}
-        className={`book-btn-card ${isActive ? 'active-book' : ''} ${isOpening ? 'is-opening' : ''} ${
-          collapsed ? 'h-[3.5rem]' : 'h-[4.25rem]'
+        className={`book-btn-card ${isActive ? 'active-book' : ''} ${
+          collapsed ? 'h-[3.25rem]' : 'h-[4rem]'
         }`}
       >
-        {/* Inside Paper Pages (Revealed when book cover swings open) */}
+        {/* Inner pages — always present, visible when cover is open */}
         <div className="book-inner-pages">
           <div className="book-inside-line" />
           <div className="book-inside-line short" />
           <div className="book-inside-title">{label}</div>
         </div>
 
-        {/* Front Cover (Rotates open on left spine hinge) */}
-        <div className="book-front-cover">
-          {/* Left Spine Details */}
+        {/* Front Cover — hinged on left spine */}
+        <div className={`book-front-cover ${isActive ? 'cover-open' : ''}`}>
+          {/* Spine */}
           <div className="book-spine-strip">
             <div className="book-spine-highlight" />
           </div>
 
-          {/* Golden / Theme Title Plate Label Badge */}
+          {/* Title badge */}
           {!collapsed ? (
             <div className="book-golden-label px-3 py-1.5 flex items-center gap-2 max-w-[88%]">
               {Icon && <Icon className="w-4 h-4 shrink-0 text-current" />}
@@ -63,16 +58,14 @@ const BookNavItem = React.memo(function BookNavItem({ label, icon: Icon, isActiv
               </span>
             </div>
           ) : (
-            <div className="book-golden-label p-2 flex items-center justify-center ml-0.5">
+            <div className="book-golden-label p-1.5 flex items-center justify-center ml-1">
               {Icon && <Icon className="w-4 h-4 text-current" />}
             </div>
           )}
         </div>
 
-        {/* White Paper Pages Edge at Bottom */}
+        {/* Page edge & bookmark */}
         <div className="book-pages-bottom" />
-
-        {/* Hanging Golden Ribbon Bookmark */}
         <div className="book-ribbon-bookmark" />
       </button>
     </div>
