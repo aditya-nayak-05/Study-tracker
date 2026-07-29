@@ -469,10 +469,21 @@ export default function LearningHub() {
 
       {/* Grid List */}
       {filteredTutorials.length === 0 ? (
-        <div className="p-12 text-center rounded-2xl flex flex-col items-center justify-center" style={cardStyle}>
-          <Youtube className="w-12 h-12 text-muted mb-3" />
-          <h3 className="text-sm font-semibold text-main mb-1">No tutorials match filters</h3>
-          <p className="text-xs text-muted">Try expanding your search query or selecting a different tab.</p>
+        <div className="p-12 text-center rounded-2xl flex flex-col items-center justify-center space-y-4" style={cardStyle}>
+          <div className="rgb-theme-glow-btn w-16 h-16 rounded-full flex items-center justify-center shadow-2xl">
+            <Youtube className="w-8 h-8 text-[var(--accent-orange)] fill-current" />
+          </div>
+          <div>
+            <h3 className="text-base font-bold text-main mb-1">No tutorials in your Learning Hub yet</h3>
+            <p className="text-xs text-muted max-w-sm">Attach a YouTube video tutorial to any topic in your roadmap to get started.</p>
+          </div>
+          <button
+            onClick={() => setShowAddModal(true)}
+            className="rgb-theme-glow-btn px-6 py-3 rounded-full text-xs font-extrabold shadow-xl cursor-pointer flex items-center gap-2 transition-transform hover:scale-105"
+          >
+            <Plus className="w-4 h-4 text-white bg-[var(--accent-orange)] rounded-full p-0.5 font-bold" />
+            <span>Add YouTube Video Link</span>
+          </button>
         </div>
       ) : (
         <div ref={containerRef} className="space-y-5">
