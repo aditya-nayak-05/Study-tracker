@@ -359,7 +359,7 @@ export default function LearningHub() {
 
   return (
     <DashboardLayout>
-      <div className="p-5 mb-6 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-start gap-6 sm:gap-10" style={cardStyle}>
+      <div className="p-5 mb-6 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4" style={cardStyle}>
         <div>
           <h2 className="text-xl font-bold text-main flex items-center gap-2">
             <Youtube className="w-6 h-6 text-accent-primary" /> YouTube Learning Hub
@@ -367,16 +367,14 @@ export default function LearningHub() {
           <p className="text-xs text-muted">Track tutorials and video study sessions across all plans</p>
         </div>
 
-        {/* Animated Round RGB Glow Button to Add YouTube Link */}
+        {/* Clean Premium Theme Button Shifted into Green Box Area (No Glow Animation) */}
         <button
           onClick={() => setShowAddModal(true)}
-          className="rgb-theme-glow-btn px-5 py-2.5 rounded-full flex items-center gap-2.5 text-xs font-extrabold shadow-xl cursor-pointer group transition-all shrink-0"
+          className="brass-btn px-5 py-2.5 rounded-full flex items-center gap-2 text-xs font-extrabold shadow-md cursor-pointer mr-16 sm:mr-24 shrink-0 hover:scale-105 transition-transform"
           title="Add YouTube Video Link"
         >
-          <div className="relative flex items-center justify-center">
-            <Youtube className="w-4.5 h-4.5 text-[var(--accent-orange)] group-hover:scale-110 transition-transform duration-300 fill-current" />
-            <Plus className="w-3 h-3 absolute -top-1.5 -right-1.5 text-white bg-[var(--accent-orange)] rounded-full p-0.5 shadow font-bold" />
-          </div>
+          <Youtube className="w-4 h-4 text-white fill-current" />
+          <Plus className="w-3.5 h-3.5 text-white stroke-[3]" />
           <span className="tracking-wide">Add Video Link</span>
         </button>
       </div>
