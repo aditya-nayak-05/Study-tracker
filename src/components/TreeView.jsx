@@ -44,7 +44,7 @@ function TreeNode({ label, level = 0, children, progress, status, isToday, defau
     <div>
       <button
         onClick={toggle}
-        className={`w-full flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-[#ebf0f7] transition-all text-left group cursor-pointer ${isToday ? 'bg-[var(--accent-orange)]/15 border border-[var(--accent-orange)]/30 shadow-sm' : ''}`}
+        className={`w-full flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-[var(--neu-hover-bg)] transition-all text-left group cursor-pointer ${isToday ? 'bg-[var(--accent-orange)]/15 border border-[var(--accent-orange)]/30 shadow-sm' : ''}`}
         style={{ paddingLeft: level * 20 + 8 }}
       >
         {hasChildren ? (
@@ -53,12 +53,12 @@ function TreeNode({ label, level = 0, children, progress, status, isToday, defau
           <span className="w-3.5 shrink-0" />
         )}
         {folderIcon}
-        <span className={`text-sm flex-1 truncate ${status === 'completed' ? 'text-muted line-through' : 'text-main'}`}>
+        <span className={`text-sm flex-1 truncate transition-colors ${status === 'completed' ? 'text-muted line-through opacity-75' : 'text-main'}`}>
           {label}
         </span>
         {progress !== undefined && progress !== null && (
           <div className="flex items-center gap-2 shrink-0">
-            <div className="w-16 h-1.5 bg-[#cbd5e0] rounded-full overflow-hidden shadow-inner">
+            <div className="w-16 h-1.5 bg-[var(--neu-border-subtle)] rounded-full overflow-hidden shadow-inner">
               <div
                 className="h-full rounded-full bg-gradient-to-r from-[#ed8936] to-[#f6ad55] transition-all duration-500"
                 style={{ width: `${progress}%` }}

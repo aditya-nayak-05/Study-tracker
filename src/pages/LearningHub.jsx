@@ -6,7 +6,8 @@ import DashboardLayout from '../layouts/DashboardLayout';
 import { extractVideoId, getThumbnailUrl, formatDuration } from '../utils/youtube';
 import {
   Search, Filter, Youtube, Play, Clock, BookOpen,
-  CheckCircle2, Circle, ExternalLink, RefreshCw, BarChart2
+  CheckCircle2, Circle, ExternalLink, RefreshCw, BarChart2,
+  Plus, X, Link2, Sparkles, Check
 } from 'lucide-react';
 
 const cardStyle = {
@@ -65,7 +66,7 @@ function FuturisticHudProgress({ progress = 0 }) {
         </span>
       </div>
 
-      {/* Main HUD Row: Dual Concentric Circular Ring + Premium Segmented Glow Pills */}
+      {/* Main HUD Row: Dual Concentric Circular HUD Ring + Premium Segmented Glow Pills */}
       <div className="flex items-center gap-3">
         {/* Dual Concentric Circular HUD Ring */}
         <div className="relative w-12 h-12 flex items-center justify-center shrink-0">
@@ -151,7 +152,7 @@ function FuturisticHudProgress({ progress = 0 }) {
 }
 
 export default function LearningHub() {
-  const { state } = useStudy();
+  const { state, dispatch, showToast } = useStudy();
   const navigate = useNavigate();
   const containerRef = useRef(null);
 
@@ -159,6 +160,83 @@ export default function LearningHub() {
   const [selectedPlanId, setSelectedPlanId] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
   const [sortBy, setSortBy] = useState('recent'); // recent, progress, title
+
+  // Add YouTube Video Modal state
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [inputUrl, setInputUrl] = useState('');
+  const [inputTitle, setInputTitle] = useState('');
+  const [selectedPlan, setSelectedPlan] = useState('');
+  const [selectedDay, setSelectedDay] = useState('');
+
+  // Auto-select first plan when modal opens or plans load
+  useEffect(() => {
+    if (state.plans && state.plans.length > 0 && !selectedPlan) {
+      setSelectedPlan(state.plans[0].id);
+    }
+  }, [state.plans, selectedPlan]);
+
+  const activePlanObj = useMemo(() => {
+    return (state.plans || []).find((p) => p.id === (selectedPlan || (state.plans[0] && state.plans[0].id)));
+  }, [state.plans, selectedPlan]);
+
+  const availableDays = useMemo(() => {
+    if (!activePlanObj) return [];
+    const days = [];
+    activePlanObj.months?.forEach((m) => {
+      m.weeks?.forEach((w) => {
+        w.days?.forEach((d) => {
+          days.push({ id: d.id, name: `${m.name} › ${d.name}` });
+        });
+      });
+    });
+    return days;
+  }, [activePlanObj]);
+
+  const previewVideoId = useMemo(() => {
+    return inputUrl.trim() ? extractVideoId(inputUrl.trim()) : null;
+  }, [inputUrl]);
+
+  const handleAddVideo = (e) => {
+    e.preventDefault();
+    if (!inputUrl.trim()) {
+      showToast('Please enter a YouTube video URL', 'error');
+      return;
+    }
+    const videoId = extractVideoId(inputUrl.trim());
+    if (!videoId) {
+      showToast('Invalid YouTube video URL format', 'error');
+      return;
+    }
+
+    const targetPlanId = selectedPlan || (state.plans[0] ? state.plans[0].id : null);
+    if (!targetPlanId) {
+      showToast('No active study plan found', 'error');
+      return;
+    }
+
+    let targetDayId = selectedDay;
+    if (!targetDayId && availableDays.length > 0) {
+      targetDayId = availableDays[0].id;
+    }
+
+    const finalTitle = inputTitle.trim() || `YouTube Tutorial (${videoId})`;
+
+    dispatch({
+      type: 'ADD_TASK',
+      payload: {
+        planId: targetPlanId,
+        dayId: targetDayId,
+        title: finalTitle,
+        youtubeUrl: inputUrl.trim(),
+        priority: 'high',
+      },
+    });
+
+    showToast('YouTube Video Tutorial added successfully!', 'success');
+    setShowAddModal(false);
+    setInputUrl('');
+    setInputTitle('');
+  };
 
   // ── Collect all task tutorials across all plans ──
   const tutorials = useMemo(() => {
@@ -281,13 +359,26 @@ export default function LearningHub() {
 
   return (
     <DashboardLayout>
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h2 className="text-xl font-bold text-main flex items-center gap-2">
             <Youtube className="w-6 h-6 text-accent-primary" /> YouTube Learning Hub
           </h2>
           <p className="text-xs text-muted">Track tutorials and video study sessions across all plans</p>
         </div>
+
+        {/* Animated Round RGB Glow Button to Add YouTube Link */}
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="rgb-theme-glow-btn px-4.5 py-2.5 rounded-full flex items-center gap-2.5 text-xs font-extrabold shadow-xl cursor-pointer group transition-all shrink-0"
+          title="Add YouTube Video Link"
+        >
+          <div className="relative flex items-center justify-center">
+            <Youtube className="w-4.5 h-4.5 text-[var(--accent-orange)] group-hover:scale-110 transition-transform duration-300 fill-current" />
+            <Plus className="w-3 h-3 absolute -top-1.5 -right-1.5 text-white bg-[var(--accent-orange)] rounded-full p-0.5 shadow font-bold" />
+          </div>
+          <span className="tracking-wide">Add Video Link</span>
+        </button>
       </div>
 
       {/* Stats Summary Panel */}
@@ -456,6 +547,144 @@ export default function LearningHub() {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Floating Action Button (RGB Glow Round Button) */}
+      <div className="fixed bottom-8 right-8 z-40">
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="rgb-theme-glow-btn w-14 h-14 rounded-full flex items-center justify-center shadow-2xl cursor-pointer group"
+          title="Add YouTube Video Tutorial"
+        >
+          <div className="relative flex items-center justify-center">
+            <Youtube className="w-6 h-6 text-[var(--accent-orange)] group-hover:scale-110 transition-transform duration-300 fill-current" />
+            <Plus className="w-3.5 h-3.5 absolute -top-1.5 -right-1.5 text-white bg-[var(--accent-orange)] rounded-full p-0.5 shadow font-bold" />
+          </div>
+        </button>
+      </div>
+
+      {/* Add YouTube Video Link Modal Popup */}
+      {showAddModal && (
+        <div
+          className="fixed inset-0 z-[200] flex items-center justify-center p-4"
+          style={{ background: 'rgba(0,0,0,0.65)', backdropFilter: 'blur(8px)' }}
+          onClick={() => setShowAddModal(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl p-6 relative neu-card flex flex-col space-y-4"
+            style={cardStyle}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setShowAddModal(false)}
+              className="absolute top-4 right-4 p-1.5 rounded-full cursor-pointer hover:bg-[var(--neu-hover-bg)] text-muted hover:text-main transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="flex items-center gap-3">
+              <div className="rgb-theme-glow-btn w-10 h-10 rounded-full flex items-center justify-center shrink-0">
+                <Youtube className="w-5 h-5 text-[var(--accent-orange)] fill-current" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-main">Add YouTube Link</h3>
+                <p className="text-xs text-muted">Attach a YouTube video tutorial to your study plan</p>
+              </div>
+            </div>
+
+            <form onSubmit={handleAddVideo} className="space-y-4 pt-2">
+              <div>
+                <label className="text-xs font-semibold text-muted block mb-1">YouTube Video Link *</label>
+                <div className="relative">
+                  <Link2 className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-accent-primary pointer-events-none" />
+                  <input
+                    type="text"
+                    placeholder="https://www.youtube.com/watch?v=..."
+                    value={inputUrl}
+                    onChange={(e) => setInputUrl(e.target.value)}
+                    className="w-full pl-9 pr-3 py-2 text-xs rounded-xl focus:outline-none inset-field"
+                    autoFocus
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Live Video Thumbnail Preview Box */}
+              {previewVideoId && (
+                <div className="p-3 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-inset-bg)] flex items-center gap-3 animate-fade-in">
+                  <img
+                    src={getThumbnailUrl(previewVideoId)}
+                    alt="Preview"
+                    className="w-24 aspect-video rounded-lg object-cover shadow"
+                    onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop&q=60'; }}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <span className="text-[10px] font-bold text-accent-primary uppercase tracking-wider block">Valid Video Detected</span>
+                    <p className="text-xs font-semibold text-main truncate">ID: {previewVideoId}</p>
+                  </div>
+                </div>
+              )}
+
+              <div>
+                <label className="text-xs font-semibold text-muted block mb-1">Topic / Tutorial Title</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Python Core Basics & Data Types"
+                  value={inputTitle}
+                  onChange={(e) => setInputTitle(e.target.value)}
+                  className="w-full px-3 py-2 text-xs rounded-xl focus:outline-none inset-field"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-muted block mb-1">Target Study Plan</label>
+                <select
+                  value={selectedPlan}
+                  onChange={(e) => {
+                    setSelectedPlan(e.target.value);
+                    setSelectedDay('');
+                  }}
+                  className="w-full px-3 py-2 text-xs rounded-xl focus:outline-none inset-field"
+                >
+                  {(state.plans || []).map((plan) => (
+                    <option key={plan.id} value={plan.id}>{plan.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              {availableDays.length > 0 && (
+                <div>
+                  <label className="text-xs font-semibold text-muted block mb-1">Target Module / Day</label>
+                  <select
+                    value={selectedDay}
+                    onChange={(e) => setSelectedDay(e.target.value)}
+                    className="w-full px-3 py-2 text-xs rounded-xl focus:outline-none inset-field"
+                  >
+                    {availableDays.map((d) => (
+                      <option key={d.id} value={d.id}>{d.name}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div className="flex justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAddModal(false)}
+                  className="leather-btn px-4 py-2 text-xs cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="brass-btn px-5 py-2 text-xs font-bold cursor-pointer flex items-center gap-1.5"
+                >
+                  <Sparkles className="w-3.5 h-3.5" /> Add Tutorial
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       )}
     </DashboardLayout>

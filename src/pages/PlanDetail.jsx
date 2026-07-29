@@ -194,7 +194,7 @@ export default function PlanDetail() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
           <div className="flex items-center gap-3">
-            <button onClick={() => navigate('/plans')} className="p-2 rounded-xl hover:bg-[#dce3ed] transition-all cursor-pointer" style={{ color: 'var(--neu-text-muted)' }}>
+            <button onClick={() => navigate('/plans')} className="p-2 rounded-xl hover:bg-[var(--neu-hover-bg)] hover:text-main transition-all cursor-pointer" style={{ color: 'var(--neu-text-muted)' }}>
               <ChevronLeft className="w-5 h-5" />
             </button>
             {editingName ? (
@@ -213,9 +213,9 @@ export default function PlanDetail() {
           </div>
           <div className="flex items-center gap-2">
             <input type="file" ref={fileInputRef} accept=".csv,.xlsx,.xls" onChange={handleImport} className="hidden" />
-            <button onClick={() => fileInputRef.current?.click()} className="p-2 rounded-xl hover:bg-[#dce3ed] cursor-pointer" style={{ color: 'var(--neu-text-muted)' }} title="Import"><FileUp className="w-4 h-4" /></button>
-            <button onClick={() => exportToPDF(plan)} className="p-2 rounded-xl hover:bg-[#dce3ed] cursor-pointer" style={{ color: 'var(--neu-text-muted)' }} title="PDF"><FileDown className="w-4 h-4" /></button>
-            <button onClick={() => exportToExcel(plan)} className="p-2 rounded-xl hover:bg-[#dce3ed] cursor-pointer" style={{ color: 'var(--neu-text-muted)' }} title="Excel"><FileDown className="w-4 h-4" /></button>
+            <button onClick={() => fileInputRef.current?.click()} className="p-2 rounded-xl hover:bg-[var(--neu-hover-bg)] cursor-pointer transition-all" style={{ color: 'var(--neu-text-muted)' }} title="Import"><FileUp className="w-4 h-4" /></button>
+            <button onClick={() => exportToPDF(plan)} className="p-2 rounded-xl hover:bg-[var(--neu-hover-bg)] cursor-pointer transition-all" style={{ color: 'var(--neu-text-muted)' }} title="PDF"><FileDown className="w-4 h-4" /></button>
+            <button onClick={() => exportToExcel(plan)} className="p-2 rounded-xl hover:bg-[var(--neu-hover-bg)] cursor-pointer transition-all" style={{ color: 'var(--neu-text-muted)' }} title="Excel"><FileDown className="w-4 h-4" /></button>
           </div>
         </div>
 
@@ -223,12 +223,29 @@ export default function PlanDetail() {
         <div className="flex items-center gap-8 mb-8 flex-wrap">
           <ProgressRing percent={stats.progress} size={56} strokeWidth={4} color={plan.color || 'var(--accent-orange)'} />
           <div>
-            <p className="text-xs" style={{ color: 'var(--neu-text-muted)' }}>Completed</p>
-            <p className="text-lg font-bold text-main">{stats.completed} / {stats.total}</p>
+            <div className="flex items-baseline gap-2">
+              <span className="text-2xl font-extrabold text-main">{stats.completed}</span>
+              <span className="text-sm text-muted">/ {stats.total} tasks</span>
+            </div>
+            <p className="text-xs text-muted">Total roadmap tasks</p>
           </div>
-          <div className="flex gap-2">
-            <button onClick={() => setView('tree')} style={btnStyle(view === 'tree')}>Tree</button>
-            <button onClick={() => setView('list')} style={btnStyle(view === 'list')}>List</button>
+          <div className="flex items-center gap-1 bg-[var(--neu-card-bg)] p-1 rounded-xl border border-[var(--neu-border-subtle)]">
+            <button
+              onClick={() => setView('tree')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
+                view === 'tree' ? 'brass-btn' : 'text-muted hover:text-main'
+              }`}
+            >
+              Tree
+            </button>
+            <button
+              onClick={() => setView('list')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
+                view === 'list' ? 'brass-btn' : 'text-muted hover:text-main'
+              }`}
+            >
+              List
+            </button>
           </div>
         </div>
 
@@ -255,13 +272,13 @@ export default function PlanDetail() {
 
                   return (
                     <div key={month.id} className="overflow-hidden" style={cardStyle}>
-                      <button className="w-full flex items-center gap-3 p-5 hover:bg-[#ebf0f7] transition-all cursor-pointer" onClick={() => setExpandedMonth(expandedMonth === month.id ? null : month.id)}>
-                        <GripVertical className="w-4 h-4" style={{ color: '#a0aec0' }} />
+                      <button className="w-full flex items-center gap-3 p-5 hover:bg-[var(--neu-hover-bg)] transition-all cursor-pointer" onClick={() => setExpandedMonth(expandedMonth === month.id ? null : month.id)}>
+                        <GripVertical className="w-4 h-4" style={{ color: 'var(--neu-text-muted)' }} />
                         <div className="flex-1 text-left">
                           <h3 className="text-sm font-semibold text-main">{month.name}</h3>
                           <p className="text-[11px]" style={{ color: 'var(--neu-text-muted)' }}>{mTasks.length} tasks · {mProgress}%</p>
                         </div>
-                        <div className="w-20 h-1.5 rounded-full overflow-hidden" style={{ background: '#cbd5e0' }}>
+                        <div className="w-20 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--neu-border-subtle)' }}>
                           <div className="h-full rounded-full transition-all" style={{ width: `${mProgress}%`, background: plan.color || 'var(--accent-orange)' }} />
                         </div>
                         <button onClick={(e) => { e.stopPropagation(); dispatch({ type: 'DELETE_MONTH', payload: { planId: plan.id, monthId: month.id } }); showToast('Month deleted', 'info'); }}
@@ -276,21 +293,21 @@ export default function PlanDetail() {
                             const wCompleted = wTasks.filter((t) => t.status === 'completed').length;
 
                             return (
-                              <div key={week.id} className="ml-4 pl-4" style={{ borderLeft: '1px solid rgba(163, 177, 198, 0.3)' }}>
-                                <button className="w-full flex items-center gap-2 py-2 hover:bg-[#ebf0f7] rounded-lg px-2 transition-all cursor-pointer" onClick={() => setExpandedWeek(expandedWeek === week.id ? null : week.id)}>
-                                  <GripVertical className="w-3.5 h-3.5" style={{ color: '#a0aec0' }} />
+                              <div key={week.id} className="ml-4 pl-4" style={{ borderLeft: '1px solid var(--neu-border-subtle)' }}>
+                                <button className="w-full flex items-center gap-2 py-2 hover:bg-[var(--neu-hover-bg)] rounded-lg px-2 transition-all cursor-pointer" onClick={() => setExpandedWeek(expandedWeek === week.id ? null : week.id)}>
+                                  <GripVertical className="w-3.5 h-3.5" style={{ color: 'var(--neu-text-muted)' }} />
                                   <span className="text-sm flex-1 text-left" style={{ color: 'var(--neu-text-main)' }}>{week.name}</span>
                                   <span className="text-[10px]" style={{ color: 'var(--neu-text-muted)' }}>{wCompleted}/{wTasks.length}</span>
                                   <button onClick={(e) => { e.stopPropagation(); dispatch({ type: 'DELETE_WEEK', payload: { planId: plan.id, weekId: week.id } }); }}
-                                    className="p-1 cursor-pointer" style={{ color: '#a0aec0' }}><Trash2 className="w-3 h-3" /></button>
+                                    className="p-1 cursor-pointer" style={{ color: 'var(--neu-text-muted)' }}><Trash2 className="w-3 h-3" /></button>
                                 </button>
 
                                 {expandedWeek === week.id && (
                                   <div className="ml-4 space-y-1 mt-1">
                                     {(week.days || []).map((day) => (
-                                      <div key={day.id} className="pl-3" style={{ borderLeft: '1px solid rgba(163, 177, 198, 0.2)' }}>
-                                        <button className="w-full flex items-center gap-2 py-1.5 hover:bg-[#ebf0f7] rounded-lg px-2 transition-all cursor-pointer" onClick={() => setExpandedDay(expandedDay === day.id ? null : day.id)}>
-                                          <GripVertical className="w-3 h-3" style={{ color: '#a0aec0' }} />
+                                      <div key={day.id} className="pl-3" style={{ borderLeft: '1px solid var(--neu-border-subtle)' }}>
+                                        <button className="w-full flex items-center gap-2 py-1.5 hover:bg-[var(--neu-hover-bg)] rounded-lg px-2 transition-all cursor-pointer" onClick={() => setExpandedDay(expandedDay === day.id ? null : day.id)}>
+                                          <GripVertical className="w-3 h-3" style={{ color: 'var(--neu-text-muted)' }} />
                                           <span className="text-sm flex-1 text-left" style={{ color: 'var(--neu-text-main)' }}>{day.name}</span>
                                           {editingDate === day.id ? (
                                             <input type="date" defaultValue={day.date} className="rounded px-2 py-0.5 text-xs" style={{ ...inputStyle }} onClick={(e) => e.stopPropagation()}
@@ -301,7 +318,7 @@ export default function PlanDetail() {
                                             </button>
                                           )}
                                           <button onClick={(e) => { e.stopPropagation(); dispatch({ type: 'DELETE_DAY', payload: { planId: plan.id, dayId: day.id } }); }}
-                                            className="p-1 cursor-pointer" style={{ color: '#a0aec0' }}><Trash2 className="w-3 h-3" /></button>
+                                            className="p-1 cursor-pointer" style={{ color: 'var(--neu-text-muted)' }}><Trash2 className="w-3 h-3" /></button>
                                         </button>
 
                                         {expandedDay === day.id && (

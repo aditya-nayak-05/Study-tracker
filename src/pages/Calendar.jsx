@@ -348,7 +348,7 @@ export default function CalendarPage() {
                             onClick={() => handleToggleTask(task)}
                             className="w-full flex items-center gap-2.5 py-2 px-2.5 rounded-lg transition-all cursor-pointer text-left group"
                             style={{ background: 'transparent' }}
-                            onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(237,137,54,0.08)'}
+                            onMouseEnter={(e) => e.currentTarget.style.background = 'var(--neu-hover-bg)'}
                             onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
                           >
                             {task.status === 'completed' ? (
@@ -356,10 +356,11 @@ export default function CalendarPage() {
                             ) : task.status === 'in-progress' ? (
                               <AlertCircle className="w-4 h-4 shrink-0" style={{ color: 'var(--accent-orange)' }} />
                             ) : (
-                              <Circle className="w-4 h-4 shrink-0" style={{ color: '#a0aec0' }} />
+                              <Circle className="w-4 h-4 shrink-0" style={{ color: 'var(--neu-text-muted)' }} />
                             )}
-                            <span className="text-xs flex-1" style={{
-                              color: task.status === 'completed' ? '#718096' : '#1a202c',
+                            <span className="text-xs flex-1 transition-colors" style={{
+                              color: task.status === 'completed' ? 'var(--neu-text-muted)' : 'var(--neu-text-main)',
+                              opacity: task.status === 'completed' ? 0.75 : 1,
                               textDecoration: task.status === 'completed' ? 'line-through' : 'none',
                             }}>{task.title}</span>
                           </button>

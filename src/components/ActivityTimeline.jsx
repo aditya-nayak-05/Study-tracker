@@ -55,7 +55,7 @@ const ActivityTimeline = React.memo(function ActivityTimeline({ activities = [],
         const Icon = iconMap[activity.type] || iconMap.default;
         const colorClass = colorMap[activity.type] || colorMap.default;
         return (
-          <div key={activity.id} className="activity-item flex items-start gap-3 py-2 px-3 rounded-lg hover:bg-[#ebf0f7] transition-all">
+          <div key={activity.id} className="activity-item flex items-start gap-3 py-2 px-3 rounded-lg hover:bg-[var(--neu-hover-bg)] transition-all">
             <div className={`w-7 h-7 rounded-lg ${colorClass} flex items-center justify-center shrink-0 mt-0.5 shadow-sm`}>
               <Icon className="w-3.5 h-3.5" />
             </div>

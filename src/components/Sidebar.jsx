@@ -156,7 +156,7 @@ const Sidebar = React.memo(function Sidebar() {
                   dispatch({ type: 'SET_UI', payload: { activePlanId: plan.id } });
                   navigate(`/plans/${plan.id}`);
                 }}
-                className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-muted hover:bg-[#ebf0f7] hover:text-main transition-all text-sm"
+                className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-muted hover:bg-[var(--neu-hover-bg)] hover:text-main transition-all text-sm"
               >
                 <Pin className="w-3.5 h-3.5 text-accent-primary shrink-0" />
                 <span className="truncate">{plan.name}</span>
@@ -169,7 +169,7 @@ const Sidebar = React.memo(function Sidebar() {
       {/* Collapse toggle */}
       <button
         onClick={toggleCollapse}
-        className="h-12 border-t border-[var(--neu-border-subtle)] flex items-center justify-center text-muted hover:text-main hover:bg-[#ebf0f7] transition-all shrink-0 cursor-pointer"
+        className="h-12 border-t border-[var(--neu-border-subtle)] flex items-center justify-center text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-all shrink-0 cursor-pointer"
       >
         {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
       </button>

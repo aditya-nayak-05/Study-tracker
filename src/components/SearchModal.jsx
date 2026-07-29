@@ -100,7 +100,7 @@ export default function SearchModal({ onClose }) {
               <button
                 key={i}
                 onClick={() => handleSelect(item)}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[#ebf0f7] transition-all text-left group cursor-pointer border border-transparent hover:border-[var(--accent-orange)]"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[var(--neu-hover-bg)] transition-all text-left group cursor-pointer border border-transparent hover:border-[var(--accent-orange)]"
               >
                 <Icon className="w-4 h-4 text-accent-primary shrink-0" />
                 <span className="text-sm text-main flex-1 truncate group-hover:text-accent-primary font-semibold">{item.label}</span>

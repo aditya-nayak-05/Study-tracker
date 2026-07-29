@@ -305,7 +305,7 @@ export default function StudyHoursChart() {
           <div className="flex items-center gap-2.5">
             <button
               onClick={handlePrev}
-              className="p-2 rounded-xl border border-[var(--neu-border)] hover:bg-[#ebf0f7] text-muted hover:text-main cursor-pointer transition-all"
+              className="p-2 rounded-xl border border-[var(--neu-border)] hover:bg-[var(--neu-hover-bg)] text-muted hover:text-main cursor-pointer transition-all"
               style={{ background: 'var(--neu-card-bg)', boxShadow: '3px 3px 7px rgba(163, 177, 198, 0.5), -3px -3px 7px rgba(255, 255, 255, 0.85)' }}
             >
               <ChevronLeft className="w-4 h-4" />
@@ -315,7 +315,7 @@ export default function StudyHoursChart() {
             </span>
             <button
               onClick={handleNext}
-              className="p-2 rounded-xl border border-[var(--neu-border)] hover:bg-[#ebf0f7] text-muted hover:text-main cursor-pointer transition-all"
+              className="p-2 rounded-xl border border-[var(--neu-border)] hover:bg-[var(--neu-hover-bg)] text-muted hover:text-main cursor-pointer transition-all"
               style={{ background: 'var(--neu-card-bg)', boxShadow: '3px 3px 7px rgba(163, 177, 198, 0.5), -3px -3px 7px rgba(255, 255, 255, 0.85)' }}
             >
               <ChevronRight className="w-4 h-4" />

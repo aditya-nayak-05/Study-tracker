@@ -186,18 +186,18 @@ export default function Plans() {
                 </button>
 
                 {menuOpen === plan.id && (
-                  <div className="absolute top-10 right-3 rounded-xl py-1 w-40 z-50 shadow-xl" style={{ background: 'var(--neu-card-bg)', border: '1px solid rgba(255,255,255,0.8)', boxShadow: '6px 6px 15px rgba(163,177,198,0.6), -6px -6px 15px rgba(255,255,255,0.85)' }} onClick={(e) => e.stopPropagation()}>
-                    <button onClick={() => handleAction('pin', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[#dce3ed] cursor-pointer" style={{ color: 'var(--neu-text-main)' }}>
+                  <div className="absolute top-10 right-3 rounded-xl py-1 w-40 z-50 shadow-xl" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border-subtle)' }} onClick={(e) => e.stopPropagation()}>
+                    <button onClick={() => handleAction('pin', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[var(--neu-hover-bg)] cursor-pointer transition-colors" style={{ color: 'var(--neu-text-main)' }}>
                       {plan.pinned ? <PinOff className="w-3.5 h-3.5" /> : <Pin className="w-3.5 h-3.5" />}
                       {plan.pinned ? 'Unpin' : 'Pin'}
                     </button>
-                    <button onClick={() => handleAction('duplicate', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[#dce3ed] cursor-pointer" style={{ color: 'var(--neu-text-main)' }}>
+                    <button onClick={() => handleAction('duplicate', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[var(--neu-hover-bg)] cursor-pointer transition-colors" style={{ color: 'var(--neu-text-main)' }}>
                       <Copy className="w-3.5 h-3.5" /> Duplicate
                     </button>
-                    <button onClick={() => handleAction('archive', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[#dce3ed] cursor-pointer" style={{ color: 'var(--neu-text-main)' }}>
+                    <button onClick={() => handleAction('archive', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[var(--neu-hover-bg)] cursor-pointer transition-colors" style={{ color: 'var(--neu-text-main)' }}>
                       <Archive className="w-3.5 h-3.5" /> Archive
                     </button>
-                    <button onClick={() => handleAction('delete', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[#dce3ed] cursor-pointer" style={{ color: '#e53e3e' }}>
+                    <button onClick={() => handleAction('delete', plan)} className="w-full flex items-center gap-2 px-4 py-2 text-sm hover:bg-[var(--neu-hover-bg)] cursor-pointer transition-colors" style={{ color: '#e53e3e' }}>
                       <Trash2 className="w-3.5 h-3.5" /> Delete
                     </button>
                   </div>
