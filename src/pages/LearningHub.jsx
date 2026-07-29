@@ -359,7 +359,7 @@ export default function LearningHub() {
 
   return (
     <DashboardLayout>
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+      <div className="p-5 mb-6 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4" style={cardStyle}>
         <div>
           <h2 className="text-xl font-bold text-main flex items-center gap-2">
             <Youtube className="w-6 h-6 text-accent-primary" /> YouTube Learning Hub
@@ -370,7 +370,7 @@ export default function LearningHub() {
         {/* Animated Round RGB Glow Button to Add YouTube Link */}
         <button
           onClick={() => setShowAddModal(true)}
-          className="rgb-theme-glow-btn px-4.5 py-2.5 rounded-full flex items-center gap-2.5 text-xs font-extrabold shadow-xl cursor-pointer group transition-all shrink-0"
+          className="rgb-theme-glow-btn px-5 py-2.5 rounded-full flex items-center gap-2.5 text-xs font-extrabold shadow-xl cursor-pointer group transition-all shrink-0"
           title="Add YouTube Video Link"
         >
           <div className="relative flex items-center justify-center">
@@ -551,7 +551,7 @@ export default function LearningHub() {
       )}
 
       {/* Floating Action Button (RGB Glow Round Button) */}
-      <div className="fixed bottom-8 right-8 z-40">
+      <div className="fixed bottom-16 right-8 z-[9999]">
         <button
           onClick={() => setShowAddModal(true)}
           className="rgb-theme-glow-btn w-14 h-14 rounded-full flex items-center justify-center shadow-2xl cursor-pointer group"
