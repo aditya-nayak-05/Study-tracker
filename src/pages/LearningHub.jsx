@@ -366,17 +366,6 @@ export default function LearningHub() {
           </h2>
           <p className="text-xs text-muted">Track tutorials and video study sessions across all plans</p>
         </div>
-
-        {/* Clean Premium Theme Button Shifted into Green Box Area (No Glow Animation) */}
-        <button
-          onClick={() => setShowAddModal(true)}
-          className="brass-btn px-5 py-2.5 rounded-full flex items-center gap-2 text-xs font-extrabold shadow-md cursor-pointer mr-16 sm:mr-24 shrink-0 hover:scale-105 transition-transform"
-          title="Add YouTube Video Link"
-        >
-          <Youtube className="w-4 h-4 text-white fill-current" />
-          <Plus className="w-3.5 h-3.5 text-white stroke-[3]" />
-          <span className="tracking-wide">Add Video Link</span>
-        </button>
       </div>
 
       {/* Stats Summary Panel */}
