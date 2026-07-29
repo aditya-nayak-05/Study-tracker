@@ -144,39 +144,14 @@ const Sidebar = React.memo(function Sidebar() {
   const handleOpenApp = (app) => {
     dispatch({
       type: 'ADD_TOAST',
-      payload: { message: `Launching ${app.name}...`, type: 'info' }
+      payload: { message: `Opening ${app.name} desktop app...`, type: 'info' }
     });
 
     try {
-      // Create temporary invisible iframe to launch application URI scheme natively in Windows
-      const iframe = document.createElement('iframe');
-      iframe.style.display = 'none';
-      iframe.src = app.protocol;
-      document.body.appendChild(iframe);
-
-      setTimeout(() => {
-        if (document.body.contains(iframe)) {
-          document.body.removeChild(iframe);
-        }
-      }, 1200);
-
-      // Fallback url handling if protocol not bound and focus remains
-      if (app.fallbackUrl) {
-        let appOpened = false;
-        const handleBlur = () => { appOpened = true; };
-        window.addEventListener('blur', handleBlur, { once: true });
-
-        setTimeout(() => {
-          window.removeEventListener('blur', handleBlur);
-          if (!appOpened && document.hasFocus()) {
-            window.open(app.fallbackUrl, '_blank', 'noopener,noreferrer');
-          }
-        }, 700);
-      }
+      // Directly trigger OS protocol scheme to open/focus desktop application
+      window.location.href = app.protocol;
     } catch (err) {
-      if (app.fallbackUrl) {
-        window.open(app.fallbackUrl, '_blank', 'noopener,noreferrer');
-      }
+      console.error('Failed to launch protocol:', err);
     }
   };
 
