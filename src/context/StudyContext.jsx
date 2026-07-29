@@ -585,6 +585,7 @@ function reducer(state, action) {
           if (p.id !== action.payload.planId) return p;
           return {
             ...p,
+            studyHours: [...(p.studyHours || []), studyHourEntry],
             videoStudyHours: [...(p.videoStudyHours || []), studyHourEntry],
             updatedAt: new Date().toISOString(),
           };
@@ -596,6 +597,7 @@ function reducer(state, action) {
         studySessions: [...state.studySessions, newSession],
         activeSessionId: newSession.id,
         videoStudyHours: [...(state.videoStudyHours || []), studyHourEntry],
+        globalStudyHours: [studyHourEntry, ...(state.globalStudyHours || [])],
         plans
       };
     }
@@ -612,10 +614,22 @@ function reducer(state, action) {
       // Compute precise hours and minutes
       const finalDuration = updates.duration !== undefined ? updates.duration : session.duration;
       const hrs = Math.floor(finalDuration / 3600);
-      const mins = (finalDuration % 3600) / 60;
+      const mins = Math.round(((finalDuration % 3600) / 60) * 10) / 10;
       const finalNotes = updates.notes !== undefined ? `Study session: ${updates.notes || 'Learning session'}` : undefined;
 
       const updatedVideoHours = (state.videoStudyHours || []).map((h) => {
+        if (h.id === sessionId) {
+          return {
+            ...h,
+            hours: hrs,
+            minutes: mins,
+            ...(finalNotes !== undefined ? { notes: finalNotes } : {})
+          };
+        }
+        return h;
+      });
+
+      const updatedGlobalHours = (state.globalStudyHours || []).map((h) => {
         if (h.id === sessionId) {
           return {
             ...h,
@@ -633,6 +647,17 @@ function reducer(state, action) {
           if (p.id !== session.planId) return p;
           return {
             ...p,
+            studyHours: (p.studyHours || []).map((h) => {
+              if (h.id === sessionId) {
+                return {
+                  ...h,
+                  hours: hrs,
+                  minutes: mins,
+                  ...(finalNotes !== undefined ? { notes: finalNotes } : {})
+                };
+              }
+              return h;
+            }),
             videoStudyHours: (p.videoStudyHours || []).map((h) => {
               if (h.id === sessionId) {
                 return {
@@ -653,6 +678,7 @@ function reducer(state, action) {
         ...state,
         studySessions: updatedSessions,
         videoStudyHours: updatedVideoHours,
+        globalStudyHours: updatedGlobalHours,
         plans: updatedPlans
       };
     }
@@ -682,54 +708,65 @@ function reducer(state, action) {
       );
 
       let newVideoHours = state.videoStudyHours || [];
+      let newGlobalHours = state.globalStudyHours || [];
       let newPlans = state.plans;
       let newActivities = state.globalActivities;
 
       // Guard: If session was extremely short (less than 5 seconds), discard the study hours entry to keep logs clean
       if (finalDuration < 5) {
         newVideoHours = (state.videoStudyHours || []).filter((h) => h.id !== sid);
+        newGlobalHours = (state.globalStudyHours || []).filter((h) => h.id !== sid);
         if (session.planId) {
           newPlans = state.plans.map((p) => {
             if (p.id !== session.planId) return p;
             return {
               ...p,
+              studyHours: (p.studyHours || []).filter((h) => h.id !== sid),
               videoStudyHours: (p.videoStudyHours || []).filter((h) => h.id !== sid),
               updatedAt: new Date().toISOString()
             };
           });
         }
       } else {
-        // Finalize the existing entry
-        newVideoHours = (state.videoStudyHours || []).map((h) => {
-          if (h.id === sid) {
-            return {
-              ...h,
-              hours,
-              minutes,
-              notes: finalNotes,
-              timestamp: new Date().toISOString()
-            };
-          }
-          return h;
-        });
+        const roundedMins = Math.round(minutes * 10) / 10;
+        const entryObj = {
+          id: sid,
+          date: new Date().toISOString().split('T')[0],
+          hours,
+          minutes: roundedMins,
+          notes: finalNotes,
+          planId: session.planId || null,
+          timestamp: new Date().toISOString()
+        };
+
+        // Finalize videoStudyHours
+        newVideoHours = (state.videoStudyHours || []).map((h) => (h.id === sid ? entryObj : h));
+        if (!newVideoHours.some((h) => h.id === sid)) {
+          newVideoHours = [entryObj, ...newVideoHours];
+        }
+
+        // Finalize globalStudyHours
+        const existingGlobalIndex = (state.globalStudyHours || []).findIndex((h) => h.id === sid);
+        if (existingGlobalIndex >= 0) {
+          newGlobalHours = (state.globalStudyHours || []).map((h) => (h.id === sid ? entryObj : h));
+        } else {
+          newGlobalHours = [entryObj, ...(state.globalStudyHours || [])];
+        }
 
         if (session.planId) {
           newPlans = state.plans.map((p) => {
             if (p.id !== session.planId) return p;
+            const existingPlanIdx = (p.studyHours || []).findIndex((h) => h.id === sid);
+            let updatedPlanStudyHours;
+            if (existingPlanIdx >= 0) {
+              updatedPlanStudyHours = (p.studyHours || []).map((h) => (h.id === sid ? entryObj : h));
+            } else {
+              updatedPlanStudyHours = [entryObj, ...(p.studyHours || [])];
+            }
             return {
               ...p,
-              videoStudyHours: (p.videoStudyHours || []).map((h) => {
-                if (h.id === sid) {
-                  return {
-                    ...h,
-                    hours,
-                    minutes,
-                    notes: finalNotes,
-                    timestamp: new Date().toISOString()
-                  };
-                }
-                return h;
-              }),
+              studyHours: updatedPlanStudyHours,
+              videoStudyHours: (p.videoStudyHours || []).map((h) => (h.id === sid ? entryObj : h)),
               updatedAt: new Date().toISOString()
             };
           });
@@ -746,6 +783,7 @@ function reducer(state, action) {
         studySessions: updatedSessions,
         activeSessionId: state.activeSessionId === sid ? null : state.activeSessionId,
         videoStudyHours: newVideoHours,
+        globalStudyHours: newGlobalHours,
         plans: newPlans,
         globalActivities: newActivities,
       };
@@ -757,6 +795,13 @@ function reducer(state, action) {
         ...state,
         studySessions: state.studySessions.filter((s) => s.id !== delId),
         activeSessionId: state.activeSessionId === delId ? null : state.activeSessionId,
+        videoStudyHours: (state.videoStudyHours || []).filter((h) => h.id !== delId),
+        globalStudyHours: (state.globalStudyHours || []).filter((h) => h.id !== delId),
+        plans: state.plans.map((p) => ({
+          ...p,
+          studyHours: (p.studyHours || []).filter((h) => h.id !== delId),
+          videoStudyHours: (p.videoStudyHours || []).filter((h) => h.id !== delId),
+        }))
       };
     }
 
