@@ -19,6 +19,56 @@ const navItems = [
   { path: '/settings', label: 'Settings', icon: Settings },
 ];
 
+// 3D Book Button Component matching Reference Image
+const BookNavItem = React.memo(function BookNavItem({ label, icon: Icon, isActive, onClick, collapsed }) {
+  const [isOpening, setIsOpening] = useState(false);
+
+  const handleClick = (e) => {
+    setIsOpening(true);
+    setTimeout(() => {
+      onClick(e);
+      setIsOpening(false);
+    }, 380); // 3D Book Opening flip animation
+  };
+
+  return (
+    <div className="book-btn-wrapper my-2.5">
+      <button
+        onClick={handleClick}
+        title={label}
+        className={`book-btn-card ${isActive ? 'active-book' : ''} ${isOpening ? 'opening-book' : ''} ${
+          collapsed ? 'p-2 flex flex-col items-center justify-center h-[3.25rem]' : 'p-3 pl-5 min-h-[4rem] flex items-center'
+        }`}
+      >
+        {/* Left Spine Strip */}
+        <div className="book-spine-strip">
+          <div className="book-spine-highlight" />
+        </div>
+
+        {/* Golden Title Plate / Label Badge */}
+        {!collapsed ? (
+          <div className="book-golden-label px-3 py-1.5 flex items-center gap-2 max-w-[90%]">
+            {Icon && <Icon className="w-4 h-4 text-[#3e2723] shrink-0" />}
+            <span className="text-xs font-black text-[#3e2723] truncate uppercase tracking-tight">
+              {label}
+            </span>
+          </div>
+        ) : (
+          <div className="book-golden-label p-1.5 flex items-center justify-center ml-1">
+            {Icon && <Icon className="w-4 h-4 text-[#3e2723]" />}
+          </div>
+        )}
+
+        {/* White Pages at Bottom */}
+        <div className="book-pages-bottom" />
+
+        {/* Hanging Golden Ribbon Bookmark */}
+        <div className="book-ribbon-bookmark" />
+      </button>
+    </div>
+  );
+});
+
 const Sidebar = React.memo(function Sidebar() {
   const { state, dispatch } = useStudy();
   const navigate = useNavigate();
@@ -112,54 +162,38 @@ const Sidebar = React.memo(function Sidebar() {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-5 space-y-1.5 overflow-y-auto">
+      <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
         {navItems.map((item, i) => {
           const isActive = location.pathname === item.path;
-          const Icon = item.icon;
           return (
-            <button
-              key={item.path}
-              ref={(el) => (itemRefs.current[i] = el)}
-              onClick={() => handleNavClick(item.path)}
-              className={`w-full flex items-center transition-all duration-300 group cursor-pointer binder-tab
-                ${collapsed ? 'justify-center p-3.5 rounded-xl' : 'gap-3 px-4 py-3'}
-                ${isActive ? 'active text-accent-primary' : 'text-muted hover:text-main'}`}
-            >
-              <Icon className={`shrink-0 transition-all duration-300 group-hover:scale-110
-                ${collapsed ? 'w-6 h-6' : 'w-4 h-4'}
-                ${isActive 
-                  ? 'text-accent-primary' 
-                  : 'text-muted group-hover:text-accent-primary'
-                }`} 
+            <div key={item.path} ref={(el) => (itemRefs.current[i] = el)}>
+              <BookNavItem
+                label={item.label}
+                icon={item.icon}
+                isActive={isActive}
+                onClick={() => handleNavClick(item.path)}
+                collapsed={collapsed}
               />
-              {!collapsed && (
-                <span 
-                  className="text-sm font-semibold tracking-wide whitespace-nowrap" 
-                  style={{ textShadow: 'none' }}
-                >
-                  {item.label}
-                </span>
-              )}
-            </button>
+            </div>
           );
         })}
 
         {/* Pinned plans */}
         {pinnedPlans.length > 0 && !collapsed && (
           <div className="pt-4 mt-4 border-t border-[var(--neu-border-subtle)]">
-            <p className="px-4 text-[10px] font-semibold uppercase tracking-wider text-muted mb-3" style={{textShadow: 'none'}}>Pinned Plans</p>
+            <p className="px-4 text-[10px] font-bold uppercase tracking-wider text-muted mb-3" style={{textShadow: 'none'}}>Pinned Plans</p>
             {pinnedPlans.map((plan) => (
-              <button
+              <BookNavItem
                 key={plan.id}
+                label={plan.name}
+                icon={Pin}
+                isActive={location.pathname === `/plans/${plan.id}`}
                 onClick={() => {
                   dispatch({ type: 'SET_UI', payload: { activePlanId: plan.id } });
                   navigate(`/plans/${plan.id}`);
                 }}
-                className="w-full flex items-center gap-2.5 px-4 py-2.5 rounded-lg text-muted hover:bg-[var(--neu-hover-bg)] hover:text-main transition-all text-sm"
-              >
-                <Pin className="w-3.5 h-3.5 text-accent-primary shrink-0" />
-                <span className="truncate">{plan.name}</span>
-              </button>
+                collapsed={collapsed}
+              />
             ))}
           </div>
         )}

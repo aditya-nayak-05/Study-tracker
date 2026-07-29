@@ -1088,3 +1088,157 @@ button:active:not(:disabled), .brass-btn:active, .leather-btn:active {
   background: var(--neu-text-sub);
 }
 
+/* ═══════════════════════════════════════════
+   📖 REALISTIC 3D BOOK BUTTON (Reference Design)
+   ═══════════════════════════════════════════ */
+.book-btn-wrapper {
+  perspective: 1000px;
+  position: relative;
+  width: 100%;
+}
+
+.book-btn-card {
+  position: relative;
+  width: 100%;
+  border-radius: 0.85rem 0.85rem 0.35rem 0.35rem;
+  background: linear-gradient(145deg, #095968 0%, #053b45 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 
+    0 6px 14px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(0, 0, 0, 0.2);
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  cursor: pointer;
+  overflow: visible;
+  user-select: none;
+}
+
+/* Dynamic cover themes */
+[data-theme="dark"] .book-btn-card {
+  background: linear-gradient(145deg, #0d5c6e 0%, #063c47 100%);
+}
+
+[data-theme="ocean"] .book-btn-card {
+  background: linear-gradient(145deg, #044b7f 0%, #011f42 100%);
+}
+
+[data-theme="forest"] .book-btn-card {
+  background: linear-gradient(145deg, #0f523c 0%, #05261b 100%);
+}
+
+[data-theme="lavender"] .book-btn-card {
+  background: linear-gradient(145deg, #5b467a 0%, #2f2145 100%);
+}
+
+.book-btn-card.active-book {
+  border-color: #ffc107;
+  box-shadow: 
+    0 0 22px var(--accent-orange),
+    0 8px 24px rgba(0, 0, 0, 0.6);
+}
+
+/* Hover Effect: 3D Lift + Glowing Effect */
+.book-btn-card:hover {
+  transform: rotateY(-12deg) translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 0 24px var(--accent-orange),
+    0 12px 28px rgba(0, 0, 0, 0.6);
+}
+
+/* Click Animation: Book Opens! */
+.book-btn-card.opening-book {
+  animation: bookOpenFlip 0.45s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes bookOpenFlip {
+  0% {
+    transform: rotateY(0deg) scale(1);
+  }
+  40% {
+    transform: rotateY(-60deg) scale(1.04);
+  }
+  100% {
+    transform: rotateY(-130deg) scale(0.95);
+    opacity: 0.2;
+  }
+}
+
+/* Left Spine Details (matching reference image) */
+.book-spine-strip {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 0.75rem;
+  background: rgba(0, 0, 0, 0.28);
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.85rem 0 0 0.35rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.book-spine-highlight {
+  width: 2px;
+  height: 70%;
+  background: rgba(255, 255, 255, 0.4);
+  border-radius: 9999px;
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+}
+
+/* Golden Label Badge (matching reference image) */
+.book-golden-label {
+  background: linear-gradient(180deg, #ffd54f 0%, #ffb300 60%, #ffa000 100%);
+  color: #3e2723;
+  border-radius: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 
+    0 2px 5px rgba(0, 0, 0, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: all 0.3s ease;
+}
+
+.book-btn-card:hover .book-golden-label {
+  filter: brightness(1.12);
+  box-shadow: 
+    0 3px 8px rgba(0, 0, 0, 0.4),
+    0 0 12px rgba(255, 213, 79, 0.85),
+    inset 0 1px 1px rgba(255, 255, 255, 0.95);
+}
+
+/* White Pages Block at Bottom (matching reference image) */
+.book-pages-bottom {
+  position: absolute;
+  bottom: 0;
+  left: 0.75rem;
+  right: 0;
+  height: 6px;
+  background: #ffffff;
+  border-radius: 0 0 0.35rem 0;
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.2);
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+}
+
+/* Golden Ribbon Bookmark (matching reference image) */
+.book-ribbon-bookmark {
+  position: absolute;
+  left: 1.25rem;
+  bottom: -9px;
+  width: 0.75rem;
+  height: 1rem;
+  background: linear-gradient(180deg, #ffd54f 0%, #ffb300 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 75%, 0 100%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  z-index: 20;
+  transition: transform 0.3s ease;
+}
+
+.book-btn-card:hover .book-ribbon-bookmark {
+  transform: translateY(2px);
+}
+
+
