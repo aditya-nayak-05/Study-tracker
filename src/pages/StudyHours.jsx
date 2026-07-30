@@ -44,10 +44,10 @@ export default function StudyHours() {
   return (
     <DashboardLayout title="Study Hours" subtitle="Log and track your study sessions">
       <div ref={containerRef} className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Pomodoro */}
+        {/* Timer */}
         <div className="sh-card bg-[var(--neu-card-bg)] border border-[var(--neu-border)] rounded-2xl p-6 flex flex-col items-center" style={{ boxShadow: 'var(--neu-shadow-raised)' }}>
           <h3 className="text-sm font-semibold text-main mb-6 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-accent-primary" /> Pomodoro Timer
+            <Clock className="w-4 h-4 text-accent-primary" /> Timer
           </h3>
           <PomodoroTimer />
         </div>

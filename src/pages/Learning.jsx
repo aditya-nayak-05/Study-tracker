@@ -521,10 +521,10 @@ export default function Learning() {
                 />
               </div>
 
-              {/* Timer 2: Pomodoro Timer */}
+              {/* Timer 2: Timer */}
               <div style={{ ...cardStyle, padding: '1.25rem 1rem' }} className="flex flex-col items-center justify-center">
                 <div className="flex items-center gap-2 mb-2 w-full justify-start text-xs font-semibold text-main">
-                  <Clock className="w-4 h-4 text-accent-primary" /> Pomodoro Timer
+                  <Clock className="w-4 h-4 text-accent-primary" /> Timer
                 </div>
                 <PomodoroTimer compact={true} />
               </div>

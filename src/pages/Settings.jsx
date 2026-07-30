@@ -98,31 +98,23 @@ export default function Settings() {
         {/* Left Column: 2x2 Grid Layout for Core Settings */}
         <div className="flex-1 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Top-Left: Pomodoro Settings */}
+            {/* Top-Left: Timer Settings */}
             <div className="notebook-settings-card p-6 flex flex-col justify-between">
               <div>
                 <div className="notebook-header-line">
                   <h3 className="text-sm font-bold text-main flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-accent-primary" /> Pomodoro Settings
+                    <Clock className="w-4 h-4 text-accent-primary" /> Timer Settings
                   </h3>
                 </div>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="max-w-xs">
                   <div>
-                    <label className="text-xs text-muted block mb-1.5 font-medium">Work (min)</label>
-                    <input type="number" min={1} max={120} value={settings.pomodoroWork}
-                      onChange={(e) => updateSetting('pomodoroWork', parseInt(e.target.value) || 25)}
-                      className="w-full px-3 py-2 rounded-xl text-main text-sm focus:outline-none" style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid rgba(255,255,255,0.6)' }} />
-                  </div>
-                  <div>
-                    <label className="text-xs text-muted block mb-1.5 font-medium">Break (min)</label>
-                    <input type="number" min={1} max={60} value={settings.pomodoroBreak}
-                      onChange={(e) => updateSetting('pomodoroBreak', parseInt(e.target.value) || 5)}
-                      className="w-full px-3 py-2 rounded-xl text-main text-sm focus:outline-none" style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid rgba(255,255,255,0.6)' }} />
-                  </div>
-                  <div>
-                    <label className="text-xs text-muted block mb-1.5 font-medium">Long Break (min)</label>
-                    <input type="number" min={1} max={60} value={settings.pomodoroLongBreak}
-                      onChange={(e) => updateSetting('pomodoroLongBreak', parseInt(e.target.value) || 15)}
+                    <label className="text-xs text-muted block mb-1.5 font-medium">Timer Duration (min)</label>
+                    <input type="number" min={1} max={180} value={settings.timerDuration || settings.pomodoroWork || 25}
+                      onChange={(e) => {
+                        const val = parseInt(e.target.value) || 25;
+                        updateSetting('timerDuration', val);
+                        updateSetting('pomodoroWork', val);
+                      }}
                       className="w-full px-3 py-2 rounded-xl text-main text-sm focus:outline-none" style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid rgba(255,255,255,0.6)' }} />
                   </div>
                 </div>

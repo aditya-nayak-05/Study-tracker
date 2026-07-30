@@ -179,7 +179,7 @@ export default function Dashboard() {
   const quickActions = [
     { label: 'New Plan', icon: Plus, color: 'var(--accent-orange)', action: () => navigate('/plans') },
     { label: 'Continue', icon: Play, color: '#38a169', action: () => activePlan && navigate(`/plans/${activePlan.id}`) },
-    { label: 'Pomodoro', icon: Clock, color: 'var(--accent-orange)', action: () => navigate('/study-hours') },
+    { label: 'Timer', icon: Clock, color: 'var(--accent-orange)', action: () => navigate('/study-hours') },
     { label: 'Log Hours', icon: Clock, color: '#319795', action: () => navigate('/study-hours') },
     { label: 'Resume Video', icon: Youtube, isSpecial: true, action: handleResumeVideo },
     { label: 'Add Task', icon: CheckSquare, color: 'var(--accent-orange)', action: () => navigate('/plans') },
@@ -327,11 +327,11 @@ export default function Dashboard() {
             )}
           </div>
 
-          {/* Pomodoro Timer (Centered) */}
+          {/* Timer (Centered) */}
           <div className="dash-card flex flex-col items-center justify-center p-6 text-center">
             <div className="notebook-header-line w-full text-center">
               <h3 className="text-sm font-bold text-main flex items-center justify-center gap-2 text-center uppercase tracking-wider">
-                <Clock className="w-4 h-4 text-accent-primary shrink-0" /> Pomodoro
+                <Clock className="w-4 h-4 text-accent-primary shrink-0" /> Timer
               </h3>
             </div>
             <PomodoroTimer compact />

@@ -1,23 +1,17 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import gsap from 'gsap';
-import { Play, Pause, RotateCcw, Coffee, Square } from 'lucide-react';
+import { Play, Pause, RotateCcw, Flame, Square } from 'lucide-react';
 import { useStudy } from '../context/StudyContext';
 
 const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
-  const { state, dispatch, showToast } = useStudy();
-  const { pomodoroWork = 25, pomodoroBreak = 5 } = state.settings;
-
-  const [mode, setMode] = useState('work'); // 'work' | 'break'
-  const [seconds, setSeconds] = useState(pomodoroWork * 60);
-  const [running, setRunning] = useState(false);
-  const [sessionCount, setSessionCount] = useState(0);
+  const { state, dispatch } = useStudy();
+  const mainTimer = state.mainTimer || {};
+  const { secondsLeft = 1500, running = false, totalSeconds = 1500, sessionCount = 0 } = mainTimer;
 
   const circleRef = useRef(null);
   const timerRef = useRef(null);
-  const intervalRef = useRef(null);
 
-  const totalSeconds = mode === 'work' ? pomodoroWork * 60 : pomodoroBreak * 60;
-  const progress = 1 - seconds / totalSeconds;
+  const progress = totalSeconds > 0 ? 1 - secondsLeft / totalSeconds : 0;
   const radius = compact ? 40 : 70;
   const circumference = 2 * Math.PI * radius;
 
@@ -37,71 +31,26 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
     }
   }, [progress, circumference]);
 
-  useEffect(() => {
+  const toggle = useCallback(() => {
     if (running) {
-      intervalRef.current = setInterval(() => {
-        setSeconds((prev) => {
-          if (prev <= 1) {
-            clearInterval(intervalRef.current);
-            setRunning(false);
-            if (mode === 'work') {
-              setSessionCount((c) => c + 1);
-              dispatch({
-                type: 'LOG_STUDY_HOURS',
-                payload: { hours: 0, minutes: pomodoroWork, notes: 'Pomodoro session', planId: state.ui.activePlanId },
-              });
-              dispatch({
-                type: 'ADD_GLOBAL_ACTIVITY',
-                payload: { type: 'study', message: `Completed ${pomodoroWork}m Pomodoro session` }
-              });
-              showToast('Pomodoro complete! Take a break 🎉', 'success');
-              setMode('break');
-              return pomodoroBreak * 60;
-            } else {
-              showToast('Break over! Time to focus 💪', 'info');
-              setMode('work');
-              return pomodoroWork * 60;
-            }
-          }
-          return prev - 1;
-        });
-      }, 1000);
+      dispatch({ type: 'PAUSE_MAIN_TIMER' });
+    } else {
+      dispatch({ type: 'START_MAIN_TIMER' });
     }
-    return () => clearInterval(intervalRef.current);
-  }, [running, mode, pomodoroWork, pomodoroBreak, dispatch, showToast, state.ui.activePlanId]);
-
-  const toggle = useCallback(() => setRunning((r) => !r), []);
+  }, [running, dispatch]);
 
   const reset = useCallback(() => {
-    setRunning(false);
-    setMode('work');
-    setSeconds(pomodoroWork * 60);
-  }, [pomodoroWork]);
+    dispatch({ type: 'RESET_MAIN_TIMER' });
+  }, [dispatch]);
 
   const finishEarly = useCallback(() => {
-    const elapsedSecs = totalSeconds - seconds;
-    const elapsedMins = Math.round(elapsedSecs / 60);
-    if (elapsedMins > 0 && mode === 'work') {
-      setSessionCount((c) => c + 1);
-      dispatch({
-        type: 'LOG_STUDY_HOURS',
-        payload: { hours: 0, minutes: elapsedMins, notes: 'Pomodoro session', planId: state.ui.activePlanId },
-      });
-      dispatch({
-        type: 'ADD_GLOBAL_ACTIVITY',
-        payload: { type: 'study', message: `Logged ${elapsedMins}m Pomodoro session` },
-      });
-      showToast(`Logged ${elapsedMins}m study session! 🎉`, 'success');
-    }
-    setRunning(false);
-    setMode('work');
-    setSeconds(pomodoroWork * 60);
-  }, [totalSeconds, seconds, mode, pomodoroWork, dispatch, showToast, state.ui.activePlanId]);
+    dispatch({ type: 'FINISH_MAIN_TIMER_EARLY' });
+  }, [dispatch]);
 
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
+  const mins = Math.floor(secondsLeft / 60);
+  const secs = secondsLeft % 60;
   const svgSize = compact ? 100 : 170;
-  const hasElapsed = seconds < totalSeconds;
+  const hasElapsed = secondsLeft < totalSeconds;
 
   return (
     <div ref={timerRef} className="flex flex-col items-center gap-3">
@@ -116,7 +65,7 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
             ref={circleRef}
             cx={svgSize / 2} cy={svgSize / 2} r={radius}
             fill="none"
-            stroke={mode === 'work' ? 'var(--accent-orange)' : '#38a169'}
+            stroke="var(--accent-orange)"
             strokeWidth={compact ? 4 : 6}
             strokeLinecap="round"
             strokeDasharray={circumference}
@@ -129,7 +78,7 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
             {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
           </span>
           <span className={`text-muted capitalize font-medium ${compact ? 'text-[10px]' : 'text-xs'}`}>
-            {mode === 'work' ? 'Focus' : 'Break'}
+            {running ? 'Focusing' : 'Timer'}
           </span>
         </div>
       </div>
@@ -169,7 +118,7 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
 
       {!compact && sessionCount > 0 && (
         <p className="text-[11px] text-muted flex items-center gap-1 font-medium">
-          <Coffee className="w-3 h-3 text-accent-primary" /> {sessionCount} session{sessionCount !== 1 ? 's' : ''} completed today
+          <Flame className="w-3 h-3 text-accent-primary" /> {sessionCount} lap{sessionCount !== 1 ? 's' : ''} completed today
         </p>
       )}
     </div>
@@ -177,4 +126,5 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
 });
 
 export default PomodoroTimer;
+
 

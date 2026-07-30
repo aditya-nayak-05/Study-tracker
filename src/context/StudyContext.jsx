@@ -17,6 +17,7 @@ const DEFAULT_PROFILE = {
 
 const DEFAULT_SETTINGS = {
   animationsEnabled: true,
+  timerDuration: 25,
   pomodoroWork: 25,
   pomodoroBreak: 5,
   pomodoroLongBreak: 15,
@@ -74,11 +75,54 @@ function createDefaultState() {
   const loadedUi = storage.getItem('ui', DEFAULT_UI);
   const ui = !loadedUi.activePlanId ? { ...loadedUi, activePlanId: 'ds-roadmap-plan-id' } : loadedUi;
 
+  const loadedSettings = storage.getItem('settings', DEFAULT_SETTINGS);
+  const defaultDuration = (loadedSettings.timerDuration || loadedSettings.pomodoroWork || 25) * 60;
+  const loadedTimer = storage.getItem('mainTimer', null);
+
+  let initialTimer = {
+    secondsLeft: defaultDuration,
+    running: false,
+    targetEndTime: null,
+    totalSeconds: defaultDuration,
+    sessionCount: 0,
+  };
+
+  if (loadedTimer) {
+    if (loadedTimer.running && loadedTimer.targetEndTime) {
+      const now = Date.now();
+      const remaining = Math.max(0, Math.ceil((loadedTimer.targetEndTime - now) / 1000));
+      if (remaining > 0) {
+        initialTimer = { ...loadedTimer, secondsLeft: remaining };
+      } else {
+        // Lap(s) completed while app was closed / reloaded
+        const overSecs = Math.floor((now - loadedTimer.targetEndTime) / 1000);
+        const extraLaps = 1 + Math.floor(overSecs / defaultDuration);
+        const currentLapRemaining = defaultDuration - (overSecs % defaultDuration);
+        initialTimer = {
+          secondsLeft: currentLapRemaining,
+          running: true,
+          targetEndTime: now + currentLapRemaining * 1000,
+          totalSeconds: defaultDuration,
+          sessionCount: (loadedTimer.sessionCount || 0) + extraLaps,
+        };
+      }
+    } else {
+      initialTimer = {
+        ...loadedTimer,
+        running: false,
+        targetEndTime: null,
+        secondsLeft: loadedTimer.secondsLeft ?? defaultDuration,
+        totalSeconds: loadedTimer.totalSeconds ?? defaultDuration,
+      };
+    }
+  }
+
   return {
     profile: storage.getItem('profile', null),
-    settings: storage.getItem('settings', DEFAULT_SETTINGS),
+    settings: loadedSettings,
     plans,
     ui,
+    mainTimer: initialTimer,
     globalStudyHours: storage.getItem('globalStudyHours', []),
     videoStudyHours: storage.getItem('videoStudyHours', []),
     globalActivities: storage.getItem('globalActivities', []),
@@ -99,8 +143,187 @@ function reducer(state, action) {
       return { ...state, profile: { ...state.profile, ...action.payload } };
 
     // ── Settings ──
-    case 'UPDATE_SETTINGS':
-      return { ...state, settings: { ...state.settings, ...action.payload } };
+    case 'UPDATE_SETTINGS': {
+      const newSettings = { ...state.settings, ...action.payload };
+      let newTimer = state.mainTimer;
+      if (action.payload.timerDuration || action.payload.pomodoroWork) {
+        const newDur = (action.payload.timerDuration || action.payload.pomodoroWork) * 60;
+        if (!state.mainTimer.running && state.mainTimer.secondsLeft === state.mainTimer.totalSeconds) {
+          newTimer = { ...state.mainTimer, secondsLeft: newDur, totalSeconds: newDur };
+        }
+      }
+      return { ...state, settings: newSettings, mainTimer: newTimer };
+    }
+
+    // ── Main Timer ──
+    case 'START_MAIN_TIMER': {
+      const defaultDuration = (state.settings.timerDuration || state.settings.pomodoroWork || 25) * 60;
+      const currentSecs = state.mainTimer.secondsLeft > 0 ? state.mainTimer.secondsLeft : defaultDuration;
+      const targetEndTime = Date.now() + currentSecs * 1000;
+      return {
+        ...state,
+        mainTimer: {
+          ...state.mainTimer,
+          secondsLeft: currentSecs,
+          running: true,
+          targetEndTime,
+        },
+      };
+    }
+
+    case 'PAUSE_MAIN_TIMER': {
+      let secondsLeft = state.mainTimer.secondsLeft;
+      if (state.mainTimer.targetEndTime) {
+        secondsLeft = Math.max(0, Math.ceil((state.mainTimer.targetEndTime - Date.now()) / 1000));
+      }
+      return {
+        ...state,
+        mainTimer: {
+          ...state.mainTimer,
+          secondsLeft,
+          running: false,
+          targetEndTime: null,
+        },
+      };
+    }
+
+    case 'RESET_MAIN_TIMER': {
+      const defaultDuration = (state.settings.timerDuration || state.settings.pomodoroWork || 25) * 60;
+      return {
+        ...state,
+        mainTimer: {
+          ...state.mainTimer,
+          secondsLeft: defaultDuration,
+          running: false,
+          targetEndTime: null,
+          totalSeconds: defaultDuration,
+        },
+      };
+    }
+
+    case 'FINISH_MAIN_TIMER_EARLY': {
+      const defaultDuration = (state.settings.timerDuration || state.settings.pomodoroWork || 25) * 60;
+      const totalSeconds = state.mainTimer.totalSeconds || defaultDuration;
+      let currentSecs = state.mainTimer.secondsLeft;
+      if (state.mainTimer.running && state.mainTimer.targetEndTime) {
+        currentSecs = Math.max(0, Math.ceil((state.mainTimer.targetEndTime - Date.now()) / 1000));
+      }
+      const elapsedSecs = totalSeconds - currentSecs;
+      const elapsedMins = Math.round(elapsedSecs / 60);
+
+      let newGlobalHours = state.globalStudyHours;
+      let newPlans = state.plans;
+      let newActivities = state.globalActivities;
+      let toasts = state.toasts;
+
+      if (elapsedMins > 0) {
+        const entry = {
+          id: generateId(),
+          date: new Date().toISOString().split('T')[0],
+          hours: 0,
+          minutes: elapsedMins,
+          notes: 'Timer session',
+          planId: state.ui.activePlanId,
+          timestamp: new Date().toISOString(),
+        };
+        newGlobalHours = [...state.globalStudyHours, entry];
+        if (state.ui.activePlanId) {
+          newPlans = state.plans.map((p) => {
+            if (p.id !== state.ui.activePlanId) return p;
+            return {
+              ...p,
+              studyHours: [...(p.studyHours || []), entry],
+              activities: [...(p.activities || []), { id: generateId(), type: 'study', message: `Logged ${elapsedMins}m Timer session`, timestamp: new Date().toISOString() }],
+              updatedAt: new Date().toISOString(),
+            };
+          });
+        }
+        newActivities = [
+          { id: generateId(), type: 'study', message: `Logged ${elapsedMins}m Timer session`, timestamp: new Date().toISOString() },
+          ...state.globalActivities,
+        ].slice(0, 200);
+        toasts = [...state.toasts, { id: generateId(), message: `Logged ${elapsedMins}m study session! 🎉`, toastType: 'success' }];
+      }
+
+      return {
+        ...state,
+        globalStudyHours: newGlobalHours,
+        plans: newPlans,
+        globalActivities: newActivities,
+        toasts,
+        mainTimer: {
+          ...state.mainTimer,
+          secondsLeft: defaultDuration,
+          running: false,
+          targetEndTime: null,
+          totalSeconds: defaultDuration,
+          sessionCount: elapsedMins > 0 ? (state.mainTimer.sessionCount || 0) + 1 : (state.mainTimer.sessionCount || 0),
+        },
+      };
+    }
+
+    case 'TICK_MAIN_TIMER': {
+      if (!state.mainTimer.running || !state.mainTimer.targetEndTime) return state;
+
+      const now = Date.now();
+      const remaining = Math.max(0, Math.ceil((state.mainTimer.targetEndTime - now) / 1000));
+
+      if (remaining <= 0) {
+        const defaultDuration = (state.settings.timerDuration || state.settings.pomodoroWork || 25) * 60;
+        const durationMins = Math.round((state.mainTimer.totalSeconds || defaultDuration) / 60);
+        const entry = {
+          id: generateId(),
+          date: new Date().toISOString().split('T')[0],
+          hours: 0,
+          minutes: durationMins,
+          notes: 'Timer session',
+          planId: state.ui.activePlanId,
+          timestamp: new Date().toISOString(),
+        };
+
+        const newGlobalHours = [...state.globalStudyHours, entry];
+        let newPlans = state.plans;
+        if (state.ui.activePlanId) {
+          newPlans = state.plans.map((p) => {
+            if (p.id !== state.ui.activePlanId) return p;
+            return {
+              ...p,
+              studyHours: [...(p.studyHours || []), entry],
+              activities: [...(p.activities || []), { id: generateId(), type: 'study', message: `Completed ${durationMins}m Timer session`, timestamp: new Date().toISOString() }],
+              updatedAt: new Date().toISOString(),
+            };
+          });
+        }
+
+        const newActivities = [
+          { id: generateId(), type: 'study', message: `Completed ${durationMins}m Timer session`, timestamp: new Date().toISOString() },
+          ...state.globalActivities,
+        ].slice(0, 200);
+
+        return {
+          ...state,
+          globalStudyHours: newGlobalHours,
+          plans: newPlans,
+          globalActivities: newActivities,
+          mainTimer: {
+            secondsLeft: defaultDuration,
+            running: true,
+            targetEndTime: Date.now() + defaultDuration * 1000,
+            totalSeconds: defaultDuration,
+            sessionCount: (state.mainTimer.sessionCount || 0) + 1,
+          },
+          toasts: [...state.toasts, { id: generateId(), message: 'Lap complete! Auto-starting next timer lap 🔄 🎉', toastType: 'success' }],
+        };
+      }
+
+      return {
+        ...state,
+        mainTimer: {
+          ...state.mainTimer,
+          secondsLeft: remaining,
+        },
+      };
+    }
 
     // ── UI ──
     case 'SET_UI':
@@ -824,13 +1047,23 @@ export function StudyProvider({ children }) {
     storage.setItem('settings', state.settings);
     storage.setItem('plans', state.plans);
     storage.setItem('ui', { ...state.ui, searchOpen: false });
+    if (state.mainTimer) storage.setItem('mainTimer', state.mainTimer);
     storage.setItem('globalStudyHours', state.globalStudyHours);
     storage.setItem('videoStudyHours', state.videoStudyHours || []);
     storage.setItem('globalActivities', state.globalActivities);
     storage.setItem('videoProgress', state.videoProgress);
     storage.setItem('studySessions', state.studySessions);
     storage.setItem('activeSessionId', state.activeSessionId);
-  }, [state.profile, state.settings, state.plans, state.ui, state.globalStudyHours, state.videoStudyHours, state.globalActivities, state.videoProgress, state.studySessions, state.activeSessionId]);
+  }, [state.profile, state.settings, state.plans, state.ui, state.mainTimer, state.globalStudyHours, state.videoStudyHours, state.globalActivities, state.videoProgress, state.studySessions, state.activeSessionId]);
+
+  // Main timer auto tick
+  useEffect(() => {
+    if (!state.mainTimer?.running) return;
+    const interval = setInterval(() => {
+      dispatch({ type: 'TICK_MAIN_TIMER' });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [state.mainTimer?.running]);
 
   // Toast auto-dismiss
   useEffect(() => {
