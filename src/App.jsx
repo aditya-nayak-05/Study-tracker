@@ -23,6 +23,7 @@ const Profile = lazy(() => import('./pages/Profile'));
 const Settings = lazy(() => import('./pages/Settings'));
 const LearningHub = lazy(() => import('./pages/LearningHub'));
 const Learning = lazy(() => import('./pages/Learning'));
+const NotesPage = lazy(() => import('./pages/NotesPage'));
 
 // Error Boundary
 class ErrorBoundary extends Component {
@@ -180,6 +181,7 @@ function AppContent() {
                   <Route path="/study-hours" element={<StudyHours />} />
                   <Route path="/learn" element={<LearningHub />} />
                   <Route path="/learn/:planId/:taskId" element={<Learning />} />
+                  <Route path="/notes" element={<NotesPage />} />
                   <Route path="/profile" element={<Profile />} />
                   <Route path="/settings" element={<Settings />} />
                 </Routes>
