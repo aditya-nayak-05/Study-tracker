@@ -10,7 +10,8 @@ import PomodoroTimer from '../components/PomodoroTimer';
 import { extractVideoId, formatDuration, calcVideoProgress } from '../utils/youtube';
 import {
   ArrowLeft, Play, Pause, CheckSquare, Clock, BookOpen,
-  MessageSquare, FileText, Settings, Video, CheckCircle2, RotateCcw, AlertTriangle
+  MessageSquare, FileText, Settings, Video, CheckCircle2, RotateCcw, AlertTriangle,
+  Gauge, Zap, FastForward, Minus, Plus
 } from 'lucide-react';
 
 const cardStyle = {
@@ -41,6 +42,8 @@ const secondaryButtonStyle = {
   boxShadow: 'var(--neu-shadow-raised)',
 };
 
+const SPEED_OPTIONS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
+
 export default function Learning() {
   const { planId, taskId } = useParams();
   const navigate = useNavigate();
@@ -57,8 +60,47 @@ export default function Learning() {
   const [showCinemaControls, setShowCinemaControls] = useState(true);
   const [videoPlaying, setVideoPlaying] = useState(false);
   const [placeholderRect, setPlaceholderRect] = useState(null);
+  const [playbackSpeed, setPlaybackSpeed] = useState(() => {
+    try {
+      const saved = localStorage.getItem('studyflow_playback_speed');
+      return saved ? parseFloat(saved) : 1;
+    } catch {
+      return 1;
+    }
+  });
   const notesTimeoutRef = useRef(null);
   const cinemaControlsTimeoutRef = useRef(null);
+
+  const handleSpeedChange = useCallback((newSpeed) => {
+    const rounded = Math.round(newSpeed * 100) / 100;
+    setPlaybackSpeed(rounded);
+    try {
+      localStorage.setItem('studyflow_playback_speed', rounded.toString());
+    } catch (e) {
+      console.warn('Failed to save playback speed:', e);
+    }
+    showToast(`Playback speed: ${rounded}x`, 'info');
+  }, [showToast]);
+
+  const handleStepSpeed = useCallback((delta) => {
+    const currentIndex = SPEED_OPTIONS.indexOf(playbackSpeed);
+    if (currentIndex !== -1) {
+      const nextIndex = Math.max(0, Math.min(SPEED_OPTIONS.length - 1, currentIndex + delta));
+      handleSpeedChange(SPEED_OPTIONS[nextIndex]);
+    } else {
+      let closestIndex = 0;
+      let minDiff = Infinity;
+      SPEED_OPTIONS.forEach((s, idx) => {
+        const diff = Math.abs(s - playbackSpeed);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestIndex = idx;
+        }
+      });
+      const nextIndex = Math.max(0, Math.min(SPEED_OPTIONS.length - 1, closestIndex + delta));
+      handleSpeedChange(SPEED_OPTIONS[nextIndex]);
+    }
+  }, [playbackSpeed, handleSpeedChange]);
 
   // Track the placeholder position for the portal-based video player
   useLayoutEffect(() => {
@@ -397,6 +439,14 @@ export default function Learning() {
                     <h2 className="text-base font-bold text-main leading-tight">{task.title}</h2>
                   </div>
                 </div>
+
+                {/* Top Bar Quick Speed Indicator */}
+                <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-sm">
+                    <Gauge className="w-3.5 h-3.5 text-accent-primary" />
+                    <span className="text-[11px] font-extrabold text-main">{playbackSpeed}x Speed</span>
+                  </div>
+                </div>
               </div>
 
               {/* Placeholder: reserves space in the layout for the portal-rendered video */}
@@ -460,6 +510,10 @@ export default function Learning() {
                     videoId={videoId}
                     startAt={startAt}
                     autoPlay={true}
+                    playbackRate={playbackSpeed}
+                    onPlaybackRateChange={(rate) => {
+                      if (rate && rate > 0) setPlaybackSpeed(rate);
+                    }}
                     onProgressUpdate={handleProgressUpdate}
                     onStateChange={(stateCode) => {
                       if (stateCode === 1) {
@@ -500,7 +554,7 @@ export default function Learning() {
               </div>
             </div>
 
-            {/* Right Column: Stack of Timer 1 (Session Timer) and Timer 2 (Pomodoro) */}
+            {/* Right Column: Stack of Timers & Playback Speed Controls */}
             <div 
               className="w-full lg:w-[320px] flex flex-col justify-center gap-4 transition-all duration-500 z-20 shrink-0"
               style={{
@@ -527,6 +581,64 @@ export default function Learning() {
                   <Clock className="w-4 h-4 text-accent-primary" /> Timer
                 </div>
                 <PomodoroTimer compact={true} />
+              </div>
+
+              {/* Playback Speed Controller Card */}
+              <div style={{ ...cardStyle, padding: '1.15rem 1rem' }} className="flex flex-col">
+                <div className="flex items-center justify-between mb-3 w-full">
+                  <div className="flex items-center gap-2 text-xs font-extrabold text-main">
+                    <Gauge className="w-4 h-4 text-accent-primary" />
+                    <span>Playback Speed</span>
+                  </div>
+                  <span className="text-[11px] font-black px-2 py-0.5 rounded-lg bg-[var(--neu-inset-bg)] border border-[var(--neu-border-subtle)] text-accent-primary shadow-inner">
+                    {playbackSpeed}x
+                  </span>
+                </div>
+
+                {/* Speed Controls Stepper + Quick Pills */}
+                <div className="flex items-center justify-between gap-1.5 w-full">
+                  <button
+                    onClick={() => handleStepSpeed(-1)}
+                    disabled={playbackSpeed <= SPEED_OPTIONS[0]}
+                    className="p-1.5 rounded-lg text-xs font-bold bg-[var(--neu-card-bg)] hover:bg-[var(--neu-hover-bg)] text-main disabled:opacity-30 cursor-pointer border border-[var(--neu-border-subtle)] transition-all shrink-0 active:scale-95"
+                    title="Slower (-0.25x)"
+                  >
+                    <Minus className="w-3.5 h-3.5" />
+                  </button>
+
+                  <div className="flex items-center gap-1 flex-1 justify-center overflow-x-auto py-0.5 scrollbar-none">
+                    {SPEED_OPTIONS.map((speed) => {
+                      const isActive = playbackSpeed === speed;
+                      return (
+                        <button
+                          key={speed}
+                          onClick={() => handleSpeedChange(speed)}
+                          className={`px-2 py-1 text-[10px] font-extrabold rounded-lg cursor-pointer transition-all ${
+                            isActive
+                              ? 'shadow-md scale-105'
+                              : 'opacity-70 hover:opacity-100 hover:bg-[var(--neu-hover-bg)]'
+                          }`}
+                          style={
+                            isActive
+                              ? { background: 'var(--accent-btn-bg)', color: 'var(--accent-btn-text)', border: '1px solid var(--accent-orange)' }
+                              : { background: 'var(--neu-inset-bg)', color: 'var(--neu-text-main)', border: '1px solid var(--neu-border-subtle)' }
+                          }
+                        >
+                          {speed}x
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <button
+                    onClick={() => handleStepSpeed(1)}
+                    disabled={playbackSpeed >= SPEED_OPTIONS[SPEED_OPTIONS.length - 1]}
+                    className="p-1.5 rounded-lg text-xs font-bold bg-[var(--neu-card-bg)] hover:bg-[var(--neu-hover-bg)] text-main disabled:opacity-30 cursor-pointer border border-[var(--neu-border-subtle)] transition-all shrink-0 active:scale-95"
+                    title="Faster (+0.25x)"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -568,8 +680,62 @@ export default function Learning() {
               </div>
             </div>
 
-            {/* Right Column: Progress & Sidebar Actions */}
+            {/* Right Column: Playback Speed, Progress & Sidebar Actions */}
             <div className="space-y-6">
+              {/* Lower Page Playback Speed Card */}
+              <div className="p-6" style={cardStyle}>
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="text-sm font-semibold text-main flex items-center gap-2">
+                    <Gauge className="w-4 h-4 text-accent-primary" /> Playback Speed
+                  </h3>
+                  <span className="text-xs font-black px-2 py-0.5 rounded-lg bg-[var(--neu-inset-bg)] border border-[var(--neu-border-subtle)] text-accent-primary shadow-inner">
+                    {playbackSpeed}x
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between gap-1">
+                  <button
+                    onClick={() => handleStepSpeed(-1)}
+                    disabled={playbackSpeed <= SPEED_OPTIONS[0]}
+                    className="p-1.5 rounded-lg text-xs font-bold bg-[var(--neu-card-bg)] hover:bg-[var(--neu-hover-bg)] text-main disabled:opacity-30 cursor-pointer border border-[var(--neu-border-subtle)] transition-all shrink-0"
+                  >
+                    <Minus className="w-3.5 h-3.5" />
+                  </button>
+
+                  <div className="flex items-center gap-1 flex-1 justify-center overflow-x-auto py-1 scrollbar-none">
+                    {SPEED_OPTIONS.map((speed) => {
+                      const isActive = playbackSpeed === speed;
+                      return (
+                        <button
+                          key={speed}
+                          onClick={() => handleSpeedChange(speed)}
+                          className={`px-2 py-1 text-[10px] font-extrabold rounded-lg cursor-pointer transition-all ${
+                            isActive
+                              ? 'shadow-md scale-105'
+                              : 'opacity-70 hover:opacity-100 hover:bg-[var(--neu-hover-bg)]'
+                          }`}
+                          style={
+                            isActive
+                              ? { background: 'var(--accent-btn-bg)', color: 'var(--accent-btn-text)', border: '1px solid var(--accent-orange)' }
+                              : { background: 'var(--neu-inset-bg)', color: 'var(--neu-text-main)', border: '1px solid var(--neu-border-subtle)' }
+                          }
+                        >
+                          {speed}x
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  <button
+                    onClick={() => handleStepSpeed(1)}
+                    disabled={playbackSpeed >= SPEED_OPTIONS[SPEED_OPTIONS.length - 1]}
+                    className="p-1.5 rounded-lg text-xs font-bold bg-[var(--neu-card-bg)] hover:bg-[var(--neu-hover-bg)] text-main disabled:opacity-30 cursor-pointer border border-[var(--neu-border-subtle)] transition-all shrink-0"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+
               {/* Video Progress Card */}
               <div className="p-6" style={cardStyle}>
                 <h3 className="text-sm font-semibold text-main mb-4">Video Progress</h3>

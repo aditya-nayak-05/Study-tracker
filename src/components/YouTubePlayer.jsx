@@ -57,6 +57,8 @@ function YouTubePlayer({
   onPlayerReady,
   onVideoEnd,
   onStateChange,
+  onPlaybackRateChange,
+  playbackRate = 1,
   startAt,
   autoPlay = false,
   className = '',
@@ -74,11 +76,24 @@ function YouTubePlayer({
   const onPlayerReadyRef = useRef(onPlayerReady);
   const onVideoEndRef = useRef(onVideoEnd);
   const onStateChangeRef = useRef(onStateChange);
+  const onPlaybackRateChangeRef = useRef(onPlaybackRateChange);
 
   useEffect(() => { onProgressUpdateRef.current = onProgressUpdate; }, [onProgressUpdate]);
   useEffect(() => { onPlayerReadyRef.current = onPlayerReady; }, [onPlayerReady]);
   useEffect(() => { onVideoEndRef.current = onVideoEnd; }, [onVideoEnd]);
   useEffect(() => { onStateChangeRef.current = onStateChange; }, [onStateChange]);
+  useEffect(() => { onPlaybackRateChangeRef.current = onPlaybackRateChange; }, [onPlaybackRateChange]);
+
+  // Sync playback rate when prop changes
+  useEffect(() => {
+    if (playerRef.current && typeof playerRef.current.setPlaybackRate === 'function') {
+      try {
+        playerRef.current.setPlaybackRate(playbackRate);
+      } catch (e) {
+        console.warn('Could not set playback rate:', e);
+      }
+    }
+  }, [playbackRate]);
 
   // --- Progress helper ---
   const reportProgress = useCallback(() => {
@@ -135,6 +150,13 @@ function YouTubePlayer({
               if (startAt != null) {
                 event.target.seekTo(startAt, true);
               }
+              if (playbackRate && playbackRate !== 1 && typeof event.target.setPlaybackRate === 'function') {
+                try {
+                  event.target.setPlaybackRate(playbackRate);
+                } catch (e) {
+                  console.warn('Initial playback rate set failed:', e);
+                }
+              }
               if (autoPlay) {
                 try {
                   event.target.playVideo();
@@ -145,6 +167,12 @@ function YouTubePlayer({
 
               if (typeof onPlayerReadyRef.current === 'function') {
                 onPlayerReadyRef.current(event);
+              }
+            },
+            onPlaybackRateChange: (event) => {
+              if (destroyed) return;
+              if (typeof onPlaybackRateChangeRef.current === 'function') {
+                onPlaybackRateChangeRef.current(event.data);
               }
             },
             onStateChange: (event) => {
