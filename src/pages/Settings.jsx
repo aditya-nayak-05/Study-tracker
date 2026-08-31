@@ -126,7 +126,7 @@ export default function Settings() {
                         style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid var(--neu-border)', color: 'var(--neu-text-main)' }}
                       />
                       <div className="flex flex-wrap gap-1.5">
-                        {[2, 4, 6, 8, 10].map((hrs) => {
+                        {[2, 3, 4, 6, 8, 10].map((hrs) => {
                           const currentGoal = settings.dailyStudyHours ?? settings.dailyGoal ?? state.profile?.dailyGoal ?? 6;
                           const isSelected = currentGoal === hrs;
                           return (
