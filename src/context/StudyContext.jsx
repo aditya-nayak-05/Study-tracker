@@ -18,6 +18,8 @@ const DEFAULT_PROFILE = {
 const DEFAULT_SETTINGS = {
   animationsEnabled: true,
   timerDuration: 25,
+  dailyGoal: 6,
+  dailyStudyHours: 6,
   pomodoroWork: 25,
   pomodoroBreak: 5,
   pomodoroLongBreak: 15,
@@ -75,7 +77,8 @@ function createDefaultState() {
   const loadedUi = storage.getItem('ui', DEFAULT_UI);
   const ui = !loadedUi.activePlanId ? { ...loadedUi, activePlanId: 'ds-roadmap-plan-id' } : loadedUi;
 
-  const loadedSettings = storage.getItem('settings', DEFAULT_SETTINGS);
+  const rawSettings = storage.getItem('settings', DEFAULT_SETTINGS);
+  const loadedSettings = { ...DEFAULT_SETTINGS, ...rawSettings };
   const defaultDuration = (loadedSettings.timerDuration || loadedSettings.pomodoroWork || 25) * 60;
   const loadedTimer = storage.getItem('mainTimer', null);
 
@@ -139,8 +142,14 @@ function reducer(state, action) {
     case 'SET_PROFILE':
       return { ...state, profile: { ...action.payload, createdAt: action.payload.createdAt || new Date().toISOString() } };
 
-    case 'UPDATE_PROFILE':
-      return { ...state, profile: { ...state.profile, ...action.payload } };
+    case 'UPDATE_PROFILE': {
+      const newProfile = { ...state.profile, ...action.payload };
+      let newSettings = state.settings;
+      if (action.payload.dailyGoal !== undefined) {
+        newSettings = { ...state.settings, dailyGoal: action.payload.dailyGoal, dailyStudyHours: action.payload.dailyGoal };
+      }
+      return { ...state, profile: newProfile, settings: newSettings };
+    }
 
     // ── Settings ──
     case 'UPDATE_SETTINGS': {
@@ -152,7 +161,12 @@ function reducer(state, action) {
           newTimer = { ...state.mainTimer, secondsLeft: newDur, totalSeconds: newDur };
         }
       }
-      return { ...state, settings: newSettings, mainTimer: newTimer };
+      let newProfile = state.profile;
+      const targetDailyHours = action.payload.dailyStudyHours ?? action.payload.dailyGoal;
+      if (targetDailyHours !== undefined && newProfile) {
+        newProfile = { ...newProfile, dailyGoal: targetDailyHours };
+      }
+      return { ...state, settings: newSettings, profile: newProfile, mainTimer: newTimer };
     }
 
     // ── Main Timer ──

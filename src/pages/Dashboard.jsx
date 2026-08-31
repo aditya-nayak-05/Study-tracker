@@ -67,9 +67,10 @@ export default function Dashboard() {
         if (has) { streak++; d.setDate(d.getDate() - 1); } else break;
       }
 
+      const dailyGoal = state.settings?.dailyStudyHours || state.settings?.dailyGoal || state.profile?.dailyGoal || 6;
       return {
         todayHours: Math.round(todayHours * 10) / 10,
-        dailyGoal: state.profile?.dailyGoal || 6,
+        dailyGoal,
         totalTasks: allTasks.length,
         completedTasks,
         todayTasks,
@@ -82,12 +83,12 @@ export default function Dashboard() {
     } catch (err) {
       console.error('Dashboard stats error:', err);
       return {
-        todayHours: 0, dailyGoal: 6, totalTasks: 0, completedTasks: 0,
+        todayHours: 0, dailyGoal: state.settings?.dailyStudyHours || state.settings?.dailyGoal || state.profile?.dailyGoal || 6, totalTasks: 0, completedTasks: 0,
         todayTasks: [], todayCompleted: 0, overallProgress: 0,
         weekData: [], streak: 0, weeklyLine: [],
       };
     }
-  }, [state.globalStudyHours, activePlan, state.profile]);
+  }, [state.globalStudyHours, activePlan, state.profile, state.settings]);
 
   // Compute YouTube session and recent tutorials
   const learningStats = useMemo(() => {

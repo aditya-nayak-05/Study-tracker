@@ -9,7 +9,7 @@ import { themes as settingsThemes } from '../data/themes';
 import InstallPWAButton from '../components/InstallPWAButton';
 import {
   Settings as SettingsIcon, Trash2, Download, Upload, Zap, Clock,
-  AlertTriangle, FileDown, FileUp, Database, HardDrive, Type, Check, Laptop, Palette,
+  AlertTriangle, FileDown, FileUp, Database, HardDrive, Type, Check, Laptop, Palette, Target,
 } from 'lucide-react';
 
 export default function Settings() {
@@ -98,24 +98,76 @@ export default function Settings() {
         {/* Left Column: 2x2 Grid Layout for Core Settings */}
         <div className="flex-1 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Top-Left: Timer Settings */}
+            {/* Top-Left: Study Goals & Timer Settings */}
             <div className="notebook-settings-card p-6 flex flex-col justify-between">
               <div>
                 <div className="notebook-header-line">
                   <h3 className="text-sm font-bold text-main flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-accent-primary" /> Timer Settings
+                    <Target className="w-4 h-4 text-accent-primary" /> Study Goals & Timer
                   </h3>
                 </div>
-                <div className="max-w-xs">
+                <div className="space-y-4">
+                  {/* Daily Study Hours Goal */}
+                  <div>
+                    <label className="text-xs text-muted block mb-1.5 font-medium">Daily Study Hours Goal (hrs/day)</label>
+                    <div className="flex items-center gap-3">
+                      <input
+                        type="number"
+                        min={1}
+                        max={24}
+                        value={settings.dailyStudyHours ?? settings.dailyGoal ?? state.profile?.dailyGoal ?? 6}
+                        onChange={(e) => {
+                          const val = Math.max(1, Math.min(24, parseInt(e.target.value) || 1));
+                          updateSetting('dailyStudyHours', val);
+                          updateSetting('dailyGoal', val);
+                          showToast(`Daily study goal set to ${val} hours 🎯`, 'success');
+                        }}
+                        className="w-20 px-3 py-2 rounded-xl text-main text-sm font-semibold focus:outline-none"
+                        style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid rgba(255,255,255,0.6)' }}
+                      />
+                      <div className="flex flex-wrap gap-1.5">
+                        {[2, 4, 6, 8, 10].map((hrs) => {
+                          const currentGoal = settings.dailyStudyHours ?? settings.dailyGoal ?? state.profile?.dailyGoal ?? 6;
+                          const isSelected = currentGoal === hrs;
+                          return (
+                            <button
+                              key={hrs}
+                              type="button"
+                              onClick={() => {
+                                updateSetting('dailyStudyHours', hrs);
+                                updateSetting('dailyGoal', hrs);
+                                showToast(`Daily study goal set to ${hrs} hours 🎯`, 'success');
+                              }}
+                              className={`px-2.5 py-1 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
+                                isSelected ? 'bg-accent-primary text-white shadow-sm' : 'text-muted hover:text-main'
+                              }`}
+                              style={!isSelected ? { background: 'var(--neu-card-bg)', boxShadow: '2px 2px 4px rgba(163, 177, 198, 0.4), -2px -2px 4px rgba(255, 255, 255, 0.8)', border: '1px solid var(--neu-border)' } : {}}
+                            >
+                              {hrs}h
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <p className="text-[11px] text-muted mt-1.5">Set your daily target study hours for Dashboard & Analytics progress</p>
+                  </div>
+
+                  {/* Timer Duration */}
                   <div>
                     <label className="text-xs text-muted block mb-1.5 font-medium">Timer Duration (min)</label>
-                    <input type="number" min={1} max={180} value={settings.timerDuration || settings.pomodoroWork || 25}
+                    <input
+                      type="number"
+                      min={1}
+                      max={180}
+                      value={settings.timerDuration || settings.pomodoroWork || 25}
                       onChange={(e) => {
                         const val = parseInt(e.target.value) || 25;
                         updateSetting('timerDuration', val);
                         updateSetting('pomodoroWork', val);
                       }}
-                      className="w-full px-3 py-2 rounded-xl text-main text-sm focus:outline-none" style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid rgba(255,255,255,0.6)' }} />
+                      className="w-full max-w-[200px] px-3 py-2 rounded-xl text-main text-sm focus:outline-none"
+                      style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid rgba(255,255,255,0.6)' }}
+                    />
                   </div>
                 </div>
               </div>

@@ -84,7 +84,7 @@ export default function Analytics() {
     });
 
     // Daily goal
-    const dailyGoal = state.profile?.dailyGoal || 6;
+    const dailyGoal = state.settings?.dailyStudyHours || state.settings?.dailyGoal || state.profile?.dailyGoal || 6;
     const dailyGoalProgress = Math.min(100, Math.round((todayHours / dailyGoal) * 100));
 
     // Line data for last 14 days
@@ -111,7 +111,7 @@ export default function Analytics() {
       weeklyData,
       lineData,
     };
-  }, [state.globalStudyHours, state.profile]);
+  }, [state.globalStudyHours, state.profile, state.settings]);
 
   const statCards = [
     { label: "Today's Hours", value: stats.todayHours, suffix: 'h', icon: Clock, color: 'var(--accent-orange)' },
