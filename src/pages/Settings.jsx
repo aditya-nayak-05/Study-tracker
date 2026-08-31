@@ -22,7 +22,7 @@ export default function Settings() {
 
   useEffect(() => {
     if (containerRef.current) {
-      const cards = containerRef.current.querySelectorAll('.settings-card');
+      const cards = containerRef.current.querySelectorAll('.notebook-settings-card, .settings-card');
       gsap.fromTo(cards, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, stagger: 0.05, ease: 'power2.out' });
     }
   }, []);
@@ -99,7 +99,7 @@ export default function Settings() {
         <div className="flex-1 space-y-6">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Top-Left: Study Goals & Timer Settings */}
-            <div className="notebook-settings-card p-6 flex flex-col justify-between">
+            <div className="notebook-settings-card p-6 flex flex-col justify-between min-h-[220px]">
               <div>
                 <div className="notebook-header-line">
                   <h3 className="text-sm font-bold text-main flex items-center gap-2">
@@ -123,7 +123,7 @@ export default function Settings() {
                           showToast(`Daily study goal set to ${val} hours 🎯`, 'success');
                         }}
                         className="w-20 px-3 py-2 rounded-xl text-main text-sm font-semibold focus:outline-none"
-                        style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid rgba(255,255,255,0.6)' }}
+                        style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid var(--neu-border)', color: 'var(--neu-text-main)' }}
                       />
                       <div className="flex flex-wrap gap-1.5">
                         {[2, 4, 6, 8, 10].map((hrs) => {
@@ -166,7 +166,7 @@ export default function Settings() {
                         updateSetting('pomodoroWork', val);
                       }}
                       className="w-full max-w-[200px] px-3 py-2 rounded-xl text-main text-sm focus:outline-none"
-                      style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid rgba(255,255,255,0.6)' }}
+                      style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)', border: '1px solid var(--neu-border)', color: 'var(--neu-text-main)' }}
                     />
                   </div>
                 </div>
