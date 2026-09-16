@@ -1,11 +1,30 @@
-import React, { useState, useRef, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import gsap from 'gsap';
-import { ChevronRight, ChevronDown, Folder, FolderOpen, FileText, CheckCircle2, Circle, Clock, Youtube, Play } from 'lucide-react';
+import { ChevronRight, ChevronDown, Folder, FolderOpen, FileText, CheckCircle2, Circle, Clock, Play } from 'lucide-react';
 import { calculateProgress } from '../utils/helpers';
 import { extractVideoId } from '../utils/youtube';
 import { useNavigate } from 'react-router-dom';
+import { useStudy } from '../context/StudyContext';
 
-function TreeNode({ label, level = 0, children, progress, status, isToday, defaultOpen = false, onClick }) {
+/* ── Reusable bulk‐toggle button ── */
+function BulkToggleBtn({ allCompleted, total, onToggle }) {
+  if (total === 0) return null;
+  return (
+    <button
+      onClick={(e) => { e.stopPropagation(); onToggle(); }}
+      title={allCompleted ? 'Mark all as not started' : 'Mark all as completed'}
+      className="shrink-0 cursor-pointer transition-transform hover:scale-110 active:scale-95"
+    >
+      {allCompleted ? (
+        <CheckCircle2 className="w-4 h-4 text-[#38a169] drop-shadow-sm" />
+      ) : (
+        <Circle className="w-4 h-4 text-muted hover:text-[#38a169] transition-colors" />
+      )}
+    </button>
+  );
+}
+
+function TreeNode({ label, level = 0, children, progress, status, isToday, defaultOpen = false, onClick, toggleBtn }) {
   const [open, setOpen] = useState(defaultOpen);
   const childRef = useRef(null);
   const hasChildren = children && children.length > 0;
@@ -42,20 +61,25 @@ function TreeNode({ label, level = 0, children, progress, status, isToday, defau
 
   return (
     <div>
-      <button
-        onClick={toggle}
-        className={`w-full flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-[var(--neu-hover-bg)] transition-all text-left group cursor-pointer ${isToday ? 'bg-[var(--accent-orange)]/15 border border-[var(--accent-orange)]/30 shadow-sm' : ''}`}
+      <div
+        className={`w-full flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-[var(--neu-hover-bg)] transition-all text-left group ${isToday ? 'bg-[var(--accent-orange)]/15 border border-[var(--accent-orange)]/30 shadow-sm' : ''}`}
         style={{ paddingLeft: level * 20 + 8 }}
       >
-        {hasChildren ? (
-          open ? <ChevronDown className="w-3.5 h-3.5 text-muted shrink-0" /> : <ChevronRight className="w-3.5 h-3.5 text-muted shrink-0" />
-        ) : (
-          <span className="w-3.5 shrink-0" />
-        )}
-        {folderIcon}
-        <span className={`text-sm flex-1 truncate transition-colors ${status === 'completed' ? 'text-muted line-through opacity-75' : 'text-main'}`}>
-          {label}
-        </span>
+        {/* Toggle button (for month/week/day rows) */}
+        {toggleBtn && <span className="shrink-0">{toggleBtn}</span>}
+
+        <button onClick={toggle} className="flex items-center gap-2 flex-1 min-w-0 cursor-pointer text-left">
+          {hasChildren ? (
+            open ? <ChevronDown className="w-3.5 h-3.5 text-muted shrink-0" /> : <ChevronRight className="w-3.5 h-3.5 text-muted shrink-0" />
+          ) : (
+            <span className="w-3.5 shrink-0" />
+          )}
+          {folderIcon}
+          <span className={`text-sm flex-1 truncate transition-colors ${status === 'completed' ? 'text-muted line-through opacity-75' : 'text-main'}`}>
+            {label}
+          </span>
+        </button>
+
         {progress !== undefined && progress !== null && (
           <div className="flex items-center gap-2 shrink-0">
             <div className="w-16 h-1.5 bg-[var(--neu-border-subtle)] rounded-full overflow-hidden shadow-inner">
@@ -68,7 +92,7 @@ function TreeNode({ label, level = 0, children, progress, status, isToday, defau
           </div>
         )}
         {!hasChildren && statusIcon}
-      </button>
+      </div>
       {hasChildren && open && (
         <div ref={childRef} className="overflow-hidden">
           {children}
@@ -81,6 +105,7 @@ function TreeNode({ label, level = 0, children, progress, status, isToday, defau
 const TreeView = React.memo(function TreeView({ plan, onTaskClick }) {
   const containerRef = useRef(null);
   const navigate = useNavigate();
+  const { dispatch } = useStudy();
 
   useEffect(() => {
     if (containerRef.current) {
@@ -90,6 +115,40 @@ const TreeView = React.memo(function TreeView({ plan, onTaskClick }) {
   }, [plan?.id]);
 
   if (!plan || !plan.months) return null;
+
+  /* ── Helpers ── */
+  const collectTasks = (container, scope) => {
+    let tasks = [];
+    if (scope === 'month') {
+      (container.weeks || []).forEach((w) => (w.days || []).forEach((d) => { tasks = tasks.concat(d.tasks || []); }));
+    } else if (scope === 'week') {
+      (container.days || []).forEach((d) => { tasks = tasks.concat(d.tasks || []); });
+    } else {
+      tasks = container.tasks || [];
+    }
+    return tasks;
+  };
+
+  const isAllCompleted = (container, scope) => {
+    const tasks = collectTasks(container, scope);
+    return tasks.length > 0 && tasks.every((t) => t.status === 'completed');
+  };
+
+  const taskCount = (container, scope) => collectTasks(container, scope).length;
+
+  const toggleScope = (scope, scopeId) => {
+    const container = scope === 'month'
+      ? plan.months.find((m) => m.id === scopeId)
+      : scope === 'week'
+        ? plan.months.flatMap((m) => m.weeks || []).find((w) => w.id === scopeId)
+        : plan.months.flatMap((m) => (m.weeks || []).flatMap((w) => w.days || [])).find((d) => d.id === scopeId);
+    if (!container) return;
+    const allDone = isAllCompleted(container, scope);
+    dispatch({
+      type: 'BULK_SET_TASKS_STATUS',
+      payload: { planId: plan.id, scope, scopeId, status: allDone ? 'not-started' : 'completed' },
+    });
+  };
 
   const getMonthProgress = (month) => {
     let total = 0, completed = 0;
@@ -121,11 +180,50 @@ const TreeView = React.memo(function TreeView({ plan, onTaskClick }) {
   return (
     <div ref={containerRef} className="space-y-0.5">
       {plan.months.map((month) => (
-        <TreeNode key={month.id} label={month.name} level={0} progress={getMonthProgress(month)} defaultOpen>
+        <TreeNode
+          key={month.id}
+          label={month.name}
+          level={0}
+          progress={getMonthProgress(month)}
+          defaultOpen
+          toggleBtn={
+            <BulkToggleBtn
+              allCompleted={isAllCompleted(month, 'month')}
+              total={taskCount(month, 'month')}
+              onToggle={() => toggleScope('month', month.id)}
+            />
+          }
+        >
           {month.weeks?.map((week) => (
-            <TreeNode key={week.id} label={week.name} level={1} progress={getWeekProgress(week)}>
+            <TreeNode
+              key={week.id}
+              label={week.name}
+              level={1}
+              progress={getWeekProgress(week)}
+              toggleBtn={
+                <BulkToggleBtn
+                  allCompleted={isAllCompleted(week, 'week')}
+                  total={taskCount(week, 'week')}
+                  onToggle={() => toggleScope('week', week.id)}
+                />
+              }
+            >
               {week.days?.map((day) => (
-                <TreeNode key={day.id} label={`${day.name}${day.date ? ' — ' + day.date : ''}`} level={2} progress={getDayProgress(day)} status={getDayStatus(day)} isToday={day.date === todayStr}>
+                <TreeNode
+                  key={day.id}
+                  label={`${day.name}${day.date ? ' — ' + day.date : ''}`}
+                  level={2}
+                  progress={getDayProgress(day)}
+                  status={getDayStatus(day)}
+                  isToday={day.date === todayStr}
+                  toggleBtn={
+                    <BulkToggleBtn
+                      allCompleted={isAllCompleted(day, 'day')}
+                      total={taskCount(day, 'day')}
+                      onToggle={() => toggleScope('day', day.id)}
+                    />
+                  }
+                >
                   {/* Rich Structured Day Header Cards */}
                   {(day.objective || day.dsa || day.projectTask || day.revision) && (
                     <div className="ml-10 my-2 p-3.5 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-sm space-y-2 text-left">

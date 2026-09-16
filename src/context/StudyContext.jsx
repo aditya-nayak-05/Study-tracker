@@ -679,6 +679,60 @@ function reducer(state, action) {
       return { ...state, plans };
     }
 
+    case 'BULK_SET_TASKS_STATUS': {
+      // payload: { planId, scope: 'month'|'week'|'day', scopeId, status: 'completed'|'not-started' }
+      const { planId, scope, scopeId, status: bulkStatus } = action.payload;
+      let count = 0;
+      const setAllTasks = (tasks) =>
+        (tasks || []).map((t) => {
+          if (t.status !== bulkStatus) count++;
+          return { ...t, status: bulkStatus };
+        });
+
+      const plans = state.plans.map((p) => {
+        if (p.id !== planId) return p;
+        const newMonths = (p.months || []).map((m) => {
+          if (scope === 'month' && m.id === scopeId) {
+            return {
+              ...m,
+              weeks: (m.weeks || []).map((w) => ({
+                ...w,
+                days: (w.days || []).map((d) => ({ ...d, tasks: setAllTasks(d.tasks) })),
+              })),
+            };
+          }
+          return {
+            ...m,
+            weeks: (m.weeks || []).map((w) => {
+              if (scope === 'week' && w.id === scopeId) {
+                return {
+                  ...w,
+                  days: (w.days || []).map((d) => ({ ...d, tasks: setAllTasks(d.tasks) })),
+                };
+              }
+              return {
+                ...w,
+                days: (w.days || []).map((d) => {
+                  if (scope === 'day' && d.id === scopeId) {
+                    return { ...d, tasks: setAllTasks(d.tasks) };
+                  }
+                  return d;
+                }),
+              };
+            }),
+          };
+        });
+        const label = scope.charAt(0).toUpperCase() + scope.slice(1);
+        return {
+          ...p,
+          months: newMonths,
+          activities: [...(p.activities || []), { id: generateId(), type: 'bulk', message: `${label} marked ${bulkStatus} (${count} tasks)`, timestamp: new Date().toISOString() }],
+          updatedAt: new Date().toISOString(),
+        };
+      });
+      return { ...state, plans };
+    }
+
     case 'DELETE_TASK': {
       const plans = state.plans.map((p) => {
         if (p.id !== action.payload.planId) return p;
