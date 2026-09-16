@@ -11,9 +11,9 @@ import { exportToPDF, exportToCSV, exportToExcel, importFromCSV, importFromExcel
 import { calculateProgress, getAllTasksInPlan, formatDate } from '../utils/helpers';
 import {
   Plus, ChevronLeft, Trash2, Edit3, Save, X, Check,
-  FileUp, FileDown, FolderPlus, GripVertical, Youtube, Play,
+  FileUp, FileDown, FolderPlus, GripVertical, Youtube, Play, Link2, Video
 } from 'lucide-react';
-import { extractVideoId, isValidYoutubeUrl, calcVideoProgress } from '../utils/youtube';
+import { extractVideoId, isValidYoutubeUrl, calcVideoProgress, getThumbnailUrl } from '../utils/youtube';
 
 const cardStyle = {
   background: 'var(--neu-card-bg)',
@@ -44,6 +44,11 @@ export default function PlanDetail() {
   const [planName, setPlanName] = useState(plan?.name || '');
   const [showAddMonth, setShowAddMonth] = useState(false);
   const [addMonthName, setAddMonthName] = useState('');
+  const [showAddMonthModal, setShowAddMonthModal] = useState(false);
+  const [showAddVideoModal, setShowAddVideoModal] = useState(false);
+  const [videoUrl, setVideoUrl] = useState('');
+  const [videoTitle, setVideoTitle] = useState('');
+  const [videoDayId, setVideoDayId] = useState('');
   const [expandedMonth, setExpandedMonth] = useState(null);
   const [expandedWeek, setExpandedWeek] = useState(null);
   const [expandedDay, setExpandedDay] = useState(null);
@@ -56,6 +61,23 @@ export default function PlanDetail() {
   const [editingTaskId, setEditingTaskId] = useState(null);
   const [editingTaskName, setEditingTaskName] = useState('');
   const [editingTaskUrl, setEditingTaskUrl] = useState('');
+
+  const allDays = useMemo(() => {
+    if (!plan) return [];
+    const list = [];
+    (plan.months || []).forEach((m) => {
+      (m.weeks || []).forEach((w) => {
+        (w.days || []).forEach((d) => {
+          list.push({ id: d.id, name: `${m.name} › ${w.name} › ${d.name}` });
+        });
+      });
+    });
+    return list;
+  }, [plan]);
+
+  const previewVideoId = useMemo(() => {
+    return videoUrl.trim() ? extractVideoId(videoUrl.trim()) : null;
+  }, [videoUrl]);
 
   useEffect(() => {
     if (plan) dispatch({ type: 'SET_UI', payload: { activePlanId: plan.id } });
@@ -89,12 +111,49 @@ export default function PlanDetail() {
     setEditingName(false);
   };
 
-  const handleAddMonth = (e) => {
-    e.preventDefault();
-    dispatch({ type: 'ADD_MONTH', payload: { planId: plan.id, name: addMonthName.trim() || undefined } });
-    showToast('Month added', 'success');
+  const handleAddMonthSubmit = (e) => {
+    e?.preventDefault();
+    const name = addMonthName.trim();
+    dispatch({ type: 'ADD_MONTH', payload: { planId: plan.id, name: name || undefined } });
+    showToast(name ? `Added ${name}` : 'Month added', 'success');
     setAddMonthName('');
+    setShowAddMonthModal(false);
     setShowAddMonth(false);
+  };
+
+  const handleAddVideoSubmit = (e) => {
+    e.preventDefault();
+    if (!videoUrl.trim()) {
+      showToast('Please enter a YouTube video URL', 'error');
+      return;
+    }
+    const videoId = extractVideoId(videoUrl.trim());
+    if (!videoId) {
+      showToast('Invalid YouTube video link or ID', 'error');
+      return;
+    }
+    const targetDayId = videoDayId || (allDays.length > 0 ? allDays[0].id : null);
+    const finalTitle = videoTitle.trim() || `YouTube Tutorial (${videoId})`;
+
+    dispatch({
+      type: 'ADD_TASK',
+      payload: {
+        planId: plan.id,
+        dayId: targetDayId,
+        title: finalTitle,
+        youtubeUrl: videoUrl.trim(),
+        priority: 'high',
+      },
+    });
+
+    showToast('YouTube Video Tutorial added successfully!', 'success');
+    setShowAddVideoModal(false);
+    setVideoUrl('');
+    setVideoTitle('');
+  };
+
+  const handleAddMonth = (e) => {
+    handleAddMonthSubmit(e);
   };
 
   const handleAddWeek = (e, monthId) => {
@@ -212,6 +271,24 @@ export default function PlanDetail() {
             )}
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setShowAddMonthModal(true)}
+              className="brass-btn px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 cursor-pointer shadow-sm"
+              title="Add a new Month to this roadmap"
+            >
+              <FolderPlus className="w-3.5 h-3.5" /> Add Month
+            </button>
+            <button
+              onClick={() => {
+                setShowAddVideoModal(true);
+                if (!videoDayId && allDays.length > 0) setVideoDayId(allDays[0].id);
+              }}
+              className="px-3 py-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 cursor-pointer text-white shadow-sm hover:opacity-90 transition-all"
+              style={{ background: 'linear-gradient(135deg, #e53e3e 0%, #c53030 100%)' }}
+              title="Attach a YouTube Video Tutorial to this roadmap"
+            >
+              <Youtube className="w-3.5 h-3.5" /> Add Video
+            </button>
             <input type="file" ref={fileInputRef} accept=".csv,.xlsx,.xls" onChange={handleImport} className="hidden" />
             <button onClick={() => fileInputRef.current?.click()} className="p-2 rounded-xl hover:bg-[var(--neu-hover-bg)] cursor-pointer transition-all" style={{ color: 'var(--neu-text-muted)' }} title="Import"><FileUp className="w-4 h-4" /></button>
             <button onClick={() => exportToPDF(plan)} className="p-2 rounded-xl hover:bg-[var(--neu-hover-bg)] cursor-pointer transition-all" style={{ color: 'var(--neu-text-muted)' }} title="PDF"><FileDown className="w-4 h-4" /></button>
@@ -417,11 +494,15 @@ export default function PlanDetail() {
               </div>
             ) : view === 'tree' ? (
               <div className="p-6" style={cardStyle}>
-                <TreeView plan={plan} onTaskClick={(task) => {
-                  dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: plan.id, taskId: task.id } });
-                }} />
+                <TreeView
+                  plan={plan}
+                  onTaskClick={(task) => {
+                    dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: plan.id, taskId: task.id } });
+                  }}
+                  onAddMonth={() => setShowAddMonthModal(true)}
+                />
                 {(!plan.months || plan.months.length === 0) && (
-                  <EmptyState title="No Months" description="Add your first month to start building your roadmap" actionLabel="Add Month" onAction={() => setShowAddMonth(true)} icon={FolderPlus} />
+                  <EmptyState title="No Months" description="Add your first month to start building your roadmap" actionLabel="Add Month" onAction={() => setShowAddMonthModal(true)} icon={FolderPlus} />
                 )}
               </div>
             ) : (
@@ -649,6 +730,128 @@ export default function PlanDetail() {
             </div>
           </div>
         </div>
+
+        {/* Global Add Month Modal */}
+        {showAddMonthModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onClick={() => setShowAddMonthModal(false)}>
+            <div className="w-full max-w-md p-6 rounded-2xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-2xl space-y-4" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-[var(--accent-orange)]/15 text-[var(--accent-orange)] flex items-center justify-center">
+                    <FolderPlus className="w-4 h-4" />
+                  </div>
+                  <h3 className="text-base font-bold text-main">Add New Month</h3>
+                </div>
+                <button onClick={() => setShowAddMonthModal(false)} className="p-1 rounded-lg text-muted hover:text-main cursor-pointer"><X className="w-4 h-4" /></button>
+              </div>
+
+              <form onSubmit={handleAddMonthSubmit} className="space-y-4">
+                <div>
+                  <label className="text-xs font-semibold text-muted block mb-1">Month Name / Topic</label>
+                  <input
+                    type="text"
+                    value={addMonthName}
+                    onChange={(e) => setAddMonthName(e.target.value)}
+                    placeholder={`e.g. Month ${(plan.months || []).length + 1} — Advanced Systems`}
+                    className="w-full px-3 py-2 text-xs rounded-xl focus:outline-none inset-field"
+                    autoFocus
+                  />
+                </div>
+                <div className="flex gap-2 justify-end pt-2">
+                  <button type="button" onClick={() => setShowAddMonthModal(false)} className="leather-btn px-4 py-2 text-xs cursor-pointer">Cancel</button>
+                  <button type="submit" className="brass-btn px-4 py-2 text-xs cursor-pointer">Create Month</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* Global Add YouTube Video Modal */}
+        {showAddVideoModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in" onClick={() => setShowAddVideoModal(false)}>
+            <div className="w-full max-w-lg p-6 rounded-2xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-2xl space-y-4" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-red-500/15 text-red-500 flex items-center justify-center">
+                    <Youtube className="w-4 h-4" />
+                  </div>
+                  <div>
+                    <h3 className="text-base font-bold text-main">Add YouTube Video Tutorial</h3>
+                    <p className="text-[11px] text-muted">Attach video to any module in {plan.name}</p>
+                  </div>
+                </div>
+                <button onClick={() => setShowAddVideoModal(false)} className="p-1 rounded-lg text-muted hover:text-main cursor-pointer"><X className="w-4 h-4" /></button>
+              </div>
+
+              <form onSubmit={handleAddVideoSubmit} className="space-y-4">
+                <div>
+                  <label className="text-xs font-semibold text-muted block mb-1">YouTube Video Link or ID *</label>
+                  <div className="relative">
+                    <Link2 className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-accent-primary pointer-events-none" />
+                    <input
+                      type="text"
+                      placeholder="https://www.youtube.com/watch?v=... or youtu.be/..."
+                      value={videoUrl}
+                      onChange={(e) => setVideoUrl(e.target.value)}
+                      className="w-full pl-9 pr-3 py-2 text-xs rounded-xl focus:outline-none inset-field"
+                      autoFocus
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Live Video Preview */}
+                {previewVideoId && (
+                  <div className="p-3 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-inset-bg)] flex items-center gap-3 animate-fade-in">
+                    <img
+                      src={getThumbnailUrl(previewVideoId)}
+                      alt="Thumbnail Preview"
+                      className="w-24 aspect-video rounded-lg object-cover shadow"
+                      onError={(e) => { e.target.onerror = null; e.target.src = 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=500&auto=format&fit=crop&q=60'; }}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <span className="text-[10px] font-bold text-accent-primary uppercase tracking-wider block">Valid Video Detected</span>
+                      <p className="text-xs font-semibold text-main truncate">ID: {previewVideoId}</p>
+                    </div>
+                  </div>
+                )}
+
+                <div>
+                  <label className="text-xs font-semibold text-muted block mb-1">Tutorial / Task Title</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Master JavaScript Scope & Closures"
+                    value={videoTitle}
+                    onChange={(e) => setVideoTitle(e.target.value)}
+                    className="w-full px-3 py-2 text-xs rounded-xl focus:outline-none inset-field"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold text-muted block mb-1">Target Module / Day</label>
+                  {allDays.length > 0 ? (
+                    <select
+                      value={videoDayId}
+                      onChange={(e) => setVideoDayId(e.target.value)}
+                      className="w-full px-3 py-2 text-xs rounded-xl focus:outline-none inset-field"
+                    >
+                      {allDays.map((d) => (
+                        <option key={d.id} value={d.id}>{d.name}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <p className="text-xs text-muted italic">Will create and attach to Month 1 › Week 1 › Day 1</p>
+                  )}
+                </div>
+
+                <div className="flex gap-2 justify-end pt-2">
+                  <button type="button" onClick={() => setShowAddVideoModal(false)} className="leather-btn px-4 py-2 text-xs cursor-pointer">Cancel</button>
+                  <button type="submit" className="brass-btn px-4 py-2 text-xs cursor-pointer">Attach Video</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );

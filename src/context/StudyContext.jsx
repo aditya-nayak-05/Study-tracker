@@ -389,15 +389,27 @@ function reducer(state, action) {
     case 'REORDER_PLANS':
       return { ...state, plans: action.payload };
 
-    // ── Months ──
     case 'ADD_MONTH': {
       const plans = state.plans.map((p) => {
         if (p.id !== action.payload.planId) return p;
-        const newMonth = { id: generateId(), name: action.payload.name || `Month ${p.months.length + 1}`, weeks: [] };
+        const currentMonths = p.months || [];
+        const newMonth = {
+          id: generateId(),
+          name: action.payload.name || `Month ${currentMonths.length + 1}`,
+          weeks: (action.payload.weeks && action.payload.weeks.length > 0) ? action.payload.weeks : [
+            {
+              id: generateId(),
+              name: 'Week 1',
+              days: [
+                { id: generateId(), name: 'Day 1', date: '', tasks: [] }
+              ]
+            }
+          ]
+        };
         return {
           ...p,
-          months: [...p.months, newMonth],
-          activities: [...p.activities, { id: generateId(), type: 'add', message: `Added ${newMonth.name}`, timestamp: new Date().toISOString() }],
+          months: [...currentMonths, newMonth],
+          activities: [...(p.activities || []), { id: generateId(), type: 'add', message: `Added ${newMonth.name}`, timestamp: new Date().toISOString() }],
           updatedAt: new Date().toISOString(),
         };
       });
@@ -603,22 +615,59 @@ function reducer(state, action) {
         description: action.payload.description || '',
         notes: action.payload.notes || '',
         estimatedTime: action.payload.estimatedTime || '',
-        priority: action.payload.priority || 'low',
+        priority: action.payload.priority || 'medium',
         status: 'not-started',
         youtubeUrl: action.payload.youtubeUrl || '',
         createdAt: new Date().toISOString(),
       };
       const plans = state.plans.map((p) => {
         if (p.id !== action.payload.planId) return p;
+        let taskAdded = false;
+        let updatedMonths = (p.months || []).map((m) => ({
+          ...m,
+          weeks: (m.weeks || []).map((w) => ({
+            ...w,
+            days: (w.days || []).map((d) => {
+              if (d.id === action.payload.dayId) {
+                taskAdded = true;
+                return { ...d, tasks: [...(d.tasks || []), newTask] };
+              }
+              return d;
+            }),
+          })),
+        }));
+
+        // Fallback: If dayId was not found or omitted, append to first day or create one
+        if (!taskAdded) {
+          if (updatedMonths.length === 0) {
+            updatedMonths = [{
+              id: generateId(),
+              name: 'Month 1',
+              weeks: [{
+                id: generateId(),
+                name: 'Week 1',
+                days: [{ id: generateId(), name: 'Day 1', date: '', tasks: [newTask] }]
+              }]
+            }];
+          } else if ((updatedMonths[0].weeks || []).length === 0) {
+            updatedMonths[0].weeks = [{
+              id: generateId(),
+              name: 'Week 1',
+              days: [{ id: generateId(), name: 'Day 1', date: '', tasks: [newTask] }]
+            }];
+          } else if ((updatedMonths[0].weeks[0].days || []).length === 0) {
+            updatedMonths[0].weeks[0].days = [{ id: generateId(), name: 'Day 1', date: '', tasks: [newTask] }];
+          } else {
+            updatedMonths[0].weeks[0].days[0].tasks = [
+              ...(updatedMonths[0].weeks[0].days[0].tasks || []),
+              newTask
+            ];
+          }
+        }
+
         return {
           ...p,
-          months: (p.months || []).map((m) => ({
-            ...m,
-            weeks: (m.weeks || []).map((w) => ({
-              ...w,
-              days: (w.days || []).map((d) => (d.id === action.payload.dayId ? { ...d, tasks: [...(d.tasks || []), newTask] } : d)),
-            })),
-          })),
+          months: updatedMonths,
           activities: [...(p.activities || []), { id: generateId(), type: 'add', message: `Added task "${newTask.title}"`, timestamp: new Date().toISOString() }],
           updatedAt: new Date().toISOString(),
         };

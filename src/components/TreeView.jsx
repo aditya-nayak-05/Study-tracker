@@ -102,7 +102,7 @@ function TreeNode({ label, level = 0, children, progress, status, isToday, defau
   );
 }
 
-const TreeView = React.memo(function TreeView({ plan, onTaskClick }) {
+const TreeView = React.memo(function TreeView({ plan, onTaskClick, onAddMonth }) {
   const containerRef = useRef(null);
   const navigate = useNavigate();
   const { dispatch } = useStudy();
@@ -276,6 +276,17 @@ const TreeView = React.memo(function TreeView({ plan, onTaskClick }) {
           ))}
         </TreeNode>
       ))}
+      {onAddMonth && (
+        <div className="pt-4 px-2">
+          <button
+            onClick={onAddMonth}
+            className="w-full py-2.5 px-4 text-xs font-semibold rounded-xl border border-dashed border-[var(--neu-border)] hover:border-[var(--accent-orange)] text-muted hover:text-main flex items-center justify-center gap-2 cursor-pointer transition-all"
+            style={{ background: 'var(--neu-card-bg)' }}
+          >
+            <Folder className="w-3.5 h-3.5" /> + Add New Month to this Roadmap
+          </button>
+        </div>
+      )}
     </div>
   );
 });

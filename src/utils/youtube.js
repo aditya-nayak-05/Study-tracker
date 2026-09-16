@@ -10,23 +10,40 @@
  */
 export function extractVideoId(url) {
   if (!url || typeof url !== 'string') return null;
-  const trimmed = url.trim();
+  let trimmed = url.trim();
 
-  // youtube.com/watch?v=VIDEO_ID
-  const watchMatch = trimmed.match(/(?:youtube\.com\/watch\?.*v=)([a-zA-Z0-9_-]{11})/);
-  if (watchMatch) return watchMatch[1];
+  // If wrapped in quotes or iframe tag
+  const iframeMatch = trimmed.match(/src=["'](.*?)["']/);
+  if (iframeMatch) trimmed = iframeMatch[1];
 
-  // youtu.be/VIDEO_ID
-  const shortMatch = trimmed.match(/(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-  if (shortMatch) return shortMatch[1];
+  // If user entered raw 11-char ID directly
+  if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) {
+    return trimmed;
+  }
 
-  // youtube.com/shorts/VIDEO_ID
-  const shortsMatch = trimmed.match(/(?:youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
+  // youtu.be/<id>
+  const youtuBeMatch = trimmed.match(/youtu\.be\/([a-zA-Z0-9_-]{11})/i);
+  if (youtuBeMatch) return youtuBeMatch[1];
+
+  // youtube.com/shorts/<id>
+  const shortsMatch = trimmed.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/i);
   if (shortsMatch) return shortsMatch[1];
 
-  // youtube.com/embed/VIDEO_ID
-  const embedMatch = trimmed.match(/(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+  // youtube.com/live/<id>
+  const liveMatch = trimmed.match(/youtube\.com\/live\/([a-zA-Z0-9_-]{11})/i);
+  if (liveMatch) return liveMatch[1];
+
+  // youtube.com/embed/<id>
+  const embedMatch = trimmed.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/i);
   if (embedMatch) return embedMatch[1];
+
+  // youtube.com/v/<id>
+  const vMatch = trimmed.match(/youtube\.com\/v\/([a-zA-Z0-9_-]{11})/i);
+  if (vMatch) return vMatch[1];
+
+  // Any URL with ?v=<id> or &v=<id> (e.g. watch?v=..., watch?feature=share&v=...)
+  const vParamMatch = trimmed.match(/[?&]v=([a-zA-Z0-9_-]{11})/i);
+  if (vParamMatch) return vParamMatch[1];
 
   return null;
 }
