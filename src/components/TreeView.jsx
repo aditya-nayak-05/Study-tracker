@@ -126,6 +126,33 @@ const TreeView = React.memo(function TreeView({ plan, onTaskClick }) {
             <TreeNode key={week.id} label={week.name} level={1} progress={getWeekProgress(week)}>
               {week.days?.map((day) => (
                 <TreeNode key={day.id} label={`${day.name}${day.date ? ' — ' + day.date : ''}`} level={2} progress={getDayProgress(day)} status={getDayStatus(day)} isToday={day.date === todayStr}>
+                  {/* Rich Structured Day Header Cards */}
+                  {(day.objective || day.dsa || day.projectTask || day.revision) && (
+                    <div className="ml-10 my-2 p-3.5 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-sm space-y-2 text-left">
+                      {day.objective && (
+                        <p className="text-xs text-main font-medium leading-relaxed">
+                          🎯 <span className="font-semibold text-accent-primary">Objective:</span> {day.objective}
+                        </p>
+                      )}
+                      <div className="flex flex-wrap gap-1.5 pt-1">
+                        {day.dsa && (
+                          <span className="text-[10px] px-2.5 py-1 rounded-lg font-semibold bg-[#6366f1]/15 text-[#818cf8] border border-[#6366f1]/30">
+                            🧮 DSA: {day.dsa}
+                          </span>
+                        )}
+                        {day.projectTask && (
+                          <span className="text-[10px] px-2.5 py-1 rounded-lg font-semibold bg-[#ed8936]/15 text-[#ed8936] border border-[#ed8936]/30">
+                            🚀 Project: {day.projectTask}
+                          </span>
+                        )}
+                        {day.revision && (
+                          <span className="text-[10px] px-2.5 py-1 rounded-lg font-semibold bg-[#38a169]/15 text-[#38a169] border border-[#38a169]/30">
+                            🔁 Revision: {day.revision}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  )}
                   {day.tasks?.map((task) => {
                     const hasVideo = task.youtubeUrl && extractVideoId(task.youtubeUrl);
                     return (

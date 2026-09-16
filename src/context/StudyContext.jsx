@@ -39,39 +39,19 @@ const DEFAULT_UI = {
 };
 
 import { dsRoadmap } from '../data/dsRoadmap';
+import { aiFullStackRoadmap } from '../data/aiFullStackRoadmap';
 
 function createDefaultState() {
   const loadedPlans = storage.getItem('plans', []);
   const hasDsRoadmap = loadedPlans.some((p) => p.id === 'ds-roadmap-plan-id');
-  let plans;
-  if (hasDsRoadmap) {
-    // If existing plan days lack dates, backfill them
-    plans = loadedPlans.map((p) => {
-      if (p.id !== 'ds-roadmap-plan-id') return p;
-      const hasDates = (p.months || []).some((m) =>
-        (m.weeks || []).some((w) => (w.days || []).some((d) => d.date))
-      );
-      if (hasDates) return p; // Already has dates, don't overwrite user edits
-      // Assign weekday dates starting from today
-      const start = new Date(); start.setHours(0, 0, 0, 0);
-      let dayOffset = 0;
-      const updatedMonths = (p.months || []).map((m) => ({
-        ...m,
-        weeks: (m.weeks || []).map((w) => ({
-          ...w,
-          days: (w.days || []).map((d) => {
-            const dt = new Date(start);
-            dt.setDate(dt.getDate() + dayOffset);
-            while (dt.getDay() === 0 || dt.getDay() === 6) { dt.setDate(dt.getDate() + 1); dayOffset++; }
-            dayOffset++;
-            return { ...d, date: d.date || dt.toISOString().split('T')[0] };
-          }),
-        })),
-      }));
-      return { ...p, months: updatedMonths };
-    });
-  } else {
-    plans = [...loadedPlans, dsRoadmap];
+  const hasAiRoadmap = loadedPlans.some((p) => p.id === 'ai-fullstack-roadmap-plan-id');
+
+  let plans = [...loadedPlans];
+  if (!hasDsRoadmap) {
+    plans.push(dsRoadmap);
+  }
+  if (!hasAiRoadmap) {
+    plans.push(aiFullStackRoadmap);
   }
 
   const loadedUi = storage.getItem('ui', DEFAULT_UI);

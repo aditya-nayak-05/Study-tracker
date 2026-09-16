@@ -246,13 +246,176 @@ export default function PlanDetail() {
             >
               List
             </button>
+            <button
+              onClick={() => setView('overview')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold cursor-pointer transition-all ${
+                view === 'overview' ? 'brass-btn' : 'text-muted hover:text-main'
+              }`}
+            >
+              Overview & Tracks
+            </button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-4">
-            {view === 'tree' ? (
+            {view === 'overview' ? (
+              <div className="space-y-6">
+                {/* 12-Month Roadmap Target & Strategy Card */}
+                <div className="p-6 space-y-4" style={cardStyle}>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#ed8936] to-[#dd6b20] flex items-center justify-center shrink-0 text-white font-bold shadow-md">
+                      🚀
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-bold text-main">AI-Enabled Full-Stack Software Engineer</h2>
+                      <p className="text-xs text-muted">12-Month Job-Ready Engineering Roadmap · 3 Hours / Day Target</p>
+                    </div>
+                  </div>
+
+                  {/* Target Roles */}
+                  <div>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-accent-primary mb-2">🎯 Target Job Roles</h4>
+                    <div className="flex flex-wrap gap-2">
+                      {['Full-Stack Developer', 'Software Engineer / SDE-1', 'Junior Full-Stack Developer', 'Frontend Engineer', 'Backend Engineer', 'Product Engineer', 'AI Application Developer', 'Generative AI Developer'].map((role) => (
+                        <span key={role} className="text-xs px-3 py-1 rounded-lg bg-[var(--neu-card-bg)] text-main font-medium border border-[var(--neu-border)] shadow-sm">
+                          {role}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Daily Study Structure (3 Hours) */}
+                  <div>
+                    <h4 className="text-xs font-bold uppercase tracking-wider text-accent-primary mb-2">⏱ Daily 3-Hour Study Structure</h4>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      <div className="p-3 rounded-xl border border-[var(--neu-border)] bg-black/10 text-center">
+                        <span className="text-xs font-bold text-main block">60–75 min</span>
+                        <span className="text-[10px] text-muted">Main Topic Learning</span>
+                      </div>
+                      <div className="p-3 rounded-xl border border-[var(--neu-border)] bg-black/10 text-center">
+                        <span className="text-xs font-bold text-main block">45 min</span>
+                        <span className="text-[10px] text-muted">Coding / Practice</span>
+                      </div>
+                      <div className="p-3 rounded-xl border border-[var(--neu-border)] bg-black/10 text-center">
+                        <span className="text-xs font-bold text-main block">45–60 min</span>
+                        <span className="text-[10px] text-muted">Project Implementation</span>
+                      </div>
+                      <div className="p-3 rounded-xl border border-[var(--neu-border)] bg-black/10 text-center">
+                        <span className="text-xs font-bold text-main block">15 min</span>
+                        <span className="text-[10px] text-muted">Active Revision & Aloud</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Parallel Tracks Grid */}
+                <div className="p-6 space-y-4" style={cardStyle}>
+                  <h3 className="text-sm font-bold text-main flex items-center gap-2">
+                    <span>🛣</span> 4 Parallel Engineering Tracks
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="p-4 rounded-xl border border-[#6366f1]/30 bg-[#6366f1]/10 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#818cf8]">🧮 DSA Track</span>
+                        <span className="text-[10px] font-mono font-bold text-[#818cf8]">150–250 Problems</span>
+                      </div>
+                      <p className="text-xs text-main">Big-O ➔ Arrays/Strings ➔ Pointers ➔ Stack/Queue/Trees ➔ Graphs ➔ DP & Mock Interviews</p>
+                    </div>
+
+                    <div className="p-4 rounded-xl border border-[#38a169]/30 bg-[#38a169]/10 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#48bb78]">🗄 SQL Track</span>
+                        <span className="text-[10px] font-mono font-bold text-[#48bb78]">100+ Problems</span>
+                      </div>
+                      <p className="text-xs text-main">SELECT/WHERE ➔ JOINS ➔ Group By ➔ CTEs ➔ Window Functions ➔ PostgreSQL Indexing</p>
+                    </div>
+
+                    <div className="p-4 rounded-xl border border-[#ed8936]/30 bg-[#ed8936]/10 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#ed8936]">💻 CS Fundamentals Track</span>
+                        <span className="text-[10px] font-mono font-bold text-[#ed8936]">Months 3–12</span>
+                      </div>
+                      <p className="text-xs text-main">Computer Networks ➔ DBMS ➔ Object Oriented Programming ➔ Operating Systems ➔ System Design</p>
+                    </div>
+
+                    <div className="p-4 rounded-xl border border-[#ecc94b]/30 bg-[#ecc94b]/10 space-y-1.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#ecc94b]">🗣 Communication Track</span>
+                        <span className="text-[10px] font-mono font-bold text-[#ecc94b]">15 min / day</span>
+                      </div>
+                      <p className="text-xs text-main">Explain topic aloud daily ➔ Explain bugs solved ➔ Sunday 2-min technical topic video recording</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Topic & Project Status System Pipelines */}
+                <div className="p-6 space-y-4" style={cardStyle}>
+                  <h3 className="text-sm font-bold text-main flex items-center gap-2">
+                    <span>📊</span> Engineering Mastery Progression Pipelines
+                  </h3>
+                  
+                  {/* Topic Status Pipeline */}
+                  <div>
+                    <span className="text-xs font-semibold text-muted block mb-2">Topic Mastery Lifecycle</span>
+                    <div className="flex items-center gap-1 overflow-x-auto pb-2">
+                      {['Not Started', 'Learning', 'Practicing', 'Applied', 'Mastered', 'Interview Ready'].map((step, idx) => (
+                        <React.Fragment key={step}>
+                          <span className={`text-[10px] px-2.5 py-1 rounded-lg font-bold shrink-0 ${
+                            idx === 5 ? 'bg-[#38a169] text-white' : idx >= 3 ? 'bg-[var(--accent-orange)] text-white' : 'bg-[var(--neu-card-bg)] text-main border border-[var(--neu-border)]'
+                          }`}>
+                            {step}
+                          </span>
+                          {idx < 5 && <span className="text-muted text-xs shrink-0">➔</span>}
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Project Status Pipeline */}
+                  <div>
+                    <span className="text-xs font-semibold text-muted block mb-2">Project Lifecycle Pipeline</span>
+                    <div className="flex items-center gap-1 overflow-x-auto pb-2">
+                      {['Planning', 'Development', 'Testing', 'Deployment', 'Documentation', 'Portfolio Ready'].map((step, idx) => (
+                        <React.Fragment key={step}>
+                          <span className={`text-[10px] px-2.5 py-1 rounded-lg font-bold shrink-0 ${
+                            idx === 5 ? 'bg-[#3182ce] text-white' : 'bg-[var(--neu-card-bg)] text-main border border-[var(--neu-border)]'
+                          }`}>
+                            {step}
+                          </span>
+                          {idx < 5 && <span className="text-muted text-xs shrink-0">➔</span>}
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3 Flagship Portfolio Projects */}
+                <div className="p-6 space-y-4" style={cardStyle}>
+                  <h3 className="text-sm font-bold text-main flex items-center gap-2">
+                    <span>🏆</span> 3 Portfolio Flagship Projects
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="p-4 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] space-y-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-accent-primary">Project 1 (Month 8)</span>
+                      <h4 className="text-xs font-bold text-main">Production Full-Stack SaaS</h4>
+                      <p className="text-[11px] text-muted">Next.js 14, Express, PostgreSQL, Docker, AWS EC2, S3, Nginx, HTTPS & CI/CD</p>
+                    </div>
+                    <div className="p-4 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] space-y-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-accent-primary">Project 2 (Month 11)</span>
+                      <h4 className="text-xs font-bold text-main">AI Document / RAG Assistant</h4>
+                      <p className="text-[11px] text-muted">Python, FastAPI, pgvector, OpenAI API, Chunking, Reranking & Citations</p>
+                    </div>
+                    <div className="p-4 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] space-y-2">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-accent-primary">Project 3 (Month 12 Flagship)</span>
+                      <h4 className="text-xs font-bold text-main">AI STUDY OS</h4>
+                      <p className="text-[11px] text-muted">Full Architecture: Next.js, Express, PostgreSQL, Redis, BullMQ, RAG & Autonomous Agents</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ) : view === 'tree' ? (
               <div className="p-6" style={cardStyle}>
                 <TreeView plan={plan} onTaskClick={(task) => {
                   dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: plan.id, taskId: task.id } });
