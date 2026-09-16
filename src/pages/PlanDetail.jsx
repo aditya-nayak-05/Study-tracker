@@ -216,9 +216,11 @@ export default function PlanDetail() {
   };
 
   const handleDateChange = (dayId, newDate) => {
+    if (!newDate) return;
+    const parsed = new Date(newDate);
+    if (isNaN(parsed.getTime())) return;
     dispatch({ type: 'UPDATE_DAY_DATE_SMART', payload: { planId: plan.id, dayId, newDate } });
     showToast('Dates updated', 'info');
-    setEditingDate(null);
   };
 
   const handleImport = async (e) => {
@@ -554,11 +556,57 @@ export default function PlanDetail() {
                                           <GripVertical className="w-3 h-3" style={{ color: 'var(--neu-text-muted)' }} />
                                           <span className="text-sm flex-1 text-left" style={{ color: 'var(--neu-text-main)' }}>{day.name}</span>
                                           {editingDate === day.id ? (
-                                            <input type="date" defaultValue={day.date} className="rounded px-2 py-0.5 text-xs" style={{ ...inputStyle }} onClick={(e) => e.stopPropagation()}
-                                              onChange={(e) => handleDateChange(day.id, e.target.value)} onBlur={() => setEditingDate(null)} autoFocus />
+                                            <div className="flex items-center gap-1" onClick={(e) => e.stopPropagation()}>
+                                              <input
+                                                type="date"
+                                                defaultValue={day.date}
+                                                className="rounded px-2 py-0.5 text-xs inset-field"
+                                                style={{ ...inputStyle }}
+                                                onChange={(e) => {
+                                                  const val = e.target.value;
+                                                  if (val && /^\d{4}-\d{2}-\d{2}$/.test(val)) {
+                                                    handleDateChange(day.id, val);
+                                                    setEditingDate(null);
+                                                  }
+                                                }}
+                                                onBlur={(e) => {
+                                                  const val = e.target.value;
+                                                  if (val && /^\d{4}-\d{2}-\d{2}$/.test(val)) {
+                                                    handleDateChange(day.id, val);
+                                                  }
+                                                  setEditingDate(null);
+                                                }}
+                                                onKeyDown={(e) => {
+                                                  if (e.key === 'Enter') {
+                                                    const val = e.target.value;
+                                                    if (val && /^\d{4}-\d{2}-\d{2}$/.test(val)) {
+                                                      handleDateChange(day.id, val);
+                                                    }
+                                                    setEditingDate(null);
+                                                  } else if (e.key === 'Escape') {
+                                                    setEditingDate(null);
+                                                  }
+                                                }}
+                                                autoFocus
+                                              />
+                                              <button
+                                                type="button"
+                                                onClick={() => setEditingDate(null)}
+                                                className="p-1 cursor-pointer hover:opacity-75"
+                                                style={{ color: 'var(--neu-text-muted)' }}
+                                                title="Close"
+                                              >
+                                                <X className="w-3.5 h-3.5" />
+                                              </button>
+                                            </div>
                                           ) : (
-                                            <button onClick={(e) => { e.stopPropagation(); setEditingDate(day.id); }} className="text-[10px] cursor-pointer" style={{ color: 'var(--neu-text-muted)' }}>
-                                              {day.date || 'Set date'}
+                                            <button
+                                              onClick={(e) => { e.stopPropagation(); setEditingDate(day.id); }}
+                                              className="text-[10px] px-2 py-0.5 rounded cursor-pointer hover:bg-[var(--neu-hover-bg)] transition-colors"
+                                              style={{ color: 'var(--neu-text-muted)' }}
+                                              title="Click to change date"
+                                            >
+                                              📅 {day.date || 'Set date'}
                                             </button>
                                           )}
                                           <button onClick={(e) => { e.stopPropagation(); dispatch({ type: 'DELETE_DAY', payload: { planId: plan.id, dayId: day.id } }); }}

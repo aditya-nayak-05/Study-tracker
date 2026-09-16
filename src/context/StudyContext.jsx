@@ -573,26 +573,34 @@ function reducer(state, action) {
     // ── Smart Date System ──
     case 'UPDATE_DAY_DATE_SMART': {
       const { planId, dayId, newDate } = action.payload;
+      if (!newDate || typeof newDate !== 'string') return state;
+
+      // Validate date before using it
+      const parsed = new Date(newDate);
+      if (isNaN(parsed.getTime())) return state;
+
+      const validDateStr = parsed.toISOString().split('T')[0];
+
       const plans = state.plans.map((p) => {
         if (p.id !== planId) return p;
         let found = false;
         let dayOffset = 0;
-        const newDateObj = new Date(newDate);
-        const updatedMonths = p.months.map((m) => ({
+        const updatedMonths = (p.months || []).map((m) => ({
           ...m,
-          weeks: m.weeks.map((w) => ({
+          weeks: (m.weeks || []).map((w) => ({
             ...w,
-            days: w.days.map((d) => {
+            days: (w.days || []).map((d) => {
               if (d.id === dayId) {
                 found = true;
                 dayOffset = 1;
-                return { ...d, date: newDate };
+                return { ...d, date: validDateStr };
               }
               if (found && d.status !== 'completed') {
-                const shifted = new Date(newDateObj);
+                const shifted = new Date(parsed);
                 shifted.setDate(shifted.getDate() + dayOffset);
                 dayOffset++;
-                return { ...d, date: shifted.toISOString().split('T')[0] };
+                const shiftedStr = !isNaN(shifted.getTime()) ? shifted.toISOString().split('T')[0] : d.date;
+                return { ...d, date: shiftedStr };
               }
               return d;
             }),
