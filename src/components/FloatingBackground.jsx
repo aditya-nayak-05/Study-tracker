@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useMemo } from 'react';
 import gsap from 'gsap';
-import { codeSnippets, snippetColors } from '../data/codeSnippets';
+import { codeSnippets } from '../data/codeSnippets';
 
 const FloatingBackground = React.memo(function FloatingBackground() {
   const containerRef = useRef(null);
@@ -9,34 +9,25 @@ const FloatingBackground = React.memo(function FloatingBackground() {
 
   const visibleSnippets = useMemo(() => {
     const shuffled = [...codeSnippets].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, 18);
+    return shuffled.slice(0, 6);
   }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
-      // Animate floating snippets
+      // Animate floating snippets with gentle GPU transforms
       snippetRefs.current.forEach((el, i) => {
         if (!el) return;
-        const duration = 20 + Math.random() * 30;
-        const delay = Math.random() * 10;
+        const duration = 25 + Math.random() * 20;
+        const delay = i * 2;
         gsap.set(el, {
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
+          x: (i * 200 + 50) % (window.innerWidth || 1200),
+          y: (i * 120 + 80) % (window.innerHeight || 800),
           opacity: 0,
         });
         gsap.to(el, {
-          y: `-=${100 + Math.random() * 200}`,
-          x: `+=${(Math.random() - 0.5) * 200}`,
-          opacity: 0.08 + Math.random() * 0.07,
+          y: `-=${80 + Math.random() * 60}`,
+          opacity: 0.07,
           duration,
-          delay,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-        });
-        gsap.to(el, {
-          rotation: (Math.random() - 0.5) * 10,
-          duration: duration * 0.7,
           delay,
           repeat: -1,
           yoyo: true,
@@ -45,18 +36,16 @@ const FloatingBackground = React.memo(function FloatingBackground() {
       });
 
       // Animate particles
-      particleRefs.current.forEach((el) => {
+      particleRefs.current.forEach((el, i) => {
         if (!el) return;
-        const duration = 15 + Math.random() * 25;
+        const duration = 20 + Math.random() * 15;
         gsap.set(el, {
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
-          scale: 0.5 + Math.random() * 1.5,
+          x: (i * 220 + 100) % (window.innerWidth || 1200),
+          y: (i * 150 + 50) % (window.innerHeight || 800),
         });
         gsap.to(el, {
-          y: `-=${50 + Math.random() * 150}`,
-          x: `+=${(Math.random() - 0.5) * 100}`,
-          opacity: 0.15 + Math.random() * 0.25,
+          y: `-=${60}`,
+          opacity: 0.18,
           duration,
           repeat: -1,
           yoyo: true,
@@ -66,13 +55,13 @@ const FloatingBackground = React.memo(function FloatingBackground() {
     }, containerRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [visibleSnippets]);
 
   return (
     <div ref={containerRef} className="fixed inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 0 }}>
-      {/* Grid */}
+      {/* Subtle Grid */}
       <div
-        className="absolute inset-0 opacity-[0.05]"
+        className="absolute inset-0 opacity-[0.03]"
         style={{
           backgroundImage: `
             linear-gradient(rgba(184,134,11,0.3) 1px, transparent 1px),
@@ -82,41 +71,34 @@ const FloatingBackground = React.memo(function FloatingBackground() {
         }}
       />
 
-      {/* Radial glow */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[600px] opacity-20"
-        style={{
-          background: 'radial-gradient(ellipse at center, rgba(184,134,11,0.15) 0%, rgba(138,101,8,0.05) 50%, transparent 80%)',
-        }}
-      />
-
       {/* Floating code snippets */}
       {visibleSnippets.map((snippet, i) => (
         <div
           key={i}
           ref={(el) => (snippetRefs.current[i] = el)}
-          className="absolute font-mono text-[10px] sm:text-xs whitespace-nowrap select-none"
+          className="absolute font-mono text-[10px] select-none"
           style={{
             color: 'var(--neu-text-sub)',
             opacity: 0,
+            willChange: 'transform',
           }}
         >
           {snippet}
         </div>
       ))}
 
-      {/* Particles */}
-      {Array.from({ length: 12 }).map((_, i) => (
+      {/* Lightweight Ambient Particles */}
+      {Array.from({ length: 6 }).map((_, i) => (
         <div
           key={`p-${i}`}
           ref={(el) => (particleRefs.current[i] = el)}
           className="absolute rounded-full"
           style={{
-            width: 2 + Math.random() * 3 + 'px',
-            height: 2 + Math.random() * 3 + 'px',
-            background: '#a0aec0',
-            boxShadow: `0 1px 2px rgba(163,177,198,0.5)`,
+            width: '3px',
+            height: '3px',
+            background: 'var(--accent-orange, #ed8936)',
             opacity: 0,
+            willChange: 'transform',
           }}
         />
       ))}

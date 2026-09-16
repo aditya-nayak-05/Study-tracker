@@ -83,9 +83,14 @@ export default function PlanDetail() {
     if (plan) dispatch({ type: 'SET_UI', payload: { activePlanId: plan.id } });
   }, [plan, dispatch]);
 
+  const handleTaskClick = useCallback((task) => {
+    if (!plan) return;
+    dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: plan.id, taskId: task.id } });
+  }, [dispatch, plan?.id]);
+
   useEffect(() => {
     if (containerRef.current) {
-      gsap.fromTo(containerRef.current, { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, ease: 'power2.out' });
+      gsap.fromTo(containerRef.current, { opacity: 0.9 }, { opacity: 1, duration: 0.2, ease: 'power1.out', clearProps: 'all' });
     }
   }, [planId]);
 
@@ -498,9 +503,7 @@ export default function PlanDetail() {
               <div className="p-6" style={cardStyle}>
                 <TreeView
                   plan={plan}
-                  onTaskClick={(task) => {
-                    dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: plan.id, taskId: task.id } });
-                  }}
+                  onTaskClick={handleTaskClick}
                   onAddMonth={() => setShowAddMonthModal(true)}
                 />
                 {(!plan.months || plan.months.length === 0) && (

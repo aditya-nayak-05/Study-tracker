@@ -1146,20 +1146,49 @@ function reducer(state, action) {
 export function StudyProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, null, createDefaultState);
 
-  // Auto-persist on every state change
+  // High-performance granular persistence (avoids serializing 2,369 tasks on every timer tick)
+  useEffect(() => {
+    if (state.plans) storage.setItem('plans', state.plans);
+  }, [state.plans]);
+
+  useEffect(() => {
+    if (state.settings) storage.setItem('settings', state.settings);
+  }, [state.settings]);
+
   useEffect(() => {
     if (state.profile !== null) storage.setItem('profile', state.profile);
-    storage.setItem('settings', state.settings);
-    storage.setItem('plans', state.plans);
+  }, [state.profile]);
+
+  useEffect(() => {
     storage.setItem('ui', { ...state.ui, searchOpen: false });
-    if (state.mainTimer) storage.setItem('mainTimer', state.mainTimer);
-    storage.setItem('globalStudyHours', state.globalStudyHours);
-    storage.setItem('videoStudyHours', state.videoStudyHours || []);
-    storage.setItem('globalActivities', state.globalActivities);
-    storage.setItem('videoProgress', state.videoProgress);
-    storage.setItem('studySessions', state.studySessions);
-    storage.setItem('activeSessionId', state.activeSessionId);
-  }, [state.profile, state.settings, state.plans, state.ui, state.mainTimer, state.globalStudyHours, state.videoStudyHours, state.globalActivities, state.videoProgress, state.studySessions, state.activeSessionId]);
+  }, [state.ui]);
+
+  useEffect(() => {
+    if (state.globalStudyHours) storage.setItem('globalStudyHours', state.globalStudyHours);
+  }, [state.globalStudyHours]);
+
+  useEffect(() => {
+    if (state.globalActivities) storage.setItem('globalActivities', state.globalActivities);
+  }, [state.globalActivities]);
+
+  useEffect(() => {
+    if (state.videoProgress) storage.setItem('videoProgress', state.videoProgress);
+  }, [state.videoProgress]);
+
+  useEffect(() => {
+    if (state.studySessions) storage.setItem('studySessions', state.studySessions);
+  }, [state.studySessions]);
+
+  useEffect(() => {
+    if (state.activeSessionId !== undefined) storage.setItem('activeSessionId', state.activeSessionId);
+  }, [state.activeSessionId]);
+
+  // Persist timer state only when not running or on session change (not every 1s)
+  useEffect(() => {
+    if (!state.mainTimer?.running && state.mainTimer) {
+      storage.setItem('mainTimer', state.mainTimer);
+    }
+  }, [state.mainTimer?.running, state.mainTimer?.sessionCount]);
 
   // Main timer auto tick
   useEffect(() => {

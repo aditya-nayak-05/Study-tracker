@@ -7,33 +7,17 @@ const DashboardLayout = React.memo(function DashboardLayout({ children, title, s
   const contentRef = useRef(null);
 
   useEffect(() => {
-    // 3D Real Book Page Flip Animation around left binder rings
     if (pageRef.current) {
       gsap.fromTo(
         pageRef.current,
+        { opacity: 0.85 },
         {
-          rotateY: 30,
-          scale: 0.95,
-          opacity: 0,
-          boxShadow: '-30px 0 60px rgba(0,0,0,0.95)',
-        },
-        {
-          rotateY: 0,
-          scale: 1,
           opacity: 1,
-          boxShadow: '8px 16px 30px rgba(0,0,0,0.95)',
-          duration: 0.5,
-          ease: 'power3.out',
-          clearProps: 'transform,boxShadow',
+          duration: 0.2,
+          ease: 'power1.out',
+          clearProps: 'all',
         }
       );
-    }
-
-    if (headerRef.current) {
-      gsap.fromTo(headerRef.current, { y: -10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, delay: 0.1, ease: 'power2.out', clearProps: 'transform' });
-    }
-    if (contentRef.current) {
-      gsap.fromTo(contentRef.current, { y: 15, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, delay: 0.15, ease: 'power2.out', clearProps: 'transform' });
     }
   }, [title]);
 
@@ -41,7 +25,6 @@ const DashboardLayout = React.memo(function DashboardLayout({ children, title, s
     <div 
       ref={pageRef}
       className="journal-page pl-16 pr-8 py-6 sm:pl-20 sm:pr-14 sm:py-8 min-h-[calc(100vh-6rem)] relative overflow-visible"
-      style={{ transformOrigin: 'left center', perspective: '1800px' }}
     >
       {/* Dog-Ear Book Page Corner Fold Accent */}
       <div 
