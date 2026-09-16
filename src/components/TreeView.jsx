@@ -211,7 +211,7 @@ const TreeView = React.memo(function TreeView({ plan, onTaskClick }) {
               {week.days?.map((day) => (
                 <TreeNode
                   key={day.id}
-                  label={`${day.name}${day.date ? ' — ' + day.date : ''}`}
+                  label={day.name}
                   level={2}
                   progress={getDayProgress(day)}
                   status={getDayStatus(day)}
