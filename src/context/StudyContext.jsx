@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useReducer, useEffect, useCallback, useMemo } from 'react';
 import * as storage from '../utils/storage';
 import { generateId } from '../utils/helpers';
+import { getStoredSpeedLevel, setStoredSpeedLevel, getStoredStyle, setStoredStyle, applyMotionScaleToDOM } from '../utils/motion';
 
 const StudyContext = createContext(null);
 
@@ -17,6 +18,8 @@ const DEFAULT_PROFILE = {
 
 const DEFAULT_SETTINGS = {
   animationsEnabled: true,
+  animationSpeed: 3, // 0: Off, 1: Very Fast, 2: Fast, 3: Normal, 4: Relaxed, 5: Slow, 6: Very Slow
+  animationStyle: 'smooth', // 'smooth', 'elegant', 'minimal', 'dynamic', 'slide', 'depth', 'cinematic', 'fade'
   timerDuration: 25,
   dailyGoal: 6,
   dailyStudyHours: 6,
@@ -58,7 +61,11 @@ function createDefaultState() {
   const ui = !loadedUi.activePlanId ? { ...loadedUi, activePlanId: 'ds-roadmap-plan-id' } : loadedUi;
 
   const rawSettings = storage.getItem('settings', DEFAULT_SETTINGS);
-  const loadedSettings = { ...DEFAULT_SETTINGS, ...rawSettings };
+  const storedSpeed = getStoredSpeedLevel();
+  const storedStyle = getStoredStyle();
+  const speed = rawSettings?.animationSpeed !== undefined ? rawSettings.animationSpeed : storedSpeed;
+  const style = rawSettings?.animationStyle !== undefined ? rawSettings.animationStyle : storedStyle;
+  const loadedSettings = { ...DEFAULT_SETTINGS, ...rawSettings, animationSpeed: speed, animationStyle: style };
   const defaultDuration = (loadedSettings.timerDuration || loadedSettings.pomodoroWork || 25) * 60;
   const loadedTimer = storage.getItem('mainTimer', null);
 
@@ -1152,7 +1159,15 @@ export function StudyProvider({ children }) {
   }, [state.plans]);
 
   useEffect(() => {
-    if (state.settings) storage.setItem('settings', state.settings);
+    if (state.settings) {
+      storage.setItem('settings', state.settings);
+      if (state.settings.animationSpeed !== undefined) {
+        setStoredSpeedLevel(state.settings.animationSpeed);
+      }
+      if (state.settings.animationStyle !== undefined) {
+        setStoredStyle(state.settings.animationStyle);
+      }
+    }
   }, [state.settings]);
 
   useEffect(() => {

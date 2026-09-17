@@ -1293,6 +1293,268 @@ button:active:not(:disabled), .brass-btn:active, .leather-btn:active {
   transform: translateY(2px);
 }
 
+/* ═══════════════════════════════════════════
+   ⚡ ULTRA-FAST HARDWARE-ACCELERATED TREE TRANSITIONS
+   60-120fps GPU composited, zero reflow lag
+   ═══════════════════════════════════════════ */
+.tree-grid-accordion {
+  display: grid;
+  transition: grid-template-rows 180ms cubic-bezier(0.16, 1, 0.3, 1), opacity 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: grid-template-rows, opacity;
+}
 
+.tree-grid-accordion.tree-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
 
+.tree-grid-accordion.tree-closed {
+  grid-template-rows: 0fr;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.tree-content-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.tree-content-glide {
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1), opacity 180ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+
+.tree-content-glide.tree-open {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.tree-content-glide.tree-closed {
+  transform: translateY(-6px);
+  opacity: 0;
+}
+
+@keyframes viewFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-view-fade {
+  animation: viewFadeIn 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ═══════════════════════════════════════════
+   PREMIUM GLOBAL MOTION & TRANSITION SYSTEM
+   ═══════════════════════════════════════════ */
+
+/* ── Button Press & Release (Fast Micro Interaction 150-180ms) ── */
+.btn-motion,
+.brass-btn,
+.leather-btn {
+  transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 160ms cubic-bezier(0.16, 1, 0.3, 1), opacity 150ms ease, filter 150ms ease;
+  will-change: transform;
+}
+.btn-motion:hover,
+.brass-btn:hover,
+.leather-btn:hover {
+  transform: scale(1.015);
+}
+.btn-motion:active,
+.brass-btn:active,
+.leather-btn:active {
+  transform: scale(0.97);
+}
+
+/* ── Card Hover: Elevated Glass (250-350ms) ── */
+.dash-card,
+.plan-card,
+.card-motion {
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 280ms cubic-bezier(0.16, 1, 0.3, 1), border-color 200ms ease;
+  will-change: transform;
+}
+.dash-card:hover,
+.plan-card:hover,
+.card-motion:hover {
+  transform: translateY(-3px) scale(1.006);
+}
+
+/* ── Dropdown: Fluid Reveal (180-250ms) ── */
+.dropdown-motion {
+  animation: dropdownReveal 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  transform-origin: top center;
+}
+@keyframes dropdownReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-5px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Tooltip: Micro Reveal (150-200ms) ── */
+.tooltip-motion {
+  animation: tooltipReveal 180ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes tooltipReveal {
+  from {
+    opacity: 0;
+    transform: translateY(3px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Icon Hover: Micro Lift ── */
+.icon-lift {
+  transition: transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.icon-lift:hover {
+  transform: translateY(-1px) scale(1.08);
+}
+
+/* ── Task Status Change: State Morph (250-350ms) ── */
+@keyframes stateMorph {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  60% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.state-morph-icon {
+  animation: stateMorph 240ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Skeleton Drift: Slow Smooth Shimmer ── */
+.skeleton-shimmer {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0) 100%);
+  background-size: 200% 100%;
+  animation: skeletonDrift 2.2s infinite ease-in-out;
+}
+@keyframes skeletonDrift {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ── Accessibility: Prefers Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════
+   GLOBAL MOTION CONTROL STYLES & PRECISION CONTROLS
+   ═══════════════════════════════════════════════════════════════════ */
+:root {
+  --motion-scale: 1;
+  --motion-mult: 1;
+}
+
+[data-motion-level="0"],
+[data-motion-off="true"] {
+  --motion-scale: 0;
+  --motion-mult: 0;
+}
+
+[data-motion-level="0"] *,
+[data-motion-level="0"] *::before,
+[data-motion-level="0"] *::after,
+[data-motion-off="true"] *,
+[data-motion-off="true"] *::before,
+[data-motion-off="true"] *::after {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.001ms !important;
+  scroll-behavior: auto !important;
+}
+
+/* Precision Press Micro-Motion */
+.precision-press-btn {
+  transition: transform 120ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 120ms ease, opacity 120ms ease;
+  user-select: none;
+}
+.precision-press-btn:active:not(:disabled) {
+  transform: scale(0.92);
+}
+.precision-press-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* Motion Dial Slider & Ticks */
+.motion-dial-track {
+  background: var(--neu-card-bg);
+  box-shadow: var(--neu-shadow-inset);
+  position: relative;
+}
+.motion-dial-thumb {
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), left 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Form Inputs: Focused Surface (180-240ms) ── */
+.focused-surface,
+input[type="text"]:not(.no-motion),
+input[type="number"]:not(.no-motion),
+input[type="search"]:not(.no-motion),
+textarea:not(.no-motion) {
+  transition: border-color 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1), background-color 200ms ease;
+}
+.focused-surface:focus,
+input[type="text"]:focus:not(.no-motion),
+input[type="number"]:focus:not(.no-motion),
+input[type="search"]:focus:not(.no-motion),
+textarea:focus:not(.no-motion) {
+  border-color: var(--accent-orange) !important;
+  box-shadow: 0 0 0 2px rgba(var(--accent-primary-rgb, 56, 161, 105), 0.15), var(--neu-shadow-inset) !important;
+}
+
+/* ── Card: Elevated Glass ── */
+.elevated-glass {
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 260ms cubic-bezier(0.16, 1, 0.3, 1), border-color 200ms ease;
+  will-change: transform;
+}
+.elevated-glass:hover {
+  transform: translateY(-3px) scale(1.006);
+  box-shadow: var(--neu-shadow-hover);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ── Sliding Underline Tab Indicator ── */
+.sliding-tab-bar {
+  position: relative;
+}
+.sliding-tab-pill {
+  transition: all 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Silent Save Indicator ── */
+.silent-save-badge {
+  transition: opacity 180ms ease, transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Breadcrumb Path Morph Item ── */
+.path-morph-item {
+  transition: opacity 200ms ease, transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
 

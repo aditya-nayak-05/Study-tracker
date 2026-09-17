@@ -6,6 +6,7 @@ import {
   ChevronLeft, ChevronRight, Pin, Sparkles, Youtube, FileText,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { compactMorph, getMotionDuration, getSpeedMultiplier, isReducedMotion } from '../utils/motion';
 import logoImg from '../assets/logo.png';
 
 const navItems = [
@@ -56,15 +57,15 @@ const BookNavItem = React.memo(function BookNavItem({ label, icon: Icon, isActiv
 
           {/* Title badge */}
           {!collapsed ? (
-            <div className="book-golden-label px-2.5 py-1.5 flex items-center gap-1.5 flex-1 min-w-0 overflow-hidden">
-              {Icon && <Icon className="w-3.5 h-3.5 shrink-0 text-current" />}
-              <span className="text-[11px] font-extrabold truncate uppercase tracking-tight text-current leading-none min-w-0">
+            <div className={`book-golden-label px-2.5 py-1.5 flex items-center gap-1.5 flex-1 min-w-0 overflow-hidden transition-all duration-300 ${isActive ? 'ring-1 ring-white/30' : ''}`}>
+              {Icon && <Icon className={`w-3.5 h-3.5 shrink-0 text-current transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-95 group-hover:scale-100'}`} />}
+              <span className={`text-[11px] font-extrabold truncate uppercase tracking-tight text-current leading-none min-w-0 transition-opacity duration-250 ${isActive ? 'opacity-100' : 'opacity-85'}`}>
                 {label}
               </span>
             </div>
           ) : (
-            <div className="book-golden-label p-1.5 flex items-center justify-center mx-auto shrink-0">
-              {Icon && <Icon className="w-4 h-4 text-current shrink-0" />}
+            <div className={`book-golden-label p-1.5 flex items-center justify-center mx-auto shrink-0 transition-all duration-300 ${isActive ? 'ring-1 ring-white/30' : ''}`}>
+              {Icon && <Icon className={`w-4 h-4 text-current shrink-0 transition-transform duration-300 ${isActive ? 'scale-110' : 'scale-95 group-hover:scale-100'}`} />}
             </div>
           )}
         </div>
@@ -122,18 +123,22 @@ const Sidebar = React.memo(function Sidebar() {
 
   useEffect(() => {
     if (sidebarRef.current) {
-      gsap.to(sidebarRef.current, {
-        width: collapsed ? 72 : 260,
-        duration: 0.35,
-        ease: 'power2.out',
-      });
+      compactMorph(sidebarRef.current, collapsed);
     }
   }, [collapsed]);
 
   useEffect(() => {
+    if (getSpeedMultiplier() === 0 || isReducedMotion()) {
+      itemRefs.current.forEach((el) => {
+        if (el) gsap.set(el, { x: 0, opacity: 1, clearProps: 'all' });
+      });
+      return;
+    }
+    const dur = getMotionDuration(0.28);
+    const mult = getSpeedMultiplier();
     itemRefs.current.forEach((el, i) => {
       if (el) {
-        gsap.fromTo(el, { x: -20, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, delay: i * 0.04, ease: 'power2.out' });
+        gsap.fromTo(el, { x: -16, opacity: 0 }, { x: 0, opacity: 1, duration: dur, delay: i * 0.03 * mult, ease: 'power2.out' });
       }
     });
   }, []);

@@ -4,6 +4,8 @@ import { useStudy } from '../context/StudyContext';
 import { Search, X, BookOpen, Calendar, CheckSquare, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
+import { modalEnter, modalExit } from '../utils/motion';
+
 export default function SearchModal({ onClose }) {
   const { state, dispatch } = useStudy();
   const navigate = useNavigate();
@@ -11,16 +13,24 @@ export default function SearchModal({ onClose }) {
   const modalRef = useRef(null);
   const contentRef = useRef(null);
   const inputRef = useRef(null);
+  const resultsRef = useRef(null);
+
+  const handleClose = useCallback(() => {
+    if (modalRef.current && contentRef.current) {
+      modalExit(modalRef.current, contentRef.current, onClose);
+    } else {
+      onClose();
+    }
+  }, [onClose]);
 
   useEffect(() => {
-    gsap.fromTo(modalRef.current, { opacity: 0 }, { opacity: 1, duration: 0.2 });
-    gsap.fromTo(contentRef.current, { y: -20, opacity: 0, scale: 0.97 }, { y: 0, opacity: 1, scale: 1, duration: 0.3, ease: 'power2.out' });
+    modalEnter(modalRef.current, contentRef.current);
     inputRef.current?.focus();
 
-    const handleKey = (e) => { if (e.key === 'Escape') onClose(); };
+    const handleKey = (e) => { if (e.key === 'Escape') handleClose(); };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [onClose]);
+  }, [handleClose]);
 
   const results = React.useMemo(() => {
     if (!query.trim()) return [];
@@ -67,11 +77,20 @@ export default function SearchModal({ onClose }) {
   const handleSelect = (item) => {
     dispatch({ type: 'SET_UI', payload: { activePlanId: item.planId } });
     navigate(`/plans/${item.planId}`);
-    onClose();
+    handleClose();
   };
 
+  useEffect(() => {
+    if (resultsRef.current) {
+      const items = resultsRef.current.querySelectorAll('.search-result-item');
+      if (items.length > 0) {
+        gsap.fromTo(items, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.2, stagger: 0.03, ease: 'power2.out' });
+      }
+    }
+  }, [results]);
+
   return (
-    <div ref={modalRef} className="fixed inset-0 z-[150] flex items-start justify-center pt-[15vh] p-4 backdrop-blur-sm" style={{ background: 'rgba(26, 32, 44, 0.6)' }} onClick={onClose}>
+    <div ref={modalRef} className="fixed inset-0 z-[150] flex items-start justify-center pt-[15vh] p-4 backdrop-blur-sm" style={{ background: 'rgba(26, 32, 44, 0.6)' }} onClick={handleClose}>
       <div ref={contentRef} className="rounded-2xl w-full max-w-xl overflow-hidden leather-card" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)', boxShadow: '10px 10px 24px rgba(163, 177, 198, 0.65), -10px -10px 24px rgba(255, 255, 255, 0.9)' }} onClick={(e) => e.stopPropagation()}>
         {/* Search Input */}
         <div className="relative flex items-center px-4 py-3.5 border-b border-[var(--neu-border-subtle)] bg-[var(--neu-card-bg)]">
@@ -84,13 +103,13 @@ export default function SearchModal({ onClose }) {
             placeholder="Search plans, tasks, days..."
             className="w-full pl-10 pr-10 py-2.5 text-xs rounded-full focus:outline-none premium-search-input text-center font-bold tracking-wider"
           />
-          <button onClick={onClose} className="absolute right-7 top-1/2 -translate-y-1/2 text-muted hover:text-main transition-colors cursor-pointer z-10">
+          <button onClick={handleClose} className="absolute right-7 top-1/2 -translate-y-1/2 text-muted hover:text-main transition-colors cursor-pointer z-10">
             <X className="w-4 h-4 text-accent-primary" />
           </button>
         </div>
 
         {/* Results */}
-        <div className="max-h-[40vh] overflow-y-auto p-2">
+        <div ref={resultsRef} className="max-h-[40vh] overflow-y-auto p-2">
           {results.length === 0 && query.trim() && (
             <p className="text-center text-muted text-sm py-8 font-medium">No results found</p>
           )}
@@ -100,7 +119,7 @@ export default function SearchModal({ onClose }) {
               <button
                 key={i}
                 onClick={() => handleSelect(item)}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[var(--neu-hover-bg)] transition-all text-left group cursor-pointer border border-transparent hover:border-[var(--accent-orange)]"
+                className="search-result-item w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-[var(--neu-hover-bg)] transition-all text-left group cursor-pointer border border-transparent hover:border-[var(--accent-orange)]"
               >
                 <Icon className="w-4 h-4 text-accent-primary shrink-0" />
                 <span className="text-sm text-main flex-1 truncate group-hover:text-accent-primary font-semibold">{item.label}</span>

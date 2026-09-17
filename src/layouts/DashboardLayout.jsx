@@ -6,20 +6,7 @@ const DashboardLayout = React.memo(function DashboardLayout({ children, title, s
   const headerRef = useRef(null);
   const contentRef = useRef(null);
 
-  useEffect(() => {
-    if (pageRef.current) {
-      gsap.fromTo(
-        pageRef.current,
-        { opacity: 0.85 },
-        {
-          opacity: 1,
-          duration: 0.2,
-          ease: 'power1.out',
-          clearProps: 'all',
-        }
-      );
-    }
-  }, [title]);
+  // Page entrance is owned cleanly by BookPageTransition
 
   return (
     <div 

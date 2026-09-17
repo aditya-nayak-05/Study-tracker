@@ -3,11 +3,13 @@ import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
 import { Camera, User, Target, BookOpen } from 'lucide-react';
 import logoImg from '../assets/logo.png';
+import { modalEnter, softShake } from '../utils/motion';
 
 export default function CreateProfileModal() {
   const { dispatch, showToast } = useStudy();
   const modalRef = useRef(null);
   const formRef = useRef(null);
+  const nameInputRef = useRef(null);
   const [form, setForm] = useState({
     name: '',
     username: '',
@@ -19,12 +21,7 @@ export default function CreateProfileModal() {
   });
 
   useEffect(() => {
-    if (modalRef.current) {
-      gsap.fromTo(modalRef.current, { opacity: 0 }, { opacity: 1, duration: 0.4, ease: 'power2.out' });
-    }
-    if (formRef.current) {
-      gsap.fromTo(formRef.current, { y: 40, opacity: 0, scale: 0.95 }, { y: 0, opacity: 1, scale: 1, duration: 0.5, delay: 0.1, ease: 'back.out(1.2)' });
-    }
+    modalEnter(modalRef.current, formRef.current);
   }, []);
 
   const handleAvatarUpload = (e) => {
@@ -37,7 +34,10 @@ export default function CreateProfileModal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.name.trim()) return;
+    if (!form.name.trim()) {
+      if (nameInputRef.current) softShake(nameInputRef.current);
+      return;
+    }
     dispatch({ type: 'SET_PROFILE', payload: form });
     dispatch({
       type: 'ADD_GLOBAL_ACTIVITY',
@@ -91,6 +91,7 @@ export default function CreateProfileModal() {
             <User className="w-4 h-4 text-accent-primary" />Name <span className="text-[#e53e3e]">*</span>
           </label>
           <input
+            ref={nameInputRef}
             type="text"
             value={form.name}
             onChange={(e) => updateField('name', e.target.value)}

@@ -3,6 +3,8 @@ import gsap from 'gsap';
 import { Play, Pause, RotateCcw, Flame, Square } from 'lucide-react';
 import { useStudy } from '../context/StudyContext';
 
+import { getMotionDuration, getSpeedMultiplier, isReducedMotion } from '../utils/motion';
+
 const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
   const { state, dispatch } = useStudy();
   const mainTimer = state.mainTimer || {};
@@ -16,16 +18,25 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
   const circumference = 2 * Math.PI * radius;
 
   useEffect(() => {
-    if (timerRef.current) {
-      gsap.fromTo(timerRef.current, { scale: 0.9, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: 'back.out(1.5)' });
+    if (!timerRef.current) return;
+    if (getSpeedMultiplier() === 0 || isReducedMotion()) {
+      gsap.set(timerRef.current, { scale: 1, opacity: 1, clearProps: 'all' });
+      return;
     }
+    const dur = getMotionDuration(0.32);
+    gsap.fromTo(timerRef.current, { scale: 0.97, opacity: 0 }, { scale: 1, opacity: 1, duration: dur, ease: 'power3.out' });
   }, []);
 
   useEffect(() => {
-    if (circleRef.current) {
+    if (!circleRef.current) return;
+    const targetOffset = circumference * (1 - progress);
+    if (getSpeedMultiplier() === 0 || isReducedMotion()) {
+      circleRef.current.style.strokeDashoffset = `${targetOffset}px`;
+    } else {
+      const dur = getMotionDuration(0.4, { isMicro: true });
       gsap.to(circleRef.current, {
-        strokeDashoffset: circumference * (1 - progress),
-        duration: 0.5,
+        strokeDashoffset: targetOffset,
+        duration: dur,
         ease: 'power2.out',
       });
     }

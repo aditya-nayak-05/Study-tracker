@@ -1,15 +1,26 @@
 import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
+import { getMotionDuration, getSpeedMultiplier, isReducedMotion } from '../utils/motion';
 
 export const BarChart = React.memo(function BarChart({ data = [], maxHeight = 120, barColor = 'var(--accent-orange)' }) {
   const barsRef = useRef([]);
   const maxVal = Math.max(...data.map((d) => d.value), 1);
 
   useEffect(() => {
+    const isOff = getSpeedMultiplier() === 0 || isReducedMotion();
     barsRef.current.forEach((bar, i) => {
-      if (bar) {
-        const h = (data[i]?.value / maxVal) * maxHeight;
-        gsap.fromTo(bar, { height: 0 }, { height: (data[i]?.value / maxVal) * maxHeight, duration: 0.6, delay: i * 0.05, ease: 'power2.out' });
+      if (!bar) return;
+      const targetHeight = (data[i]?.value / maxVal) * maxHeight;
+      if (isOff) {
+        bar.style.height = `${targetHeight}px`;
+      } else {
+        const dur = getMotionDuration(0.5);
+        const mult = getSpeedMultiplier();
+        gsap.fromTo(
+          bar,
+          { height: 0 },
+          { height: targetHeight, duration: dur, delay: i * 0.04 * mult, ease: 'power2.out' }
+        );
       }
     });
   }, [data, maxVal, maxHeight]);
@@ -37,10 +48,15 @@ export const ProgressRing = React.memo(function ProgressRing({ percent = 0, size
   const circumference = 2 * Math.PI * radius;
 
   useEffect(() => {
-    if (circleRef.current) {
+    if (!circleRef.current) return;
+    const targetOffset = circumference * (1 - percent / 100);
+    if (getSpeedMultiplier() === 0 || isReducedMotion()) {
+      circleRef.current.style.strokeDashoffset = `${targetOffset}px`;
+    } else {
+      const dur = getMotionDuration(0.65);
       gsap.to(circleRef.current, {
-        strokeDashoffset: circumference * (1 - percent / 100),
-        duration: 0.8,
+        strokeDashoffset: targetOffset,
+        duration: dur,
         ease: 'power2.out',
       });
     }
@@ -71,18 +87,23 @@ export const AnimatedCounter = React.memo(function AnimatedCounter({ value = 0, 
   const prevVal = useRef(0);
 
   useEffect(() => {
-    if (ref.current) {
-      const obj = { val: prevVal.current };
-      gsap.to(obj, {
-        val: value,
-        duration: 0.8,
-        ease: 'power2.out',
-        onUpdate: () => {
-          if (ref.current) ref.current.textContent = Math.round(obj.val) + suffix;
-        },
-      });
+    if (!ref.current) return;
+    if (getSpeedMultiplier() === 0 || isReducedMotion()) {
+      ref.current.textContent = Math.round(value) + suffix;
       prevVal.current = value;
+      return;
     }
+    const obj = { val: prevVal.current };
+    const dur = getMotionDuration(0.6);
+    gsap.to(obj, {
+      val: value,
+      duration: dur,
+      ease: 'power2.out',
+      onUpdate: () => {
+        if (ref.current) ref.current.textContent = Math.round(obj.val) + suffix;
+      },
+    });
+    prevVal.current = value;
   }, [value, suffix]);
 
   return <span ref={ref} className={className}>{value}{suffix}</span>;
@@ -95,9 +116,13 @@ export const MiniLineChart = React.memo(function MiniLineChart({ data = [], widt
   const points = data.map((v, i) => `${i * step},${height - (v / maxVal) * (height - 8)}`).join(' ');
 
   useEffect(() => {
-    if (pathRef.current) {
-      const length = pathRef.current.getTotalLength();
-      gsap.fromTo(pathRef.current, { strokeDashoffset: length }, { strokeDashoffset: 0, duration: 1, ease: 'power2.out' });
+    if (!pathRef.current) return;
+    const length = pathRef.current.getTotalLength();
+    if (getSpeedMultiplier() === 0 || isReducedMotion()) {
+      gsap.set(pathRef.current, { strokeDashoffset: 0 });
+    } else {
+      const dur = getMotionDuration(0.7);
+      gsap.fromTo(pathRef.current, { strokeDashoffset: length }, { strokeDashoffset: 0, duration: dur, ease: 'power2.out' });
     }
   }, [data]);
 

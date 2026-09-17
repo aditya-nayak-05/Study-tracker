@@ -344,8 +344,9 @@ export default function PlanDetail() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-4">
-            {view === 'overview' ? (
-              <div className="space-y-6">
+            <div key={view} className="animate-view-fade">
+              {view === 'overview' ? (
+                <div className="space-y-6">
                 {/* 12-Month Roadmap Target & Strategy Card */}
                 <div className="p-6 space-y-4" style={cardStyle}>
                   <div className="flex items-center gap-3">
@@ -761,6 +762,7 @@ export default function PlanDetail() {
                 )}
               </div>
             )}
+            </div>
           </div>
 
           {/* Sidebar */}

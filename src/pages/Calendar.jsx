@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
 import DashboardLayout from '../layouts/DashboardLayout';
 import { ChevronLeft, ChevronRight, CheckCircle2, Circle, Clock, BookOpen, CalendarDays, AlertCircle } from 'lucide-react';
+import { temporalSlide } from '../utils/motion';
 import {
   startOfMonth, endOfMonth, eachDayOfInterval, startOfWeek, endOfWeek,
   isSameDay, formatDate, getAllTasksInPlan, getDaysInPlan,
@@ -17,13 +18,13 @@ export default function CalendarPage() {
   const [view, setView] = useState('month');
   const [selectedDate, setSelectedDate] = useState(new Date());
   const gridRef = useRef(null);
+  const navDirRef = useRef(1);
 
   const today = useMemo(() => new Date(), []);
 
   useEffect(() => {
     if (gridRef.current) {
-      const cells = gridRef.current.querySelectorAll('.cal-cell');
-      gsap.fromTo(cells, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.25, stagger: 0.01, ease: 'power2.out' });
+      temporalSlide(gridRef.current, navDirRef.current);
     }
   }, [currentDate, view]);
 
@@ -102,6 +103,7 @@ export default function CalendarPage() {
   }, [currentDate, view]);
 
   const navigate = (dir) => {
+    navDirRef.current = dir;
     const d = new Date(currentDate);
     if (view === 'month') d.setMonth(d.getMonth() + dir);
     else d.setDate(d.getDate() + 7 * dir);

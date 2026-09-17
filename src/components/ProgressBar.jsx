@@ -2,12 +2,14 @@ import React, { useRef, useEffect, useMemo } from 'react';
 import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
 import { getAllTasksInPlan, getCompletedCount } from '../utils/helpers';
+import { progressFlow } from '../utils/motion';
 
 const ProgressBar = React.memo(function ProgressBar() {
   const { activePlan } = useStudy();
   const barRef = useRef(null);
   const fillRef = useRef(null);
   const countRef = useRef(null);
+  const prevPercentRef = useRef(0);
 
   const { completed, total, percent } = useMemo(() => {
     if (!activePlan) return { completed: 0, total: 0, percent: 0 };
@@ -18,14 +20,15 @@ const ProgressBar = React.memo(function ProgressBar() {
 
   useEffect(() => {
     if (barRef.current) {
-      gsap.fromTo(barRef.current, { y: 60 }, { y: 0, duration: 0.5, ease: 'power3.out' });
+      gsap.fromTo(barRef.current, { y: 60 }, { y: 0, duration: 0.45, ease: 'power3.out' });
     }
   }, []);
 
   useEffect(() => {
     if (fillRef.current) {
-      gsap.to(fillRef.current, { width: `${percent}%`, duration: 0.8, ease: 'power2.out' });
+      progressFlow(fillRef.current, percent, 0.65);
     }
+    prevPercentRef.current = percent;
   }, [percent]);
 
   if (!activePlan) return null;

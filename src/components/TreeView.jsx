@@ -35,36 +35,70 @@ const TreeNode = React.memo(function TreeNode({ label, level = 0, children, prog
     setOpen((o) => !o);
   }, [hasChildren, onClick]);
 
-  const statusIcon = status === 'completed' ? (
-    <CheckCircle2 className="w-3.5 h-3.5 text-[#38a169] shrink-0" />
-  ) : status === 'in-progress' ? (
-    <Clock className="w-3.5 h-3.5 text-accent-primary shrink-0" />
-  ) : (
-    <Circle className="w-3.5 h-3.5 text-muted shrink-0" />
-  );
+  const handleRowClick = useCallback((e) => {
+    // Prevent double toggle if clicking an interactive inner button
+    if (e.target.closest('button') && !e.target.closest('.tree-node-click-target')) {
+      return;
+    }
+    toggle();
+  }, [toggle]);
 
-  const folderIcon = hasChildren ? (
-    open ? <FolderOpen className="w-4 h-4 text-accent-primary shrink-0" /> : <Folder className="w-4 h-4 text-muted shrink-0" />
+  const statusIcon = status === 'completed' ? (
+    <CheckCircle2 key="done" className="w-3.5 h-3.5 text-[#38a169] shrink-0 state-morph-icon" />
+  ) : status === 'in-progress' ? (
+    <Clock key="prog" className="w-3.5 h-3.5 text-accent-primary shrink-0 state-morph-icon" />
   ) : (
-    <FileText className="w-4 h-4 text-muted shrink-0" />
+    <Circle key="todo" className="w-3.5 h-3.5 text-muted shrink-0 state-morph-icon" />
   );
 
   return (
-    <div>
+    <div className="relative select-none">
       <div
-        className={`w-full flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-[var(--neu-hover-bg)] transition-colors text-left group ${isToday ? 'bg-[var(--accent-orange)]/15 border border-[var(--accent-orange)]/30 shadow-sm' : ''}`}
+        onClick={handleRowClick}
+        className={`w-full flex items-center gap-2 py-1.5 px-2 rounded-lg hover:bg-[var(--neu-hover-bg)] active:scale-[0.995] transition-all duration-150 text-left group cursor-pointer ${
+          isToday ? 'bg-[var(--accent-orange)]/15 border border-[var(--accent-orange)]/30 shadow-sm' : ''
+        }`}
         style={{ paddingLeft: level * 20 + 8 }}
       >
         {toggleBtn && <span className="shrink-0">{toggleBtn}</span>}
 
-        <button onClick={toggle} className="flex items-center gap-2 flex-1 min-w-0 cursor-pointer text-left">
+        <button
+          type="button"
+          onClick={(e) => { e.stopPropagation(); toggle(); }}
+          className="tree-node-click-target flex items-center gap-2 flex-1 min-w-0 cursor-pointer text-left focus:outline-none"
+        >
           {hasChildren ? (
-            open ? <ChevronDown className="w-3.5 h-3.5 text-muted shrink-0 transition-transform" /> : <ChevronRight className="w-3.5 h-3.5 text-muted shrink-0 transition-transform" />
+            <ChevronRight
+              className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                open ? 'rotate-90 text-accent-primary' : 'text-muted rotate-0 group-hover:text-main'
+              }`}
+            />
           ) : (
             <span className="w-3.5 shrink-0" />
           )}
-          {folderIcon}
-          <span className={`text-sm flex-1 truncate transition-colors ${status === 'completed' ? 'text-muted line-through opacity-75' : 'text-main'}`}>
+
+          {/* Animated Folder / Document Icon */}
+          <span className="shrink-0 transition-transform duration-200 ease-out group-hover:scale-110">
+            {hasChildren ? (
+              open ? (
+                <FolderOpen className="w-4 h-4 text-accent-primary transition-colors duration-150" />
+              ) : (
+                <Folder className="w-4 h-4 text-muted group-hover:text-main transition-colors duration-150" />
+              )
+            ) : (
+              <FileText className="w-4 h-4 text-muted group-hover:text-main transition-colors duration-150" />
+            )}
+          </span>
+
+          <span
+            className={`text-sm flex-1 truncate transition-colors duration-150 ${
+              status === 'completed'
+                ? 'text-muted line-through opacity-75'
+                : open && hasChildren
+                ? 'text-main font-medium'
+                : 'text-main'
+            }`}
+          >
             {label}
           </span>
         </button>
@@ -83,17 +117,20 @@ const TreeNode = React.memo(function TreeNode({ label, level = 0, children, prog
         {!hasChildren && statusIcon}
       </div>
 
-      {/* GPU-Accelerated 60fps CSS Grid Accordion */}
+      {/* ⚡ High-Speed 60-120fps Hardware-Accelerated Accordion with Physics Slide & Fade */}
       {hasChildren && (
-        <div
-          className="grid transition-all duration-200 ease-out"
-          style={{
-            gridTemplateRows: open ? '1fr' : '0fr',
-            opacity: open ? 1 : 0,
-          }}
-        >
-          <div className="overflow-hidden">
-            {children}
+        <div className={`tree-grid-accordion ${open ? 'tree-open' : 'tree-closed'}`}>
+          <div className="tree-content-inner">
+            <div className={`tree-content-glide relative ${open ? 'tree-open' : 'tree-closed'}`}>
+              {/* Subtle hierarchy connector guide line */}
+              {open && level >= 0 && (
+                <div
+                  className="absolute top-0 bottom-2 w-px bg-gradient-to-b from-[var(--neu-border-subtle)] via-[var(--neu-border-subtle)]/40 to-transparent pointer-events-none"
+                  style={{ left: level * 20 + 15 }}
+                />
+              )}
+              {children}
+            </div>
           </div>
         </div>
       )}
@@ -205,7 +242,7 @@ const TreeView = React.memo(function TreeView({ plan, onTaskClick, onAddMonth })
                       >
                         {/* Rich Structured Day Header Cards */}
                         {(day.objective || day.dsa || day.projectTask || day.revision) && (
-                          <div className="ml-10 my-2 p-3.5 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-sm space-y-2 text-left">
+                          <div className="ml-10 my-2 p-3.5 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-sm space-y-2 text-left transition-all duration-200 hover:border-accent-primary/40 hover:shadow-md">
                             {day.objective && (
                               <p className="text-xs text-main font-medium leading-relaxed">
                                 🎯 <span className="font-semibold text-accent-primary">Objective:</span> {day.objective}
@@ -213,17 +250,17 @@ const TreeView = React.memo(function TreeView({ plan, onTaskClick, onAddMonth })
                             )}
                             <div className="flex flex-wrap gap-1.5 pt-1">
                               {day.dsa && (
-                                <span className="text-[10px] px-2.5 py-1 rounded-lg font-semibold bg-[#6366f1]/15 text-[#818cf8] border border-[#6366f1]/30">
+                                <span className="text-[10px] px-2.5 py-1 rounded-lg font-semibold bg-[#6366f1]/15 text-[#818cf8] border border-[#6366f1]/30 transition-all duration-150 hover:scale-105 hover:bg-[#6366f1]/25">
                                   🧮 DSA: {day.dsa}
                                 </span>
                               )}
                               {day.projectTask && (
-                                <span className="text-[10px] px-2.5 py-1 rounded-lg font-semibold bg-[#ed8936]/15 text-[#ed8936] border border-[#ed8936]/30">
+                                <span className="text-[10px] px-2.5 py-1 rounded-lg font-semibold bg-[#ed8936]/15 text-[#ed8936] border border-[#ed8936]/30 transition-all duration-150 hover:scale-105 hover:bg-[#ed8936]/25">
                                   🚀 Project: {day.projectTask}
                                 </span>
                               )}
                               {day.revision && (
-                                <span className="text-[10px] px-2.5 py-1 rounded-lg font-semibold bg-[#38a169]/15 text-[#38a169] border border-[#38a169]/30">
+                                <span className="text-[10px] px-2.5 py-1 rounded-lg font-semibold bg-[#38a169]/15 text-[#38a169] border border-[#38a169]/30 transition-all duration-150 hover:scale-105 hover:bg-[#38a169]/25">
                                   🔁 Revision: {day.revision}
                                 </span>
                               )}
@@ -233,14 +270,14 @@ const TreeView = React.memo(function TreeView({ plan, onTaskClick, onAddMonth })
                         {day.tasks?.map((task) => {
                           const hasVideo = task.youtubeUrl && extractVideoId(task.youtubeUrl);
                           return (
-                            <div key={task.id} className="flex items-center gap-1">
+                            <div key={task.id} className="flex items-center gap-1 group/task">
                               <div className="flex-1">
                                 <TreeNode label={task.title} level={3} status={task.status} onClick={() => onTaskClick?.(task, day)} />
                               </div>
                               {hasVideo && (
                                 <button
                                   onClick={(e) => { e.stopPropagation(); navigate(`/learn/${plan.id}/${task.id}`); }}
-                                  className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium cursor-pointer shrink-0"
+                                  className="flex items-center gap-1 px-1.5 py-0.5 rounded text-[9px] font-medium cursor-pointer shrink-0 transition-transform duration-150 hover:scale-105 active:scale-95"
                                   style={{ background: 'var(--neu-card-bg)', color: 'var(--accent-orange)', border: '1px solid var(--neu-border)', boxShadow: '2px 2px 5px rgba(163, 177, 198, 0.4), -2px -2px 5px rgba(255, 255, 255, 0.8)' }}
                                 >
                                   <Play className="w-2.5 h-2.5" /> Watch

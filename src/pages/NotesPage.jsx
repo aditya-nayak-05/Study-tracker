@@ -3,7 +3,7 @@ import { useStudy } from '../context/StudyContext';
 import {
   FileText, Upload, Plus, Trash2, MoveLeft, MoveRight, Copy, Download,
   Eye, Grid, ZoomIn, ZoomOut, RotateCcw, ChevronLeft, ChevronRight,
-  BookOpen, Edit3, CheckSquare, Sparkles, Folder, FileUp, GripVertical,
+  BookOpen, Edit3, CheckSquare, Check, Sparkles, Folder, FileUp, GripVertical,
   HelpCircle, MessageSquare, Save, X, Layout, Layers, FileCode
 } from 'lucide-react';
 import { savePdfDocument, getAllPdfDocuments, getPdfDocument, deletePdfDocument } from '../utils/pdfStorage';
@@ -56,6 +56,8 @@ export default function NotesPage() {
   const [pageNotes, setPageNotes] = useState('');
   const [draggedPageIndex, setDraggedPageIndex] = useState(null);
   const [isDragOverDropZone, setIsDragOverDropZone] = useState(false);
+  const [saveStatus, setSaveStatus] = useState('saved');
+  const saveTimeoutRef = useRef(null);
 
   // UI Modals & Dropdowns
   const [showAddMenu, setShowAddMenu] = useState(false);
@@ -386,6 +388,9 @@ export default function NotesPage() {
   // Save current page notes
   const handleNotesChange = (text) => {
     setPageNotes(text);
+    setSaveStatus('saving');
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+
     if (!activeDoc || !activeDoc.pages?.[currentPageIndex]) return;
 
     const updatedPages = activeDoc.pages.map((p, i) =>
@@ -399,7 +404,16 @@ export default function NotesPage() {
     };
 
     setActiveDoc(updatedDoc);
-    savePdfDocument(updatedDoc, activeDoc.blob).catch((err) => console.error('Auto-save notes error:', err));
+    savePdfDocument(updatedDoc, activeDoc.blob)
+      .then(() => {
+        saveTimeoutRef.current = setTimeout(() => {
+          setSaveStatus('saved');
+        }, 300);
+      })
+      .catch((err) => {
+        console.error('Auto-save notes error:', err);
+        setSaveStatus('saved');
+      });
   };
 
   // Global Dropzone File Upload
@@ -834,8 +848,18 @@ export default function NotesPage() {
                     </span>
                   </div>
 
-                  <span className="text-[10px] text-muted font-semibold flex items-center gap-1">
-                    <Save className="w-3 h-3 text-accent-primary" /> Auto-saved
+                  <span className="text-[10px] font-semibold flex items-center gap-1.5 transition-opacity duration-200 text-muted">
+                    {saveStatus === 'saving' ? (
+                      <>
+                        <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-orange)] animate-pulse shrink-0" />
+                        <span className="opacity-80">Saving...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Check className="w-3.5 h-3.5 text-[#38a169] shrink-0" />
+                        <span className="text-[#38a169]">Saved ✓</span>
+                      </>
+                    )}
                   </span>
                 </div>
 

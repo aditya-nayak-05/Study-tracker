@@ -15,6 +15,7 @@ import {
   BookOpen, Target, Flame, TrendingUp, StickyNote, Youtube,
 } from 'lucide-react';
 import { extractVideoId, getThumbnailUrl, formatDuration } from '../utils/youtube';
+import { completionSweep, isReducedMotion, getMotionDuration, getSpeedMultiplier } from '../utils/motion';
 
 export default function Dashboard() {
   const { state, dispatch, activePlan, showToast } = useStudy();
@@ -24,12 +25,34 @@ export default function Dashboard() {
   const [quickTask, setQuickTask] = useState('');
 
   useEffect(() => {
-    if (cardsRef.current) {
-      const cards = cardsRef.current.querySelectorAll('.dash-card');
-      if (cards.length > 0) {
-        gsap.fromTo(cards, { y: 25, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.05, ease: 'power2.out' });
-      }
+    if (!cardsRef.current) return;
+    const cards = cardsRef.current.querySelectorAll('.dash-card');
+    if (cards.length === 0) return;
+
+    if (getSpeedMultiplier() === 0 || isReducedMotion()) {
+      gsap.set(cards, { y: 0, opacity: 1, scale: 1, clearProps: 'all' });
+      return;
     }
+
+    const ctx = gsap.context(() => {
+      const dur = getMotionDuration(0.42);
+      const mult = getSpeedMultiplier();
+      gsap.fromTo(
+        cards,
+        { y: 16, opacity: 0, scale: 0.985 },
+        {
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: dur,
+          stagger: 0.04 * mult,
+          ease: 'power3.out',
+          clearProps: 'transform,opacity',
+        }
+      );
+    }, cardsRef);
+
+    return () => ctx.revert();
   }, []);
 
   // Stats - wrapped in try-catch for safety
@@ -417,14 +440,17 @@ export default function Dashboard() {
                   {stats.todayTasks.map((task) => (
                     <div key={task.id} className="flex items-center justify-center gap-3 py-1.5 text-center">
                       <button
-                        onClick={() => dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: activePlan.id, taskId: task.id } })}
-                        className="w-4 h-4 rounded-full border-2 shrink-0 cursor-pointer transition-all"
+                        onClick={(e) => {
+                          completionSweep(e.currentTarget);
+                          dispatch({ type: 'CYCLE_TASK_STATUS', payload: { planId: activePlan.id, taskId: task.id } });
+                        }}
+                        className="w-4 h-4 rounded-full border-2 shrink-0 cursor-pointer transition-all duration-200"
                         style={{
                           borderColor: task.status === 'completed' ? '#38a169' : task.status === 'in-progress' ? 'var(--accent-orange)' : '#cbd5e0',
                           background: task.status === 'completed' ? '#38a169' : 'transparent',
                         }}
                       />
-                      <span className="text-xs font-bold truncate text-center" style={{ color: task.status === 'completed' ? '#718096' : 'var(--neu-text-main)', textDecoration: task.status === 'completed' ? 'line-through' : 'none' }}>{task.title}</span>
+                      <span className="text-xs font-bold truncate text-center transition-all duration-200" style={{ color: task.status === 'completed' ? '#718096' : 'var(--neu-text-main)', textDecoration: task.status === 'completed' ? 'line-through' : 'none', opacity: task.status === 'completed' ? 0.75 : 1 }}>{task.title}</span>
                     </div>
                   ))}
                 </div>

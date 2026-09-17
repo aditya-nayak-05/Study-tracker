@@ -1,13 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { FolderOpen, Plus } from 'lucide-react';
+import { gentleArrival } from '../utils/motion';
 
 const EmptyState = React.memo(function EmptyState({ title, description, actionLabel, onAction, icon: Icon = FolderOpen }) {
   const ref = useRef(null);
 
   useEffect(() => {
     if (ref.current) {
-      gsap.fromTo(ref.current, { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power2.out' });
+      gentleArrival(ref.current);
     }
   }, []);
 

@@ -4,6 +4,7 @@ import { useStudy } from '../context/StudyContext';
 import DashboardLayout from '../layouts/DashboardLayout';
 import { BarChart, ProgressRing, AnimatedCounter, MiniLineChart } from '../components/Charts';
 import StudyHoursChart from '../components/StudyHoursChart';
+import { isReducedMotion, getMotionDuration, getSpeedMultiplier } from '../utils/motion';
 import {
   Clock, TrendingUp, Flame, Award, Target, BarChart3, Calendar,
 } from 'lucide-react';
@@ -13,10 +14,26 @@ export default function Analytics() {
   const cardsRef = useRef(null);
 
   useEffect(() => {
-    if (cardsRef.current) {
-      const cards = cardsRef.current.querySelectorAll('.analytics-card');
-      gsap.fromTo(cards, { y: 20, opacity: 0, scale: 0.97 }, { y: 0, opacity: 1, scale: 1, duration: 0.35, stagger: 0.05, ease: 'power2.out' });
+    if (!cardsRef.current) return;
+    const cards = cardsRef.current.querySelectorAll('.analytics-card');
+    if (cards.length === 0) return;
+
+    if (getSpeedMultiplier() === 0 || isReducedMotion()) {
+      gsap.set(cards, { y: 0, opacity: 1, scale: 1, clearProps: 'all' });
+      return;
     }
+
+    const ctx = gsap.context(() => {
+      const dur = getMotionDuration(0.38);
+      const mult = getSpeedMultiplier();
+      gsap.fromTo(
+        cards,
+        { y: 16, opacity: 0, scale: 0.985 },
+        { y: 0, opacity: 1, scale: 1, duration: dur, stagger: 0.04 * mult, ease: 'power3.out', clearProps: 'transform,opacity' }
+      );
+    }, cardsRef);
+
+    return () => ctx.revert();
   }, []);
 
   const stats = useMemo(() => {

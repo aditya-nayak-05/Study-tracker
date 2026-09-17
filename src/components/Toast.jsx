@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { CheckCircle, AlertCircle, Info, X } from 'lucide-react';
 import { useStudy } from '../context/StudyContext';
+import { toastEnter, toastExit } from '../utils/motion';
 
 const icons = {
   success: CheckCircle,
@@ -23,19 +24,13 @@ function ToastItem({ toast, onRemove }) {
 
   useEffect(() => {
     if (ref.current) {
-      gsap.fromTo(ref.current, { x: 100, opacity: 0 }, { x: 0, opacity: 1, duration: 0.3, ease: 'power2.out' });
+      toastEnter(ref.current);
     }
   }, []);
 
   const handleClose = () => {
     if (ref.current) {
-      gsap.to(ref.current, {
-        x: 100,
-        opacity: 0,
-        duration: 0.2,
-        ease: 'power2.in',
-        onComplete: () => onRemove(toast.id),
-      });
+      toastExit(ref.current, () => onRemove(toast.id));
     } else {
       onRemove(toast.id);
     }

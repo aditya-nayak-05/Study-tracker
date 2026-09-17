@@ -4,6 +4,8 @@ import { useStudy } from '../context/StudyContext';
 import { availableFonts } from '../data/fonts';
 import { Type, Check, X, Sparkles } from 'lucide-react';
 
+import { modalEnter, modalExit } from '../utils/motion';
+
 export default function FontPickerModal({ onClose }) {
   const modalRef = useRef(null);
   const backdropRef = useRef(null);
@@ -12,12 +14,7 @@ export default function FontPickerModal({ onClose }) {
 
   useEffect(() => {
     if (modalRef.current && backdropRef.current) {
-      gsap.fromTo(backdropRef.current, { opacity: 0 }, { opacity: 1, duration: 0.25 });
-      gsap.fromTo(
-        modalRef.current,
-        { scale: 0.92, y: 15, opacity: 0 },
-        { scale: 1, y: 0, opacity: 1, duration: 0.3, ease: 'power2.out' }
-      );
+      modalEnter(backdropRef.current, modalRef.current);
     }
   }, []);
 
@@ -32,13 +29,7 @@ export default function FontPickerModal({ onClose }) {
 
   const handleClose = () => {
     if (modalRef.current && backdropRef.current) {
-      gsap.to(backdropRef.current, { opacity: 0, duration: 0.2 });
-      gsap.to(modalRef.current, {
-        scale: 0.92,
-        opacity: 0,
-        duration: 0.2,
-        onComplete: onClose,
-      });
+      modalExit(backdropRef.current, modalRef.current, onClose);
     } else {
       onClose();
     }

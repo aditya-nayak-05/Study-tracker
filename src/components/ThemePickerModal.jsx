@@ -1,24 +1,44 @@
-import React from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import { X } from 'lucide-react';
 import { themes } from '../data/themes';
+import { modalEnter, modalExit } from '../utils/motion';
 
 export default function ThemePickerModal({ isOpen, onClose, currentTheme, onSelect }) {
+  const backdropRef = useRef(null);
+  const modalRef = useRef(null);
+
+  useEffect(() => {
+    if (isOpen && backdropRef.current && modalRef.current) {
+      modalEnter(backdropRef.current, modalRef.current);
+    }
+  }, [isOpen]);
+
+  const handleClose = useCallback(() => {
+    if (backdropRef.current && modalRef.current) {
+      modalExit(backdropRef.current, modalRef.current, onClose);
+    } else {
+      onClose();
+    }
+  }, [onClose]);
+
   if (!isOpen) return null;
 
   return (
     <div
+      ref={backdropRef}
       className="fixed inset-0 z-[200] flex items-center justify-center p-4"
       style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)' }}
-      onClick={onClose}
+      onClick={handleClose}
     >
       <div
+        ref={modalRef}
         className="w-full max-w-lg rounded-2xl p-6 relative neu-card max-h-[85vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close */}
         <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 rounded-lg cursor-pointer inset-field z-10"
+          onClick={handleClose}
+          className="absolute top-4 right-4 p-1.5 rounded-lg cursor-pointer inset-field z-10 hover:scale-105 active:scale-95 transition-transform"
         >
           <X className="w-4 h-4 text-muted" />
         </button>

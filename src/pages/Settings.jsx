@@ -10,7 +10,9 @@ import InstallPWAButton from '../components/InstallPWAButton';
 import {
   Settings as SettingsIcon, Trash2, Download, Upload, Zap, Clock,
   AlertTriangle, FileDown, FileUp, Database, HardDrive, Type, Check, Laptop, Palette, Target,
+  Minus, Plus, RotateCcw, Play, Sparkles,
 } from 'lucide-react';
+import { ANIMATION_SPEED_LEVELS, ANIMATION_STYLES, triggerMotionDemo } from '../utils/motion';
 
 export default function Settings() {
   const { state, dispatch, showToast } = useStudy();
@@ -19,6 +21,14 @@ export default function Settings() {
   const importFileRef = useRef(null);
   const [confirmReset, setConfirmReset] = useState(false);
   const [settings, setSettings] = useState(state.settings);
+  const [previewing, setPreviewing] = useState(false);
+  const previewCardRef = useRef(null);
+  const previewBadgesRef = useRef([]);
+  const previewProgressRef = useRef(null);
+
+  useEffect(() => {
+    setSettings(state.settings);
+  }, [state.settings]);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -31,6 +41,59 @@ export default function Settings() {
     setSettings((s) => ({ ...s, [key]: value }));
     dispatch({ type: 'UPDATE_SETTINGS', payload: { [key]: value } });
   }, [dispatch]);
+
+  const currentSpeedLevel = settings.animationSpeed ?? 3;
+  const currentSpeedConfig = ANIMATION_SPEED_LEVELS.find((l) => l.level === currentSpeedLevel) || ANIMATION_SPEED_LEVELS[3];
+
+  const currentStyleId = settings.animationStyle || 'smooth';
+  const currentStyleConfig = ANIMATION_STYLES.find((s) => s.id === currentStyleId) || ANIMATION_STYLES[0];
+
+  const handleSpeedChange = useCallback((newLevel) => {
+    const safeLevel = Math.max(0, Math.min(6, newLevel));
+    updateSetting('animationSpeed', safeLevel);
+    updateSetting('animationsEnabled', safeLevel > 0);
+    const targetConfig = ANIMATION_SPEED_LEVELS.find((l) => l.level === safeLevel) || ANIMATION_SPEED_LEVELS[3];
+    if (safeLevel === 0) {
+      showToast('Animations disabled (Instant mode)', 'info');
+    } else {
+      showToast(`Motion set to ${targetConfig.label} (${targetConfig.speedText})`, 'success');
+    }
+  }, [updateSetting, showToast]);
+
+  const handleStyleChange = useCallback((styleId) => {
+    updateSetting('animationStyle', styleId);
+    const targetStyle = ANIMATION_STYLES.find((s) => s.id === styleId) || ANIMATION_STYLES[0];
+    showToast(`Motion style set to ${targetStyle.name} (${targetStyle.subtitle}) ✨`, 'success');
+  }, [updateSetting, showToast]);
+
+  const handleDecrease = useCallback(() => {
+    if (currentSpeedLevel > 0) {
+      handleSpeedChange(currentSpeedLevel - 1);
+    }
+  }, [currentSpeedLevel, handleSpeedChange]);
+
+  const handleIncrease = useCallback(() => {
+    if (currentSpeedLevel < 6) {
+      handleSpeedChange(currentSpeedLevel + 1);
+    }
+  }, [currentSpeedLevel, handleSpeedChange]);
+
+  const handleResetSpeed = useCallback(() => {
+    handleSpeedChange(3);
+    handleStyleChange('smooth');
+  }, [handleSpeedChange, handleStyleChange]);
+
+  const handleTriggerPreview = useCallback(() => {
+    if (previewing) return;
+    setPreviewing(true);
+    triggerMotionDemo(
+      previewCardRef.current,
+      previewBadgesRef.current,
+      previewProgressRef.current,
+      () => setPreviewing(false),
+      currentStyleId
+    );
+  }, [previewing, currentStyleId]);
 
   const handleExportData = useCallback(() => {
     const data = storage.exportAllData();
@@ -275,23 +338,288 @@ export default function Settings() {
 
         {/* Right Column: Animations, Data Management, Danger Zone (Notebook Ruled Sidebar) */}
         <div className="w-full xl:w-96 space-y-6 shrink-0">
-          {/* Animations */}
+          {/* Animation & Motion */}
           <div className="notebook-settings-card p-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <Zap className="w-4 h-4 text-accent-primary" />
+            <div className="notebook-header-line">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <Zap className="w-4 h-4 text-accent-primary" />
+                  <div>
+                    <h3 className="text-sm font-bold text-main">Animation & Motion</h3>
+                    <p className="text-xs text-muted">Customize how fast interface animations and transitions feel throughout Study Flow.</p>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  title={currentSpeedLevel > 0 ? 'Turn animations off' : 'Turn animations on'}
+                  onClick={() => handleSpeedChange(currentSpeedLevel > 0 ? 0 : 3)}
+                  className="w-12 h-7 rounded-full flex items-center px-1 cursor-pointer transition-colors shrink-0"
+                  style={{
+                    background: 'var(--neu-card-bg)',
+                    boxShadow: currentSpeedLevel > 0
+                      ? 'inset 2px 2px 4px rgba(163, 177, 198, 0.6), inset -2px -2px 4px rgba(255, 255, 255, 0.9)'
+                      : '3px 3px 6px rgba(163, 177, 198, 0.5), -3px -3px 6px rgba(255, 255, 255, 0.8)'
+                  }}
+                >
+                  <div
+                    className={`w-5 h-5 rounded-full transition-transform ${
+                      currentSpeedLevel > 0 ? 'translate-x-5 bg-[#38a169]' : 'bg-[#a0aec0]'
+                    }`}
+                    style={{ boxShadow: '1px 1px 3px rgba(0,0,0,0.2)' }}
+                  />
+                </button>
+              </div>
+            </div>
+
+            <div className="space-y-4 pt-1">
+              {/* Animation Speed Status */}
+              <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm font-bold text-main">Animations</h3>
-                  <p className="text-xs text-muted">Toggle GSAP animations globally</p>
+                  <span className="text-[11px] font-semibold text-muted uppercase tracking-wider block">Animation Speed</span>
+                  <div className="flex items-baseline gap-2 mt-0.5">
+                    <span className="text-base font-bold text-main">
+                      {currentSpeedConfig.label}
+                    </span>
+                    <span
+                      className="text-xs font-mono font-semibold px-2 py-0.5 rounded-md text-accent-primary"
+                      style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)' }}
+                    >
+                      {currentSpeedConfig.speedText}
+                    </span>
+                  </div>
+                </div>
+                <span className="text-[11px] font-mono text-muted">
+                  Level {currentSpeedLevel} / 6
+                </span>
+              </div>
+
+              {/* Stepper Controls: [ - ] Decrease | Current Speed | [ + ] Increase */}
+              <div
+                className="flex items-center justify-between gap-2 p-1.5 rounded-2xl"
+                style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)' }}
+              >
+                <button
+                  type="button"
+                  disabled={currentSpeedLevel <= 0}
+                  onClick={handleDecrease}
+                  title="Decrease animation speed"
+                  aria-label="Decrease animation speed"
+                  className="precision-press-btn w-9 h-9 rounded-xl flex items-center justify-center text-main cursor-pointer"
+                  style={{
+                    background: 'var(--neu-card-bg)',
+                    boxShadow: currentSpeedLevel <= 0 ? 'none' : '2px 2px 5px rgba(163, 177, 198, 0.5), -2px -2px 5px rgba(255, 255, 255, 0.85)',
+                    border: '1px solid var(--neu-border)'
+                  }}
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+
+                <div className="flex-1 text-center py-0.5 px-2">
+                  <div className="text-xs font-bold text-main">
+                    {currentSpeedConfig.label}
+                  </div>
+                  <div className="text-[10px] text-muted truncate">
+                    {currentSpeedConfig.description}
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  disabled={currentSpeedLevel >= 6}
+                  onClick={handleIncrease}
+                  title="Increase animation speed"
+                  aria-label="Increase animation speed"
+                  className="precision-press-btn w-9 h-9 rounded-xl flex items-center justify-center text-main cursor-pointer"
+                  style={{
+                    background: 'var(--neu-card-bg)',
+                    boxShadow: currentSpeedLevel >= 6 ? 'none' : '2px 2px 5px rgba(163, 177, 198, 0.5), -2px -2px 5px rgba(255, 255, 255, 0.85)',
+                    border: '1px solid var(--neu-border)'
+                  }}
+                >
+                  <Plus className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Visual Motion Dial / Step Indicators */}
+              <div className="pt-0.5">
+                <div className="flex justify-between items-center mb-1 px-1">
+                  <span className="text-[10px] text-muted font-medium">Off</span>
+                  <span className="text-[10px] text-muted font-medium">Fast</span>
+                  <span className="text-[10px] text-muted font-medium">Normal</span>
+                  <span className="text-[10px] text-muted font-medium">Slow</span>
+                  <span className="text-[10px] text-muted font-medium">V.Slow</span>
+                </div>
+                <div className="relative flex items-center justify-between p-1.5 rounded-xl motion-dial-track">
+                  {ANIMATION_SPEED_LEVELS.map((lvl) => {
+                    const isCurrent = lvl.level === currentSpeedLevel;
+                    return (
+                      <button
+                        key={lvl.level}
+                        type="button"
+                        onClick={() => handleSpeedChange(lvl.level)}
+                        title={`${lvl.label} (${lvl.speedText})`}
+                        className={`group relative flex items-center justify-center w-6 h-6 rounded-lg cursor-pointer transition-all duration-150 ${
+                          isCurrent ? 'scale-110 font-bold' : 'text-muted hover:text-main'
+                        }`}
+                        style={
+                          isCurrent
+                            ? {
+                                background: 'var(--accent-primary)',
+                                color: '#ffffff',
+                                boxShadow: '0 2px 6px rgba(0, 0, 0, 0.25)',
+                              }
+                            : {}
+                        }
+                      >
+                        <span className={`text-[10px] ${isCurrent ? 'text-white' : ''}`}>
+                          {lvl.level}
+                        </span>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
-              <button
-                onClick={() => updateSetting('animationsEnabled', !settings.animationsEnabled)}
-                className="w-12 h-7 rounded-full flex items-center px-1 cursor-pointer transition-colors"
-                style={{ background: 'var(--neu-card-bg)', boxShadow: settings.animationsEnabled ? 'inset 2px 2px 4px rgba(163, 177, 198, 0.6), inset -2px -2px 4px rgba(255, 255, 255, 0.9)' : '3px 3px 6px rgba(163, 177, 198, 0.5), -3px -3px 6px rgba(255, 255, 255, 0.8)' }}
+
+              {/* Animation Style Selector */}
+              <div className="pt-2 border-t border-[var(--neu-border-subtle)] space-y-2">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="text-[11px] font-semibold text-muted uppercase tracking-wider block">Animation Style</span>
+                    <span className="text-[10px] text-muted">Behavior, easing & visual character</span>
+                  </div>
+                  <span
+                    className="text-xs font-mono font-semibold px-2 py-0.5 rounded-md text-accent-primary"
+                    style={{ background: 'var(--neu-card-bg)', boxShadow: 'var(--neu-shadow-inset)' }}
+                  >
+                    {currentStyleConfig.name}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  {ANIMATION_STYLES.map((style) => {
+                    const isSelected = style.id === currentStyleId;
+                    return (
+                      <button
+                        key={style.id}
+                        type="button"
+                        onClick={() => handleStyleChange(style.id)}
+                        className={`p-2.5 rounded-xl flex flex-col text-left transition-all cursor-pointer border relative ${
+                          isSelected
+                            ? 'border-accent-primary'
+                            : 'border-[var(--neu-border-subtle)] hover:border-[var(--accent-primary)]/40'
+                        }`}
+                        style={{
+                          background: 'var(--neu-card-bg)',
+                          boxShadow: isSelected
+                            ? 'inset 2px 2px 4px rgba(163, 177, 198, 0.6), inset -2px -2px 4px rgba(255, 255, 255, 0.9)'
+                            : '2px 2px 4px rgba(163, 177, 198, 0.35), -2px -2px 4px rgba(255, 255, 255, 0.75)',
+                        }}
+                      >
+                        <div className="flex items-center justify-between w-full mb-0.5">
+                          <span className={`text-xs font-bold ${isSelected ? 'text-accent-primary' : 'text-main'}`}>
+                            {style.name}
+                          </span>
+                          <span className="text-[9px] px-1 py-0.2 rounded font-medium bg-black/5 dark:bg-white/10 text-muted">
+                            {style.badge}
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-medium text-accent-primary/90 mb-1">
+                          {style.subtitle}
+                        </span>
+                        <span className="text-[9px] text-muted leading-tight line-clamp-2">
+                          {style.description}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Action Buttons: Reset & Preview */}
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={handleResetSpeed}
+                  disabled={currentSpeedLevel === 3 && currentStyleId === 'smooth'}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl text-xs text-muted hover:text-main cursor-pointer precision-press-btn font-medium transition-all"
+                  style={{
+                    background: 'var(--neu-card-bg)',
+                    boxShadow: (currentSpeedLevel === 3 && currentStyleId === 'smooth') ? 'none' : '2px 2px 4px rgba(163, 177, 198, 0.4), -2px -2px 4px rgba(255, 255, 255, 0.8)',
+                    border: '1px solid var(--neu-border)'
+                  }}
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  Reset
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleTriggerPreview}
+                  disabled={previewing}
+                  className="flex-1 flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl text-xs text-accent-primary hover:brightness-110 cursor-pointer precision-press-btn font-semibold transition-all"
+                  style={{
+                    background: 'var(--neu-card-bg)',
+                    boxShadow: '2px 2px 4px rgba(163, 177, 198, 0.4), -2px -2px 4px rgba(255, 255, 255, 0.8)',
+                    border: '1px solid var(--neu-border)'
+                  }}
+                >
+                  <Play className={`w-3.5 h-3.5 ${previewing ? 'animate-spin' : ''}`} />
+                  {previewing ? 'Playing...' : 'Preview'}
+                </button>
+              </div>
+
+              {/* Interactive Motion Sample Box */}
+              <div
+                ref={previewCardRef}
+                className="p-3 rounded-xl border border-[var(--neu-border-subtle)] transition-all"
+                style={{
+                  background: 'var(--neu-inset-bg)',
+                  boxShadow: 'var(--neu-shadow-inset)',
+                }}
               >
-                <div className={`w-5 h-5 rounded-full transition-transform ${settings.animationsEnabled ? 'translate-x-5 bg-[#38a169]' : 'bg-[#a0aec0]'}`} style={{ boxShadow: '1px 1px 3px rgba(0,0,0,0.2)' }} />
-              </button>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-[10px] font-bold text-muted flex items-center gap-1 uppercase tracking-wider">
+                    <Sparkles className="w-3 h-3 text-accent-primary" /> Live Motion Sample
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[10px] font-medium text-accent-primary">
+                      {currentStyleConfig.subtitle}
+                    </span>
+                    <span className="text-[10px] font-mono text-muted">
+                      ({currentSpeedConfig.speedText})
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1.5 mb-2.5">
+                  <div
+                    ref={(el) => (previewBadgesRef.current[0] = el)}
+                    className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-accent-primary/10 text-accent-primary border border-accent-primary/20"
+                  >
+                    {currentStyleConfig.name} Flow
+                  </div>
+                  <div
+                    ref={(el) => (previewBadgesRef.current[1] = el)}
+                    className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                  >
+                    {currentStyleConfig.enterOffset > 0 ? `${currentStyleConfig.enterOffset}px Move` : 'Pure Fade'}
+                  </div>
+                  <div
+                    ref={(el) => (previewBadgesRef.current[2] = el)}
+                    className="px-2 py-0.5 rounded-md text-[10px] font-medium bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20"
+                  >
+                    {currentStyleConfig.blurAmount !== '0px' ? `${currentStyleConfig.blurAmount} Blur` : `${currentStyleConfig.scaleFactor}x Scale`}
+                  </div>
+                </div>
+
+                <div className="h-1.5 w-full rounded-full overflow-hidden bg-black/10 dark:bg-white/10">
+                  <div
+                    ref={previewProgressRef}
+                    className="h-full rounded-full bg-accent-primary"
+                    style={{ width: '100%' }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
 
