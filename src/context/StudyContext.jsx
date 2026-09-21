@@ -43,11 +43,13 @@ const DEFAULT_UI = {
 
 import { dsRoadmap } from '../data/dsRoadmap';
 import { aiFullStackRoadmap } from '../data/aiFullStackRoadmap';
+import { aiWebDevRoadmap } from '../data/aiWebDevRoadmap';
 
 function createDefaultState() {
   const loadedPlans = storage.getItem('plans', []);
   const hasDsRoadmap = loadedPlans.some((p) => p.id === 'ds-roadmap-plan-id');
   const hasAiRoadmap = loadedPlans.some((p) => p.id === 'ai-fullstack-roadmap-plan-id');
+  const hasAiWebDevRoadmap = loadedPlans.some((p) => p.id === 'ai-web-dev-main-id' || p.name === 'ai web dev (main)');
 
   let plans = [...loadedPlans];
   if (!hasDsRoadmap) {
@@ -55,6 +57,9 @@ function createDefaultState() {
   }
   if (!hasAiRoadmap) {
     plans.push(aiFullStackRoadmap);
+  }
+  if (!hasAiWebDevRoadmap) {
+    plans.push(aiWebDevRoadmap);
   }
 
   const loadedUi = storage.getItem('ui', DEFAULT_UI);
