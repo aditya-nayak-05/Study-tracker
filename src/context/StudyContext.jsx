@@ -63,7 +63,7 @@ function createDefaultState() {
   }
 
   const loadedUi = storage.getItem('ui', DEFAULT_UI);
-  const ui = !loadedUi.activePlanId ? { ...loadedUi, activePlanId: 'ds-roadmap-plan-id' } : loadedUi;
+  const ui = (!hasAiWebDevRoadmap || !loadedUi.activePlanId) ? { ...loadedUi, activePlanId: 'ai-web-dev-main-id' } : loadedUi;
 
   const rawSettings = storage.getItem('settings', DEFAULT_SETTINGS);
   const storedSpeed = getStoredSpeedLevel();
