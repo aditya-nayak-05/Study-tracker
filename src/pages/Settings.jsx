@@ -10,7 +10,7 @@ import InstallPWAButton from '../components/InstallPWAButton';
 import {
   Settings as SettingsIcon, Trash2, Download, Upload, Zap, Clock,
   AlertTriangle, FileDown, FileUp, Database, HardDrive, Type, Check, Laptop, Palette, Target,
-  Minus, Plus, RotateCcw, Play, Sparkles,
+  Minus, Plus, RotateCcw, Play, Sparkles, Archive, ArchiveRestore,
 } from 'lucide-react';
 import { ANIMATION_SPEED_LEVELS, ANIMATION_STYLES, triggerMotionDemo } from '../utils/motion';
 
@@ -148,6 +148,21 @@ export default function Settings() {
     showToast('Application reset', 'info');
     setConfirmReset(false);
     setTimeout(() => window.location.reload(), 500);
+  }, [dispatch, showToast]);
+
+  const handleUnarchivePlan = useCallback((plan) => {
+    dispatch({
+      type: 'UPDATE_PLAN',
+      payload: { id: plan.id, updates: { archived: false } },
+    });
+    showToast(`"${plan.name}" removed from archive and restored!`, 'success');
+  }, [dispatch, showToast]);
+
+  const handleDeleteArchivedPlan = useCallback((plan) => {
+    if (window.confirm(`Permanently delete "${plan.name}"? This cannot be undone.`)) {
+      dispatch({ type: 'DELETE_PLAN', payload: plan.id });
+      showToast(`"${plan.name}" permanently deleted`, 'info');
+    }
   }, [dispatch, showToast]);
 
   const storageSize = storage.getStorageSize();
@@ -334,6 +349,111 @@ export default function Settings() {
               </div>
             </div>
           </div>
+
+          {/* Archived Plans Section */}
+          {(() => {
+            const archivedPlans = (state.plans || []).filter((p) => p.archived);
+            return (
+              <div className="notebook-settings-card p-6">
+                <div className="notebook-header-line flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Archive className="w-5 h-5 text-accent-primary" />
+                    <div>
+                      <h3 className="text-sm font-bold text-main flex items-center gap-2">
+                        Archived Plans
+                        <span className="text-xs px-2 py-0.5 rounded-full font-semibold" style={{ background: 'var(--neu-inset-bg)', color: 'var(--neu-text-muted)', border: '1px solid var(--neu-border)' }}>
+                          {archivedPlans.length}
+                        </span>
+                      </h3>
+                      <p className="text-xs text-muted">View plans you've archived and restore or permanently remove them</p>
+                    </div>
+                  </div>
+                </div>
+
+                {archivedPlans.length === 0 ? (
+                  <div className="py-8 text-center rounded-xl" style={{ background: 'var(--neu-inset-bg)', border: '1px dashed var(--neu-border)' }}>
+                    <Archive className="w-8 h-8 text-muted mx-auto mb-2 opacity-50" />
+                    <p className="text-xs text-muted font-medium">No archived plans</p>
+                    <p className="text-[11px] text-muted opacity-75 mt-0.5">Plans you archive from the Study Plans page will appear here</p>
+                  </div>
+                ) : (
+                  <div className="space-y-3 pt-2">
+                    {archivedPlans.map((plan) => {
+                      const totalTasks = (plan.months || []).reduce((acc, m) =>
+                        acc + (m.weeks || []).reduce((wAcc, w) =>
+                          wAcc + (w.days || []).reduce((dAcc, d) => dAcc + (d.tasks || []).length, 0), 0), 0);
+
+                      return (
+                        <div
+                          key={plan.id}
+                          className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl gap-3 transition-all"
+                          style={{
+                            background: 'var(--neu-card-bg)',
+                            boxShadow: 'var(--neu-shadow-raised)',
+                            border: '1px solid var(--neu-border)',
+                          }}
+                        >
+                          <div className="flex items-start sm:items-center gap-3 min-w-0">
+                            <div
+                              className="w-3.5 h-3.5 rounded-full shrink-0 mt-1 sm:mt-0"
+                              style={{ background: plan.color || 'var(--accent-primary)' }}
+                            />
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <h4 className="text-sm font-bold text-main truncate">{plan.name}</h4>
+                                <span className="text-[10px] px-2 py-0.5 rounded-md font-medium text-muted uppercase tracking-wider" style={{ background: 'var(--neu-inset-bg)' }}>
+                                  {plan.category || 'general'}
+                                </span>
+                              </div>
+                              {plan.description && (
+                                <p className="text-xs text-muted truncate mt-0.5 max-w-md">{plan.description}</p>
+                              )}
+                              <div className="flex items-center gap-3 mt-1 text-[11px] text-muted">
+                                <span>{plan.months?.length || 0} Months</span>
+                                <span>•</span>
+                                <span>{totalTasks} Tasks</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+                            <button
+                              type="button"
+                              onClick={() => handleUnarchivePlan(plan)}
+                              title="Remove from archived and restore to active plans"
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-accent-primary hover:brightness-110 cursor-pointer transition-all active:scale-95"
+                              style={{
+                                background: 'var(--neu-card-bg)',
+                                boxShadow: '2px 2px 5px rgba(163, 177, 198, 0.4), -2px -2px 5px rgba(255, 255, 255, 0.8)',
+                                border: '1px solid var(--neu-border)'
+                              }}
+                            >
+                              <ArchiveRestore className="w-3.5 h-3.5" />
+                              Remove from Archive
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteArchivedPlan(plan)}
+                              title="Delete plan permanently"
+                              className="flex items-center justify-center p-2 rounded-xl text-red-500 hover:text-red-600 hover:bg-red-500/10 cursor-pointer transition-all active:scale-95"
+                              style={{
+                                background: 'var(--neu-card-bg)',
+                                boxShadow: '2px 2px 4px rgba(163, 177, 198, 0.3), -2px -2px 4px rgba(255, 255, 255, 0.7)',
+                                border: '1px solid var(--neu-border)'
+                              }}
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
 
         {/* Right Column: Animations, Data Management, Danger Zone (Notebook Ruled Sidebar) */}
