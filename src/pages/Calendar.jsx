@@ -28,10 +28,11 @@ export default function CalendarPage() {
     }
   }, [currentDate, view]);
 
-  // ─── Build tasks-by-date map from ALL plans ───
+  // ─── Build tasks-by-date map from ACTIVE plans ───
   const tasksByDate = useMemo(() => {
     const map = {};
     (state.plans || []).forEach((plan) => {
+      if (plan.archived) return;
       (plan.months || []).forEach((month) => {
         (month.weeks || []).forEach((week) => {
           (week.days || []).forEach((day) => {
@@ -171,7 +172,7 @@ export default function CalendarPage() {
         <div className="p-4 rounded-xl flex flex-col items-center justify-center text-center gap-2" style={cardStyle}>
           <BookOpen className="w-5 h-5 text-center" style={{ color: 'var(--accent-orange)' }} />
           <div className="text-center">
-            <p className="text-xl font-black text-main text-center">{(state.plans || []).length}</p>
+            <p className="text-xl font-black text-main text-center">{(state.plans || []).filter((p) => !p.archived).length}</p>
             <p className="text-[11px] font-bold text-center uppercase tracking-wider" style={{ color: 'var(--neu-text-muted)' }}>Active plans</p>
           </div>
         </div>

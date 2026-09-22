@@ -38,6 +38,7 @@ export default function SearchModal({ onClose }) {
     const items = [];
 
     state.plans.forEach((plan) => {
+      if (plan.archived) return;
       if (plan.name.toLowerCase().includes(q)) {
         items.push({ type: 'plan', label: plan.name, planId: plan.id, icon: BookOpen });
       }
