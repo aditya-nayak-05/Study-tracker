@@ -63,7 +63,14 @@ function createDefaultState() {
   }
 
   const loadedUi = storage.getItem('ui', DEFAULT_UI);
-  const ui = (!hasAiWebDevRoadmap || !loadedUi.activePlanId) ? { ...loadedUi, activePlanId: 'ai-web-dev-main-id' } : loadedUi;
+  let ui = (!hasAiWebDevRoadmap || !loadedUi.activePlanId) ? { ...loadedUi, activePlanId: 'ai-web-dev-main-id' } : loadedUi;
+
+  // Ensure activePlanId is not an archived plan
+  const isActiveArchived = plans.some((p) => p.id === ui.activePlanId && p.archived);
+  if (isActiveArchived) {
+    const firstUnarchived = plans.find((p) => !p.archived);
+    ui = { ...ui, activePlanId: firstUnarchived ? firstUnarchived.id : null };
+  }
 
   const rawSettings = storage.getItem('settings', DEFAULT_SETTINGS);
   const storedSpeed = getStoredSpeedLevel();
@@ -362,10 +369,27 @@ function reducer(state, action) {
       return { ...state, plans: [...state.plans, action.payload] };
 
     case 'UPDATE_PLAN': {
-      const plans = state.plans.map((p) =>
-        p.id === action.payload.id ? { ...p, ...action.payload.updates, updatedAt: new Date().toISOString() } : p
-      );
-      return { ...state, plans };
+      const isArchivingActive = action.payload.updates?.archived === true && state.ui.activePlanId === action.payload.id;
+      const plans = state.plans.map((p) => {
+        if (p.id !== action.payload.id) return p;
+        const updates = { ...action.payload.updates };
+        if (updates.archived === true) {
+          updates.pinned = false;
+        }
+        return { ...p, ...updates, updatedAt: new Date().toISOString() };
+      });
+
+      let newActivePlanId = state.ui.activePlanId;
+      if (isArchivingActive) {
+        const nextActive = plans.find((p) => !p.archived && p.id !== action.payload.id);
+        newActivePlanId = nextActive ? nextActive.id : null;
+      }
+
+      return {
+        ...state,
+        plans,
+        ui: isArchivingActive ? { ...state.ui, activePlanId: newActivePlanId } : state.ui,
+      };
     }
 
     case 'DELETE_PLAN':
@@ -1233,7 +1257,7 @@ export function StudyProvider({ children }) {
 
   const activePlan = useMemo(() => {
     if (!state.ui.activePlanId) return null;
-    return state.plans.find((p) => p.id === state.ui.activePlanId) || null;
+    return state.plans.find((p) => p.id === state.ui.activePlanId && !p.archived) || null;
   }, [state.ui.activePlanId, state.plans]);
 
   const value = useMemo(

@@ -80,7 +80,7 @@ export default function PlanDetail() {
   }, [videoUrl]);
 
   useEffect(() => {
-    if (plan) dispatch({ type: 'SET_UI', payload: { activePlanId: plan.id } });
+    if (plan && !plan.archived) dispatch({ type: 'SET_UI', payload: { activePlanId: plan.id } });
   }, [plan, dispatch]);
 
   const handleTaskClick = useCallback((task) => {
