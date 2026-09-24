@@ -8,6 +8,7 @@ import { availableFonts } from '../data/fonts';
 import { themes as settingsThemes } from '../data/themes';
 import InstallPWAButton from '../components/InstallPWAButton';
 import MotivationQuoteBanner from '../components/MotivationQuoteBanner';
+import UserMotivationQuoteBanner from '../components/UserMotivationQuoteBanner';
 import { SIX_HUNDRED_QUOTES, MOTIVATION_CATEGORIES, getRandomQuote } from '../data/motivationQuotes';
 import {
   Settings as SettingsIcon, Trash2, Download, Upload, Zap, Clock,
@@ -918,6 +919,28 @@ export default function Settings() {
                     Write your personal study mantras and display them directly on your dashboard
                   </p>
                 </div>
+              </div>
+            </div>
+
+            {/* Live Dashboard Preview for User Custom Quote */}
+            <div className="mb-6 pt-2">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-muted flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-accent-primary" />
+                  Live Dashboard Preview (Personal Quote Banner)
+                </span>
+                <span className="text-[11px] text-muted">
+                  Displays at the top of your dashboard quotes section
+                </span>
+              </div>
+              <div
+                className="p-3 sm:p-4 rounded-2xl transition-all duration-300"
+                style={{
+                  background: 'var(--neu-inset-bg)',
+                  border: '1px dashed var(--neu-border)',
+                }}
+              >
+                <UserMotivationQuoteBanner isPreview={true} />
               </div>
             </div>
 

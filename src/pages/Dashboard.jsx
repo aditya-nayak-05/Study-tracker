@@ -7,6 +7,7 @@ import PomodoroTimer from '../components/PomodoroTimer';
 import ActivityTimeline from '../components/ActivityTimeline';
 import StylishAnalogClock from '../components/StylishAnalogClock';
 import MotivationQuoteBanner from '../components/MotivationQuoteBanner';
+import UserMotivationQuoteBanner from '../components/UserMotivationQuoteBanner';
 import { ProgressRing, AnimatedCounter, BarChart, MiniLineChart } from '../components/Charts';
 import {
   getGreeting, getAllTasksInPlan, calculateProgress,
@@ -242,7 +243,6 @@ export default function Dashboard() {
     <DashboardLayout 
       title={`${getGreeting()}, ${state.profile?.name || 'Student'}`} 
       subtitle="Here's your study overview for today"
-      headerRight={<MotivationQuoteBanner />}
     >
       <div ref={cardsRef} className="space-y-8">
         {/* Quick Actions Bar (Centered) */}
@@ -337,6 +337,12 @@ export default function Dashboard() {
               <ProgressRing percent={stats.overallProgress} size={54} strokeWidth={5} color="var(--accent-orange)" />
             </div>
           </div>
+        </div>
+
+        {/* Motivational Quotes Section (User Motivational Quote & Curated Motivational Quote) */}
+        <div className="space-y-3.5">
+          <UserMotivationQuoteBanner />
+          <MotivationQuoteBanner />
         </div>
 
         {/* Main Content Grid */}

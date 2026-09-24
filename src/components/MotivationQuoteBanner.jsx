@@ -106,6 +106,23 @@ export default function MotivationQuoteBanner({ isPreview = false }) {
         </div>
 
         <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-2 mb-0.5">
+            <span
+              className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider"
+              style={{
+                background: 'color-mix(in srgb, var(--accent-orange) 15%, transparent)',
+                color: 'var(--accent-orange-bright, var(--accent-orange))',
+                border: '1px solid color-mix(in srgb, var(--accent-orange) 30%, transparent)',
+              }}
+            >
+              Motivational Quote
+            </span>
+            {activeId && activeId.startsWith('q_') && (
+              <span className="text-[10px] font-bold text-muted">
+                #{activeId.replace('q_', '')}
+              </span>
+            )}
+          </div>
           <p
             className={`${getFontSizeClass(activeText)} whitespace-normal break-words leading-snug tracking-wide`}
             style={{
