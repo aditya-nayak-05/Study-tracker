@@ -345,31 +345,51 @@ export default function Dashboard() {
           <MotivationQuoteBanner />
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {/* Weekly Study Chart (Centered) */}
-          <div className="dash-card lg:col-span-2 p-6 flex flex-col justify-between">
+        {/* 3-Column Core Tools Row: Analog Clock | Weekly Study Hours | Timer */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 items-stretch">
+          {/* 1. Stylish Analog Clock (Left) */}
+          <StylishAnalogClock />
+
+          {/* 2. Weekly Study Hours (Center) */}
+          <div className="dash-card p-6 flex flex-col justify-between h-full">
             <div className="notebook-header-line flex items-center justify-between text-center">
               <h3 className="text-sm font-bold text-main flex items-center gap-2 uppercase tracking-wider text-center">
                 <TrendingUp className="w-4 h-4 text-accent-primary shrink-0" /> Weekly Study Hours
               </h3>
               {stats.weeklyLine.length > 0 && <MiniLineChart data={stats.weeklyLine} width={80} height={24} color="var(--accent-orange)" />}
             </div>
-            {stats.weekData.length > 0 ? (
-              <BarChart data={stats.weekData} maxHeight={100} barColor="var(--accent-orange)" />
-            ) : (
-              <p className="text-sm text-center py-8 text-muted font-bold">No study data yet</p>
+            <div className="my-auto py-2">
+              {stats.weekData.length > 0 ? (
+                <BarChart data={stats.weekData} maxHeight={140} barColor="var(--accent-orange)" />
+              ) : (
+                <p className="text-sm text-center py-8 text-muted font-bold">No study data yet</p>
+              )}
+            </div>
+            {learningStats.activeSession && learningStats.activeSessionTask && (
+              <div 
+                onClick={() => navigate(`/learn/${learningStats.activeSession.planId}/${learningStats.activeSession.taskId}`)}
+                className="mt-2 pt-2 border-t border-[var(--neu-border)] flex items-center justify-between text-xs text-muted hover:text-accent-primary cursor-pointer transition-colors"
+              >
+                <span className="flex items-center gap-1.5 font-bold uppercase tracking-wider text-[10px]">
+                  <Youtube className="w-3 h-3 text-accent-primary" /> Continue Learning
+                </span>
+                <span className="text-[10px] font-semibold truncate max-w-[130px]">
+                  {learningStats.activeSessionTask.title}
+                </span>
+              </div>
             )}
           </div>
 
-          {/* Timer (Centered) */}
-          <div className="dash-card flex flex-col items-center justify-center p-6 text-center">
+          {/* 3. Timer (Right) */}
+          <div className="dash-card flex flex-col items-center justify-between p-6 text-center h-full">
             <div className="notebook-header-line w-full text-center">
               <h3 className="text-sm font-bold text-main flex items-center justify-center gap-2 text-center uppercase tracking-wider">
                 <Clock className="w-4 h-4 text-accent-primary shrink-0" /> Timer
               </h3>
             </div>
-            <PomodoroTimer compact />
+            <div className="my-auto py-2">
+              <PomodoroTimer compact />
+            </div>
           </div>
         </div>
 
@@ -434,8 +454,8 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Bottom Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        {/* Bottom 2-Column Grid: Today's Tasks & Recent Activity */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
           {/* Today's Tasks (Centered) */}
           <div className="dash-card p-6 flex flex-col justify-between">
             <div>
@@ -483,9 +503,6 @@ export default function Dashboard() {
               </form>
             )}
           </div>
-
-          {/* Stylish Analog Clock (Centered) */}
-          <StylishAnalogClock />
 
           {/* Recent Activity (Centered) */}
           <div className="dash-card p-6 flex flex-col justify-between">

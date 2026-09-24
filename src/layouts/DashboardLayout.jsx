@@ -36,19 +36,21 @@ const DashboardLayout = React.memo(function DashboardLayout({ children, title, s
       {(title || subtitle || headerRight) && (
         <div 
           ref={headerRef} 
-          className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8 pb-2"
+          className={`flex flex-col gap-1 mb-8 pb-2 ${
+            headerRight ? 'lg:flex-row lg:items-center justify-between' : 'items-center text-center mx-auto'
+          }`}
         >
           {(title || subtitle) && (
-            <div className="shrink-0">
+            <div className={headerRight ? 'shrink-0' : 'text-center mx-auto'}>
               {title && (
                 <h1 
-                  className="text-2xl sm:text-3xl font-extrabold text-main tracking-tight"
+                  className="text-2xl sm:text-3xl font-black text-main tracking-tight text-center"
                 >
                   {title}
                 </h1>
               )}
               {subtitle && (
-                <p className="text-xs sm:text-sm text-muted mt-1 font-medium">
+                <p className="text-xs sm:text-sm text-muted mt-1 font-medium text-center">
                   {subtitle}
                 </p>
               )}
