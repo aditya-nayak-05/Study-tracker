@@ -7,10 +7,13 @@ import { exportToCSV, exportToExcel, exportToPDF, importFromCSV, importFromExcel
 import { availableFonts } from '../data/fonts';
 import { themes as settingsThemes } from '../data/themes';
 import InstallPWAButton from '../components/InstallPWAButton';
+import MotivationQuoteBanner from '../components/MotivationQuoteBanner';
+import { DEFAULT_MOTIVATION_QUOTES } from '../context/StudyContext';
 import {
   Settings as SettingsIcon, Trash2, Download, Upload, Zap, Clock,
   AlertTriangle, FileDown, FileUp, Database, HardDrive, Type, Check, Laptop, Palette, Target,
   Minus, Plus, RotateCcw, Play, Sparkles, Archive, ArchiveRestore,
+  Quote, Edit3, Save, X,
 } from 'lucide-react';
 import { ANIMATION_SPEED_LEVELS, ANIMATION_STYLES, triggerMotionDemo } from '../utils/motion';
 
@@ -164,6 +167,108 @@ export default function Settings() {
       showToast(`"${plan.name}" permanently deleted`, 'info');
     }
   }, [dispatch, showToast]);
+
+  // Motivation Quotes State & Handlers
+  const quotesList = settings.motivationalQuotes && settings.motivationalQuotes.length > 0
+    ? settings.motivationalQuotes
+    : DEFAULT_MOTIVATION_QUOTES;
+
+  const [editingQuoteId, setEditingQuoteId] = useState(null);
+  const [editText, setEditText] = useState('');
+  const [editAuthor, setEditAuthor] = useState('');
+
+  const [newQuoteText, setNewQuoteText] = useState('');
+  const [newQuoteAuthor, setNewQuoteAuthor] = useState('');
+  const [showAddQuote, setShowAddQuote] = useState(false);
+
+  const handleSetActiveQuote = useCallback((quote) => {
+    updateSetting('activeQuoteId', quote.id);
+    updateSetting('activeQuoteText', quote.text);
+    updateSetting('activeQuoteAuthor', quote.author || '');
+    showToast(`Active quote set to: "${quote.text.slice(0, 32)}..." ✨`, 'success');
+  }, [updateSetting, showToast]);
+
+  const handleStartEditQuote = useCallback((quote) => {
+    setEditingQuoteId(quote.id);
+    setEditText(quote.text);
+    setEditAuthor(quote.author || '');
+  }, []);
+
+  const handleCancelEditQuote = useCallback(() => {
+    setEditingQuoteId(null);
+    setEditText('');
+    setEditAuthor('');
+  }, []);
+
+  const handleSaveEditQuote = useCallback((quoteId) => {
+    if (!editText.trim()) {
+      showToast('Quote text cannot be empty', 'error');
+      return;
+    }
+    const trimmedText = editText.trim();
+    const trimmedAuthor = editAuthor.trim();
+    const updatedList = quotesList.map((q) => {
+      if (q.id === quoteId) {
+        return { ...q, text: trimmedText, author: trimmedAuthor };
+      }
+      return q;
+    });
+    updateSetting('motivationalQuotes', updatedList);
+
+    if (settings.activeQuoteId === quoteId || settings.activeQuoteText === quotesList.find((q) => q.id === quoteId)?.text) {
+      updateSetting('activeQuoteText', trimmedText);
+      updateSetting('activeQuoteAuthor', trimmedAuthor);
+    }
+    setEditingQuoteId(null);
+    showToast('Motivation quote updated ✨', 'success');
+  }, [editText, editAuthor, quotesList, settings.activeQuoteId, settings.activeQuoteText, updateSetting, showToast]);
+
+  const handleAddNewQuote = useCallback((e) => {
+    if (e) e.preventDefault();
+    if (!newQuoteText.trim()) {
+      showToast('Please enter quote text', 'error');
+      return;
+    }
+    const newQuote = {
+      id: `quote_${Date.now()}`,
+      text: newQuoteText.trim(),
+      author: newQuoteAuthor.trim() || 'Anonymous',
+    };
+    const updatedList = [...quotesList, newQuote];
+    updateSetting('motivationalQuotes', updatedList);
+    updateSetting('activeQuoteId', newQuote.id);
+    updateSetting('activeQuoteText', newQuote.text);
+    updateSetting('activeQuoteAuthor', newQuote.author);
+    setNewQuoteText('');
+    setNewQuoteAuthor('');
+    setShowAddQuote(false);
+    showToast('New motivation quote added & set as active! 🎉', 'success');
+  }, [newQuoteText, newQuoteAuthor, quotesList, updateSetting, showToast]);
+
+  const handleDeleteQuote = useCallback((quoteId) => {
+    if (quotesList.length <= 1) {
+      showToast('Keep at least one motivational quote', 'error');
+      return;
+    }
+    const updatedList = quotesList.filter((q) => q.id !== quoteId);
+    updateSetting('motivationalQuotes', updatedList);
+
+    if (settings.activeQuoteId === quoteId) {
+      const fallback = updatedList[0];
+      updateSetting('activeQuoteId', fallback.id);
+      updateSetting('activeQuoteText', fallback.text);
+      updateSetting('activeQuoteAuthor', fallback.author || '');
+    }
+    showToast('Motivation quote removed', 'info');
+  }, [quotesList, settings.activeQuoteId, updateSetting, showToast]);
+
+  const handleResetQuotes = useCallback(() => {
+    updateSetting('motivationalQuotes', DEFAULT_MOTIVATION_QUOTES);
+    updateSetting('activeQuoteId', DEFAULT_MOTIVATION_QUOTES[0].id);
+    updateSetting('activeQuoteText', DEFAULT_MOTIVATION_QUOTES[0].text);
+    updateSetting('activeQuoteAuthor', DEFAULT_MOTIVATION_QUOTES[0].author);
+    showToast('Reset quotes to defaults ✨', 'info');
+  }, [updateSetting, showToast]);
 
   const storageSize = storage.getStorageSize();
   const storageSizeStr = storageSize > 1024 * 1024
@@ -344,6 +449,433 @@ export default function Settings() {
                         </div>
                       )}
                     </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {/* Motivation Quotes Section */}
+          <div className="notebook-settings-card p-6">
+            <div className="notebook-header-line flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex items-center gap-3">
+                <Quote className="w-5 h-5 text-accent-primary" />
+                <div>
+                  <h3 className="text-sm font-bold text-main flex items-center gap-2">
+                    Motivation Quotes
+                    <span
+                      className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                      style={{
+                        background: 'var(--neu-inset-bg)',
+                        color: 'var(--accent-orange-bright, var(--accent-orange))',
+                        border: '1px solid var(--neu-border)',
+                      }}
+                    >
+                      {quotesList.length} Quotes
+                    </span>
+                  </h3>
+                  <p className="text-xs text-muted">
+                    Customize the motivational quote banner displayed on your dashboard header
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleResetQuotes}
+                  title="Reset to default quotes"
+                  className="px-2.5 py-1.5 rounded-xl text-xs font-semibold text-muted hover:text-main cursor-pointer transition-all active:scale-95 flex items-center gap-1.5"
+                  style={{
+                    background: 'var(--neu-card-bg)',
+                    boxShadow: 'var(--neu-shadow-raised)',
+                    border: '1px solid var(--neu-border)',
+                  }}
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  Reset
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowAddQuote(!showAddQuote)}
+                  className="px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-accent-primary hover:brightness-110 cursor-pointer transition-all active:scale-95 flex items-center gap-1.5 shadow-sm"
+                >
+                  {showAddQuote ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
+                  {showAddQuote ? 'Close' : 'Add Quote'}
+                </button>
+              </div>
+            </div>
+
+            {/* Live Dashboard Preview Section */}
+            <div className="mb-6 pt-2">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold uppercase tracking-wider text-muted flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-accent-primary" />
+                  Live Dashboard Preview (Glow & Theme Adaptive)
+                </span>
+                <span className="text-[11px] text-muted">
+                  Dynamically shifts color and glow with active Color Theme
+                </span>
+              </div>
+              <div
+                className="p-3 sm:p-4 rounded-2xl transition-all duration-300"
+                style={{
+                  background: 'var(--neu-inset-bg)',
+                  border: '1px dashed var(--neu-border)',
+                }}
+              >
+                <MotivationQuoteBanner isPreview={true} />
+              </div>
+            </div>
+
+            {/* Quick Edit Current Active Quote */}
+            <div
+              className="mb-6 p-4 rounded-2xl transition-all"
+              style={{
+                background: 'var(--neu-card-bg)',
+                border: '1.5px solid color-mix(in srgb, var(--accent-orange) 45%, var(--neu-border))',
+                boxShadow: '0 0 16px color-mix(in srgb, var(--accent-orange) 16%, transparent), var(--neu-shadow-raised)',
+              }}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <label className="text-xs font-bold text-main flex items-center gap-1.5">
+                  <Edit3 className="w-3.5 h-3.5 text-accent-primary" />
+                  Quick Edit Active Quote
+                </label>
+                <span
+                  className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider"
+                  style={{
+                    background: 'color-mix(in srgb, var(--accent-orange) 18%, transparent)',
+                    color: 'var(--accent-orange-bright, var(--accent-orange))',
+                    border: '1px solid color-mix(in srgb, var(--accent-orange) 35%, transparent)',
+                  }}
+                >
+                  Live on Dashboard
+                </span>
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <textarea
+                    rows={2}
+                    value={activeQuoteText}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      updateSetting('activeQuoteText', val);
+                      if (settings.activeQuoteId) {
+                        const updated = quotesList.map((q) =>
+                          q.id === settings.activeQuoteId ? { ...q, text: val } : q
+                        );
+                        updateSetting('motivationalQuotes', updated);
+                      }
+                    }}
+                    placeholder="Enter active motivation quote text..."
+                    className="w-full px-3 py-2 rounded-xl text-main text-xs sm:text-sm focus:outline-none resize-none font-medium"
+                    style={{
+                      background: 'var(--neu-inset-bg)',
+                      boxShadow: 'var(--neu-shadow-inset)',
+                      border: '1px solid var(--neu-border)',
+                      color: 'var(--neu-text-main)',
+                    }}
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="flex-1">
+                    <input
+                      type="text"
+                      value={activeQuoteAuthor}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        updateSetting('activeQuoteAuthor', val);
+                        if (settings.activeQuoteId) {
+                          const updated = quotesList.map((q) =>
+                            q.id === settings.activeQuoteId ? { ...q, author: val } : q
+                          );
+                          updateSetting('motivationalQuotes', updated);
+                        }
+                      }}
+                      placeholder="Author / Attribution..."
+                      className="w-full px-3 py-1.5 rounded-xl text-main text-xs focus:outline-none"
+                      style={{
+                        background: 'var(--neu-inset-bg)',
+                        boxShadow: 'var(--neu-shadow-inset)',
+                        border: '1px solid var(--neu-border)',
+                        color: 'var(--neu-text-main)',
+                      }}
+                    />
+                  </div>
+                  <span className="text-[11px] text-muted italic">
+                    Auto-saved
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Add New Quote Form (Collapsible) */}
+            {showAddQuote && (
+              <form
+                onSubmit={handleAddNewQuote}
+                className="mb-6 p-4 rounded-2xl space-y-3 transition-all"
+                style={{
+                  background: 'var(--neu-inset-bg)',
+                  border: '1.5px solid color-mix(in srgb, var(--accent-orange) 45%, var(--neu-border))',
+                  boxShadow: '0 0 16px color-mix(in srgb, var(--accent-orange) 16%, transparent)',
+                }}
+              >
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-main flex items-center gap-1.5">
+                    <Plus className="w-3.5 h-3.5 text-accent-primary" /> Add New Motivational Quote
+                  </h4>
+                  <button
+                    type="button"
+                    onClick={() => setShowAddQuote(false)}
+                    className="text-muted hover:text-main text-xs p-1"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
+                <div>
+                  <label className="text-[11px] text-muted block mb-1 font-medium">Quote Text *</label>
+                  <textarea
+                    rows={2}
+                    value={newQuoteText}
+                    onChange={(e) => setNewQuoteText(e.target.value)}
+                    placeholder="e.g. Master the fundamentals and the complex becomes simple."
+                    className="w-full px-3 py-2 rounded-xl text-main text-xs sm:text-sm focus:outline-none resize-none"
+                    style={{
+                      background: 'var(--neu-card-bg)',
+                      boxShadow: 'var(--neu-shadow-inset)',
+                      border: '1px solid var(--neu-border)',
+                      color: 'var(--neu-text-main)',
+                    }}
+                  />
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3 items-end">
+                  <div className="flex-1 w-full">
+                    <label className="text-[11px] text-muted block mb-1 font-medium">Author / Attribution (Optional)</label>
+                    <input
+                      type="text"
+                      value={newQuoteAuthor}
+                      onChange={(e) => setNewQuoteAuthor(e.target.value)}
+                      placeholder="e.g. Aditya, Marcus Aurelius, Steve Jobs"
+                      className="w-full px-3 py-2 rounded-xl text-main text-xs focus:outline-none"
+                      style={{
+                        background: 'var(--neu-card-bg)',
+                        boxShadow: 'var(--neu-shadow-inset)',
+                        border: '1px solid var(--neu-border)',
+                        color: 'var(--neu-text-main)',
+                      }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
+                    <button
+                      type="submit"
+                      className="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold text-white bg-accent-primary hover:brightness-110 cursor-pointer transition-all active:scale-95 shadow-sm"
+                    >
+                      Save & Set Active
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowAddQuote(false)}
+                      className="px-3 py-2 rounded-xl text-xs font-semibold text-muted hover:text-main cursor-pointer transition-all"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </form>
+            )}
+
+            {/* List of Quotes */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <span className="text-xs font-bold uppercase tracking-wider text-muted">
+                  Saved Motivation Quotes ({quotesList.length})
+                </span>
+                <span className="text-[11px] text-muted">
+                  Click a quote to set it as active on your Dashboard
+                </span>
+              </div>
+
+              <div className="space-y-2.5">
+                {quotesList.map((quote) => {
+                  const isActive = (settings.activeQuoteId === quote.id) || (settings.activeQuoteText === quote.text);
+                  const isEditing = editingQuoteId === quote.id;
+
+                  if (isEditing) {
+                    return (
+                      <div
+                        key={quote.id}
+                        className="p-3.5 rounded-xl space-y-3"
+                        style={{
+                          background: 'var(--neu-card-bg)',
+                          border: '1.5px solid var(--accent-orange)',
+                          boxShadow: '0 0 14px color-mix(in srgb, var(--accent-orange) 22%, transparent)',
+                        }}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-bold text-accent-primary">Editing Quote</span>
+                          <button
+                            type="button"
+                            onClick={handleCancelEditQuote}
+                            className="p-1 text-muted hover:text-main"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                        <textarea
+                          rows={2}
+                          value={editText}
+                          onChange={(e) => setEditText(e.target.value)}
+                          className="w-full px-3 py-2 rounded-xl text-main text-xs sm:text-sm focus:outline-none resize-none font-medium"
+                          style={{
+                            background: 'var(--neu-inset-bg)',
+                            boxShadow: 'var(--neu-shadow-inset)',
+                            border: '1px solid var(--neu-border)',
+                            color: 'var(--neu-text-main)',
+                          }}
+                        />
+                        <div className="flex flex-col sm:flex-row gap-2 items-center justify-between">
+                          <input
+                            type="text"
+                            value={editAuthor}
+                            onChange={(e) => setEditAuthor(e.target.value)}
+                            placeholder="Author..."
+                            className="w-full sm:max-w-xs px-3 py-1.5 rounded-xl text-main text-xs focus:outline-none"
+                            style={{
+                              background: 'var(--neu-inset-bg)',
+                              boxShadow: 'var(--neu-shadow-inset)',
+                              border: '1px solid var(--neu-border)',
+                              color: 'var(--neu-text-main)',
+                            }}
+                          />
+                          <div className="flex items-center gap-2 self-end sm:self-center">
+                            <button
+                              type="button"
+                              onClick={() => handleSaveEditQuote(quote.id)}
+                              className="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-accent-primary hover:brightness-110 cursor-pointer flex items-center gap-1.5 shadow-sm"
+                            >
+                              <Save className="w-3.5 h-3.5" /> Save Changes
+                            </button>
+                            <button
+                              type="button"
+                              onClick={handleCancelEditQuote}
+                              className="px-2.5 py-1.5 rounded-xl text-xs font-semibold text-muted hover:text-main cursor-pointer"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  return (
+                    <div
+                      key={quote.id}
+                      onClick={() => handleSetActiveQuote(quote)}
+                      className={`group flex items-start justify-between p-3 sm:p-3.5 rounded-xl gap-3 transition-all cursor-pointer ${
+                        isActive
+                          ? 'border-[1.5px]'
+                          : 'hover:border-[var(--accent-orange)]'
+                      }`}
+                      style={{
+                        background: 'var(--neu-card-bg)',
+                        boxShadow: isActive
+                          ? '0 0 16px color-mix(in srgb, var(--accent-orange) 24%, transparent), var(--neu-shadow-raised)'
+                          : 'var(--neu-shadow-raised)',
+                        borderColor: isActive
+                          ? 'color-mix(in srgb, var(--accent-orange) 65%, var(--neu-border))'
+                          : 'var(--neu-border)',
+                      }}
+                    >
+                      <div className="flex items-start gap-3 min-w-0 flex-1">
+                        <div
+                          className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
+                            isActive
+                              ? 'bg-accent-primary text-white shadow-sm'
+                              : 'text-muted group-hover:text-accent-primary'
+                          }`}
+                          style={{
+                            background: isActive ? 'var(--accent-orange)' : 'var(--neu-inset-bg)',
+                            border: '1px solid var(--neu-border)',
+                          }}
+                        >
+                          <Quote className="w-3 h-3" />
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                            {isActive && (
+                              <span
+                                className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1"
+                                style={{
+                                  background: 'color-mix(in srgb, var(--accent-orange) 18%, transparent)',
+                                  color: 'var(--accent-orange-bright, var(--accent-orange))',
+                                  border: '1px solid color-mix(in srgb, var(--accent-orange) 35%, transparent)',
+                                }}
+                              >
+                                <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-orange)] animate-pulse" />
+                                Active on Dashboard
+                              </span>
+                            )}
+                          </div>
+                          <p
+                            className="text-xs sm:text-sm font-medium leading-relaxed"
+                            style={{
+                              color: isActive ? 'var(--accent-orange-bright, var(--accent-orange))' : 'var(--neu-text-main)',
+                            }}
+                          >
+                            "{quote.text}"
+                          </p>
+                          {quote.author && (
+                            <p className="text-[11px] text-muted mt-1 font-medium">
+                              — {quote.author}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+
+                      <div
+                        className="flex items-center gap-1.5 shrink-0"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        {!isActive && (
+                          <button
+                            type="button"
+                            onClick={() => handleSetActiveQuote(quote)}
+                            title="Set as active quote on Dashboard"
+                            className="px-2 py-1 rounded-lg text-[11px] font-semibold text-muted hover:text-accent-primary transition-all opacity-80 group-hover:opacity-100"
+                            style={{
+                              background: 'var(--neu-inset-bg)',
+                              border: '1px solid var(--neu-border)',
+                            }}
+                          >
+                            Set Active
+                          </button>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() => handleStartEditQuote(quote)}
+                          title="Edit this quote text"
+                          className="p-1.5 rounded-lg text-muted hover:text-main hover:bg-[var(--neu-inset-bg)] cursor-pointer transition-all active:scale-95"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteQuote(quote.id)}
+                          title="Delete quote"
+                          disabled={quotesList.length <= 1}
+                          className="p-1.5 rounded-lg text-red-400 hover:text-red-500 hover:bg-red-500/10 cursor-pointer transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
                   );
                 })}
               </div>

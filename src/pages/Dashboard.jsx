@@ -6,6 +6,7 @@ import DashboardLayout from '../layouts/DashboardLayout';
 import PomodoroTimer from '../components/PomodoroTimer';
 import ActivityTimeline from '../components/ActivityTimeline';
 import StylishAnalogClock from '../components/StylishAnalogClock';
+import MotivationQuoteBanner from '../components/MotivationQuoteBanner';
 import { ProgressRing, AnimatedCounter, BarChart, MiniLineChart } from '../components/Charts';
 import {
   getGreeting, getAllTasksInPlan, calculateProgress,
@@ -238,7 +239,11 @@ export default function Dashboard() {
   }, [activePlan, dispatch]);
 
   return (
-    <DashboardLayout title={`${getGreeting()}, ${state.profile?.name || 'Student'}`} subtitle="Here's your study overview for today">
+    <DashboardLayout 
+      title={`${getGreeting()}, ${state.profile?.name || 'Student'}`} 
+      subtitle="Here's your study overview for today"
+      headerRight={<MotivationQuoteBanner />}
+    >
       <div ref={cardsRef} className="space-y-8">
         {/* Quick Actions Bar (Centered) */}
         <div className="dash-card p-5">

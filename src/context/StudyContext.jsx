@@ -16,6 +16,14 @@ const DEFAULT_PROFILE = {
   createdAt: '',
 };
 
+export const DEFAULT_MOTIVATION_QUOTES = [
+  { id: 'quote_1', text: 'Small daily improvements over time lead to stunning results.', author: 'Robin Sharma' },
+  { id: 'quote_2', text: 'The secret of getting ahead is getting started.', author: 'Mark Twain' },
+  { id: 'quote_3', text: 'It always seems impossible until it\'s done.', author: 'Nelson Mandela' },
+  { id: 'quote_4', text: 'Success is the sum of small efforts, repeated day in and day out.', author: 'Robert Collier' },
+  { id: 'quote_5', text: 'Focus on progress, not perfection. Every line of code counts.', author: 'Study Flow' },
+];
+
 const DEFAULT_SETTINGS = {
   animationsEnabled: true,
   animationSpeed: 3, // 0: Off, 1: Very Fast, 2: Fast, 3: Normal, 4: Relaxed, 5: Slow, 6: Very Slow
@@ -28,6 +36,10 @@ const DEFAULT_SETTINGS = {
   pomodoroLongBreak: 15,
   sidebarCollapsed: false,
   fontFamily: "'Inter', sans-serif",
+  motivationalQuotes: DEFAULT_MOTIVATION_QUOTES,
+  activeQuoteId: 'quote_1',
+  activeQuoteText: 'Small daily improvements over time lead to stunning results.',
+  activeQuoteAuthor: 'Robin Sharma',
 };
 
 const DEFAULT_UI = {
@@ -77,7 +89,22 @@ function createDefaultState() {
   const storedStyle = getStoredStyle();
   const speed = rawSettings?.animationSpeed !== undefined ? rawSettings.animationSpeed : storedSpeed;
   const style = rawSettings?.animationStyle !== undefined ? rawSettings.animationStyle : storedStyle;
-  const loadedSettings = { ...DEFAULT_SETTINGS, ...rawSettings, animationSpeed: speed, animationStyle: style };
+  const quotes = (rawSettings?.motivationalQuotes && rawSettings.motivationalQuotes.length > 0)
+    ? rawSettings.motivationalQuotes
+    : DEFAULT_MOTIVATION_QUOTES;
+  const activeQuoteId = rawSettings?.activeQuoteId || quotes[0]?.id || 'quote_1';
+  const activeQuoteText = rawSettings?.activeQuoteText || quotes.find(q => q.id === activeQuoteId)?.text || quotes[0]?.text;
+  const activeQuoteAuthor = rawSettings?.activeQuoteAuthor ?? (quotes.find(q => q.id === activeQuoteId)?.author || quotes[0]?.author || '');
+  const loadedSettings = {
+    ...DEFAULT_SETTINGS,
+    ...rawSettings,
+    motivationalQuotes: quotes,
+    activeQuoteId,
+    activeQuoteText,
+    activeQuoteAuthor,
+    animationSpeed: speed,
+    animationStyle: style,
+  };
   const defaultDuration = (loadedSettings.timerDuration || loadedSettings.pomodoroWork || 25) * 60;
   const loadedTimer = storage.getItem('mainTimer', null);
 

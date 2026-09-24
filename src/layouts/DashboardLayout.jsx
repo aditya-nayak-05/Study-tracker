@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import gsap from 'gsap';
 
-const DashboardLayout = React.memo(function DashboardLayout({ children, title, subtitle }) {
+const DashboardLayout = React.memo(function DashboardLayout({ children, title, subtitle, headerRight }) {
   const pageRef = useRef(null);
   const headerRef = useRef(null);
   const contentRef = useRef(null);
@@ -33,19 +33,31 @@ const DashboardLayout = React.memo(function DashboardLayout({ children, title, s
         ))}
       </div>
 
-      {(title || subtitle) && (
-        <div ref={headerRef} style={{ marginBottom: '2rem', paddingBottom: '0.5rem' }}>
-          {title && (
-            <h1 
-              className="text-2xl sm:text-3xl font-extrabold text-main tracking-tight"
-            >
-              {title}
-            </h1>
+      {(title || subtitle || headerRight) && (
+        <div 
+          ref={headerRef} 
+          className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-8 pb-2"
+        >
+          {(title || subtitle) && (
+            <div className="shrink-0">
+              {title && (
+                <h1 
+                  className="text-2xl sm:text-3xl font-extrabold text-main tracking-tight"
+                >
+                  {title}
+                </h1>
+              )}
+              {subtitle && (
+                <p className="text-xs sm:text-sm text-muted mt-1 font-medium">
+                  {subtitle}
+                </p>
+              )}
+            </div>
           )}
-          {subtitle && (
-            <p className="text-xs sm:text-sm text-muted mt-1 font-medium">
-              {subtitle}
-            </p>
+          {headerRight && (
+            <div className="flex-1 max-w-xl 2xl:max-w-2xl w-full">
+              {headerRight}
+            </div>
           )}
         </div>
       )}
