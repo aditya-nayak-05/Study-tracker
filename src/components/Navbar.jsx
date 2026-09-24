@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState, useMemo } from 'react';
 import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
-import { Search, Bell, ChevronRight, Palette, Type } from 'lucide-react';
+import { Search, Bell, ChevronRight, Palette, Type, Menu } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import FontPickerModal from './FontPickerModal';
 import ThemePickerModal from './ThemePickerModal';
@@ -153,7 +153,7 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
   );
 }
 
-const Navbar = React.memo(function Navbar({ onSearchOpen }) {
+const Navbar = React.memo(function Navbar({ onSearchOpen, onMobileMenuToggle }) {
   const { state, dispatch, showToast } = useStudy();
   const location = useLocation();
   const navigate = useNavigate();
@@ -222,7 +222,7 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
   return (
     <header
       ref={navRef}
-      className="h-[4.5rem] border-b border-[var(--neu-border-subtle)] flex items-center justify-between px-8 sticky top-0 z-30 transition-all duration-500"
+      className="h-[4.5rem] border-b border-[var(--neu-border-subtle)] flex items-center justify-between px-3 sm:px-6 md:px-8 sticky top-0 z-30 transition-all duration-500"
       style={{ 
         background: showCinemaControls ? 'var(--neu-header-bg)' : 'transparent', 
         backdropFilter: showCinemaControls ? 'blur(12px)' : 'none', 
@@ -230,22 +230,33 @@ const Navbar = React.memo(function Navbar({ onSearchOpen }) {
         boxShadow: showCinemaControls ? 'var(--neu-shadow-raised)' : 'none' 
       }}
     >
-      {/* Breadcrumbs */}
-      <div 
-        className="flex items-center gap-2 text-sm shrink-0 transition-opacity duration-500"
-        style={{
-          opacity: showCinemaControls ? 1 : 0,
-          pointerEvents: showCinemaControls ? 'auto' : 'none'
-        }}
-      >
-        {breadcrumbs.map((crumb, i) => (
-          <React.Fragment key={i}>
-            {i > 0 && <ChevronRight className="w-3.5 h-3.5 text-muted" />}
-            <span className={i === breadcrumbs.length - 1 ? 'text-main font-semibold' : 'text-muted'} style={{textShadow: 'none'}}>
-              {crumb}
-            </span>
-          </React.Fragment>
-        ))}
+      {/* Left Section: Mobile Menu Button & Breadcrumbs */}
+      <div className="flex items-center gap-2 min-w-0">
+        <button
+          onClick={onMobileMenuToggle}
+          aria-label="Toggle navigation menu"
+          className="p-2 rounded-xl text-main hover:bg-[var(--neu-hover-bg)] lg:hidden transition-all cursor-pointer inset-field shrink-0"
+        >
+          <Menu className="w-5 h-5 text-accent-primary" />
+        </button>
+
+        {/* Breadcrumbs */}
+        <div 
+          className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm shrink-0 transition-opacity duration-500 min-w-0"
+          style={{
+            opacity: showCinemaControls ? 1 : 0,
+            pointerEvents: showCinemaControls ? 'auto' : 'none'
+          }}
+        >
+          {breadcrumbs.map((crumb, i) => (
+            <React.Fragment key={i}>
+              {i > 0 && <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-muted shrink-0" />}
+              <span className={`${i === breadcrumbs.length - 1 ? 'text-main font-semibold truncate' : 'text-muted hidden sm:inline'}`} style={{textShadow: 'none'}}>
+                {crumb}
+              </span>
+            </React.Fragment>
+          ))}
+        </div>
       </div>
 
       {/* Cinematic Learning Page Navbar Stats */}

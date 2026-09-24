@@ -146,6 +146,31 @@ function AppContent() {
 
   const handleSearchOpen = useCallback(() => setSearchOpen(true), []);
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => 
+    typeof window !== 'undefined' ? window.innerWidth < 1024 : false
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 1024;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setMobileMenuOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const handleMobileMenuToggle = useCallback(() => {
+    setMobileMenuOpen((prev) => !prev);
+  }, []);
+
+  const handleMobileMenuClose = useCallback(() => {
+    setMobileMenuOpen(false);
+  }, []);
+
   if (loading) return <LoadingScreen />;
 
   // Show profile creation if no profile exists or profile has no name
@@ -159,16 +184,16 @@ function AppContent() {
     );
   }
 
-  const sidebarWidth = state.settings?.sidebarCollapsed ? 72 : 260;
+  const sidebarWidth = isMobile ? 0 : (state.settings?.sidebarCollapsed ? 72 : 260);
 
   return (
-    <div style={{ minHeight: '100vh', position: 'relative' }}>
+    <div style={{ minHeight: '100vh', position: 'relative' }} className="overflow-x-hidden">
       <FloatingBackground />
-      <Sidebar />
+      <Sidebar mobileOpen={mobileMenuOpen} onClose={handleMobileMenuClose} />
 
-      <div style={{ marginLeft: sidebarWidth, transition: 'margin-left 0.3s ease' }}>
-        <Navbar onSearchOpen={handleSearchOpen} />
-        <main style={{ padding: '2rem 2.5rem', paddingBottom: '5rem', position: 'relative', zIndex: 10, minHeight: 'calc(100vh - 4rem)' }}>
+      <div style={{ marginLeft: sidebarWidth, transition: 'margin-left 0.3s ease' }} className="min-w-0 flex-1">
+        <Navbar onSearchOpen={handleSearchOpen} onMobileMenuToggle={handleMobileMenuToggle} />
+        <main className="p-3 sm:p-5 md:p-6 lg:p-8 pb-16 sm:pb-20 relative z-10 min-h-[calc(100vh-4.5rem)]">
           <ErrorBoundary>
             <Suspense fallback={<PageLoader />}>
               <BookPageTransition>

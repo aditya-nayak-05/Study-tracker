@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
 import {
   LayoutDashboard, BookOpen, Calendar, BarChart3, Clock, User, Settings,
-  ChevronLeft, ChevronRight, Pin, Sparkles, Youtube, FileText,
+  ChevronLeft, ChevronRight, Pin, Sparkles, Youtube, FileText, X,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { compactMorph, getMotionDuration, getSpeedMultiplier, isReducedMotion } from '../utils/motion';
@@ -78,7 +78,7 @@ const BookNavItem = React.memo(function BookNavItem({ label, icon: Icon, isActiv
   );
 });
 
-const Sidebar = React.memo(function Sidebar() {
+const Sidebar = React.memo(function Sidebar({ mobileOpen = false, onClose }) {
   const { state, dispatch } = useStudy();
   const navigate = useNavigate();
   const location = useLocation();
@@ -122,7 +122,7 @@ const Sidebar = React.memo(function Sidebar() {
   }, [isLearnPage]);
 
   useEffect(() => {
-    if (sidebarRef.current) {
+    if (sidebarRef.current && window.innerWidth >= 1024) {
       compactMorph(sidebarRef.current, collapsed);
     }
   }, [collapsed]);
@@ -146,6 +146,7 @@ const Sidebar = React.memo(function Sidebar() {
   const handleNavClick = (path) => {
     navigate(path);
     dispatch({ type: 'SET_UI', payload: { currentPage: path } });
+    if (onClose) onClose();
   };
 
   const toggleCollapse = () => {
@@ -155,71 +156,95 @@ const Sidebar = React.memo(function Sidebar() {
   const pinnedPlans = state.plans.filter((p) => p.pinned && !p.archived);
 
   return (
-    <aside
-      ref={sidebarRef}
-      className="fixed left-0 top-0 h-screen flex flex-col z-40 overflow-hidden transition-all duration-500 wood-panel"
-      style={{ 
-        width: collapsed ? 72 : 260, 
-        opacity: showCinemaControls ? 1 : 0,
-        pointerEvents: showCinemaControls ? 'auto' : 'none'
-      }}
-    >
-      {/* Logo */}
-      <div className="flex items-center gap-3 px-4 h-[4.5rem] border-b border-[var(--neu-border-subtle)] shrink-0">
-        <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 border-2 border-[var(--accent-orange)] shadow-md overflow-hidden bg-black/20">
-          <img src={logoImg} alt="Study Tracker Logo" className="w-full h-full object-cover rounded-full" />
-        </div>
-        {!collapsed && (
-          <span className="text-base font-extrabold text-main whitespace-nowrap tracking-tight" style={{textShadow: 'none'}}>Study Tracker</span>
-        )}
-      </div>
+    <>
+      {/* Mobile Backdrop Overlay */}
+      {mobileOpen && (
+        <div 
+          onClick={onClose}
+          className="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 lg:hidden transition-opacity duration-300"
+          aria-hidden="true"
+        />
+      )}
 
-      {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
-        {navItems.map((item, i) => {
-          const isActive = location.pathname === item.path;
-          return (
-            <div key={item.path} ref={(el) => (itemRefs.current[i] = el)}>
-              <BookNavItem
-                label={item.label}
-                icon={item.icon}
-                isActive={isActive}
-                onClick={() => handleNavClick(item.path)}
-                collapsed={collapsed}
-              />
-            </div>
-          );
-        })}
-
-        {/* Pinned plans */}
-        {pinnedPlans.length > 0 && !collapsed && (
-          <div className="pt-4 mt-4 border-t border-[var(--neu-border-subtle)]">
-            <p className="px-4 text-[10px] font-bold uppercase tracking-wider text-muted mb-3" style={{textShadow: 'none'}}>Pinned Plans</p>
-            {pinnedPlans.map((plan) => (
-              <BookNavItem
-                key={plan.id}
-                label={plan.name}
-                icon={Pin}
-                isActive={location.pathname === `/plans/${plan.id}`}
-                onClick={() => {
-                  dispatch({ type: 'SET_UI', payload: { activePlanId: plan.id } });
-                  navigate(`/plans/${plan.id}`);
-                }}
-                collapsed={collapsed}
-              />
-            ))}
-          </div>
-        )}
-      </nav>
-
-      {/* Collapse toggle */}
-      <button
-        onClick={toggleCollapse}
-        className="h-12 border-t border-[var(--neu-border-subtle)] flex items-center justify-center text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-all shrink-0 cursor-pointer"
+      <aside
+        ref={sidebarRef}
+        className={`fixed left-0 top-0 h-screen flex flex-col z-50 overflow-hidden transition-all duration-300 wood-panel ${
+          mobileOpen ? 'translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'
+        }`}
+        style={{ 
+          width: typeof window !== 'undefined' && window.innerWidth < 1024 ? 260 : (collapsed ? 72 : 260), 
+          opacity: showCinemaControls ? 1 : 0,
+          pointerEvents: showCinemaControls ? 'auto' : 'none'
+        }}
       >
-        {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
-      </button>
-    </aside>
+        {/* Logo & Close Button Header */}
+        <div className="flex items-center justify-between px-4 h-[4.5rem] border-b border-[var(--neu-border-subtle)] shrink-0">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 border-2 border-[var(--accent-orange)] shadow-md overflow-hidden bg-black/20">
+              <img src={logoImg} alt="Study Tracker Logo" className="w-full h-full object-cover rounded-full" />
+            </div>
+            {(!collapsed || (typeof window !== 'undefined' && window.innerWidth < 1024)) && (
+              <span className="text-base font-extrabold text-main whitespace-nowrap tracking-tight" style={{textShadow: 'none'}}>Study Tracker</span>
+            )}
+          </div>
+          {/* Mobile close button */}
+          <button
+            onClick={onClose}
+            aria-label="Close sidebar"
+            className="p-1.5 rounded-lg text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] lg:hidden cursor-pointer"
+          >
+            <X className="w-5 h-5 text-accent-primary" />
+          </button>
+        </div>
+
+        {/* Nav */}
+        <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
+          {navItems.map((item, i) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <div key={item.path} ref={(el) => (itemRefs.current[i] = el)}>
+                <BookNavItem
+                  label={item.label}
+                  icon={item.icon}
+                  isActive={isActive}
+                  onClick={() => handleNavClick(item.path)}
+                  collapsed={typeof window !== 'undefined' && window.innerWidth < 1024 ? false : collapsed}
+                />
+              </div>
+            );
+          })}
+
+          {/* Pinned plans */}
+          {pinnedPlans.length > 0 && (!collapsed || (typeof window !== 'undefined' && window.innerWidth < 1024)) && (
+            <div className="pt-4 mt-4 border-t border-[var(--neu-border-subtle)]">
+              <p className="px-4 text-[10px] font-bold uppercase tracking-wider text-muted mb-3" style={{textShadow: 'none'}}>Pinned Plans</p>
+              {pinnedPlans.map((plan) => (
+                <BookNavItem
+                  key={plan.id}
+                  label={plan.name}
+                  icon={Pin}
+                  isActive={location.pathname === `/plans/${plan.id}`}
+                  onClick={() => {
+                    dispatch({ type: 'SET_UI', payload: { activePlanId: plan.id } });
+                    navigate(`/plans/${plan.id}`);
+                    if (onClose) onClose();
+                  }}
+                  collapsed={false}
+                />
+              ))}
+            </div>
+          )}
+        </nav>
+
+        {/* Collapse toggle (Desktop only) */}
+        <button
+          onClick={toggleCollapse}
+          className="hidden lg:flex h-12 border-t border-[var(--neu-border-subtle)] items-center justify-center text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-all shrink-0 cursor-pointer"
+        >
+          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+        </button>
+      </aside>
+    </>
   );
 });
 
