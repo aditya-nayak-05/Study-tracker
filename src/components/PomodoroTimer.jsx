@@ -14,7 +14,7 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
   const timerRef = useRef(null);
 
   const progress = totalSeconds > 0 ? 1 - secondsLeft / totalSeconds : 0;
-  const radius = compact ? 40 : 70;
+  const radius = compact ? 78 : 92;
   const circumference = 2 * Math.PI * radius;
 
   useEffect(() => {
@@ -60,24 +60,24 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
 
   const mins = Math.floor(secondsLeft / 60);
   const secs = secondsLeft % 60;
-  const svgSize = compact ? 100 : 170;
+  const svgSize = compact ? 180 : 216;
   const hasElapsed = secondsLeft < totalSeconds;
 
   return (
-    <div ref={timerRef} className="flex flex-col items-center gap-3">
+    <div ref={timerRef} className="flex flex-col items-center gap-4">
       {/* Circle */}
       <div className="relative">
         <svg width={svgSize} height={svgSize} className="-rotate-90">
           <circle
             cx={svgSize / 2} cy={svgSize / 2} r={radius}
-            fill="none" stroke="rgba(163, 177, 198, 0.3)" strokeWidth={compact ? 4 : 6}
+            fill="none" stroke="rgba(163, 177, 198, 0.3)" strokeWidth={compact ? 7 : 8}
           />
           <circle
             ref={circleRef}
             cx={svgSize / 2} cy={svgSize / 2} r={radius}
             fill="none"
             stroke="var(--accent-orange)"
-            strokeWidth={compact ? 4 : 6}
+            strokeWidth={compact ? 7 : 8}
             strokeLinecap="round"
             strokeDasharray={circumference}
             strokeDashoffset={circumference}
@@ -85,51 +85,51 @@ const PomodoroTimer = React.memo(function PomodoroTimer({ compact = false }) {
           />
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className={`font-mono font-bold text-accent-primary ${compact ? 'text-lg' : 'text-3xl'}`} style={{textShadow: 'none'}}>
+          <span className={`font-mono font-black text-accent-primary tracking-tight ${compact ? 'text-3xl sm:text-4xl' : 'text-4xl sm:text-5xl'}`} style={{textShadow: 'none'}}>
             {String(mins).padStart(2, '0')}:{String(secs).padStart(2, '0')}
           </span>
-          <span className={`text-muted capitalize font-medium ${compact ? 'text-[10px]' : 'text-xs'}`}>
+          <span className={`text-muted capitalize font-bold tracking-wider uppercase mt-1 ${compact ? 'text-[11px]' : 'text-xs'}`}>
             {running ? 'Focusing' : 'Timer'}
           </span>
         </div>
       </div>
 
       {/* Controls */}
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center gap-3">
         <button
           onClick={toggle}
           title={running ? 'Pause' : 'Start'}
-          className={`p-3 rounded-xl cursor-pointer transition-all leather-btn flex items-center justify-center ${
+          className={`p-3.5 rounded-2xl cursor-pointer transition-all leather-btn flex items-center justify-center ${
             running
-              ? 'border-2 border-[var(--accent-orange)] text-accent-primary'
+              ? 'border-2 border-[var(--accent-orange)] text-accent-primary shadow-md'
               : 'text-accent-primary'
           }`}
         >
-          {running ? <Pause className="w-4 h-4" /> : <Play className="w-4 h-4" />}
+          {running ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
         </button>
 
         {hasElapsed && (
           <button
             onClick={finishEarly}
             title="Finish & Log Session"
-            className="p-3 rounded-xl text-[#38a169] hover:text-[#2f855a] transition-all cursor-pointer leather-btn flex items-center justify-center"
+            className="p-3.5 rounded-2xl text-[#38a169] hover:text-[#2f855a] transition-all cursor-pointer leather-btn flex items-center justify-center"
           >
-            <Square className="w-4 h-4" fill="currentColor" fillOpacity="0.2" />
+            <Square className="w-5 h-5" fill="currentColor" fillOpacity="0.2" />
           </button>
         )}
 
         <button
           onClick={reset}
           title="Reset Timer"
-          className="p-3 rounded-xl text-muted hover:text-main transition-all cursor-pointer leather-btn flex items-center justify-center"
+          className="p-3.5 rounded-2xl text-muted hover:text-main transition-all cursor-pointer leather-btn flex items-center justify-center"
         >
-          <RotateCcw className="w-4 h-4" />
+          <RotateCcw className="w-5 h-5" />
         </button>
       </div>
 
       {!compact && sessionCount > 0 && (
-        <p className="text-[11px] text-muted flex items-center gap-1 font-medium">
-          <Flame className="w-3 h-3 text-accent-primary" /> {sessionCount} lap{sessionCount !== 1 ? 's' : ''} completed today
+        <p className="text-xs text-muted flex items-center gap-1.5 font-semibold">
+          <Flame className="w-4 h-4 text-accent-primary" /> {sessionCount} lap{sessionCount !== 1 ? 's' : ''} completed today
         </p>
       )}
     </div>

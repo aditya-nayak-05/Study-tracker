@@ -340,7 +340,7 @@ export default function Dashboard() {
         </div>
 
         {/* Motivational Quotes Section (User Motivational Quote & Curated Motivational Quote) */}
-        <div className="space-y-3.5">
+        <div className="space-y-4">
           <UserMotivationQuoteBanner />
           <MotivationQuoteBanner />
         </div>
