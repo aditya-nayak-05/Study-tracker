@@ -8,12 +8,12 @@ import { availableFonts } from '../data/fonts';
 import { themes as settingsThemes } from '../data/themes';
 import InstallPWAButton from '../components/InstallPWAButton';
 import MotivationQuoteBanner from '../components/MotivationQuoteBanner';
-import { DEFAULT_MOTIVATION_QUOTES } from '../context/StudyContext';
+import { SIX_HUNDRED_QUOTES, MOTIVATION_CATEGORIES, getRandomQuote } from '../data/motivationQuotes';
 import {
   Settings as SettingsIcon, Trash2, Download, Upload, Zap, Clock,
   AlertTriangle, FileDown, FileUp, Database, HardDrive, Type, Check, Laptop, Palette, Target,
   Minus, Plus, RotateCcw, Play, Sparkles, Archive, ArchiveRestore,
-  Quote, Edit3, Save, X,
+  Quote, Edit3, Save, X, Search, Shuffle, Calendar, Lock, PenLine, ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import { ANIMATION_SPEED_LEVELS, ANIMATION_STYLES, triggerMotionDemo } from '../utils/motion';
 
@@ -168,107 +168,168 @@ export default function Settings() {
     }
   }, [dispatch, showToast]);
 
-  // Motivation Quotes State & Handlers
-  const quotesList = settings.motivationalQuotes && settings.motivationalQuotes.length > 0
-    ? settings.motivationalQuotes
-    : DEFAULT_MOTIVATION_QUOTES;
+  // Motivation Quotes Settings & Custom Quotes State
+  const dailyQuoteChangeEnabled = settings.dailyQuoteChangeEnabled !== false;
+  const userCustomQuotes = Array.isArray(settings.userCustomQuotes) ? settings.userCustomQuotes : [];
 
-  const [editingQuoteId, setEditingQuoteId] = useState(null);
-  const [editText, setEditText] = useState('');
-  const [editAuthor, setEditAuthor] = useState('');
+  // 600 Quotes Search, Category Filter & Pagination
+  const [quoteSearch, setQuoteSearch] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [quotePage, setQuotePage] = useState(1);
+  const quotesPerPage = 12;
 
-  const [newQuoteText, setNewQuoteText] = useState('');
-  const [newQuoteAuthor, setNewQuoteAuthor] = useState('');
-  const [showAddQuote, setShowAddQuote] = useState(false);
+  const filtered600Quotes = useMemo(() => {
+    let list = SIX_HUNDRED_QUOTES;
+    if (selectedCategory && selectedCategory !== 'All') {
+      list = list.filter((q) => q.category === selectedCategory);
+    }
+    if (quoteSearch.trim()) {
+      const qLower = quoteSearch.toLowerCase().trim();
+      list = list.filter(
+        (q) =>
+          q.text.toLowerCase().includes(qLower) ||
+          (q.index && q.index.toString() === qLower) ||
+          q.category.toLowerCase().includes(qLower)
+      );
+    }
+    return list;
+  }, [selectedCategory, quoteSearch]);
 
+  const totalPages = Math.ceil(filtered600Quotes.length / quotesPerPage) || 1;
+  const paginatedQuotes = useMemo(() => {
+    const start = (quotePage - 1) * quotesPerPage;
+    return filtered600Quotes.slice(start, start + quotesPerPage);
+  }, [filtered600Quotes, quotePage, quotesPerPage]);
+
+  const handleCategorySelect = useCallback((cat) => {
+    setSelectedCategory(cat);
+    setQuotePage(1);
+  }, []);
+
+  const handleSearchChange = useCallback((val) => {
+    setQuoteSearch(val);
+    setQuotePage(1);
+  }, []);
+
+  // Action: Set any quote active
   const handleSetActiveQuote = useCallback((quote) => {
     updateSetting('activeQuoteId', quote.id);
     updateSetting('activeQuoteText', quote.text);
-    updateSetting('activeQuoteAuthor', quote.author || '');
-    showToast(`Active quote set to: "${quote.text.slice(0, 32)}..." ✨`, 'success');
+    updateSetting('activeQuoteAuthor', quote.author || quote.category || '');
+    updateSetting('activeQuoteCategory', quote.category || '');
+    showToast(`Active quote set to: "${quote.text.slice(0, 35)}..." ✨`, 'success');
   }, [updateSetting, showToast]);
 
-  const handleStartEditQuote = useCallback((quote) => {
-    setEditingQuoteId(quote.id);
-    setEditText(quote.text);
-    setEditAuthor(quote.author || '');
-  }, []);
+  // Action: Toggle Daily Auto-Change ON / OFF
+  const handleToggleDailyChange = useCallback(() => {
+    const nextVal = !dailyQuoteChangeEnabled;
+    updateSetting('dailyQuoteChangeEnabled', nextVal);
+    showToast(
+      nextVal
+        ? 'Daily auto-change is ON: Quotes change automatically every day ✨'
+        : 'Daily auto-change is OFF: Quote locked and will not change daily 🔒',
+      nextVal ? 'success' : 'info'
+    );
+  }, [dailyQuoteChangeEnabled, updateSetting, showToast]);
 
-  const handleCancelEditQuote = useCallback(() => {
-    setEditingQuoteId(null);
-    setEditText('');
-    setEditAuthor('');
-  }, []);
-
-  const handleSaveEditQuote = useCallback((quoteId) => {
-    if (!editText.trim()) {
-      showToast('Quote text cannot be empty', 'error');
-      return;
+  // Action: Pick Random Quote from 600
+  const handlePickRandomQuote = useCallback(() => {
+    const random = getRandomQuote(SIX_HUNDRED_QUOTES, settings.activeQuoteId);
+    if (random) {
+      handleSetActiveQuote(random);
+      showToast(`Random Quote #${random.index}: "${random.text}" (${random.category}) ✨`, 'success');
     }
-    const trimmedText = editText.trim();
-    const trimmedAuthor = editAuthor.trim();
-    const updatedList = quotesList.map((q) => {
-      if (q.id === quoteId) {
-        return { ...q, text: trimmedText, author: trimmedAuthor };
-      }
-      return q;
-    });
-    updateSetting('motivationalQuotes', updatedList);
+  }, [settings.activeQuoteId, handleSetActiveQuote, showToast]);
 
-    if (settings.activeQuoteId === quoteId || settings.activeQuoteText === quotesList.find((q) => q.id === quoteId)?.text) {
-      updateSetting('activeQuoteText', trimmedText);
-      updateSetting('activeQuoteAuthor', trimmedAuthor);
-    }
-    setEditingQuoteId(null);
-    showToast('Motivation quote updated ✨', 'success');
-  }, [editText, editAuthor, quotesList, settings.activeQuoteId, settings.activeQuoteText, updateSetting, showToast]);
+  // Custom Quotes: Add form state
+  const [customQuoteText, setCustomQuoteText] = useState('');
+  const [customQuoteAuthor, setCustomQuoteAuthor] = useState('');
 
-  const handleAddNewQuote = useCallback((e) => {
+  // Custom Quotes: Inline edit state
+  const [editingCustomId, setEditingCustomId] = useState(null);
+  const [editCustomText, setEditCustomText] = useState('');
+  const [editCustomAuthor, setEditCustomAuthor] = useState('');
+
+  const handleAddCustomQuote = useCallback((e) => {
     if (e) e.preventDefault();
-    if (!newQuoteText.trim()) {
-      showToast('Please enter quote text', 'error');
+    if (!customQuoteText.trim()) {
+      showToast('Please enter your motivational quote', 'error');
       return;
     }
     const newQuote = {
-      id: `quote_${Date.now()}`,
-      text: newQuoteText.trim(),
-      author: newQuoteAuthor.trim() || 'Anonymous',
+      id: `custom_${Date.now()}`,
+      text: customQuoteText.trim(),
+      author: customQuoteAuthor.trim() || state.profile?.name || 'Personal Mantra',
+      category: 'Custom Quote',
+      isCustom: true,
+      createdAt: new Date().toISOString(),
     };
-    const updatedList = [...quotesList, newQuote];
-    updateSetting('motivationalQuotes', updatedList);
+    const updated = [newQuote, ...userCustomQuotes];
+    updateSetting('userCustomQuotes', updated);
+    // Set as active quote on Dashboard
     updateSetting('activeQuoteId', newQuote.id);
     updateSetting('activeQuoteText', newQuote.text);
     updateSetting('activeQuoteAuthor', newQuote.author);
-    setNewQuoteText('');
-    setNewQuoteAuthor('');
-    setShowAddQuote(false);
-    showToast('New motivation quote added & set as active! 🎉', 'success');
-  }, [newQuoteText, newQuoteAuthor, quotesList, updateSetting, showToast]);
+    updateSetting('activeQuoteCategory', 'Custom Quote');
+    setCustomQuoteText('');
+    setCustomQuoteAuthor('');
+    showToast('Your custom quote has been added & set active on your Dashboard! 🎉', 'success');
+  }, [customQuoteText, customQuoteAuthor, userCustomQuotes, state.profile?.name, updateSetting, showToast]);
 
-  const handleDeleteQuote = useCallback((quoteId) => {
-    if (quotesList.length <= 1) {
-      showToast('Keep at least one motivational quote', 'error');
+  const handleStartEditCustom = useCallback((quote) => {
+    setEditingCustomId(quote.id);
+    setEditCustomText(quote.text);
+    setEditCustomAuthor(quote.author || '');
+  }, []);
+
+  const handleCancelEditCustom = useCallback(() => {
+    setEditingCustomId(null);
+    setEditCustomText('');
+    setEditCustomAuthor('');
+  }, []);
+
+  const handleSaveEditCustom = useCallback((quoteId) => {
+    if (!editCustomText.trim()) {
+      showToast('Quote text cannot be empty', 'error');
       return;
     }
-    const updatedList = quotesList.filter((q) => q.id !== quoteId);
-    updateSetting('motivationalQuotes', updatedList);
-
+    const updated = userCustomQuotes.map((q) => {
+      if (q.id === quoteId) {
+        return {
+          ...q,
+          text: editCustomText.trim(),
+          author: editCustomAuthor.trim() || 'Personal Mantra',
+        };
+      }
+      return q;
+    });
+    updateSetting('userCustomQuotes', updated);
     if (settings.activeQuoteId === quoteId) {
-      const fallback = updatedList[0];
+      updateSetting('activeQuoteText', editCustomText.trim());
+      updateSetting('activeQuoteAuthor', editCustomAuthor.trim() || 'Personal Mantra');
+    }
+    setEditingCustomId(null);
+    showToast('Custom quote updated ✨', 'success');
+  }, [editCustomText, editCustomAuthor, userCustomQuotes, settings.activeQuoteId, updateSetting, showToast]);
+
+  const handleDeleteCustomQuote = useCallback((quoteId) => {
+    const updated = userCustomQuotes.filter((q) => q.id !== quoteId);
+    updateSetting('userCustomQuotes', updated);
+    if (settings.activeQuoteId === quoteId) {
+      const fallback = SIX_HUNDRED_QUOTES[0];
       updateSetting('activeQuoteId', fallback.id);
       updateSetting('activeQuoteText', fallback.text);
-      updateSetting('activeQuoteAuthor', fallback.author || '');
+      updateSetting('activeQuoteAuthor', fallback.category);
+      updateSetting('activeQuoteCategory', fallback.category);
     }
-    showToast('Motivation quote removed', 'info');
-  }, [quotesList, settings.activeQuoteId, updateSetting, showToast]);
+    showToast('Custom quote deleted', 'info');
+  }, [userCustomQuotes, settings.activeQuoteId, updateSetting, showToast]);
 
-  const handleResetQuotes = useCallback(() => {
-    updateSetting('motivationalQuotes', DEFAULT_MOTIVATION_QUOTES);
-    updateSetting('activeQuoteId', DEFAULT_MOTIVATION_QUOTES[0].id);
-    updateSetting('activeQuoteText', DEFAULT_MOTIVATION_QUOTES[0].text);
-    updateSetting('activeQuoteAuthor', DEFAULT_MOTIVATION_QUOTES[0].author);
-    showToast('Reset quotes to defaults ✨', 'info');
-  }, [updateSetting, showToast]);
+  const handleResetToFirstQuote = useCallback(() => {
+    const first = SIX_HUNDRED_QUOTES[0];
+    handleSetActiveQuote(first);
+    showToast('Reset active quote to #1 ✨', 'info');
+  }, [handleSetActiveQuote, showToast]);
 
   const storageSize = storage.getStorageSize();
   const storageSizeStr = storageSize > 1024 * 1024
@@ -455,7 +516,7 @@ export default function Settings() {
             </div>
           </div>
 
-          {/* Motivation Quotes Section */}
+          {/* SECTION 1: Motivation Quotes */}
           <div className="notebook-settings-card p-6">
             <div className="notebook-header-line flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
@@ -471,50 +532,90 @@ export default function Settings() {
                         border: '1px solid var(--neu-border)',
                       }}
                     >
-                      {quotesList.length} Quotes
+                      600 Powerful Quotes
                     </span>
                   </h3>
                   <p className="text-xs text-muted">
-                    Customize the motivational quote banner displayed on your dashboard header
+                    Curated motivational quotes with adaptive font sizing, daily auto-rotation, and glowing theme banner
                   </p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              {/* Action Buttons: Daily Toggle & Random Quote */}
+              <div className="flex items-center gap-2 flex-wrap">
                 <button
                   type="button"
-                  onClick={handleResetQuotes}
-                  title="Reset to default quotes"
-                  className="px-2.5 py-1.5 rounded-xl text-xs font-semibold text-muted hover:text-main cursor-pointer transition-all active:scale-95 flex items-center gap-1.5"
+                  onClick={handleToggleDailyChange}
+                  title={
+                    dailyQuoteChangeEnabled
+                      ? 'Daily auto-change is ON (quotes change daily). Click to lock.'
+                      : 'Daily auto-change is OFF (quote is locked). Click to enable daily quotes.'
+                  }
+                  className="px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer transition-all active:scale-95 flex items-center gap-1.5"
+                  style={{
+                    background: dailyQuoteChangeEnabled
+                      ? 'color-mix(in srgb, var(--accent-orange) 18%, var(--neu-card-bg))'
+                      : 'var(--neu-card-bg)',
+                    border: dailyQuoteChangeEnabled
+                      ? '1px solid color-mix(in srgb, var(--accent-orange) 50%, transparent)'
+                      : '1px solid var(--neu-border)',
+                    color: dailyQuoteChangeEnabled
+                      ? 'var(--accent-orange-bright, var(--accent-orange))'
+                      : 'var(--neu-text-muted)',
+                    boxShadow: dailyQuoteChangeEnabled
+                      ? '0 0 10px color-mix(in srgb, var(--accent-orange) 20%, transparent)'
+                      : 'var(--neu-shadow-raised)',
+                  }}
+                >
+                  {dailyQuoteChangeEnabled ? (
+                    <>
+                      <Calendar className="w-3.5 h-3.5 text-accent-primary" />
+                      <span>Daily Rotation: ON</span>
+                    </>
+                  ) : (
+                    <>
+                      <Lock className="w-3.5 h-3.5 opacity-70" />
+                      <span>Daily Rotation: OFF</span>
+                    </>
+                  )}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handlePickRandomQuote}
+                  title="Pick a random quote from 600 quotes"
+                  className="px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-accent-primary hover:brightness-110 cursor-pointer transition-all active:scale-95 flex items-center gap-1.5 shadow-sm"
+                >
+                  <Shuffle className="w-3.5 h-3.5" />
+                  Random Quote
+                </button>
+
+                <button
+                  type="button"
+                  onClick={handleResetToFirstQuote}
+                  title="Reset to Quote #1"
+                  className="px-2.5 py-1.5 rounded-xl text-xs font-semibold text-muted hover:text-main cursor-pointer transition-all active:scale-95 flex items-center gap-1"
                   style={{
                     background: 'var(--neu-card-bg)',
                     boxShadow: 'var(--neu-shadow-raised)',
                     border: '1px solid var(--neu-border)',
                   }}
                 >
-                  <RotateCcw className="w-3.5 h-3.5" />
-                  Reset
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowAddQuote(!showAddQuote)}
-                  className="px-3 py-1.5 rounded-xl text-xs font-semibold text-white bg-accent-primary hover:brightness-110 cursor-pointer transition-all active:scale-95 flex items-center gap-1.5 shadow-sm"
-                >
-                  {showAddQuote ? <X className="w-3.5 h-3.5" /> : <Plus className="w-3.5 h-3.5" />}
-                  {showAddQuote ? 'Close' : 'Add Quote'}
+                  <RotateCcw className="w-3 h-3" />
+                  #1
                 </button>
               </div>
             </div>
 
-            {/* Live Dashboard Preview Section */}
+            {/* Live Dashboard Preview */}
             <div className="mb-6 pt-2">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs font-bold uppercase tracking-wider text-muted flex items-center gap-1.5">
                   <Sparkles className="w-3.5 h-3.5 text-accent-primary" />
-                  Live Dashboard Preview (Glow & Theme Adaptive)
+                  Live Dashboard Preview (Theme Glow & Adaptive Sizing)
                 </span>
                 <span className="text-[11px] text-muted">
-                  Dynamically shifts color and glow with active Color Theme
+                  Displays full quote with soft glow & theme border
                 </span>
               </div>
               <div
@@ -528,48 +629,77 @@ export default function Settings() {
               </div>
             </div>
 
-            {/* Quick Edit Current Active Quote */}
+            {/* Daily Auto-Change Setting Explanation */}
             <div
-              className="mb-6 p-4 rounded-2xl transition-all"
+              className="mb-6 p-3.5 rounded-xl flex items-center justify-between gap-3"
               style={{
-                background: 'var(--neu-card-bg)',
-                border: '1.5px solid color-mix(in srgb, var(--accent-orange) 45%, var(--neu-border))',
-                boxShadow: '0 0 16px color-mix(in srgb, var(--accent-orange) 16%, transparent), var(--neu-shadow-raised)',
+                background: 'var(--neu-inset-bg)',
+                border: '1px solid var(--neu-border)',
               }}
             >
-              <div className="flex items-center justify-between mb-2">
-                <label className="text-xs font-bold text-main flex items-center gap-1.5">
-                  <Edit3 className="w-3.5 h-3.5 text-accent-primary" />
-                  Quick Edit Active Quote
-                </label>
-                <span
-                  className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider"
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
                   style={{
-                    background: 'color-mix(in srgb, var(--accent-orange) 18%, transparent)',
-                    color: 'var(--accent-orange-bright, var(--accent-orange))',
-                    border: '1px solid color-mix(in srgb, var(--accent-orange) 35%, transparent)',
+                    background: dailyQuoteChangeEnabled
+                      ? 'color-mix(in srgb, var(--accent-orange) 20%, transparent)'
+                      : 'var(--neu-card-bg)',
+                    color: dailyQuoteChangeEnabled
+                      ? 'var(--accent-orange)'
+                      : 'var(--neu-text-muted)',
                   }}
                 >
-                  Live on Dashboard
-                </span>
-              </div>
-              <div className="space-y-3">
+                  {dailyQuoteChangeEnabled ? <Calendar className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
+                </div>
                 <div>
-                  <textarea
-                    rows={2}
-                    value={activeQuoteText}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      updateSetting('activeQuoteText', val);
-                      if (settings.activeQuoteId) {
-                        const updated = quotesList.map((q) =>
-                          q.id === settings.activeQuoteId ? { ...q, text: val } : q
-                        );
-                        updateSetting('motivationalQuotes', updated);
-                      }
-                    }}
-                    placeholder="Enter active motivation quote text..."
-                    className="w-full px-3 py-2 rounded-xl text-main text-xs sm:text-sm focus:outline-none resize-none font-medium"
+                  <h4 className="text-xs font-bold text-main">
+                    {dailyQuoteChangeEnabled
+                      ? 'Daily Quote Auto-Change is Active'
+                      : 'Daily Quote Auto-Change is Turned Off'}
+                  </h4>
+                  <p className="text-[11px] text-muted">
+                    {dailyQuoteChangeEnabled
+                      ? 'A fresh inspirational quote will automatically greet you on the Dashboard every day.'
+                      : 'Your current quote is locked and will stay fixed on the Dashboard.'}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={handleToggleDailyChange}
+                className="px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer transition-all active:scale-95 shrink-0"
+                style={{
+                  background: dailyQuoteChangeEnabled ? 'var(--accent-orange)' : 'var(--neu-card-bg)',
+                  color: dailyQuoteChangeEnabled ? '#fff' : 'var(--neu-text-main)',
+                  border: '1px solid var(--neu-border)',
+                  boxShadow: 'var(--neu-shadow-raised)',
+                }}
+              >
+                {dailyQuoteChangeEnabled ? 'Turn Off' : 'Turn On'}
+              </button>
+            </div>
+
+            {/* 600 Quotes Explorer */}
+            <div>
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+                <div>
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-muted flex items-center gap-1.5">
+                    Browse All 600 Quotes
+                  </h4>
+                  <p className="text-[11px] text-muted">
+                    Showing {filtered600Quotes.length} matching quotes. Click any quote to display it immediately on your dashboard.
+                  </p>
+                </div>
+
+                {/* Search Input */}
+                <div className="relative min-w-[220px]">
+                  <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-muted" />
+                  <input
+                    type="text"
+                    value={quoteSearch}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    placeholder="Search by keyword or #..."
+                    className="w-full pl-8 pr-3 py-1.5 rounded-xl text-xs text-main focus:outline-none"
                     style={{
                       background: 'var(--neu-inset-bg)',
                       boxShadow: 'var(--neu-shadow-inset)',
@@ -577,71 +707,260 @@ export default function Settings() {
                       color: 'var(--neu-text-main)',
                     }}
                   />
+                  {quoteSearch && (
+                    <button
+                      type="button"
+                      onClick={() => handleSearchChange('')}
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted hover:text-main text-xs"
+                    >
+                      <X className="w-3 h-3" />
+                    </button>
+                  )}
                 </div>
-                <div className="flex items-center gap-3">
-                  <div className="flex-1">
-                    <input
-                      type="text"
-                      value={activeQuoteAuthor}
-                      onChange={(e) => {
-                        const val = e.target.value;
-                        updateSetting('activeQuoteAuthor', val);
-                        if (settings.activeQuoteId) {
-                          const updated = quotesList.map((q) =>
-                            q.id === settings.activeQuoteId ? { ...q, author: val } : q
-                          );
-                          updateSetting('motivationalQuotes', updated);
-                        }
+              </div>
+
+              {/* Category Pills */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-2 mb-3 scrollbar-thin">
+                {MOTIVATION_CATEGORIES.map((cat) => {
+                  const isCatActive = selectedCategory === cat;
+                  return (
+                    <button
+                      key={cat}
+                      type="button"
+                      onClick={() => handleCategorySelect(cat)}
+                      className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold whitespace-nowrap cursor-pointer transition-all ${
+                        isCatActive
+                          ? 'bg-accent-primary text-white shadow-sm'
+                          : 'text-muted hover:text-main'
+                      }`}
+                      style={
+                        !isCatActive
+                          ? {
+                              background: 'var(--neu-card-bg)',
+                              boxShadow: 'var(--neu-shadow-raised)',
+                              border: '1px solid var(--neu-border)',
+                            }
+                          : {}
+                      }
+                    >
+                      {cat}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Quotes Grid / List */}
+              <div className="space-y-2">
+                {paginatedQuotes.length === 0 ? (
+                  <div
+                    className="py-8 text-center rounded-xl"
+                    style={{ background: 'var(--neu-inset-bg)', border: '1px dashed var(--neu-border)' }}
+                  >
+                    <Quote className="w-6 h-6 text-muted mx-auto mb-1 opacity-50" />
+                    <p className="text-xs text-muted font-medium">No quotes found for "{quoteSearch}"</p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setQuoteSearch('');
+                        setSelectedCategory('All');
                       }}
-                      placeholder="Author / Attribution..."
-                      className="w-full px-3 py-1.5 rounded-xl text-main text-xs focus:outline-none"
+                      className="mt-2 text-xs text-accent-primary font-bold underline"
+                    >
+                      Clear search filters
+                    </button>
+                  </div>
+                ) : (
+                  paginatedQuotes.map((q) => {
+                    const isActive = settings.activeQuoteText === q.text || settings.activeQuoteId === q.id;
+                    return (
+                      <div
+                        key={q.id}
+                        onClick={() => handleSetActiveQuote(q)}
+                        className={`group flex items-start justify-between p-3 rounded-xl gap-3 transition-all cursor-pointer ${
+                          isActive ? 'border-[1.5px]' : 'hover:border-[var(--accent-orange)]'
+                        }`}
+                        style={{
+                          background: 'var(--neu-card-bg)',
+                          boxShadow: isActive
+                            ? '0 0 14px color-mix(in srgb, var(--accent-orange) 22%, transparent), var(--neu-shadow-raised)'
+                            : 'var(--neu-shadow-raised)',
+                          borderColor: isActive
+                            ? 'color-mix(in srgb, var(--accent-orange) 65%, var(--neu-border))'
+                            : 'var(--neu-border)',
+                        }}
+                      >
+                        <div className="flex items-start gap-3 min-w-0 flex-1">
+                          <span
+                            className="text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 mt-0.5"
+                            style={{
+                              background: isActive ? 'var(--accent-orange)' : 'var(--neu-inset-bg)',
+                              color: isActive ? '#fff' : 'var(--neu-text-muted)',
+                              border: '1px solid var(--neu-border)',
+                            }}
+                          >
+                            #{q.index}
+                          </span>
+
+                          <div className="min-w-0 flex-1">
+                            <p
+                              className="text-xs sm:text-sm font-semibold whitespace-normal break-words leading-snug"
+                              style={{
+                                color: isActive
+                                  ? 'var(--accent-orange-bright, var(--accent-orange))'
+                                  : 'var(--neu-text-main)',
+                              }}
+                            >
+                              "{q.text}"
+                            </p>
+                            <span
+                              className="inline-block text-[10px] font-medium text-muted mt-0.5 tracking-wider uppercase"
+                            >
+                              {q.category}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="shrink-0 self-center">
+                          {isActive ? (
+                            <span
+                              className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1 shrink-0"
+                              style={{
+                                background: 'color-mix(in srgb, var(--accent-orange) 18%, transparent)',
+                                color: 'var(--accent-orange-bright, var(--accent-orange))',
+                                border: '1px solid color-mix(in srgb, var(--accent-orange) 35%, transparent)',
+                              }}
+                            >
+                              <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent-orange)] animate-pulse" />
+                              Active
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleSetActiveQuote(q);
+                              }}
+                              className="px-2.5 py-1 rounded-lg text-[11px] font-semibold text-muted hover:text-accent-primary transition-all opacity-75 group-hover:opacity-100"
+                              style={{
+                                background: 'var(--neu-inset-bg)',
+                                border: '1px solid var(--neu-border)',
+                              }}
+                            >
+                              Set Active
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+
+              {/* Pagination Controls */}
+              {totalPages > 1 && (
+                <div className="flex items-center justify-between mt-3 pt-2 border-t border-[var(--neu-border)] text-xs text-muted">
+                  <span>
+                    Page {quotePage} of {totalPages}
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      disabled={quotePage <= 1}
+                      onClick={() => setQuotePage((p) => Math.max(1, p - 1))}
+                      className="px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                      style={{
+                        background: 'var(--neu-card-bg)',
+                        border: '1px solid var(--neu-border)',
+                        boxShadow: 'var(--neu-shadow-raised)',
+                      }}
+                    >
+                      <ChevronLeft className="w-3.5 h-3.5" /> Prev
+                    </button>
+                    <button
+                      type="button"
+                      disabled={quotePage >= totalPages}
+                      onClick={() => setQuotePage((p) => Math.min(totalPages, p + 1))}
+                      className="px-2.5 py-1 rounded-lg font-semibold flex items-center gap-1 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+                      style={{
+                        background: 'var(--neu-card-bg)',
+                        border: '1px solid var(--neu-border)',
+                        boxShadow: 'var(--neu-shadow-raised)',
+                      }}
+                    >
+                      Next <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* SECTION 2: Add Your Own Motivational Quote */}
+          <div className="notebook-settings-card p-6">
+            <div className="notebook-header-line flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <PenLine className="w-5 h-5 text-accent-primary" />
+                <div>
+                  <h3 className="text-sm font-bold text-main flex items-center gap-2">
+                    Add Your Own Motivational Quote
+                    <span
+                      className="text-xs px-2 py-0.5 rounded-full font-semibold"
                       style={{
                         background: 'var(--neu-inset-bg)',
-                        boxShadow: 'var(--neu-shadow-inset)',
+                        color: 'var(--accent-orange-bright, var(--accent-orange))',
                         border: '1px solid var(--neu-border)',
-                        color: 'var(--neu-text-main)',
                       }}
-                    />
-                  </div>
-                  <span className="text-[11px] text-muted italic">
-                    Auto-saved
-                  </span>
+                    >
+                      {userCustomQuotes.length} Custom
+                    </span>
+                  </h3>
+                  <p className="text-xs text-muted">
+                    Write your personal study mantras and display them directly on your dashboard
+                  </p>
                 </div>
               </div>
             </div>
 
-            {/* Add New Quote Form (Collapsible) */}
-            {showAddQuote && (
-              <form
-                onSubmit={handleAddNewQuote}
-                className="mb-6 p-4 rounded-2xl space-y-3 transition-all"
-                style={{
-                  background: 'var(--neu-inset-bg)',
-                  border: '1.5px solid color-mix(in srgb, var(--accent-orange) 45%, var(--neu-border))',
-                  boxShadow: '0 0 16px color-mix(in srgb, var(--accent-orange) 16%, transparent)',
-                }}
-              >
-                <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-bold text-main flex items-center gap-1.5">
-                    <Plus className="w-3.5 h-3.5 text-accent-primary" /> Add New Motivational Quote
-                  </h4>
-                  <button
-                    type="button"
-                    onClick={() => setShowAddQuote(false)}
-                    className="text-muted hover:text-main text-xs p-1"
-                  >
-                    <X className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+            {/* Add Custom Quote Form */}
+            <form
+              onSubmit={handleAddCustomQuote}
+              className="p-4 rounded-2xl space-y-3 mb-6 transition-all"
+              style={{
+                background: 'var(--neu-inset-bg)',
+                border: '1.5px solid color-mix(in srgb, var(--accent-orange) 45%, var(--neu-border))',
+                boxShadow: '0 0 16px color-mix(in srgb, var(--accent-orange) 14%, transparent)',
+              }}
+            >
+              <div>
+                <label className="text-xs font-bold text-main block mb-1">
+                  Your Motivational Quote *
+                </label>
+                <textarea
+                  rows={2}
+                  value={customQuoteText}
+                  onChange={(e) => setCustomQuoteText(e.target.value)}
+                  placeholder="e.g. Master the fundamentals and the complex becomes simple."
+                  className="w-full px-3 py-2 rounded-xl text-main text-xs sm:text-sm focus:outline-none resize-none font-medium"
+                  style={{
+                    background: 'var(--neu-card-bg)',
+                    boxShadow: 'var(--neu-shadow-inset)',
+                    border: '1px solid var(--neu-border)',
+                    color: 'var(--neu-text-main)',
+                  }}
+                />
+              </div>
 
-                <div>
-                  <label className="text-[11px] text-muted block mb-1 font-medium">Quote Text *</label>
-                  <textarea
-                    rows={2}
-                    value={newQuoteText}
-                    onChange={(e) => setNewQuoteText(e.target.value)}
-                    placeholder="e.g. Master the fundamentals and the complex becomes simple."
-                    className="w-full px-3 py-2 rounded-xl text-main text-xs sm:text-sm focus:outline-none resize-none"
+              <div className="flex flex-col sm:flex-row gap-3 items-end">
+                <div className="flex-1 w-full">
+                  <label className="text-xs font-medium text-muted block mb-1">
+                    Author / Attribution (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={customQuoteAuthor}
+                    onChange={(e) => setCustomQuoteAuthor(e.target.value)}
+                    placeholder="e.g. Aditya, Marcus Aurelius, Unknown"
+                    className="w-full px-3 py-2 rounded-xl text-main text-xs focus:outline-none"
                     style={{
                       background: 'var(--neu-card-bg)',
                       boxShadow: 'var(--neu-shadow-inset)',
@@ -650,99 +969,70 @@ export default function Settings() {
                     }}
                   />
                 </div>
+                <button
+                  type="submit"
+                  className="w-full sm:w-auto px-5 py-2 rounded-xl text-xs font-bold text-white bg-accent-primary hover:brightness-110 cursor-pointer transition-all active:scale-95 shadow-sm shrink-0 flex items-center justify-center gap-1.5"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  Add & Set Active on Dashboard
+                </button>
+              </div>
+            </form>
 
-                <div className="flex flex-col sm:flex-row gap-3 items-end">
-                  <div className="flex-1 w-full">
-                    <label className="text-[11px] text-muted block mb-1 font-medium">Author / Attribution (Optional)</label>
-                    <input
-                      type="text"
-                      value={newQuoteAuthor}
-                      onChange={(e) => setNewQuoteAuthor(e.target.value)}
-                      placeholder="e.g. Aditya, Marcus Aurelius, Steve Jobs"
-                      className="w-full px-3 py-2 rounded-xl text-main text-xs focus:outline-none"
-                      style={{
-                        background: 'var(--neu-card-bg)',
-                        boxShadow: 'var(--neu-shadow-inset)',
-                        border: '1px solid var(--neu-border)',
-                        color: 'var(--neu-text-main)',
-                      }}
-                    />
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto">
-                    <button
-                      type="submit"
-                      className="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold text-white bg-accent-primary hover:brightness-110 cursor-pointer transition-all active:scale-95 shadow-sm"
-                    >
-                      Save & Set Active
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowAddQuote(false)}
-                      className="px-3 py-2 rounded-xl text-xs font-semibold text-muted hover:text-main cursor-pointer transition-all"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </div>
-              </form>
-            )}
-
-            {/* List of Quotes */}
+            {/* User Custom Quotes List */}
             <div>
               <div className="flex items-center justify-between mb-3">
                 <span className="text-xs font-bold uppercase tracking-wider text-muted">
-                  Saved Motivation Quotes ({quotesList.length})
+                  Your Custom Motivation Quotes ({userCustomQuotes.length})
                 </span>
                 <span className="text-[11px] text-muted">
-                  Click a quote to set it as active on your Dashboard
+                  Click any quote to set it as active on your dashboard
                 </span>
               </div>
 
-              <div className="space-y-2.5">
-                {quotesList.map((quote) => {
-                  const isActive = (settings.activeQuoteId === quote.id) || (settings.activeQuoteText === quote.text);
-                  const isEditing = editingQuoteId === quote.id;
+              {userCustomQuotes.length === 0 ? (
+                <div
+                  className="py-8 text-center rounded-xl"
+                  style={{ background: 'var(--neu-inset-bg)', border: '1px dashed var(--neu-border)' }}
+                >
+                  <PenLine className="w-7 h-7 text-muted mx-auto mb-2 opacity-50" />
+                  <p className="text-xs text-muted font-medium">No custom quotes created yet</p>
+                  <p className="text-[11px] text-muted opacity-75 mt-0.5">
+                    Write your favorite quote above to store it and display it on your Dashboard
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-2.5">
+                  {userCustomQuotes.map((quote) => {
+                    const isActive = settings.activeQuoteId === quote.id || settings.activeQuoteText === quote.text;
+                    const isEditing = editingCustomId === quote.id;
 
-                  if (isEditing) {
-                    return (
-                      <div
-                        key={quote.id}
-                        className="p-3.5 rounded-xl space-y-3"
-                        style={{
-                          background: 'var(--neu-card-bg)',
-                          border: '1.5px solid var(--accent-orange)',
-                          boxShadow: '0 0 14px color-mix(in srgb, var(--accent-orange) 22%, transparent)',
-                        }}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-bold text-accent-primary">Editing Quote</span>
-                          <button
-                            type="button"
-                            onClick={handleCancelEditQuote}
-                            className="p-1 text-muted hover:text-main"
-                          >
-                            <X className="w-3.5 h-3.5" />
-                          </button>
-                        </div>
-                        <textarea
-                          rows={2}
-                          value={editText}
-                          onChange={(e) => setEditText(e.target.value)}
-                          className="w-full px-3 py-2 rounded-xl text-main text-xs sm:text-sm focus:outline-none resize-none font-medium"
+                    if (isEditing) {
+                      return (
+                        <div
+                          key={quote.id}
+                          className="p-3.5 rounded-xl space-y-3"
                           style={{
-                            background: 'var(--neu-inset-bg)',
-                            boxShadow: 'var(--neu-shadow-inset)',
-                            border: '1px solid var(--neu-border)',
-                            color: 'var(--neu-text-main)',
+                            background: 'var(--neu-card-bg)',
+                            border: '1.5px solid var(--accent-orange)',
+                            boxShadow: '0 0 14px color-mix(in srgb, var(--accent-orange) 22%, transparent)',
                           }}
-                        />
-                        <div className="flex flex-col sm:flex-row gap-2 items-center justify-between">
-                          <input
-                            type="text"
-                            value={editAuthor}
-                            onChange={(e) => setEditAuthor(e.target.value)}
-                            placeholder="Author..."
-                            className="w-full sm:max-w-xs px-3 py-1.5 rounded-xl text-main text-xs focus:outline-none"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-bold text-accent-primary">Editing Custom Quote</span>
+                            <button
+                              type="button"
+                              onClick={handleCancelEditCustom}
+                              className="p-1 text-muted hover:text-main"
+                            >
+                              <X className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                          <textarea
+                            rows={2}
+                            value={editCustomText}
+                            onChange={(e) => setEditCustomText(e.target.value)}
+                            className="w-full px-3 py-2 rounded-xl text-main text-xs sm:text-sm focus:outline-none resize-none font-medium"
                             style={{
                               background: 'var(--neu-inset-bg)',
                               boxShadow: 'var(--neu-shadow-inset)',
@@ -750,66 +1040,77 @@ export default function Settings() {
                               color: 'var(--neu-text-main)',
                             }}
                           />
-                          <div className="flex items-center gap-2 self-end sm:self-center">
-                            <button
-                              type="button"
-                              onClick={() => handleSaveEditQuote(quote.id)}
-                              className="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-accent-primary hover:brightness-110 cursor-pointer flex items-center gap-1.5 shadow-sm"
-                            >
-                              <Save className="w-3.5 h-3.5" /> Save Changes
-                            </button>
-                            <button
-                              type="button"
-                              onClick={handleCancelEditQuote}
-                              className="px-2.5 py-1.5 rounded-xl text-xs font-semibold text-muted hover:text-main cursor-pointer"
-                            >
-                              Cancel
-                            </button>
+                          <div className="flex flex-col sm:flex-row gap-2 items-center justify-between">
+                            <input
+                              type="text"
+                              value={editCustomAuthor}
+                              onChange={(e) => setEditCustomAuthor(e.target.value)}
+                              placeholder="Author / Attribution..."
+                              className="w-full sm:max-w-xs px-3 py-1.5 rounded-xl text-main text-xs focus:outline-none"
+                              style={{
+                                background: 'var(--neu-inset-bg)',
+                                boxShadow: 'var(--neu-shadow-inset)',
+                                border: '1px solid var(--neu-border)',
+                                color: 'var(--neu-text-main)',
+                              }}
+                            />
+                            <div className="flex items-center gap-2 self-end sm:self-center">
+                              <button
+                                type="button"
+                                onClick={() => handleSaveEditCustom(quote.id)}
+                                className="px-3 py-1.5 rounded-xl text-xs font-bold text-white bg-accent-primary hover:brightness-110 cursor-pointer flex items-center gap-1.5 shadow-sm"
+                              >
+                                <Save className="w-3.5 h-3.5" /> Save Changes
+                              </button>
+                              <button
+                                type="button"
+                                onClick={handleCancelEditCustom}
+                                className="px-2.5 py-1.5 rounded-xl text-xs font-semibold text-muted hover:text-main cursor-pointer"
+                              >
+                                Cancel
+                              </button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  }
+                      );
+                    }
 
-                  return (
-                    <div
-                      key={quote.id}
-                      onClick={() => handleSetActiveQuote(quote)}
-                      className={`group flex items-start justify-between p-3 sm:p-3.5 rounded-xl gap-3 transition-all cursor-pointer ${
-                        isActive
-                          ? 'border-[1.5px]'
-                          : 'hover:border-[var(--accent-orange)]'
-                      }`}
-                      style={{
-                        background: 'var(--neu-card-bg)',
-                        boxShadow: isActive
-                          ? '0 0 16px color-mix(in srgb, var(--accent-orange) 24%, transparent), var(--neu-shadow-raised)'
-                          : 'var(--neu-shadow-raised)',
-                        borderColor: isActive
-                          ? 'color-mix(in srgb, var(--accent-orange) 65%, var(--neu-border))'
-                          : 'var(--neu-border)',
-                      }}
-                    >
-                      <div className="flex items-start gap-3 min-w-0 flex-1">
-                        <div
-                          className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
-                            isActive
-                              ? 'bg-accent-primary text-white shadow-sm'
-                              : 'text-muted group-hover:text-accent-primary'
-                          }`}
-                          style={{
-                            background: isActive ? 'var(--accent-orange)' : 'var(--neu-inset-bg)',
-                            border: '1px solid var(--neu-border)',
-                          }}
-                        >
-                          <Quote className="w-3 h-3" />
-                        </div>
+                    return (
+                      <div
+                        key={quote.id}
+                        onClick={() => handleSetActiveQuote(quote)}
+                        className={`group flex items-start justify-between p-3.5 rounded-xl gap-3 transition-all cursor-pointer ${
+                          isActive ? 'border-[1.5px]' : 'hover:border-[var(--accent-orange)]'
+                        }`}
+                        style={{
+                          background: 'var(--neu-card-bg)',
+                          boxShadow: isActive
+                            ? '0 0 16px color-mix(in srgb, var(--accent-orange) 24%, transparent), var(--neu-shadow-raised)'
+                            : 'var(--neu-shadow-raised)',
+                          borderColor: isActive
+                            ? 'color-mix(in srgb, var(--accent-orange) 65%, var(--neu-border))'
+                            : 'var(--neu-border)',
+                        }}
+                      >
+                        <div className="flex items-start gap-3 min-w-0 flex-1">
+                          <div
+                            className={`w-6 h-6 rounded-lg flex items-center justify-center shrink-0 mt-0.5 transition-colors ${
+                              isActive
+                                ? 'bg-accent-primary text-white shadow-sm'
+                                : 'text-muted group-hover:text-accent-primary'
+                            }`}
+                            style={{
+                              background: isActive ? 'var(--accent-orange)' : 'var(--neu-inset-bg)',
+                              border: '1px solid var(--neu-border)',
+                            }}
+                          >
+                            <Quote className="w-3 h-3" />
+                          </div>
 
-                        <div className="min-w-0 flex-1">
-                          <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                          <div className="min-w-0 flex-1">
                             {isActive && (
                               <span
-                                className="text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider flex items-center gap-1"
+                                className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider mb-1"
                                 style={{
                                   background: 'color-mix(in srgb, var(--accent-orange) 18%, transparent)',
                                   color: 'var(--accent-orange-bright, var(--accent-orange))',
@@ -820,65 +1121,66 @@ export default function Settings() {
                                 Active on Dashboard
                               </span>
                             )}
-                          </div>
-                          <p
-                            className="text-xs sm:text-sm font-medium leading-relaxed"
-                            style={{
-                              color: isActive ? 'var(--accent-orange-bright, var(--accent-orange))' : 'var(--neu-text-main)',
-                            }}
-                          >
-                            "{quote.text}"
-                          </p>
-                          {quote.author && (
-                            <p className="text-[11px] text-muted mt-1 font-medium">
-                              — {quote.author}
+                            <p
+                              className="text-xs sm:text-sm font-semibold whitespace-normal break-words leading-relaxed"
+                              style={{
+                                color: isActive
+                                  ? 'var(--accent-orange-bright, var(--accent-orange))'
+                                  : 'var(--neu-text-main)',
+                              }}
+                            >
+                              "{quote.text}"
                             </p>
-                          )}
+                            {quote.author && (
+                              <p className="text-[11px] text-muted mt-1 font-medium">
+                                — {quote.author}
+                              </p>
+                            )}
+                          </div>
                         </div>
-                      </div>
 
-                      <div
-                        className="flex items-center gap-1.5 shrink-0"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        {!isActive && (
+                        <div
+                          className="flex items-center gap-1.5 shrink-0"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {!isActive && (
+                            <button
+                              type="button"
+                              onClick={() => handleSetActiveQuote(quote)}
+                              title="Set as active on Dashboard"
+                              className="px-2 py-1 rounded-lg text-[11px] font-semibold text-muted hover:text-accent-primary transition-all opacity-80 group-hover:opacity-100"
+                              style={{
+                                background: 'var(--neu-inset-bg)',
+                                border: '1px solid var(--neu-border)',
+                              }}
+                            >
+                              Set Active
+                            </button>
+                          )}
+
                           <button
                             type="button"
-                            onClick={() => handleSetActiveQuote(quote)}
-                            title="Set as active quote on Dashboard"
-                            className="px-2 py-1 rounded-lg text-[11px] font-semibold text-muted hover:text-accent-primary transition-all opacity-80 group-hover:opacity-100"
-                            style={{
-                              background: 'var(--neu-inset-bg)',
-                              border: '1px solid var(--neu-border)',
-                            }}
+                            onClick={() => handleStartEditCustom(quote)}
+                            title="Edit this custom quote"
+                            className="p-1.5 rounded-lg text-muted hover:text-main hover:bg-[var(--neu-inset-bg)] cursor-pointer transition-all active:scale-95"
                           >
-                            Set Active
+                            <Edit3 className="w-3.5 h-3.5" />
                           </button>
-                        )}
 
-                        <button
-                          type="button"
-                          onClick={() => handleStartEditQuote(quote)}
-                          title="Edit this quote text"
-                          className="p-1.5 rounded-lg text-muted hover:text-main hover:bg-[var(--neu-inset-bg)] cursor-pointer transition-all active:scale-95"
-                        >
-                          <Edit3 className="w-3.5 h-3.5" />
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteQuote(quote.id)}
-                          title="Delete quote"
-                          disabled={quotesList.length <= 1}
-                          className="p-1.5 rounded-lg text-red-400 hover:text-red-500 hover:bg-red-500/10 cursor-pointer transition-all active:scale-95 disabled:opacity-30 disabled:cursor-not-allowed"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteCustomQuote(quote.id)}
+                            title="Delete custom quote"
+                            className="p-1.5 rounded-lg text-red-400 hover:text-red-500 hover:bg-red-500/10 cursor-pointer transition-all active:scale-95"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
 

@@ -16,13 +16,9 @@ const DEFAULT_PROFILE = {
   createdAt: '',
 };
 
-export const DEFAULT_MOTIVATION_QUOTES = [
-  { id: 'quote_1', text: 'Small daily improvements over time lead to stunning results.', author: 'Robin Sharma' },
-  { id: 'quote_2', text: 'The secret of getting ahead is getting started.', author: 'Mark Twain' },
-  { id: 'quote_3', text: 'It always seems impossible until it\'s done.', author: 'Nelson Mandela' },
-  { id: 'quote_4', text: 'Success is the sum of small efforts, repeated day in and day out.', author: 'Robert Collier' },
-  { id: 'quote_5', text: 'Focus on progress, not perfection. Every line of code counts.', author: 'Study Flow' },
-];
+import { SIX_HUNDRED_QUOTES, getDailyQuote, getRandomQuote } from '../data/motivationQuotes';
+
+export const DEFAULT_MOTIVATION_QUOTES = SIX_HUNDRED_QUOTES;
 
 const DEFAULT_SETTINGS = {
   animationsEnabled: true,
@@ -36,10 +32,14 @@ const DEFAULT_SETTINGS = {
   pomodoroLongBreak: 15,
   sidebarCollapsed: false,
   fontFamily: "'Inter', sans-serif",
+  dailyQuoteChangeEnabled: true,
+  lastDailyQuoteDate: '',
+  userCustomQuotes: [],
   motivationalQuotes: DEFAULT_MOTIVATION_QUOTES,
-  activeQuoteId: 'quote_1',
-  activeQuoteText: 'Small daily improvements over time lead to stunning results.',
-  activeQuoteAuthor: 'Robin Sharma',
+  activeQuoteId: SIX_HUNDRED_QUOTES[0].id,
+  activeQuoteText: SIX_HUNDRED_QUOTES[0].text,
+  activeQuoteAuthor: SIX_HUNDRED_QUOTES[0].author,
+  activeQuoteCategory: SIX_HUNDRED_QUOTES[0].category,
 };
 
 const DEFAULT_UI = {
@@ -89,19 +89,49 @@ function createDefaultState() {
   const storedStyle = getStoredStyle();
   const speed = rawSettings?.animationSpeed !== undefined ? rawSettings.animationSpeed : storedSpeed;
   const style = rawSettings?.animationStyle !== undefined ? rawSettings.animationStyle : storedStyle;
-  const quotes = (rawSettings?.motivationalQuotes && rawSettings.motivationalQuotes.length > 0)
-    ? rawSettings.motivationalQuotes
-    : DEFAULT_MOTIVATION_QUOTES;
-  const activeQuoteId = rawSettings?.activeQuoteId || quotes[0]?.id || 'quote_1';
-  const activeQuoteText = rawSettings?.activeQuoteText || quotes.find(q => q.id === activeQuoteId)?.text || quotes[0]?.text;
-  const activeQuoteAuthor = rawSettings?.activeQuoteAuthor ?? (quotes.find(q => q.id === activeQuoteId)?.author || quotes[0]?.author || '');
+  
+  const todayStr = new Date().toISOString().split('T')[0];
+  const dailyQuoteChangeEnabled = rawSettings?.dailyQuoteChangeEnabled !== undefined
+    ? rawSettings.dailyQuoteChangeEnabled
+    : true;
+  const userCustomQuotes = Array.isArray(rawSettings?.userCustomQuotes)
+    ? rawSettings.userCustomQuotes
+    : [];
+  let lastDailyQuoteDate = rawSettings?.lastDailyQuoteDate || '';
+
+  let activeQuoteId = rawSettings?.activeQuoteId;
+  let activeQuoteText = rawSettings?.activeQuoteText;
+  let activeQuoteAuthor = rawSettings?.activeQuoteAuthor;
+  let activeQuoteCategory = rawSettings?.activeQuoteCategory;
+
+  // When daily change is enabled and it is a new day, update active quote automatically
+  if (dailyQuoteChangeEnabled && lastDailyQuoteDate !== todayStr) {
+    const todayDaily = getDailyQuote(SIX_HUNDRED_QUOTES);
+    if (todayDaily) {
+      activeQuoteId = todayDaily.id;
+      activeQuoteText = todayDaily.text;
+      activeQuoteAuthor = todayDaily.category;
+      activeQuoteCategory = todayDaily.category;
+      lastDailyQuoteDate = todayStr;
+    }
+  } else if (!activeQuoteText) {
+    activeQuoteId = SIX_HUNDRED_QUOTES[0].id;
+    activeQuoteText = SIX_HUNDRED_QUOTES[0].text;
+    activeQuoteAuthor = SIX_HUNDRED_QUOTES[0].author;
+    activeQuoteCategory = SIX_HUNDRED_QUOTES[0].category;
+  }
+
   const loadedSettings = {
     ...DEFAULT_SETTINGS,
     ...rawSettings,
-    motivationalQuotes: quotes,
+    dailyQuoteChangeEnabled,
+    lastDailyQuoteDate,
+    userCustomQuotes,
+    motivationalQuotes: SIX_HUNDRED_QUOTES,
     activeQuoteId,
     activeQuoteText,
     activeQuoteAuthor,
+    activeQuoteCategory,
     animationSpeed: speed,
     animationStyle: style,
   };

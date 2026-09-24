@@ -55,7 +55,7 @@ const DashboardLayout = React.memo(function DashboardLayout({ children, title, s
             </div>
           )}
           {headerRight && (
-            <div className="flex-1 max-w-xl 2xl:max-w-2xl w-full">
+            <div className="flex-1 max-w-2xl 2xl:max-w-3xl w-full">
               {headerRight}
             </div>
           )}
