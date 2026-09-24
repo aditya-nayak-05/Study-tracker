@@ -630,6 +630,72 @@ export default function Settings() {
               </div>
             </div>
 
+            {/* Curated Quote Display on Dashboard Toggle */}
+            <div
+              className="mb-4 p-3.5 rounded-xl flex items-center justify-between gap-3"
+              style={{
+                background: 'var(--neu-inset-bg)',
+                border: '1px solid var(--neu-border)',
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                  style={{
+                    background: (settings.showCuratedQuoteBanner !== false)
+                      ? 'color-mix(in srgb, var(--accent-orange) 20%, transparent)'
+                      : 'var(--neu-card-bg)',
+                    color: (settings.showCuratedQuoteBanner !== false)
+                      ? 'var(--accent-orange)'
+                      : 'var(--neu-text-muted)',
+                  }}
+                >
+                  <Quote className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-main">
+                    {(settings.showCuratedQuoteBanner !== false)
+                      ? 'Curated Quote Banner is Visible on Dashboard'
+                      : 'Curated Quote Banner is Hidden on Dashboard'}
+                  </h4>
+                  <p className="text-[11px] text-muted">
+                    {(settings.showCuratedQuoteBanner !== false)
+                      ? 'Displaying the 600-quote motivation card on your dashboard.'
+                      : 'Turned off. This quote is currently hidden on your dashboard.'}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const nextVal = settings.showCuratedQuoteBanner === false;
+                  setSettings((prev) => ({ ...prev, showCuratedQuoteBanner: nextVal }));
+                  dispatch({
+                    type: 'UPDATE_SETTINGS',
+                    payload: { showCuratedQuoteBanner: nextVal },
+                  });
+                  showToast(nextVal ? 'Curated Quote banner enabled ✨' : 'Curated Quote banner hidden', 'info');
+                }}
+                className="px-3.5 py-1.5 rounded-full text-xs font-bold cursor-pointer transition-all duration-300 active:scale-95"
+                style={{
+                  background: (settings.showCuratedQuoteBanner !== false)
+                    ? 'color-mix(in srgb, var(--accent-orange) 18%, var(--neu-card-bg))'
+                    : 'var(--neu-card-bg)',
+                  border: (settings.showCuratedQuoteBanner !== false)
+                    ? '1.5px solid var(--accent-orange)'
+                    : '1px solid var(--neu-border)',
+                  color: (settings.showCuratedQuoteBanner !== false)
+                    ? 'var(--accent-orange-bright, var(--accent-orange))'
+                    : 'var(--neu-text-muted)',
+                  boxShadow: (settings.showCuratedQuoteBanner !== false)
+                    ? '0 0 14px color-mix(in srgb, var(--accent-orange) 35%, transparent)'
+                    : 'none',
+                }}
+              >
+                {(settings.showCuratedQuoteBanner !== false) ? 'Display: ON' : 'Display: OFF'}
+              </button>
+            </div>
+
             {/* Daily Auto-Change Setting Explanation */}
             <div
               className="mb-6 p-3.5 rounded-xl flex items-center justify-between gap-3"
@@ -942,6 +1008,72 @@ export default function Settings() {
               >
                 <UserMotivationQuoteBanner isPreview={true} />
               </div>
+            </div>
+
+            {/* User Quote Display on Dashboard Toggle */}
+            <div
+              className="mb-6 p-3.5 rounded-xl flex items-center justify-between gap-3"
+              style={{
+                background: 'var(--neu-inset-bg)',
+                border: '1px solid var(--neu-border)',
+              }}
+            >
+              <div className="flex items-center gap-3">
+                <div
+                  className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                  style={{
+                    background: (settings.showUserQuoteBanner !== false)
+                      ? 'color-mix(in srgb, var(--accent-orange) 20%, transparent)'
+                      : 'var(--neu-card-bg)',
+                    color: (settings.showUserQuoteBanner !== false)
+                      ? 'var(--accent-orange)'
+                      : 'var(--neu-text-muted)',
+                  }}
+                >
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="text-xs font-bold text-main">
+                    {(settings.showUserQuoteBanner !== false)
+                      ? 'User Quote Banner is Visible on Dashboard'
+                      : 'User Quote Banner is Hidden on Dashboard'}
+                  </h4>
+                  <p className="text-[11px] text-muted">
+                    {(settings.showUserQuoteBanner !== false)
+                      ? 'Displaying your personal custom motivation card on your dashboard.'
+                      : 'Turned off. This quote is currently hidden on your dashboard.'}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  const nextVal = settings.showUserQuoteBanner === false;
+                  setSettings((prev) => ({ ...prev, showUserQuoteBanner: nextVal }));
+                  dispatch({
+                    type: 'UPDATE_SETTINGS',
+                    payload: { showUserQuoteBanner: nextVal },
+                  });
+                  showToast(nextVal ? 'User Quote banner enabled ✨' : 'User Quote banner hidden', 'info');
+                }}
+                className="px-3.5 py-1.5 rounded-full text-xs font-bold cursor-pointer transition-all duration-300 active:scale-95"
+                style={{
+                  background: (settings.showUserQuoteBanner !== false)
+                    ? 'color-mix(in srgb, var(--accent-orange) 18%, var(--neu-card-bg))'
+                    : 'var(--neu-card-bg)',
+                  border: (settings.showUserQuoteBanner !== false)
+                    ? '1.5px solid var(--accent-orange)'
+                    : '1px solid var(--neu-border)',
+                  color: (settings.showUserQuoteBanner !== false)
+                    ? 'var(--accent-orange-bright, var(--accent-orange))'
+                    : 'var(--neu-text-muted)',
+                  boxShadow: (settings.showUserQuoteBanner !== false)
+                    ? '0 0 14px color-mix(in srgb, var(--accent-orange) 35%, transparent)'
+                    : 'none',
+                }}
+              >
+                {(settings.showUserQuoteBanner !== false) ? 'Display: ON' : 'Display: OFF'}
+              </button>
             </div>
 
             {/* Add Custom Quote Form */}

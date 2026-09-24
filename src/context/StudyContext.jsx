@@ -40,6 +40,8 @@ const DEFAULT_SETTINGS = {
   activeQuoteText: SIX_HUNDRED_QUOTES[0].text,
   activeQuoteAuthor: SIX_HUNDRED_QUOTES[0].author,
   activeQuoteCategory: SIX_HUNDRED_QUOTES[0].category,
+  showUserQuoteBanner: true,
+  showCuratedQuoteBanner: true,
 };
 
 const DEFAULT_UI = {

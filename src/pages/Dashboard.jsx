@@ -14,7 +14,7 @@ import {
 } from '../utils/helpers';
 import {
   Plus, Play, Clock, CheckSquare, Calendar, BarChart3, User, Settings,
-  BookOpen, Target, Flame, TrendingUp, StickyNote, Youtube,
+  BookOpen, Target, Flame, TrendingUp, StickyNote, Youtube, Sparkles, Quote, EyeOff,
 } from 'lucide-react';
 import { extractVideoId, getThumbnailUrl, formatDuration } from '../utils/youtube';
 import { completionSweep, isReducedMotion, getMotionDuration, getSpeedMultiplier } from '../utils/motion';
@@ -239,6 +239,41 @@ export default function Dashboard() {
     }
   }, [activePlan, dispatch]);
 
+  const showUserQuote = state.settings?.showUserQuoteBanner !== false;
+  const showCuratedQuote = state.settings?.showCuratedQuoteBanner !== false;
+
+  const toggleUserQuote = useCallback(() => {
+    const nextVal = !showUserQuote;
+    dispatch({
+      type: 'UPDATE_SETTINGS',
+      payload: { showUserQuoteBanner: nextVal },
+    });
+    if (showToast) {
+      showToast(
+        nextVal
+          ? 'User Motivational Quote displayed ✨'
+          : 'User Motivational Quote hidden',
+        nextVal ? 'success' : 'info'
+      );
+    }
+  }, [showUserQuote, dispatch, showToast]);
+
+  const toggleCuratedQuote = useCallback(() => {
+    const nextVal = !showCuratedQuote;
+    dispatch({
+      type: 'UPDATE_SETTINGS',
+      payload: { showCuratedQuoteBanner: nextVal },
+    });
+    if (showToast) {
+      showToast(
+        nextVal
+          ? 'Curated Motivational Quote displayed ✨'
+          : 'Curated Motivational Quote hidden',
+        nextVal ? 'success' : 'info'
+      );
+    }
+  }, [showCuratedQuote, dispatch, showToast]);
+
   return (
     <DashboardLayout 
       title={`${getGreeting()}, ${state.profile?.name || 'Student'}`} 
@@ -340,9 +375,106 @@ export default function Dashboard() {
         </div>
 
         {/* Motivational Quotes Section (User Motivational Quote & Curated Motivational Quote) */}
-        <div className="space-y-4">
-          <UserMotivationQuoteBanner />
-          <MotivationQuoteBanner />
+        <div className="space-y-3.5">
+          {/* Glowing Animated Quote Display Toggle Controls */}
+          <div className="flex items-center justify-center gap-3 sm:gap-4 flex-wrap py-0.5">
+            {/* 1. Toggle User Motivational Quote Button */}
+            <button
+              type="button"
+              onClick={toggleUserQuote}
+              title={showUserQuote ? "Turn off User Motivational Quote display" : "Turn on User Motivational Quote display"}
+              className={`group relative flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer active:scale-95 ${
+                showUserQuote ? 'hover:brightness-110 hover:scale-105' : 'hover:opacity-100 hover:scale-102'
+              }`}
+              style={{
+                background: showUserQuote
+                  ? 'linear-gradient(135deg, color-mix(in srgb, var(--accent-orange) 22%, var(--neu-card-bg)) 0%, color-mix(in srgb, var(--accent-orange) 10%, var(--neu-card-bg)) 100%)'
+                  : 'var(--neu-card-bg)',
+                border: showUserQuote
+                  ? '1.5px solid var(--accent-orange)'
+                  : '1px solid var(--neu-border)',
+                color: showUserQuote
+                  ? 'var(--accent-orange-bright, var(--accent-orange))'
+                  : 'var(--neu-text-muted)',
+                boxShadow: showUserQuote
+                  ? '0 0 16px color-mix(in srgb, var(--accent-orange) 45%, transparent), 0 0 30px color-mix(in srgb, var(--accent-orange) 20%, transparent), inset 0 1px 1px rgba(255, 255, 255, 0.2)'
+                  : 'var(--neu-shadow-inset)',
+              }}
+            >
+              {showUserQuote ? (
+                <>
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent-orange)] opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent-orange)]" />
+                  </span>
+                  <Sparkles className="w-3.5 h-3.5 text-accent-primary animate-pulse" />
+                  <span>User Quote: ON</span>
+                </>
+              ) : (
+                <>
+                  <span className="h-2 w-2 rounded-full bg-gray-400/50 inline-block" />
+                  <EyeOff className="w-3.5 h-3.5 text-muted opacity-60" />
+                  <span>User Quote: OFF</span>
+                </>
+              )}
+            </button>
+
+            {/* 2. Toggle Curated Motivational Quote Button */}
+            <button
+              type="button"
+              onClick={toggleCuratedQuote}
+              title={showCuratedQuote ? "Turn off Curated Motivational Quote display" : "Turn on Curated Motivational Quote display"}
+              className={`group relative flex items-center gap-2 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer active:scale-95 ${
+                showCuratedQuote ? 'hover:brightness-110 hover:scale-105' : 'hover:opacity-100 hover:scale-102'
+              }`}
+              style={{
+                background: showCuratedQuote
+                  ? 'linear-gradient(135deg, color-mix(in srgb, var(--accent-orange) 22%, var(--neu-card-bg)) 0%, color-mix(in srgb, var(--accent-orange) 10%, var(--neu-card-bg)) 100%)'
+                  : 'var(--neu-card-bg)',
+                border: showCuratedQuote
+                  ? '1.5px solid var(--accent-orange)'
+                  : '1px solid var(--neu-border)',
+                color: showCuratedQuote
+                  ? 'var(--accent-orange-bright, var(--accent-orange))'
+                  : 'var(--neu-text-muted)',
+                boxShadow: showCuratedQuote
+                  ? '0 0 16px color-mix(in srgb, var(--accent-orange) 45%, transparent), 0 0 30px color-mix(in srgb, var(--accent-orange) 20%, transparent), inset 0 1px 1px rgba(255, 255, 255, 0.2)'
+                  : 'var(--neu-shadow-inset)',
+              }}
+            >
+              {showCuratedQuote ? (
+                <>
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--accent-orange)] opacity-75" />
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--accent-orange)]" />
+                  </span>
+                  <Quote className="w-3.5 h-3.5 text-accent-primary animate-pulse" />
+                  <span>Curated Quote: ON</span>
+                </>
+              ) : (
+                <>
+                  <span className="h-2 w-2 rounded-full bg-gray-400/50 inline-block" />
+                  <EyeOff className="w-3.5 h-3.5 text-muted opacity-60" />
+                  <span>Curated Quote: OFF</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Conditional Quote Banners */}
+          {showUserQuote && <UserMotivationQuoteBanner />}
+          {showCuratedQuote && <MotivationQuoteBanner />}
+          {!showUserQuote && !showCuratedQuote && (
+            <div
+              className="py-3.5 px-4 rounded-2xl text-center text-xs text-muted font-medium"
+              style={{
+                background: 'var(--neu-inset-bg)',
+                border: '1px dashed var(--neu-border)',
+              }}
+            >
+              Motivational quotes are currently turned off. Click either glowing button above to display.
+            </div>
+          )}
         </div>
 
         {/* 3-Column Core Tools Row: Analog Clock | Weekly Study Hours | Timer */}
