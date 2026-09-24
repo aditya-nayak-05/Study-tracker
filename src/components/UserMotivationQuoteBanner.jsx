@@ -25,10 +25,18 @@ export default function UserMotivationQuoteBanner({ isPreview = false }) {
   // Adaptive font sizing based on length to ensure full display without cutoffs
   const getFontSizeClass = (text) => {
     const len = text ? text.length : 0;
-    if (len <= 25) return 'text-base sm:text-lg md:text-xl font-black';
-    if (len <= 55) return 'text-sm sm:text-base md:text-lg font-bold';
-    if (len <= 85) return 'text-xs sm:text-sm md:text-base font-semibold';
-    return 'text-xs sm:text-[13px] md:text-sm font-medium';
+    if (len <= 30) return 'text-base sm:text-lg md:text-xl lg:text-2xl font-black';
+    if (len <= 60) return 'text-sm sm:text-base md:text-lg lg:text-xl font-extrabold';
+    if (len <= 90) return 'text-xs sm:text-sm md:text-base font-bold';
+    return 'text-xs sm:text-[13px] md:text-sm font-semibold leading-relaxed';
+  };
+
+  // Determine dynamic min height based on text length
+  const getMinHeightClass = (text) => {
+    const len = text ? text.length : 0;
+    if (len <= 40) return 'min-h-[74px] sm:min-h-[84px] md:min-h-[88px]';
+    if (len <= 80) return 'min-h-[80px] sm:min-h-[92px] md:min-h-[96px]';
+    return 'min-h-[90px] sm:min-h-[102px] md:min-h-[108px]';
   };
 
   const handleGoToCustomQuotes = useCallback((e) => {
@@ -58,15 +66,15 @@ export default function UserMotivationQuoteBanner({ isPreview = false }) {
 
   return (
     <div
-      className="group relative flex flex-col md:flex-row items-center justify-between gap-3 sm:gap-4 px-4 py-4 sm:px-8 sm:py-5.5 rounded-2xl md:rounded-full min-h-[80px] sm:min-h-[96px] transition-all duration-300 w-full overflow-hidden"
+      className={`group relative flex flex-col md:flex-row items-center justify-center gap-3 sm:gap-4 px-4 py-4 sm:px-8 sm:py-5.5 rounded-2xl md:rounded-full ${getMinHeightClass(activeCustomText)} transition-all duration-300 w-full overflow-hidden`}
       style={{
         background: 'linear-gradient(135deg, var(--neu-card-bg) 0%, color-mix(in srgb, var(--accent-orange) 10%, var(--neu-card-bg)) 100%)',
         border: '2px sm:border-[2.5px] solid color-mix(in srgb, var(--accent-orange) 70%, var(--neu-border))',
         boxShadow: '0 0 24px color-mix(in srgb, var(--accent-orange) 22%, transparent), 0 4px 16px rgba(0, 0, 0, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.18)',
       }}
     >
-      {/* Left Badge */}
-      <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 z-10 self-center md:self-center">
+      {/* Left Badge (Anchored on desktop, centered on mobile) */}
+      <div className="flex items-center gap-2.5 sm:gap-3 shrink-0 z-10 self-center md:self-auto md:absolute md:left-6 lg:md:left-8 md:top-1/2 md:-translate-y-1/2">
         <div
           className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center shrink-0 transition-transform group-hover:scale-105"
           style={{
@@ -90,8 +98,8 @@ export default function UserMotivationQuoteBanner({ isPreview = false }) {
         </span>
       </div>
 
-      {/* Centered Quote Display Area */}
-      <div className="min-w-0 flex-1 text-center px-1 sm:px-4 z-10 py-1 md:py-0">
+      {/* True Dead-Center Quote Display Area */}
+      <div className="w-full flex items-center justify-center text-center px-1 sm:px-4 md:px-48 lg:px-56 xl:px-64 z-10 py-1 md:py-0">
         <p
           className={`${getFontSizeClass(activeCustomText)} text-center whitespace-normal break-words leading-snug tracking-wide font-bold`}
           style={{
@@ -99,12 +107,12 @@ export default function UserMotivationQuoteBanner({ isPreview = false }) {
             textShadow: '0 0 18px color-mix(in srgb, var(--accent-orange) 45%, transparent)',
           }}
         >
-          "{activeCustomText}"
+          {activeCustomText}
         </p>
       </div>
 
-      {/* Right Action Controls */}
-      <div className="flex items-center justify-center gap-1.5 sm:gap-2 shrink-0 z-10 self-center md:self-center flex-wrap sm:flex-nowrap">
+      {/* Right Action Controls (Anchored on desktop, centered on mobile) */}
+      <div className="flex items-center justify-center gap-1.5 sm:gap-2 shrink-0 z-10 self-center md:self-auto md:absolute md:right-6 lg:md:right-8 md:top-1/2 md:-translate-y-1/2 flex-wrap sm:flex-nowrap">
         {userQuotes.length > 1 && (
           <button
             type="button"

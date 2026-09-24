@@ -811,7 +811,7 @@ export default function Settings() {
                                   : 'var(--neu-text-main)',
                               }}
                             >
-                              "{q.text}"
+                              {q.text}
                             </p>
                             <span
                               className="inline-block text-[10px] font-medium text-muted mt-0.5 tracking-wider uppercase"
@@ -1152,7 +1152,7 @@ export default function Settings() {
                                   : 'var(--neu-text-main)',
                               }}
                             >
-                              "{quote.text}"
+                              {quote.text}
                             </p>
                             {quote.author && (
                               <p className="text-[11px] text-muted mt-1 font-medium">
