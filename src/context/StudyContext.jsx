@@ -58,12 +58,14 @@ const DEFAULT_UI = {
 import { dsRoadmap } from '../data/dsRoadmap';
 import { aiFullStackRoadmap } from '../data/aiFullStackRoadmap';
 import { aiWebDevRoadmap } from '../data/aiWebDevRoadmap';
+import { aiEngineerRoadmap } from '../data/aiEngineerRoadmap';
 
 function createDefaultState() {
   const loadedPlans = storage.getItem('plans', []);
   const hasDsRoadmap = loadedPlans.some((p) => p.id === 'ds-roadmap-plan-id');
   const hasAiRoadmap = loadedPlans.some((p) => p.id === 'ai-fullstack-roadmap-plan-id');
   const hasAiWebDevRoadmap = loadedPlans.some((p) => p.id === 'ai-web-dev-main-id' || p.name === 'ai web dev (main)');
+  const hasAiEngineerRoadmap = loadedPlans.some((p) => p.id === 'ai-engineer-roadmap-plan-id' || p.name.toLowerCase() === 'ai engineer roadmap' || p.name.toLowerCase() === 'ai engineer');
 
   let plans = [...loadedPlans];
   if (!hasDsRoadmap) {
@@ -75,9 +77,12 @@ function createDefaultState() {
   if (!hasAiWebDevRoadmap) {
     plans.push(aiWebDevRoadmap);
   }
+  if (!hasAiEngineerRoadmap) {
+    plans.push(aiEngineerRoadmap);
+  }
 
   const loadedUi = storage.getItem('ui', DEFAULT_UI);
-  let ui = (!hasAiWebDevRoadmap || !loadedUi.activePlanId) ? { ...loadedUi, activePlanId: 'ai-web-dev-main-id' } : loadedUi;
+  let ui = (!hasAiEngineerRoadmap || !loadedUi.activePlanId) ? { ...loadedUi, activePlanId: 'ai-engineer-roadmap-plan-id' } : loadedUi;
 
   // Ensure activePlanId is not an archived plan
   const isActiveArchived = plans.some((p) => p.id === ui.activePlanId && p.archived);
