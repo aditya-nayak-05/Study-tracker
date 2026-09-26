@@ -141,7 +141,7 @@ export default function PracticeMode({
         <p className="text-muted text-sm">No question set available for practice.</p>
         <button
           onClick={onExit}
-          className="brass-btn px-4 py-2 rounded-xl text-xs font-bold"
+          className="brass-btn px-4 py-2 rounded-xl text-[13px] font-bold"
         >
           Return to Questions
         </button>
@@ -154,15 +154,15 @@ export default function PracticeMode({
   const progressPercent = totalInFilter > 0 ? Math.round(((currentIndex + 1) / totalInFilter) * 100) : 0;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-8">
       {/* Top Practice Bar: Exit, Set Selector, Mode Filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 sm:p-6 rounded-2xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md">
         {/* Left: Exit button & Set Selector */}
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={onExit}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-colors cursor-pointer inset-field"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-semibold text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-colors cursor-pointer inset-field"
           >
             <ArrowLeft className="w-4 h-4 text-accent-primary" />
             <span>Exit Practice</span>
@@ -174,7 +174,7 @@ export default function PracticeMode({
               setSelectedSetId(e.target.value);
               setCurrentIndex(0);
             }}
-            className="px-3 py-1.5 text-xs font-bold rounded-xl border border-[var(--neu-border-subtle)] bg-[var(--neu-card-bg)] text-main focus:outline-none cursor-pointer"
+            className="px-3 py-1.5 text-[13px] font-bold rounded-xl border border-[var(--neu-border-subtle)] bg-[var(--neu-card-bg)] text-main focus:outline-none cursor-pointer"
           >
             {questionSets.map((s) => (
               <option key={s.id} value={s.id}>
@@ -201,7 +201,7 @@ export default function PracticeMode({
                   setFilterMode(f.id);
                   setCurrentIndex(0);
                 }}
-                className={`px-2.5 py-1 text-[11px] font-bold rounded-lg transition-all cursor-pointer ${
+                className={`px-2.5 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${
                   filterMode === f.id
                     ? 'brass-btn text-white'
                     : 'text-muted hover:text-main'
@@ -217,7 +217,7 @@ export default function PracticeMode({
             type="button"
             onClick={() => setIsRandom((prev) => !prev)}
             title="Shuffle Questions"
-            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+            className={`flex items-center gap-1 px-2.5 py-1.5 rounded-xl text-[13px] font-bold border transition-all cursor-pointer ${
               isRandom
                 ? 'bg-purple-500/20 border-purple-500/50 text-purple-300'
                 : 'inset-field text-muted hover:text-main'
@@ -231,8 +231,8 @@ export default function PracticeMode({
 
       {/* Progress Bar & Counter */}
       <div className="space-y-1.5">
-        <div className="flex items-center justify-between text-xs font-bold">
-          <span className="text-muted uppercase tracking-wider text-[11px]">
+        <div className="flex items-center justify-between text-[13px] font-bold">
+          <span className="text-muted uppercase tracking-wider text-xs">
             {currentSet.name}
           </span>
           <span className="font-mono text-main">
@@ -241,7 +241,7 @@ export default function PracticeMode({
         </div>
 
         <div
-          className="w-full h-2 rounded-full overflow-hidden neu-card"
+          className="w-full h-[6px] rounded-full overflow-hidden neu-card"
           style={{
             background: 'var(--neu-inset-bg)',
             boxShadow: 'var(--neu-shadow-inset)',
@@ -260,7 +260,7 @@ export default function PracticeMode({
       {/* Main Focus Practice Card */}
       {activeQuestion ? (
         <div
-          className="p-6 sm:p-10 rounded-3xl border leather-card shadow-2xl relative space-y-8"
+          className="p-7 sm:p-10 rounded-3xl border leather-card shadow-2xl relative space-y-8"
           style={{
             background: 'var(--neu-card-bg)',
             border: '1.5px solid var(--neu-border)',
@@ -270,7 +270,7 @@ export default function PracticeMode({
           {/* Question Header & Meta */}
           <div className="flex items-center justify-between gap-3 border-b border-[var(--neu-border-subtle)] pb-4">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-mono font-black text-muted px-2.5 py-1 rounded-lg inset-field">
+              <span className="text-sm font-mono font-black text-muted px-2.5 py-1 rounded-lg inset-field">
                 #{String(currentIndex + 1).padStart(2, '0')}
               </span>
 
@@ -296,7 +296,7 @@ export default function PracticeMode({
             <button
               type="button"
               onClick={() => onToggleComplete(currentSet.id, activeQuestion.id, !isCompleted)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold border transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-bold border transition-all cursor-pointer ${
                 isCompleted
                   ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400'
                   : 'inset-field text-muted hover:text-emerald-400'
@@ -309,7 +309,7 @@ export default function PracticeMode({
 
           {/* Big Prominent Question Text */}
           <div className="py-2 text-center sm:text-left">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-black text-main leading-snug tracking-tight">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-main leading-snug tracking-tight">
               {activeQuestion.text}
             </h2>
           </div>
@@ -321,7 +321,7 @@ export default function PracticeMode({
                 <button
                   type="button"
                   onClick={handleToggleAnswer}
-                  className="brass-btn px-6 py-3 rounded-2xl text-sm font-bold flex items-center gap-2 cursor-pointer shadow-lg active:scale-95"
+                  className="brass-btn px-7 py-3.5 rounded-2xl text-base font-bold flex items-center gap-2 cursor-pointer shadow-lg active:scale-95"
                 >
                   <Eye className="w-4 h-4 text-accent-primary" />
                   <span>Show Answer</span>
@@ -336,7 +336,7 @@ export default function PracticeMode({
             ) : (
               <div className="p-5 sm:p-6 rounded-2xl border border-[var(--neu-border-subtle)] bg-[var(--neu-inset-bg)] space-y-4 animate-in fade-in zoom-in-95 duration-200">
                 <div className="flex items-center justify-between border-b border-[var(--neu-border-subtle)] pb-2">
-                  <span className="text-xs font-bold text-muted uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="text-[13px] font-bold text-muted uppercase tracking-wider flex items-center gap-1.5">
                     <Sparkles className="w-3.5 h-3.5 text-accent-primary" />
                     <span>Your Stored Answer</span>
                   </span>
@@ -345,7 +345,7 @@ export default function PracticeMode({
                     <button
                       type="button"
                       onClick={() => setIsEditingAnswer((prev) => !prev)}
-                      className="text-xs text-muted hover:text-main font-semibold flex items-center gap-1 cursor-pointer"
+                      className="text-[13px] text-muted hover:text-main font-semibold flex items-center gap-1 cursor-pointer"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                       <span>{isEditingAnswer ? 'Cancel Edit' : 'Edit Answer'}</span>
@@ -354,7 +354,7 @@ export default function PracticeMode({
                     <button
                       type="button"
                       onClick={handleToggleAnswer}
-                      className="text-xs text-muted hover:text-main font-semibold flex items-center gap-1 cursor-pointer"
+                      className="text-[13px] text-muted hover:text-main font-semibold flex items-center gap-1 cursor-pointer"
                     >
                       <EyeOff className="w-3.5 h-3.5" />
                       <span>Hide</span>
@@ -368,7 +368,7 @@ export default function PracticeMode({
                       value={editedAnswer}
                       onChange={(e) => setEditedAnswer(e.target.value)}
                       rows={5}
-                      className="w-full p-3.5 text-xs sm:text-sm rounded-xl focus:outline-none inset-field text-main leading-relaxed"
+                      className="w-full p-3.5 text-sm sm:text-base rounded-xl focus:outline-none inset-field text-main leading-relaxed"
                       placeholder="Write your answer..."
                       autoFocus
                     />
@@ -376,14 +376,14 @@ export default function PracticeMode({
                       <button
                         type="button"
                         onClick={() => setIsEditingAnswer(false)}
-                        className="px-3 py-1.5 text-xs rounded text-muted hover:text-main cursor-pointer"
+                        className="px-3 py-1.5 text-[13px] rounded text-muted hover:text-main cursor-pointer"
                       >
                         Cancel
                       </button>
                       <button
                         type="button"
                         onClick={handleSaveAnswer}
-                        className="brass-btn px-4 py-1.5 text-xs font-bold text-white rounded cursor-pointer"
+                        className="brass-btn px-4 py-1.5 text-[13px] font-bold text-white rounded cursor-pointer"
                       >
                         Save Answer
                       </button>
@@ -392,17 +392,17 @@ export default function PracticeMode({
                 ) : (
                   <div>
                     {activeQuestion.answer ? (
-                      <p className="text-sm sm:text-base text-main leading-relaxed whitespace-pre-wrap font-normal">
+                      <p className="text-base sm:text-lg text-main leading-relaxed whitespace-pre-wrap font-normal">
                         {activeQuestion.answer}
                       </p>
                     ) : (
-                      <p className="text-xs text-muted italic">
+                      <p className="text-sm text-muted italic">
                         No answer stored yet for this question. Click "Edit Answer" above to add one.
                       </p>
                     )}
 
                     {activeQuestion.notes && (
-                      <div className="mt-4 pt-3 border-t border-[var(--neu-border-subtle)] text-xs text-muted">
+                      <div className="mt-4 pt-3 border-t border-[var(--neu-border-subtle)] text-sm text-muted">
                         <span className="font-bold text-main">Notes: </span>
                         <span>{activeQuestion.notes}</span>
                       </div>
@@ -418,20 +418,20 @@ export default function PracticeMode({
             <button
               type="button"
               onClick={handlePrevious}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-main hover:bg-[var(--neu-hover-bg)] inset-field transition-all cursor-pointer"
+              className="flex items-center gap-2 px-5 py-3 rounded-xl text-[13px] font-bold text-main hover:bg-[var(--neu-hover-bg)] inset-field transition-all cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4 text-accent-primary" />
               <span>Previous</span>
             </button>
 
-            <div className="hidden sm:flex items-center gap-2 text-[11px] text-muted font-mono">
+            <div className="hidden sm:flex items-center gap-2 text-xs text-muted font-mono">
               <span>Use <kbd className="px-1.5 py-0.5 rounded border border-gray-600 bg-black/20">←</kbd> <kbd className="px-1.5 py-0.5 rounded border border-gray-600 bg-black/20">→</kbd> to navigate</span>
             </div>
 
             <button
               type="button"
               onClick={handleNext}
-              className="brass-btn flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold cursor-pointer active:scale-95"
+              className="brass-btn flex items-center gap-2 px-6 py-3 rounded-xl text-[13px] font-bold cursor-pointer active:scale-95"
             >
               <span>Next</span>
               <ArrowRight className="w-4 h-4 text-accent-primary" />
@@ -441,14 +441,14 @@ export default function PracticeMode({
       ) : (
         <div className="p-12 text-center rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] space-y-3">
           <BookOpen className="w-8 h-8 text-muted mx-auto" />
-          <h3 className="text-base font-bold text-main">No questions match this practice filter.</h3>
-          <p className="text-xs text-muted">
+          <h3 className="text-lg font-bold text-main">No questions match this practice filter.</h3>
+          <p className="text-sm text-muted">
             Try switching the filter to "All" or choosing another Question Set.
           </p>
           <button
             type="button"
             onClick={() => setFilterMode('all')}
-            className="brass-btn px-4 py-2 rounded-xl text-xs font-bold mt-2 cursor-pointer"
+            className="brass-btn px-4 py-2.5 rounded-xl text-[13px] font-bold mt-2 cursor-pointer"
           >
             Show All Questions
           </button>

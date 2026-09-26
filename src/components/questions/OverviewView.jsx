@@ -102,19 +102,19 @@ export default function OverviewView({
   }, [questionSets]);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* Quick Actions Row */}
-      <div className="flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md">
+      <div className="flex flex-wrap items-center justify-between gap-3 p-5 sm:p-6 rounded-2xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md">
         <div className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-accent-primary animate-pulse" />
-          <span className="text-xs font-bold text-main">Quick Actions:</span>
+          <Sparkles className="w-[18px] h-[18px] text-accent-primary animate-pulse" />
+          <span className="text-[13px] font-bold text-main">Quick Actions:</span>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
           <button
             type="button"
             onClick={onCreateSet}
-            className="brass-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer active:scale-95"
+            className="brass-btn px-4 py-2.5 rounded-[10px] text-[13px] font-bold flex items-center gap-1.5 cursor-pointer active:scale-95"
           >
             <Plus className="w-4 h-4 text-accent-primary" />
             <span>Create Question Set</span>
@@ -123,7 +123,7 @@ export default function OverviewView({
           <button
             type="button"
             onClick={onPasteQuestions}
-            className="px-4 py-2 rounded-xl text-xs font-bold inset-field border border-[var(--neu-border)] text-main hover:border-[var(--accent-orange)] transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2.5 rounded-[10px] text-[13px] font-bold inset-field border border-[var(--neu-border)] text-main hover:border-[var(--accent-orange)] transition-all flex items-center gap-1.5 cursor-pointer"
           >
             <Sparkles className="w-3.5 h-3.5 text-accent-primary" />
             <span>Paste Questions</span>
@@ -132,7 +132,7 @@ export default function OverviewView({
           <button
             type="button"
             onClick={onImportBackup}
-            className="px-3.5 py-2 rounded-xl text-xs font-bold inset-field border border-[var(--neu-border)] text-muted hover:text-main transition-colors flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2.5 rounded-[10px] text-[13px] font-bold inset-field border border-[var(--neu-border)] text-muted hover:text-main transition-colors flex items-center gap-1.5 cursor-pointer"
           >
             <Upload className="w-3.5 h-3.5 text-accent-primary" />
             <span>Import JSON</span>
@@ -141,76 +141,76 @@ export default function OverviewView({
       </div>
 
       {/* 4 Clean Statistics Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
         {/* Total Questions */}
-        <div className="p-5 rounded-2xl border dash-card flex flex-col justify-between" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
-          <div className="flex items-center justify-between text-muted text-xs font-bold uppercase tracking-wider">
+        <div className="p-6 min-h-[120px] rounded-2xl border dash-card flex flex-col justify-between" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
+          <div className="flex items-center justify-between text-muted text-[11px] font-semibold uppercase tracking-wider">
             <span>Total Questions</span>
-            <HelpCircle className="w-4 h-4 text-accent-primary" />
+            <HelpCircle className="w-5 h-5 text-accent-primary" />
           </div>
-          <div className="my-2">
-            <span className="text-2xl sm:text-3xl font-black text-main font-mono">
+          <div className="my-3">
+            <span className="text-3xl sm:text-[34px] font-black text-main font-mono">
               {stats.totalQuestions}
             </span>
           </div>
-          <span className="text-[11px] text-muted">
+          <span className="text-xs text-muted">
             Across {questionSets.length} question sets
           </span>
         </div>
 
         {/* Completed */}
-        <div className="p-5 rounded-2xl border dash-card flex flex-col justify-between" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
-          <div className="flex items-center justify-between text-muted text-xs font-bold uppercase tracking-wider">
+        <div className="p-6 min-h-[120px] rounded-2xl border dash-card flex flex-col justify-between" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
+          <div className="flex items-center justify-between text-muted text-[11px] font-semibold uppercase tracking-wider">
             <span>Completed</span>
-            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+            <CheckCircle2 className="w-5 h-5 text-emerald-400" />
           </div>
-          <div className="my-2 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-black text-main font-mono">
+          <div className="my-3 flex items-baseline gap-2">
+            <span className="text-3xl sm:text-[34px] font-black text-main font-mono">
               {stats.completedQuestions}
             </span>
             <span className="text-xs font-bold text-emerald-400">
               {stats.completionPercent}%
             </span>
           </div>
-          <span className="text-[11px] text-muted">
+          <span className="text-xs text-muted">
             {stats.totalQuestions - stats.completedQuestions} remaining
           </span>
         </div>
 
         {/* Answered */}
-        <div className="p-5 rounded-2xl border dash-card flex flex-col justify-between" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
-          <div className="flex items-center justify-between text-muted text-xs font-bold uppercase tracking-wider">
+        <div className="p-6 min-h-[120px] rounded-2xl border dash-card flex flex-col justify-between" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
+          <div className="flex items-center justify-between text-muted text-[11px] font-semibold uppercase tracking-wider">
             <span>Answer Coverage</span>
-            <TrendingUp className="w-4 h-4 text-blue-400" />
+            <TrendingUp className="w-5 h-5 text-blue-400" />
           </div>
-          <div className="my-2 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-black text-main font-mono">
+          <div className="my-3 flex items-baseline gap-2">
+            <span className="text-3xl sm:text-[34px] font-black text-main font-mono">
               {stats.answeredQuestions}
             </span>
             <span className="text-xs font-bold text-blue-400">
               {stats.answerCoverage}%
             </span>
           </div>
-          <span className="text-[11px] text-muted">
+          <span className="text-xs text-muted">
             {stats.totalQuestions - stats.answeredQuestions} unanswered
           </span>
         </div>
 
         {/* Today's Goal */}
-        <div className="p-5 rounded-2xl border dash-card flex flex-col justify-between" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
-          <div className="flex items-center justify-between text-muted text-xs font-bold uppercase tracking-wider">
+        <div className="p-6 min-h-[120px] rounded-2xl border dash-card flex flex-col justify-between" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
+          <div className="flex items-center justify-between text-muted text-[11px] font-semibold uppercase tracking-wider">
             <span>Today's Goal</span>
-            <Clock className="w-4 h-4 text-accent-primary" />
+            <Clock className="w-5 h-5 text-accent-primary" />
           </div>
-          <div className="my-2 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-black text-main font-mono">
+          <div className="my-3 flex items-baseline gap-2">
+            <span className="text-3xl sm:text-[34px] font-black text-main font-mono">
               {stats.completedToday}
             </span>
             <span className="text-xs font-bold text-muted">
               / {stats.todayGoal}
             </span>
           </div>
-          <div className="w-full h-1.5 rounded-full overflow-hidden neu-card" style={{ background: 'var(--neu-inset-bg)' }}>
+          <div className="w-full h-[6px] rounded-full overflow-hidden neu-card" style={{ background: 'var(--neu-inset-bg)' }}>
             <div
               className="h-full rounded-full transition-all duration-500"
               style={{
@@ -225,41 +225,41 @@ export default function OverviewView({
       {/* Hero "Continue Studying" Card */}
       {continueSet && continueQuestion && (
         <div
-          className="p-6 sm:p-8 rounded-3xl border dash-card relative overflow-hidden shadow-xl"
+          className="p-7 sm:p-9 rounded-3xl border dash-card relative overflow-hidden shadow-xl"
           style={{
             background: 'var(--neu-card-bg)',
             border: '1.5px solid var(--neu-border)',
           }}
         >
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
             <div className="space-y-3 flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300">
+                <span className="text-[11px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300">
                   Continue Studying
                 </span>
-                <span className="text-xs font-bold text-muted truncate">
+                <span className="text-[13px] font-bold text-muted truncate">
                   {continueSet.name}
                 </span>
               </div>
 
               <div>
-                <span className="text-xs font-mono text-muted block mb-1">
+                <span className="text-[13px] font-mono text-muted block mb-1">
                   Question {continueIndex + 1} of {continueSet.questions?.length || 0}
                 </span>
-                <h3 className="text-lg sm:text-xl font-black text-main tracking-tight leading-snug">
+                <h3 className="text-xl sm:text-2xl font-black text-main tracking-tight leading-snug">
                   {continueQuestion.text}
                 </h3>
               </div>
 
               {/* Progress bar */}
               <div className="w-full max-w-md space-y-1 pt-1">
-                <div className="flex justify-between text-[11px] font-bold text-muted">
+                <div className="flex justify-between text-xs leading-relaxed font-bold text-muted">
                   <span>Set Progress</span>
                   <span className="font-mono text-main">
                     {Math.round(((continueSet.questions?.filter((q) => q.completed).length || 0) / (continueSet.questions?.length || 1)) * 100)}%
                   </span>
                 </div>
-                <div className="w-full h-2 rounded-full overflow-hidden neu-card" style={{ background: 'var(--neu-inset-bg)' }}>
+                <div className="w-full h-[6px] rounded-full overflow-hidden neu-card" style={{ background: 'var(--neu-inset-bg)' }}>
                   <div
                     className="h-full rounded-full"
                     style={{
@@ -275,7 +275,7 @@ export default function OverviewView({
               <button
                 type="button"
                 onClick={() => onStartPractice(continueSet.id, continueQuestion.id)}
-                className="brass-btn px-6 py-3.5 rounded-2xl text-xs sm:text-sm font-bold flex items-center gap-2 cursor-pointer shadow-lg active:scale-95"
+                className="brass-btn px-7 py-4 rounded-2xl text-sm sm:text-base font-bold flex items-center gap-2 cursor-pointer shadow-lg active:scale-95"
               >
                 <span>Continue Practice</span>
                 <ArrowRight className="w-4 h-4 text-accent-primary" />
@@ -288,36 +288,36 @@ export default function OverviewView({
       {/* Today's Study Queue (Smart Revision list) */}
       {studyQueue.length > 0 && (
         <div
-          className="p-5 sm:p-6 rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md space-y-4"
+          className="p-6 sm:p-7 rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md space-y-4"
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-              <h3 className="text-sm font-bold text-main uppercase tracking-wider">
+              <h3 className="text-[15px] font-semibold text-main">
                 Today's Priority Study Queue
               </h3>
             </div>
-            <span className="text-xs text-muted font-medium">
+            <span className="text-[13px] text-muted font-medium">
               {studyQueue.length} questions waiting
             </span>
           </div>
 
-          <div className="space-y-2">
+          <div className="space-y-1">
             {studyQueue.map((item, idx) => (
               <div
                 key={item.id || idx}
                 onClick={() => onStartPractice(item.setId, item.id)}
-                className="p-3 rounded-xl border border-[var(--neu-border-subtle)] bg-[var(--neu-inset-bg)] hover:border-[var(--accent-orange)] transition-colors flex items-center justify-between gap-3 cursor-pointer group"
+                className="py-4 px-4 rounded-lg bg-[var(--neu-inset-bg)] transition-colors flex items-center justify-between gap-3 cursor-pointer group"
               >
                 <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-xs font-mono font-bold text-muted px-2 py-0.5 rounded inset-field shrink-0">
+                  <span className="text-[13px] font-mono font-bold text-muted px-2 py-0.5 rounded inset-field shrink-0">
                     {idx + 1}
                   </span>
                   <div className="min-w-0">
-                    <p className="text-xs font-semibold text-main truncate group-hover:text-accent-primary transition-colors">
+                    <p className="text-sm font-semibold text-main truncate group-hover:text-accent-primary transition-colors">
                       {item.text}
                     </p>
-                    <span className="text-[10px] text-muted">
+                    <span className="text-[11px] text-muted">
                       Set: {item.setName}
                     </span>
                   </div>
@@ -338,22 +338,22 @@ export default function OverviewView({
       )}
 
       {/* Pinned & Recent Question Sets Section */}
-      <div className="space-y-4">
+      <div className="space-y-5">
         <div className="flex items-center justify-between">
-          <h3 className="text-sm font-bold text-main uppercase tracking-wider">
+          <h3 className="text-[15px] font-semibold text-main">
             Question Sets Overview
           </h3>
           <button
             type="button"
             onClick={onCreateSet}
-            className="text-xs font-bold text-accent-primary hover:underline flex items-center gap-1 cursor-pointer"
+            className="text-[13px] font-bold text-accent-primary hover:underline flex items-center gap-1 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Create New Set</span>
           </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {questionSets.slice(0, 6).map((set) => (
             <QuestionSetCard
               key={set.id}

@@ -115,7 +115,7 @@ export default function AnalyticsView({
       answerCoverage,
       dailyChart: Object.values(daysMap),
       setBreakdowns,
-    };
+      };
   }, [questionSets]);
 
   const maxChartCount = useMemo(() => {
@@ -154,74 +154,74 @@ export default function AnalyticsView({
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* Overview Stat Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-        <div className="p-5 rounded-2xl border dash-card flex flex-col justify-between" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
-          <div className="flex items-center justify-between text-muted text-xs font-bold uppercase tracking-wider">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+        <div className="p-6 rounded-2xl border dash-card flex flex-col justify-between min-h-[120px]" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
+          <div className="flex items-center justify-between text-muted text-[13px] font-semibold uppercase tracking-wider">
             <span>Total Question Sets</span>
             <BarChart3 className="w-4 h-4 text-accent-primary" />
           </div>
-          <div className="my-2">
-            <span className="text-3xl font-black text-main font-mono">
+          <div className="my-3">
+            <span className="text-[34px] font-black text-main font-mono">
               {analytics.totalSets}
             </span>
           </div>
-          <span className="text-[11px] text-muted">
+          <span className="text-xs text-muted">
             {analytics.totalQuestions} questions total
           </span>
         </div>
 
-        <div className="p-5 rounded-2xl border dash-card flex flex-col justify-between" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
-          <div className="flex items-center justify-between text-muted text-xs font-bold uppercase tracking-wider">
+        <div className="p-6 rounded-2xl border dash-card flex flex-col justify-between min-h-[120px]" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
+          <div className="flex items-center justify-between text-muted text-[13px] font-semibold uppercase tracking-wider">
             <span>Overall Completion</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-400" />
           </div>
-          <div className="my-2 flex items-baseline gap-2">
-            <span className="text-3xl font-black text-main font-mono">
+          <div className="my-3 flex items-baseline gap-2">
+            <span className="text-[34px] font-black text-main font-mono">
               {analytics.completionRate}%
             </span>
             <span className="text-xs font-bold text-emerald-400">
               {analytics.completedCount} done
             </span>
           </div>
-          <span className="text-[11px] text-muted">
+          <span className="text-xs text-muted">
             {analytics.totalQuestions - analytics.completedCount} remaining
           </span>
         </div>
 
-        <div className="p-5 rounded-2xl border dash-card flex flex-col justify-between" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
-          <div className="flex items-center justify-between text-muted text-xs font-bold uppercase tracking-wider">
+        <div className="p-6 rounded-2xl border dash-card flex flex-col justify-between min-h-[120px]" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
+          <div className="flex items-center justify-between text-muted text-[13px] font-semibold uppercase tracking-wider">
             <span>Answer Coverage</span>
             <TrendingUp className="w-4 h-4 text-blue-400" />
           </div>
-          <div className="my-2 flex items-baseline gap-2">
-            <span className="text-3xl font-black text-main font-mono">
+          <div className="my-3 flex items-baseline gap-2">
+            <span className="text-[34px] font-black text-main font-mono">
               {analytics.answerCoverage}%
             </span>
             <span className="text-xs font-bold text-blue-400">
               {analytics.answeredCount} answered
             </span>
           </div>
-          <span className="text-[11px] text-muted">
+          <span className="text-xs text-muted">
             {analytics.unansweredCount} unanswered
           </span>
         </div>
 
-        <div className="p-5 rounded-2xl border dash-card flex flex-col justify-between" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
-          <div className="flex items-center justify-between text-muted text-xs font-bold uppercase tracking-wider">
+        <div className="p-6 rounded-2xl border dash-card flex flex-col justify-between min-h-[120px]" style={{ background: 'var(--neu-card-bg)', border: '1px solid var(--neu-border)' }}>
+          <div className="flex items-center justify-between text-muted text-[13px] font-semibold uppercase tracking-wider">
             <span>Priority Attention</span>
             <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
           </div>
-          <div className="my-2 flex items-baseline gap-2">
-            <span className="text-3xl font-black text-main font-mono">
+          <div className="my-3 flex items-baseline gap-2">
+            <span className="text-[34px] font-black text-main font-mono">
               {analytics.importantUnansweredCount}
             </span>
             <span className="text-xs font-bold text-amber-400">
               important & empty
             </span>
           </div>
-          <span className="text-[11px] text-muted">
+          <span className="text-xs text-muted">
             {analytics.importantCount} total important questions
           </span>
         </div>
@@ -230,44 +230,44 @@ export default function AnalyticsView({
       {/* Time-Based Study Velocity & Activity Graph */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Time-based numbers */}
-        <div className="p-6 rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md flex flex-col justify-between space-y-4">
-          <h3 className="text-xs font-bold text-muted uppercase tracking-wider flex items-center gap-2">
+        <div className="p-7 rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md flex flex-col justify-between space-y-4">
+          <h3 className="text-sm font-bold text-muted uppercase tracking-wider flex items-center gap-2">
             <Clock className="w-4 h-4 text-accent-primary" />
             <span>Completion Velocity</span>
           </h3>
 
           <div className="space-y-4">
             <div className="flex items-center justify-between p-3.5 rounded-2xl inset-field bg-[var(--neu-inset-bg)]">
-              <span className="text-xs font-semibold text-muted">Completed Today</span>
-              <span className="text-xl font-black text-main font-mono">
+              <span className="text-sm font-semibold text-muted">Completed Today</span>
+              <span className="text-2xl font-black text-main font-mono">
                 {analytics.completedToday}
               </span>
             </div>
 
             <div className="flex items-center justify-between p-3.5 rounded-2xl inset-field bg-[var(--neu-inset-bg)]">
-              <span className="text-xs font-semibold text-muted">Completed This Week</span>
-              <span className="text-xl font-black text-main font-mono">
+              <span className="text-sm font-semibold text-muted">Completed This Week</span>
+              <span className="text-2xl font-black text-main font-mono">
                 {analytics.completedThisWeek}
               </span>
             </div>
 
             <div className="flex items-center justify-between p-3.5 rounded-2xl inset-field bg-[var(--neu-inset-bg)]">
-              <span className="text-xs font-semibold text-muted">Completed This Month</span>
-              <span className="text-xl font-black text-main font-mono">
+              <span className="text-sm font-semibold text-muted">Completed This Month</span>
+              <span className="text-2xl font-black text-main font-mono">
                 {analytics.completedThisMonth}
               </span>
             </div>
           </div>
 
-          <p className="text-[11px] text-muted italic text-center">
+          <p className="text-xs text-muted italic text-center">
             Calculated dynamically from real completedAt timestamps.
           </p>
         </div>
 
         {/* 7-Day Completion Bar Chart */}
-        <div className="lg:col-span-2 p-6 rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md flex flex-col justify-between space-y-4">
+        <div className="lg:col-span-2 p-7 rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md flex flex-col justify-between space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-xs font-bold text-muted uppercase tracking-wider flex items-center gap-2">
+            <h3 className="text-sm font-bold text-muted uppercase tracking-wider flex items-center gap-2">
               <Calendar className="w-4 h-4 text-accent-primary" />
               <span>Questions Completed (Last 7 Days)</span>
             </h3>
@@ -277,7 +277,7 @@ export default function AnalyticsView({
           </div>
 
           {/* Clean Custom SVG / HTML Bar Chart */}
-          <div className="h-44 flex items-end justify-between gap-3 px-2 pt-4">
+          <div className="h-52 flex items-end justify-between gap-3 px-2 pt-4">
             {analytics.dailyChart.map((d, idx) => {
               const heightPercent = Math.max(8, Math.round((d.count / maxChartCount) * 100));
 
@@ -309,7 +309,7 @@ export default function AnalyticsView({
             })}
           </div>
 
-          <div className="flex items-center justify-between text-[11px] text-muted pt-2 border-t border-[var(--neu-border-subtle)]">
+          <div className="flex items-center justify-between text-xs text-muted pt-2 border-t border-[var(--neu-border-subtle)]">
             <span>Keep your daily rhythm active.</span>
             <span>Target: 15 questions/day</span>
           </div>
@@ -317,14 +317,14 @@ export default function AnalyticsView({
       </div>
 
       {/* Per-Set Progress Breakdown */}
-      <div className="p-6 rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md space-y-4">
-        <h3 className="text-sm font-bold text-main uppercase tracking-wider">
+      <div className="p-7 rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md space-y-4">
+        <h3 className="text-[15px] font-bold text-main uppercase tracking-wider">
           Question Set Mastery Breakdown
         </h3>
 
         <div className="space-y-3.5">
           {analytics.setBreakdowns.map((set) => (
-            <div key={set.id} className="p-4 rounded-2xl inset-field bg-[var(--neu-inset-bg)] border border-[var(--neu-border-subtle)] space-y-2">
+            <div key={set.id} className="p-5 rounded-2xl inset-field bg-[var(--neu-inset-bg)] border border-[var(--neu-border-subtle)] space-y-2">
               <div className="flex items-center justify-between text-xs font-bold">
                 <div className="flex items-center gap-2">
                   <span
@@ -344,7 +344,7 @@ export default function AnalyticsView({
                 </div>
               </div>
 
-              <div className="w-full h-2 rounded-full overflow-hidden neu-card" style={{ background: 'var(--neu-card-bg)' }}>
+              <div className="w-full h-[6px] rounded-full overflow-hidden neu-card" style={{ background: 'var(--neu-card-bg)' }}>
                 <div
                   className="h-full rounded-full transition-all duration-500"
                   style={{
@@ -365,10 +365,10 @@ export default function AnalyticsView({
       </div>
 
       {/* Data Backup & Reset Section */}
-      <div className="p-6 rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md space-y-5">
+      <div className="p-7 rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md space-y-5">
         <div className="flex items-center justify-between border-b border-[var(--neu-border-subtle)] pb-3">
           <div>
-            <h3 className="text-sm font-bold text-main uppercase tracking-wider">
+            <h3 className="text-[15px] font-bold text-main uppercase tracking-wider">
               Data Management & Backup
             </h3>
             <p className="text-xs text-muted mt-0.5">
@@ -385,17 +385,17 @@ export default function AnalyticsView({
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {/* Export All */}
-          <div className="p-4 rounded-2xl border border-[var(--neu-border-subtle)] bg-[var(--neu-inset-bg)] flex flex-col justify-between space-y-3">
+          <div className="p-5 rounded-2xl border border-[var(--neu-border-subtle)] bg-[var(--neu-inset-bg)] flex flex-col justify-between space-y-3">
             <div>
-              <span className="text-xs font-bold text-main block">Export All Questions</span>
-              <p className="text-[11px] text-muted mt-1 leading-relaxed">
+              <span className="text-[13px] font-bold text-main block">Export All Questions</span>
+              <p className="text-xs text-muted mt-1 leading-relaxed">
                 Download a complete JSON backup of all Question Sets, answers, notes, and progress.
               </p>
             </div>
             <button
               type="button"
               onClick={() => exportAllQuestionsBackup(questionSets)}
-              className="brass-btn w-full py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 cursor-pointer"
+              className="brass-btn w-full py-2 rounded-xl text-[13px] font-bold flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Download Backup</span>
@@ -403,14 +403,14 @@ export default function AnalyticsView({
           </div>
 
           {/* Import Backup */}
-          <div className="p-4 rounded-2xl border border-[var(--neu-border-subtle)] bg-[var(--neu-inset-bg)] flex flex-col justify-between space-y-3">
+          <div className="p-5 rounded-2xl border border-[var(--neu-border-subtle)] bg-[var(--neu-inset-bg)] flex flex-col justify-between space-y-3">
             <div>
-              <span className="text-xs font-bold text-main block">Restore from Backup</span>
-              <p className="text-[11px] text-muted mt-1 leading-relaxed">
+              <span className="text-[13px] font-bold text-main block">Restore from Backup</span>
+              <p className="text-xs text-muted mt-1 leading-relaxed">
                 Import a previously exported JSON backup file. Validates format before updating data.
               </p>
             </div>
-            <label className="inset-field w-full py-2 rounded-xl text-xs font-bold border border-[var(--neu-border)] text-main hover:border-[var(--accent-orange)] transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+            <label className="inset-field w-full py-2 rounded-xl text-[13px] font-bold border border-[var(--neu-border)] text-main hover:border-[var(--accent-orange)] transition-all flex items-center justify-center gap-1.5 cursor-pointer">
               <Upload className="w-3.5 h-3.5 text-accent-primary" />
               <span>Select Backup File</span>
               <input
@@ -423,17 +423,17 @@ export default function AnalyticsView({
           </div>
 
           {/* Clear All Data */}
-          <div className="p-4 rounded-2xl border border-red-500/20 bg-red-500/5 flex flex-col justify-between space-y-3">
+          <div className="p-5 rounded-2xl border border-red-500/20 bg-red-500/5 flex flex-col justify-between space-y-3">
             <div>
-              <span className="text-xs font-bold text-red-400 block">Clear All Question Data</span>
-              <p className="text-[11px] text-muted mt-1 leading-relaxed">
+              <span className="text-[13px] font-bold text-red-400 block">Clear All Question Data</span>
+              <p className="text-xs text-muted mt-1 leading-relaxed">
                 Permanently wipes all Question Sets and progress. Requires typing DELETE to confirm.
               </p>
             </div>
             <button
               type="button"
               onClick={() => setClearConfirmOpen(true)}
-              className="w-full py-2 rounded-xl text-xs font-bold bg-red-500/15 border border-red-500/30 text-red-400 hover:bg-red-500/25 transition-all cursor-pointer flex items-center justify-center gap-1.5"
+              className="w-full py-2 rounded-xl text-[13px] font-bold bg-red-500/15 border border-red-500/30 text-red-400 hover:bg-red-500/25 transition-all cursor-pointer flex items-center justify-center gap-1.5"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Clear All Questions</span>

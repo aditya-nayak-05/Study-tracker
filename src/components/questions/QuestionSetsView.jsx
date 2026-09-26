@@ -55,7 +55,7 @@ export default function QuestionSetsView({
   }, [questionSets, search, activeTab]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Search & Filter Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         {/* Filter Pills */}
@@ -70,7 +70,7 @@ export default function QuestionSetsView({
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id)}
-              className={`px-3 py-1.5 text-xs font-bold rounded-xl transition-all cursor-pointer shrink-0 ${
+              className={`px-3.5 py-2 text-[13px] font-bold rounded-xl transition-all cursor-pointer shrink-0 ${
                 activeTab === tab.id
                   ? 'brass-btn text-white shadow-sm'
                   : 'inset-field text-muted hover:text-main'
@@ -90,7 +90,7 @@ export default function QuestionSetsView({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search question sets..."
-              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-xl focus:outline-none inset-field text-main font-semibold"
+              className="w-full pl-10 pr-4 py-2 text-sm rounded-xl focus:outline-none inset-field text-main font-semibold"
               style={{
                 background: 'var(--neu-card-bg)',
                 border: '1px solid var(--neu-border)',
@@ -101,7 +101,7 @@ export default function QuestionSetsView({
           <button
             type="button"
             onClick={onCreateSet}
-            className="brass-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer shrink-0 active:scale-95"
+            className="brass-btn px-4 py-2.5 rounded-xl text-[13px] font-bold flex items-center gap-1.5 cursor-pointer shrink-0 active:scale-95"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>Create Set</span>
@@ -111,7 +111,7 @@ export default function QuestionSetsView({
 
       {/* Grid of Sets */}
       {filteredSets.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {filteredSets.map((set) => (
             <QuestionSetCard
               key={set.id}
@@ -129,13 +129,13 @@ export default function QuestionSetsView({
         </div>
       ) : (
         <div className="p-12 text-center rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] space-y-4">
-          <FolderPlus className="w-10 h-10 text-muted mx-auto" />
-          <h3 className="text-base font-bold text-main">
+          <FolderPlus className="w-12 h-12 text-muted mx-auto" />
+          <h3 className="text-lg font-bold text-main">
             {questionSets.length === 0
               ? 'No Question Sets Yet'
               : 'No question sets match your current search or filter'}
           </h3>
-          <p className="text-xs text-muted max-w-sm mx-auto">
+          <p className="text-sm text-muted max-w-sm mx-auto">
             {questionSets.length === 0
               ? 'Create your first question set and start practicing!'
               : 'Try changing your filter or clearing the search text.'}

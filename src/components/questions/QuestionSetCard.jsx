@@ -47,7 +47,7 @@ export default function QuestionSetCard({
 
   return (
     <div
-      className="p-5 sm:p-6 rounded-2xl border transition-all duration-300 relative group flex flex-col justify-between plan-card dash-card"
+      className="p-6 sm:p-7 rounded-2xl border transition-all duration-300 relative group flex flex-col justify-between plan-card dash-card"
       style={{
         background: 'var(--neu-card-bg)',
         border: set.pinned ? '1.5px solid var(--accent-orange)' : '1px solid var(--neu-border)',
@@ -67,7 +67,7 @@ export default function QuestionSetCard({
               </span>
             )}
             <span
-              className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border truncate"
+              className="text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border truncate"
               style={{
                 background: `${set.color || '#6366f1'}15`,
                 color: set.color || '#6366f1',
@@ -106,7 +106,7 @@ export default function QuestionSetCard({
             {/* Dropdown Menu */}
             {menuOpen && (
               <div
-                className="absolute right-0 top-8 z-30 w-44 rounded-xl p-1.5 shadow-2xl border text-xs font-semibold backdrop-blur-md"
+                className="absolute right-0 top-8 z-30 w-44 rounded-xl p-1.5 shadow-2xl border text-[13px] font-semibold backdrop-blur-md"
                 style={{
                   background: 'var(--neu-card-bg)',
                   borderColor: 'var(--neu-border)',
@@ -119,7 +119,7 @@ export default function QuestionSetCard({
                     setMenuOpen(false);
                     onEdit(set);
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-colors cursor-pointer text-left"
+                  className="w-full flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-colors cursor-pointer text-left"
                 >
                   <Edit2 className="w-3.5 h-3.5 text-accent-primary" />
                   <span>Rename / Edit</span>
@@ -131,7 +131,7 @@ export default function QuestionSetCard({
                     setMenuOpen(false);
                     onDuplicate(set.id);
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-colors cursor-pointer text-left"
+                  className="w-full flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-colors cursor-pointer text-left"
                 >
                   <Copy className="w-3.5 h-3.5 text-accent-primary" />
                   <span>Duplicate Set</span>
@@ -143,7 +143,7 @@ export default function QuestionSetCard({
                     setMenuOpen(false);
                     onPin(set.id);
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-colors cursor-pointer text-left"
+                  className="w-full flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-colors cursor-pointer text-left"
                 >
                   {set.pinned ? <PinOff className="w-3.5 h-3.5 text-amber-400" /> : <Pin className="w-3.5 h-3.5 text-amber-400" />}
                   <span>{set.pinned ? 'Unpin Set' : 'Pin to Top'}</span>
@@ -157,7 +157,7 @@ export default function QuestionSetCard({
                     setMenuOpen(false);
                     onExportJSON(set);
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-colors cursor-pointer text-left"
+                  className="w-full flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-colors cursor-pointer text-left"
                 >
                   <Download className="w-3.5 h-3.5 text-accent-primary" />
                   <span>Export JSON</span>
@@ -169,7 +169,7 @@ export default function QuestionSetCard({
                     setMenuOpen(false);
                     onExportCSV(set);
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-colors cursor-pointer text-left"
+                  className="w-full flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-colors cursor-pointer text-left"
                 >
                   <FileText className="w-3.5 h-3.5 text-accent-primary" />
                   <span>Export CSV</span>
@@ -183,7 +183,7 @@ export default function QuestionSetCard({
                     setMenuOpen(false);
                     onDelete(set.id, set.name, total);
                   }}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer text-left"
+                  className="w-full flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors cursor-pointer text-left"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Delete Set</span>
@@ -198,10 +198,10 @@ export default function QuestionSetCard({
           onClick={() => onOpenSet(set.id)}
           className="cursor-pointer group-hover:text-accent-primary transition-colors"
         >
-          <h3 className="text-base sm:text-lg font-black text-main leading-snug tracking-tight line-clamp-1">
+          <h3 className="text-lg sm:text-xl font-black text-main leading-snug tracking-tight line-clamp-1">
             {set.name}
           </h3>
-          <p className="text-xs text-muted mt-1 line-clamp-2 leading-relaxed min-h-[2rem]">
+          <p className="text-sm text-muted mt-1 line-clamp-2 leading-relaxed min-h-[2.5rem]">
             {set.description || 'No description provided.'}
           </p>
         </div>
@@ -209,12 +209,12 @@ export default function QuestionSetCard({
         {/* Progress Bar & Percent */}
         <div className="mt-4 space-y-1.5">
           <div className="flex items-center justify-between text-xs font-bold">
-            <span className="text-muted uppercase tracking-wider text-[10px]">Completion</span>
+            <span className="text-muted uppercase tracking-wider text-[11px]">Completion</span>
             <span className="text-main font-mono">{completionPercent}%</span>
           </div>
 
           <div
-            className="w-full h-2 rounded-full overflow-hidden neu-card"
+            className="w-full h-[6px] rounded-full overflow-hidden neu-card"
             style={{
               background: 'var(--neu-inset-bg)',
               boxShadow: 'var(--neu-shadow-inset)',
@@ -231,7 +231,7 @@ export default function QuestionSetCard({
         </div>
 
         {/* Breakdown Stats */}
-        <div className="grid grid-cols-2 gap-2 mt-4 pt-3 border-t border-[var(--neu-border-subtle)] text-xs">
+        <div className="grid grid-cols-2 gap-3 mt-5 pt-3 border-t border-[var(--neu-border-subtle)] text-[13px]">
           <div className="flex items-center gap-1.5 text-main font-semibold">
             <CheckCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
             <span>{completed} Completed</span>
@@ -252,8 +252,8 @@ export default function QuestionSetCard({
       </div>
 
       {/* Footer: Last practiced + Buttons */}
-      <div className="mt-5 pt-3.5 border-t border-[var(--neu-border-subtle)] flex items-center justify-between gap-3">
-        <span className="text-[11px] text-muted italic truncate">
+      <div className="mt-6 pt-4 border-t border-[var(--neu-border-subtle)] flex items-center justify-between gap-3">
+        <span className="text-xs text-muted italic truncate">
           Practiced {formattedTime}
         </span>
 
@@ -261,7 +261,7 @@ export default function QuestionSetCard({
           <button
             type="button"
             onClick={() => onOpenSet(set.id)}
-            className="px-3 py-1.5 rounded-xl text-xs font-semibold text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-all cursor-pointer"
+            className="px-3.5 py-2 rounded-xl text-[13px] font-semibold text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-all cursor-pointer"
           >
             Open
           </button>
@@ -269,7 +269,7 @@ export default function QuestionSetCard({
           <button
             type="button"
             onClick={() => onContinuePractice(set.id)}
-            className="brass-btn px-3.5 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1 cursor-pointer active:scale-95"
+            className="brass-btn px-4 py-2 rounded-xl text-[13px] font-bold flex items-center gap-1 cursor-pointer active:scale-95"
           >
             <Play className="w-3 h-3 text-accent-primary" />
             <span>Practice</span>

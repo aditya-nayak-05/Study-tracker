@@ -187,13 +187,13 @@ export default function QuestionSetDetail({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Top Navigation & Action Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] inset-field transition-all cursor-pointer w-fit"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-bold text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] inset-field transition-all cursor-pointer w-fit"
         >
           <ArrowLeft className="w-4 h-4 text-accent-primary" />
           <span>Back to Question Sets</span>
@@ -205,7 +205,7 @@ export default function QuestionSetDetail({
             type="button"
             onClick={() => onStartPractice(set.id)}
             disabled={total === 0}
-            className="brass-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
+            className="brass-btn px-4 py-2.5 rounded-xl text-[13px] font-bold flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
           >
             <Play className="w-3.5 h-3.5 text-accent-primary" />
             <span>Practice Mode</span>
@@ -214,7 +214,7 @@ export default function QuestionSetDetail({
           <button
             type="button"
             onClick={() => setShowAddModal(true)}
-            className="px-3.5 py-2 rounded-xl text-xs font-bold inset-field border border-[var(--neu-border)] text-main hover:border-[var(--accent-orange)] transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2.5 rounded-xl text-[13px] font-bold inset-field border border-[var(--neu-border)] text-main hover:border-[var(--accent-orange)] transition-all flex items-center gap-1.5 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5 text-accent-primary" />
             <span>Add Question</span>
@@ -223,7 +223,7 @@ export default function QuestionSetDetail({
           <button
             type="button"
             onClick={() => setShowPasteModal(true)}
-            className="px-3.5 py-2 rounded-xl text-xs font-bold inset-field border border-[var(--neu-border)] text-main hover:border-[var(--accent-orange)] transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2.5 rounded-xl text-[13px] font-bold inset-field border border-[var(--neu-border)] text-main hover:border-[var(--accent-orange)] transition-all flex items-center gap-1.5 cursor-pointer"
           >
             <Sparkles className="w-3.5 h-3.5 text-accent-primary" />
             <span>Paste Questions</span>
@@ -252,7 +252,7 @@ export default function QuestionSetDetail({
 
       {/* Set Header Hero Card */}
       <div
-        className="p-6 rounded-3xl border dash-card shadow-lg relative overflow-hidden"
+        className="p-7 sm:p-8 rounded-3xl border dash-card shadow-lg relative overflow-hidden"
         style={{
           background: 'var(--neu-card-bg)',
           border: '1.5px solid var(--neu-border)',
@@ -279,10 +279,10 @@ export default function QuestionSetDetail({
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-black text-main tracking-tight">
+            <h1 className="text-2xl sm:text-[34px] font-black text-main tracking-tight">
               {set.name}
             </h1>
-            <p className="text-xs sm:text-sm text-muted leading-relaxed max-w-3xl">
+            <p className="text-sm sm:text-[15px] text-muted leading-relaxed max-w-3xl">
               {set.description || 'No description added. Click the edit icon to customize this set.'}
             </p>
           </div>
@@ -290,13 +290,13 @@ export default function QuestionSetDetail({
           {/* Quick Circular / Percent Indicator */}
           <div className="flex items-center gap-6 p-4 rounded-2xl inset-field border border-[var(--neu-border-subtle)] bg-[var(--neu-inset-bg)] shrink-0 justify-between sm:justify-start">
             <div>
-              <span className="text-[10px] font-bold text-muted uppercase tracking-wider block">
+              <span className="text-[11px] font-bold text-muted uppercase tracking-wider block">
                 Completion Rate
               </span>
-              <span className="text-2xl font-black text-main font-mono">
+              <span className="text-3xl font-black text-main font-mono">
                 {completionPercent}%
               </span>
-              <span className="text-[10px] text-muted block">
+              <span className="text-[11px] text-muted block">
                 {completed} of {total} done
               </span>
             </div>
@@ -304,13 +304,13 @@ export default function QuestionSetDetail({
             <div className="h-10 w-px bg-[var(--neu-border-subtle)]" />
 
             <div>
-              <span className="text-[10px] font-bold text-muted uppercase tracking-wider block">
+              <span className="text-[11px] font-bold text-muted uppercase tracking-wider block">
                 Answer Coverage
               </span>
-              <span className="text-2xl font-black text-main font-mono">
+              <span className="text-3xl font-black text-main font-mono">
                 {answerPercent}%
               </span>
-              <span className="text-[10px] text-muted block">
+              <span className="text-[11px] text-muted block">
                 {answered} of {total} written
               </span>
             </div>
@@ -319,7 +319,7 @@ export default function QuestionSetDetail({
 
         {/* Progress bar across set */}
         <div className="mt-6 pt-4 border-t border-[var(--neu-border-subtle)] space-y-2">
-          <div className="flex items-center justify-between text-xs font-bold text-muted">
+          <div className="flex items-center justify-between text-[13px] font-bold text-muted">
             <div className="flex items-center gap-3">
               <span className="text-main">{completed} Completed</span>
               <span>•</span>
@@ -333,7 +333,7 @@ export default function QuestionSetDetail({
           </div>
 
           <div
-            className="w-full h-2 rounded-full overflow-hidden neu-card"
+            className="w-full h-[6px] rounded-full overflow-hidden neu-card"
             style={{
               background: 'var(--neu-inset-bg)',
               boxShadow: 'var(--neu-shadow-inset)',
@@ -351,7 +351,7 @@ export default function QuestionSetDetail({
       </div>
 
       {/* Toolbar: Search, Filters, Sort & View Mode */}
-      <div className="space-y-3">
+      <div className="space-y-4">
         <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
           {/* Real-time search */}
           <div className="flex-1 relative">
@@ -361,7 +361,7 @@ export default function QuestionSetDetail({
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search question titles, answers, notes, or tags..."
-              className="w-full pl-10 pr-4 py-2.5 text-xs rounded-xl focus:outline-none inset-field text-main font-medium"
+              className="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl focus:outline-none inset-field text-main font-medium"
               style={{
                 background: 'var(--neu-card-bg)',
                 border: '1px solid var(--neu-border)',
@@ -371,13 +371,13 @@ export default function QuestionSetDetail({
 
           {/* Sort Dropdown */}
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl inset-field text-xs font-semibold text-muted">
+            <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl inset-field text-[13px] font-semibold text-muted">
               <SlidersHorizontal className="w-3.5 h-3.5 text-accent-primary" />
               <span>Sort:</span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-transparent font-bold text-main focus:outline-none cursor-pointer text-xs"
+                className="bg-transparent font-bold text-main focus:outline-none cursor-pointer text-[13px]"
               >
                 <option value="original">Original Order</option>
                 <option value="newest">Newest First</option>
@@ -394,7 +394,7 @@ export default function QuestionSetDetail({
             <button
               type="button"
               onClick={() => setIsCompact((prev) => !prev)}
-              className={`px-3 py-2 rounded-xl text-xs font-semibold inset-field transition-all cursor-pointer ${
+              className={`px-3 py-2 rounded-xl text-[13px] font-semibold inset-field transition-all cursor-pointer ${
                 isCompact ? 'brass-btn text-white' : 'text-muted hover:text-main'
               }`}
             >
@@ -420,7 +420,7 @@ export default function QuestionSetDetail({
               key={f.id}
               type="button"
               onClick={() => setActiveFilter(f.id)}
-              className={`px-3 py-1 text-xs font-bold rounded-full transition-all cursor-pointer shrink-0 ${
+              className={`px-3.5 py-1.5 text-[13px] font-bold rounded-full transition-all cursor-pointer shrink-0 ${
                 activeFilter === f.id
                   ? 'brass-btn text-white shadow-sm'
                   : 'inset-field text-muted hover:text-main'
@@ -434,7 +434,7 @@ export default function QuestionSetDetail({
 
       {/* Bulk Selection Bar (appears when 1 or more selected) */}
       {selectedIds.size > 0 && (
-        <div className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-xs animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-[13px] animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex items-center gap-3">
             <button
               type="button"
@@ -456,21 +456,21 @@ export default function QuestionSetDetail({
             <button
               type="button"
               onClick={() => handleBulkComplete(true)}
-              className="px-3 py-1.5 rounded-xl font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 cursor-pointer"
+              className="px-3.5 py-2 rounded-xl font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 cursor-pointer"
             >
               Mark Completed
             </button>
             <button
               type="button"
               onClick={() => handleBulkComplete(false)}
-              className="px-3 py-1.5 rounded-xl font-bold inset-field text-muted hover:text-main cursor-pointer"
+              className="px-3.5 py-2 rounded-xl font-bold inset-field text-muted hover:text-main cursor-pointer"
             >
               Mark Incomplete
             </button>
             <button
               type="button"
               onClick={() => setBulkDeleteConfirm(true)}
-              className="px-3 py-1.5 rounded-xl font-bold bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 cursor-pointer"
+              className="px-3.5 py-2 rounded-xl font-bold bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 cursor-pointer"
             >
               Delete Selected
             </button>
@@ -480,7 +480,7 @@ export default function QuestionSetDetail({
 
       {/* Question Cards List */}
       {processedQuestions.length > 0 ? (
-        <div className="space-y-3.5">
+        <div className="space-y-4">
           {processedQuestions.map((q, idx) => (
             <QuestionCard
               key={q.id || idx}
@@ -503,12 +503,12 @@ export default function QuestionSetDetail({
       ) : (
         <div className="p-12 text-center rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] space-y-4">
           <Circle className="w-8 h-8 text-muted mx-auto" />
-          <h3 className="text-base font-bold text-main">
+          <h3 className="text-lg font-bold text-main">
             {questions.length === 0
               ? 'No Questions in this Set Yet'
               : 'No questions match your current filter or search'}
           </h3>
-          <p className="text-xs text-muted max-w-sm mx-auto">
+          <p className="text-sm text-muted max-w-sm mx-auto">
             {questions.length === 0
               ? 'Paste a list of questions to convert them automatically, or add a single question.'
               : 'Try clearing your search query or switching filters to "All".'}
@@ -520,7 +520,7 @@ export default function QuestionSetDetail({
                 <button
                   type="button"
                   onClick={() => setShowPasteModal(true)}
-                  className="brass-btn px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 cursor-pointer"
+                  className="brass-btn px-4 py-2.5 rounded-xl text-[13px] font-bold flex items-center gap-1.5 cursor-pointer"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
                   <span>Paste Questions</span>
@@ -528,7 +528,7 @@ export default function QuestionSetDetail({
                 <button
                   type="button"
                   onClick={() => setShowAddModal(true)}
-                  className="px-4 py-2 rounded-xl text-xs font-bold inset-field border border-[var(--neu-border)] text-main cursor-pointer"
+                  className="px-4 py-2.5 rounded-xl text-[13px] font-bold inset-field border border-[var(--neu-border)] text-main cursor-pointer"
                 >
                   + Add Question
                 </button>
@@ -540,7 +540,7 @@ export default function QuestionSetDetail({
                   setSearch('');
                   setActiveFilter('all');
                 }}
-                className="brass-btn px-4 py-2 rounded-xl text-xs font-bold cursor-pointer"
+                className="brass-btn px-4 py-2 rounded-xl text-[13px] font-bold cursor-pointer"
               >
                 Clear Search & Filters
               </button>

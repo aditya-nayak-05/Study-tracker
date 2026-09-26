@@ -209,9 +209,9 @@ export default function QuestionsPage() {
           <button
             type="button"
             onClick={() => setGlobalSearchOpen(true)}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl inset-field border border-[var(--neu-border)] text-muted hover:text-main text-xs font-semibold cursor-pointer max-w-xs w-full transition-all"
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl inset-field border border-[var(--neu-border)] text-muted hover:text-main text-[13px] font-semibold cursor-pointer max-w-xs w-full transition-all"
           >
-            <Search className="w-3.5 h-3.5 text-accent-primary shrink-0" />
+            <Search className="w-4 h-4 text-accent-primary shrink-0" />
             <span className="truncate">Search all questions & answers...</span>
             <kbd className="hidden sm:inline text-[9px] px-1.5 py-0.5 rounded bg-black/20 text-muted ml-auto font-mono">
               Ctrl+K
@@ -220,11 +220,12 @@ export default function QuestionsPage() {
         </div>
       }
     >
-      <div ref={containerRef} className="space-y-6">
+      <div ref={containerRef} className="space-y-10">
+        <div className="max-w-[1600px] w-full mx-auto space-y-10">
         {/* Navigation Tabs (Overview, Question Sets, Practice, Analytics) */}
         {!selectedSetId && (
-          <div className="flex items-center justify-between border-b border-[var(--neu-border-subtle)] pb-4 overflow-x-auto">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between border-b border-[var(--neu-border-subtle)] pb-5 mb-2 overflow-x-auto">
+            <div className="flex items-center gap-2.5">
               {[
                 { id: 'overview', label: 'Overview', icon: BookOpen },
                 { id: 'sets', label: `Question Sets (${questionSets.length})`, icon: Layers },
@@ -239,13 +240,13 @@ export default function QuestionsPage() {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer shrink-0 ${
+                    className={`flex items-center gap-2.5 px-5 py-2.5 rounded-xl text-[13px] font-bold transition-all cursor-pointer shrink-0 ${
                       isActive
                         ? 'brass-btn text-white shadow-md'
                         : 'inset-field text-muted hover:text-main hover:bg-[var(--neu-hover-bg)]'
                     }`}
                   >
-                    <Icon className="w-4 h-4 text-accent-primary" />
+                    <Icon className="w-[18px] h-[18px] text-accent-primary" />
                     <span>{tab.label}</span>
                   </button>
                 );
@@ -336,6 +337,7 @@ export default function QuestionsPage() {
             showToast={showToast}
           />
         )}
+        </div>
       </div>
 
       {/* Global Questions Search Modal */}
@@ -356,7 +358,7 @@ export default function QuestionsPage() {
                 value={globalSearchQuery}
                 onChange={(e) => setGlobalSearchQuery(e.target.value)}
                 placeholder="Search across all questions and answers..."
-                className="w-full pl-9 pr-8 py-2 text-xs rounded-xl focus:outline-none inset-field text-main font-semibold"
+                className="w-full pl-9 pr-8 py-2 text-sm rounded-xl focus:outline-none inset-field text-main font-semibold"
                 autoFocus
               />
               <button
@@ -368,23 +370,23 @@ export default function QuestionsPage() {
               </button>
             </div>
 
-            <div className="p-3 max-h-96 overflow-y-auto space-y-2">
+            <div className="p-3 max-h-96 overflow-y-auto space-y-2.5">
               {globalSearchResults.map((res, i) => (
                 <div
                   key={i}
                   onClick={() => handleSelectSearchResult(res)}
-                  className="p-3 rounded-xl border border-[var(--neu-border-subtle)] bg-[var(--neu-inset-bg)] hover:border-[var(--accent-orange)] transition-colors cursor-pointer group flex items-start justify-between gap-3"
+                  className="p-3.5 rounded-xl border border-[var(--neu-border-subtle)] bg-[var(--neu-inset-bg)] hover:border-[var(--accent-orange)] transition-colors cursor-pointer group flex items-start justify-between gap-3"
                 >
                   <div className="min-w-0">
-                    <p className="text-xs font-bold text-main group-hover:text-accent-primary transition-colors">
+                    <p className="text-sm font-semibold text-main group-hover:text-accent-primary transition-colors">
                       {res.question.text}
                     </p>
                     {res.question.answer && (
-                      <p className="text-[11px] text-muted line-clamp-1 italic mt-0.5">
+                      <p className="text-xs text-muted line-clamp-1 italic mt-0.5">
                         {res.question.answer}
                       </p>
                     )}
-                    <span className="text-[10px] text-muted font-medium mt-1 inline-block">
+                    <span className="text-[11px] text-muted font-medium mt-1 inline-block">
                       Set: {res.setName} ({res.subject || 'General'})
                     </span>
                   </div>

@@ -91,7 +91,7 @@ export default function QuestionCard({
 
   return (
     <div
-      className={`p-4 sm:p-5 rounded-2xl border transition-all duration-300 relative group dash-card ${
+      className={`p-5 sm:p-6 rounded-2xl border transition-all duration-300 relative group dash-card ${
         isSelected
           ? 'border-indigo-500/60 bg-indigo-500/5 shadow-md'
           : isCompleted
@@ -136,13 +136,13 @@ export default function QuestionCard({
           {/* Question Text & Meta */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-1">
-              <span className="text-[11px] font-mono font-bold text-muted px-2 py-0.5 rounded inset-field">
+              <span className="text-xs font-mono font-bold text-muted px-2 py-0.5 rounded inset-field">
                 #{String(index + 1).padStart(2, '0')}
               </span>
 
               {/* Difficulty badge */}
               <span
-                className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
+                className={`text-[11px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${
                   difficultyColors[question.difficulty] || difficultyColors.medium
                 }`}
               >
@@ -151,7 +151,7 @@ export default function QuestionCard({
 
               {/* Answer Status */}
               <span
-                className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 ${
+                className={`text-[11px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 ${
                   isAnswered
                     ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
                     : 'bg-zinc-500/10 text-muted border border-zinc-500/20'
@@ -170,23 +170,6 @@ export default function QuestionCard({
                 )}
               </span>
 
-              {/* Status pill */}
-              <span
-                className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                  question.status === 'completed'
-                    ? 'text-emerald-400 bg-emerald-500/10'
-                    : question.status === 'in_progress'
-                    ? 'text-amber-400 bg-amber-500/10'
-                    : 'text-muted bg-zinc-500/10'
-                }`}
-              >
-                {question.status === 'completed'
-                  ? 'Completed'
-                  : question.status === 'in_progress'
-                  ? 'In Progress'
-                  : 'Not Started'}
-              </span>
-
               {/* Tags */}
               {Array.isArray(question.tags) &&
                 question.tags.map((tag, tIdx) => (
@@ -202,7 +185,7 @@ export default function QuestionCard({
             {/* Question Text */}
             <h3
               onClick={() => setExpanded((prev) => !prev)}
-              className={`text-sm sm:text-base font-bold leading-relaxed cursor-pointer select-text transition-colors ${
+              className={`text-base sm:text-[17px] leading-[1.55] font-bold cursor-pointer select-text transition-colors ${
                 isCompleted ? 'text-main/80 line-through decoration-muted/50' : 'text-main hover:text-accent-primary'
               }`}
             >
@@ -271,10 +254,10 @@ export default function QuestionCard({
 
       {/* Expanded Answer Body */}
       {expanded && (
-        <div className="mt-4 pt-3.5 border-t border-[var(--neu-border-subtle)] space-y-3">
+        <div className="mt-5 pt-4 border-t border-[var(--neu-border-subtle)] space-y-4">
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-bold text-muted uppercase tracking-wider flex items-center gap-1.5">
+              <label className="text-[13px] font-semibold text-muted uppercase tracking-wider flex items-center gap-1.5">
                 <span>Your Answer</span>
                 {saveStatus === 'saving' && (
                   <span className="text-[10px] text-amber-400 animate-pulse font-normal lowercase">saving...</span>
@@ -285,7 +268,7 @@ export default function QuestionCard({
               </label>
 
               {/* Character / Word count */}
-              <div className="text-[10px] font-mono text-muted">
+              <div className="text-[11px] font-mono text-muted">
                 {localAnswer.trim() ? `${localAnswer.trim().split(/\s+/).length} words` : 'Empty answer'}
               </div>
             </div>
@@ -296,7 +279,7 @@ export default function QuestionCard({
               onBlur={handleBlur}
               placeholder="Write or refine your answer here... (Auto-saves automatically)"
               rows={4}
-              className="w-full p-3.5 text-xs sm:text-sm rounded-xl focus:outline-none inset-field text-main leading-relaxed resize-y font-normal"
+              className="w-full p-4 text-sm sm:text-base rounded-xl focus:outline-none inset-field text-main leading-[1.6] resize-y font-normal"
               style={{
                 background: 'var(--neu-inset-bg)',
                 border: '1px solid var(--neu-border-subtle)',
@@ -309,7 +292,7 @@ export default function QuestionCard({
             <button
               type="button"
               onClick={() => setShowNotes((prev) => !prev)}
-              className="text-[11px] font-semibold text-muted hover:text-main flex items-center gap-1.5 cursor-pointer py-0.5"
+              className="text-xs font-semibold text-muted hover:text-main flex items-center gap-1.5 cursor-pointer py-0.5"
             >
               <FileText className="w-3 h-3 text-accent-primary" />
               <span>{showNotes ? 'Hide Study Notes' : question.notes ? 'View Study Notes' : '+ Add Study Notes'}</span>
