@@ -118,6 +118,9 @@ export default function QuestionSetDetail({
     return list;
   }, [questions, search, activeFilter, sortBy]);
 
+  const filteredTotal = processedQuestions.length;
+  const filteredCompleted = processedQuestions.filter((q) => q.completed).length;
+
   // Bulk selection handling
   const handleToggleSelect = useCallback((id) => {
     setSelectedIds((prev) => {
@@ -177,7 +180,7 @@ export default function QuestionSetDetail({
   };
 
   return (
-    <div className="max-w-[1600px] mx-auto w-full space-y-10">
+    <div className="max-w-[1200px] mx-auto w-full space-y-10">
       {/* Top Navigation & Action Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <button
@@ -297,6 +300,9 @@ export default function QuestionSetDetail({
             <h1 className="text-3xl sm:text-[38px] font-black text-main tracking-tight leading-tight pr-12">
               {set.name}
             </h1>
+            <div className="text-sm sm:text-base font-semibold text-main">
+              {filteredTotal} {filteredTotal === 1 ? 'Question' : 'Questions'} &middot; {filteredCompleted} Completed
+            </div>
             <p className="text-sm sm:text-base text-muted leading-relaxed">
               {set.description || 'No description added. Click the edit icon to customize this set.'}
             </p>
