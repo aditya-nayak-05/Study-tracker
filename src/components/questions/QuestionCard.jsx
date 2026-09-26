@@ -102,7 +102,7 @@ export default function QuestionCard({
 
   return (
     <div
-      className={`max-w-5xl mx-auto p-5 sm:p-7 rounded-2xl border transition-all duration-300 relative bg-[var(--neu-card-bg)] ${
+      className={`w-full p-5 sm:p-7 rounded-2xl border transition-all duration-300 relative bg-[var(--neu-card-bg)] ${
         isCompleted ? 'opacity-80 border-[var(--neu-border-subtle)]' : 'border-[var(--neu-border)]'
       }`}
     >
@@ -159,10 +159,10 @@ export default function QuestionCard({
         )}
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-start pr-8 md:pr-0">
+      <div className="flex flex-col md:flex-row md:items-start justify-between pr-8 md:pr-0 w-full gap-4 md:gap-8">
         
         {/* LEFT COLUMN */}
-        <div className="flex-grow md:pr-4 flex flex-col gap-2">
+        <div className="flex-1 min-w-0 flex flex-col gap-2">
           <div className="text-sm font-mono text-muted flex items-center gap-2">
             {isCompleted && <span className="text-emerald-500">✓</span>}
             {String(index + 1).padStart(2, '0')}

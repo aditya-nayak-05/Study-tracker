@@ -197,10 +197,10 @@ export default function QuestionsPage() {
 
   return (
     <DashboardLayout
-      title={currentOpenSet ? currentOpenSet.name : 'Questions'}
+      title="Questions"
       subtitle={
         currentOpenSet
-          ? `${currentOpenSet.questions?.length || 0} questions in this collection`
+          ? null
           : 'Manage question sets, convert pasted lists, practice consistently, and track progress.'
       }
       headerRight={

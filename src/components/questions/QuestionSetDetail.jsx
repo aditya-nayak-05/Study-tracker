@@ -224,16 +224,10 @@ export default function QuestionSetDetail({
         </div>
       </div>
 
-      {/* Set Header Hero Card */}
-      <div
-        className="p-7 sm:p-9 rounded-3xl border dash-card shadow-lg relative overflow-hidden"
-        style={{
-          background: 'var(--neu-card-bg)',
-          border: '1.5px solid var(--neu-border)',
-        }}
-      >
+      {/* Set Header Hero */}
+      <div className="relative pb-8 mb-4 border-b border-[var(--neu-border-subtle)]">
         {/* Absolute More Menu */}
-        <div className="absolute top-7 right-7 sm:top-9 sm:right-9 z-10">
+        <div className="absolute top-0 right-0 z-10">
           <div className="relative">
             <button
               onClick={() => setShowMoreMenu(!showMoreMenu)}
@@ -301,7 +295,7 @@ export default function QuestionSetDetail({
               {set.name}
             </h1>
             <div className="text-sm sm:text-base font-semibold text-main">
-              {filteredTotal} {filteredTotal === 1 ? 'Question' : 'Questions'} &middot; {filteredCompleted} Completed
+              {total} {total === 1 ? 'Question' : 'Questions'} &middot; {completed} Completed
             </div>
             <p className="text-sm sm:text-base text-muted leading-relaxed">
               {set.description || 'No description added. Click the edit icon to customize this set.'}
