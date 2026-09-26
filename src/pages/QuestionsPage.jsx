@@ -221,7 +221,7 @@ export default function QuestionsPage() {
       }
     >
       <div ref={containerRef} className="space-y-10">
-        <div className="max-w-[1600px] w-full mx-auto space-y-10">
+        <div className="w-full space-y-10">
         {/* Navigation Tabs (Overview, Question Sets, Practice, Analytics) */}
         {!selectedSetId && (
           <div className="flex items-center justify-between border-b border-[var(--neu-border-subtle)] pb-5 mb-2 overflow-x-auto">

@@ -180,7 +180,7 @@ export default function QuestionSetDetail({
   };
 
   return (
-    <div className="max-w-[1200px] mx-auto w-full space-y-10">
+    <div className="w-full mx-auto space-y-10">
       {/* Top Navigation & Action Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <button
