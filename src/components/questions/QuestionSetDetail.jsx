@@ -29,10 +29,13 @@ export default function QuestionSetDetail({
   showToast,
 }) {
   const [search, setSearch] = useState('');
-  const [activeFilter, setActiveFilter] = useState('all'); // 'all' | 'incomplete' | 'completed' | 'answered' | 'unanswered' | 'important' | 'easy' | 'medium' | 'hard'
+  const [activeFilter, setActiveFilter] = useState('all'); // 'all' | 'incomplete' | 'completed' 
   const [sortBy, setSortBy] = useState('original');
   const [isCompact, setIsCompact] = useState(false);
   const [selectedIds, setSelectedIds] = useState(new Set());
+  
+  // Dropdown for more options
+  const [showMoreMenu, setShowMoreMenu] = useState(false);
 
   // Modals state
   const [showAddModal, setShowAddModal] = useState(false);
@@ -78,20 +81,7 @@ export default function QuestionSetDetail({
       case 'incomplete':
         list = list.filter((i) => !i.completed);
         break;
-      case 'answered':
-        list = list.filter((i) => i.answer && i.answer.trim());
-        break;
-      case 'unanswered':
-        list = list.filter((i) => !i.answer || !i.answer.trim());
-        break;
-      case 'important':
-        list = list.filter((i) => i.important);
-        break;
-      case 'easy':
-      case 'medium':
-      case 'hard':
-        list = list.filter((i) => i.difficulty === activeFilter);
-        break;
+      // removed other filters from UI but keep logic if needed
       default:
         break;
     }
@@ -187,88 +177,113 @@ export default function QuestionSetDetail({
   };
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-[1600px] mx-auto w-full space-y-10">
       {/* Top Navigation & Action Row */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <button
           type="button"
           onClick={onBack}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-[13px] font-bold text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] inset-field transition-all cursor-pointer w-fit"
+          className="flex items-center gap-2 px-3 py-1.5 rounded-xl text-sm font-semibold text-muted hover:text-main hover:bg-[var(--neu-hover-bg)] transition-all cursor-pointer w-fit"
         >
           <ArrowLeft className="w-4 h-4 text-accent-primary" />
           <span>Back to Question Sets</span>
         </button>
 
         {/* Primary Action Buttons */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-3 flex-wrap">
           <button
             type="button"
             onClick={() => onStartPractice(set.id)}
             disabled={total === 0}
-            className="brass-btn px-4 py-2.5 rounded-xl text-[13px] font-bold flex items-center gap-1.5 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed active:scale-95"
+            className="brass-btn h-10 px-5 rounded-[10px] text-sm font-semibold flex items-center gap-2 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed active:scale-95 transition-all"
           >
-            <Play className="w-3.5 h-3.5 text-accent-primary" />
+            <Play className="w-4 h-4 text-accent-primary" />
             <span>Practice Mode</span>
           </button>
 
           <button
             type="button"
             onClick={() => setShowAddModal(true)}
-            className="px-4 py-2.5 rounded-xl text-[13px] font-bold inset-field border border-[var(--neu-border)] text-main hover:border-[var(--accent-orange)] transition-all flex items-center gap-1.5 cursor-pointer"
+            className="h-10 px-4 rounded-[10px] text-sm font-semibold inset-field border border-[var(--neu-border)] text-main hover:border-[var(--accent-orange)] transition-all flex items-center gap-2 cursor-pointer"
           >
-            <Plus className="w-3.5 h-3.5 text-accent-primary" />
+            <Plus className="w-4 h-4 text-accent-primary" />
             <span>Add Question</span>
           </button>
 
           <button
             type="button"
             onClick={() => setShowPasteModal(true)}
-            className="px-4 py-2.5 rounded-xl text-[13px] font-bold inset-field border border-[var(--neu-border)] text-main hover:border-[var(--accent-orange)] transition-all flex items-center gap-1.5 cursor-pointer"
+            className="h-10 px-4 rounded-[10px] text-sm font-semibold inset-field border border-[var(--neu-border)] text-main hover:border-[var(--accent-orange)] transition-all flex items-center gap-2 cursor-pointer"
           >
-            <Sparkles className="w-3.5 h-3.5 text-accent-primary" />
+            <Sparkles className="w-4 h-4 text-accent-primary" />
             <span>Paste Questions</span>
-          </button>
-
-          {/* Set Options Dropdown Button */}
-          <button
-            type="button"
-            onClick={() => setShowEditSetModal(true)}
-            title="Edit Set Info"
-            className="p-2 rounded-xl inset-field border border-[var(--neu-border)] text-muted hover:text-main transition-colors cursor-pointer"
-          >
-            <Edit2 className="w-4 h-4 text-accent-primary" />
-          </button>
-
-          <button
-            type="button"
-            onClick={() => exportQuestionSetJSON(set)}
-            title="Export Question Set as JSON"
-            className="p-2 rounded-xl inset-field border border-[var(--neu-border)] text-muted hover:text-main transition-colors cursor-pointer"
-          >
-            <Download className="w-4 h-4 text-accent-primary" />
           </button>
         </div>
       </div>
 
       {/* Set Header Hero Card */}
       <div
-        className="p-7 sm:p-8 rounded-3xl border dash-card shadow-lg relative overflow-hidden"
+        className="p-7 sm:p-9 rounded-3xl border dash-card shadow-lg relative overflow-hidden"
         style={{
           background: 'var(--neu-card-bg)',
           border: '1.5px solid var(--neu-border)',
         }}
       >
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-          <div className="space-y-2 flex-1 min-w-0">
+        {/* Absolute More Menu */}
+        <div className="absolute top-7 right-7 sm:top-9 sm:right-9 z-10">
+          <div className="relative">
+            <button
+              onClick={() => setShowMoreMenu(!showMoreMenu)}
+              className="p-2 rounded-xl inset-field border border-[var(--neu-border)] text-muted hover:text-main transition-colors cursor-pointer"
+            >
+              <MoreVertical className="w-4 h-4 text-accent-primary" />
+            </button>
+            {showMoreMenu && (
+              <div 
+                className="absolute right-0 mt-2 w-48 rounded-xl shadow-xl border overflow-hidden py-1"
+                style={{
+                  background: 'var(--neu-card-bg)',
+                  borderColor: 'var(--neu-border)',
+                }}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowEditSetModal(true);
+                    setShowMoreMenu(false);
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm font-medium text-main hover:bg-[var(--neu-hover-bg)] flex items-center gap-2 transition-colors cursor-pointer"
+                >
+                  <Edit2 className="w-4 h-4 text-muted" />
+                  Edit Set Info
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    exportQuestionSetJSON(set);
+                    setShowMoreMenu(false);
+                  }}
+                  className="w-full text-left px-4 py-2 text-sm font-medium text-main hover:bg-[var(--neu-hover-bg)] flex items-center gap-2 transition-colors cursor-pointer"
+                >
+                  <Download className="w-4 h-4 text-muted" />
+                  Export as JSON
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-6 max-w-4xl">
+          <div className="space-y-3">
             <div className="flex items-center gap-2 flex-wrap">
               {set.pinned && (
-                <span className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/30">
-                  <Pin className="w-3 h-3 fill-amber-400" />
+                <span className="flex items-center gap-1 text-[11px] font-bold uppercase tracking-wider text-amber-500 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/30">
+                  <Pin className="w-3.5 h-3.5 fill-amber-500" />
                   <span>Pinned</span>
                 </span>
               )}
               <span
-                className="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border"
+                className="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full border"
                 style={{
                   background: `${set.color || '#6366f1'}15`,
                   color: set.color || '#6366f1',
@@ -279,105 +294,89 @@ export default function QuestionSetDetail({
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-[34px] font-black text-main tracking-tight">
+            <h1 className="text-3xl sm:text-[38px] font-black text-main tracking-tight leading-tight pr-12">
               {set.name}
             </h1>
-            <p className="text-sm sm:text-[15px] text-muted leading-relaxed max-w-3xl">
+            <p className="text-sm sm:text-base text-muted leading-relaxed">
               {set.description || 'No description added. Click the edit icon to customize this set.'}
             </p>
           </div>
-
-          {/* Quick Circular / Percent Indicator */}
-          <div className="flex items-center gap-6 p-4 rounded-2xl inset-field border border-[var(--neu-border-subtle)] bg-[var(--neu-inset-bg)] shrink-0 justify-between sm:justify-start">
-            <div>
-              <span className="text-[11px] font-bold text-muted uppercase tracking-wider block">
-                Completion Rate
-              </span>
-              <span className="text-3xl font-black text-main font-mono">
-                {completionPercent}%
-              </span>
-              <span className="text-[11px] text-muted block">
-                {completed} of {total} done
-              </span>
-            </div>
-
-            <div className="h-10 w-px bg-[var(--neu-border-subtle)]" />
-
-            <div>
-              <span className="text-[11px] font-bold text-muted uppercase tracking-wider block">
-                Answer Coverage
-              </span>
-              <span className="text-3xl font-black text-main font-mono">
-                {answerPercent}%
-              </span>
-              <span className="text-[11px] text-muted block">
-                {answered} of {total} written
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Progress bar across set */}
-        <div className="mt-6 pt-4 border-t border-[var(--neu-border-subtle)] space-y-2">
-          <div className="flex items-center justify-between text-[13px] font-bold text-muted">
-            <div className="flex items-center gap-3">
-              <span className="text-main">{completed} Completed</span>
-              <span>•</span>
-              <span>{remaining} Remaining</span>
-              <span>•</span>
-              <span className="text-blue-400">{answered} Answered</span>
-              <span>•</span>
-              <span>{unanswered} Unanswered</span>
-            </div>
-            <span className="font-mono text-main">{completionPercent}%</span>
-          </div>
-
-          <div
-            className="w-full h-[6px] rounded-full overflow-hidden neu-card"
-            style={{
-              background: 'var(--neu-inset-bg)',
-              boxShadow: 'var(--neu-shadow-inset)',
-            }}
-          >
-            <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{
-                width: `${completionPercent}%`,
-                background: 'linear-gradient(90deg, #6366f1 0%, #a855f7 100%)',
-              }}
-            />
+          
+          {/* Subtle Progress Bar */}
+          <div className="pt-2 max-w-md w-full">
+             <div className="flex items-center justify-between text-sm font-semibold text-muted mb-2">
+               <span>{completed} of {total} completed</span>
+               <span className="font-mono text-main">{completionPercent}%</span>
+             </div>
+             <div
+               className="w-full h-[6px] rounded-full overflow-hidden"
+               style={{
+                 background: 'var(--neu-inset-bg)',
+                 boxShadow: 'var(--neu-shadow-inset)',
+               }}
+             >
+               <div
+                 className="h-full rounded-full transition-all duration-500"
+                 style={{
+                   width: `${completionPercent}%`,
+                   background: 'linear-gradient(90deg, var(--accent-primary) 0%, #a855f7 100%)',
+                 }}
+               />
+             </div>
           </div>
         </div>
       </div>
 
       {/* Toolbar: Search, Filters, Sort & View Mode */}
-      <div className="space-y-4">
-        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-3">
-          {/* Real-time search */}
-          <div className="flex-1 relative">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-accent-primary pointer-events-none" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search question titles, answers, notes, or tags..."
-              className="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl focus:outline-none inset-field text-main font-medium"
-              style={{
-                background: 'var(--neu-card-bg)',
-                border: '1px solid var(--neu-border)',
-              }}
-            />
+      <div className="space-y-5">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
+          
+          {/* Filter Pills */}
+          <div className="flex items-center gap-2 flex-wrap overflow-x-auto pb-1">
+            {[
+              { id: 'all', label: `All (${total})` },
+              { id: 'incomplete', label: `Incomplete (${remaining})` },
+              { id: 'completed', label: `Completed (${completed})` },
+            ].map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                onClick={() => setActiveFilter(f.id)}
+                className={`h-10 px-5 text-sm font-semibold rounded-xl transition-all cursor-pointer shrink-0 ${
+                  activeFilter === f.id
+                    ? 'brass-btn text-white shadow-sm'
+                    : 'inset-field text-muted hover:text-main border border-[var(--neu-border)]'
+                }`}
+              >
+                {f.label}
+              </button>
+            ))}
           </div>
 
-          {/* Sort Dropdown */}
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl inset-field text-[13px] font-semibold text-muted">
-              <SlidersHorizontal className="w-3.5 h-3.5 text-accent-primary" />
-              <span>Sort:</span>
+          <div className="flex items-center gap-3 flex-wrap">
+            {/* Real-time search */}
+            <div className="relative min-w-[240px]">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-accent-primary pointer-events-none" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search..."
+                className="w-full pl-10 pr-4 h-10 text-sm rounded-xl focus:outline-none inset-field text-main font-medium placeholder:text-muted"
+                style={{
+                  background: 'var(--neu-card-bg)',
+                  border: '1px solid var(--neu-border)',
+                }}
+              />
+            </div>
+
+            {/* Sort Dropdown */}
+            <div className="flex items-center gap-2 h-10 px-3 rounded-xl inset-field border border-[var(--neu-border)] text-sm font-semibold text-muted bg-[var(--neu-card-bg)]">
+              <SlidersHorizontal className="w-4 h-4 text-accent-primary" />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="bg-transparent font-bold text-main focus:outline-none cursor-pointer text-[13px]"
+                className="bg-transparent font-semibold text-main focus:outline-none cursor-pointer text-sm"
               >
                 <option value="original">Original Order</option>
                 <option value="newest">Newest First</option>
@@ -394,7 +393,7 @@ export default function QuestionSetDetail({
             <button
               type="button"
               onClick={() => setIsCompact((prev) => !prev)}
-              className={`px-3 py-2 rounded-xl text-[13px] font-semibold inset-field transition-all cursor-pointer ${
+              className={`h-10 px-4 rounded-xl text-sm font-semibold inset-field border border-[var(--neu-border)] transition-all cursor-pointer ${
                 isCompact ? 'brass-btn text-white' : 'text-muted hover:text-main'
               }`}
             >
@@ -402,49 +401,21 @@ export default function QuestionSetDetail({
             </button>
           </div>
         </div>
-
-        {/* Filter Pills */}
-        <div className="flex items-center gap-1.5 flex-wrap overflow-x-auto pb-1">
-          {[
-            { id: 'all', label: `All (${total})` },
-            { id: 'incomplete', label: `Incomplete (${remaining})` },
-            { id: 'completed', label: `Completed (${completed})` },
-            { id: 'answered', label: `Answered (${answered})` },
-            { id: 'unanswered', label: `Unanswered (${unanswered})` },
-            { id: 'important', label: `⭐ Important (${questions.filter((q) => q.important).length})` },
-            { id: 'easy', label: 'Easy' },
-            { id: 'medium', label: 'Medium' },
-            { id: 'hard', label: 'Hard' },
-          ].map((f) => (
-            <button
-              key={f.id}
-              type="button"
-              onClick={() => setActiveFilter(f.id)}
-              className={`px-3.5 py-1.5 text-[13px] font-bold rounded-full transition-all cursor-pointer shrink-0 ${
-                activeFilter === f.id
-                  ? 'brass-btn text-white shadow-sm'
-                  : 'inset-field text-muted hover:text-main'
-              }`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
       </div>
 
-      {/* Bulk Selection Bar (appears when 1 or more selected) */}
+      {/* Bulk Selection Bar */}
       {selectedIds.size > 0 && (
-        <div className="flex items-center justify-between gap-3 p-3 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-[13px] animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="flex items-center justify-between gap-3 p-4 rounded-2xl bg-indigo-500/10 border border-indigo-500/30 text-sm animate-in fade-in slide-in-from-top-2 duration-200">
           <div className="flex items-center gap-3">
             <button
               type="button"
               onClick={handleSelectAll}
-              className="flex items-center gap-1.5 font-bold text-main cursor-pointer"
+              className="flex items-center gap-2 font-bold text-main cursor-pointer"
             >
               {selectedIds.size === processedQuestions.length ? (
-                <CheckSquare className="w-4 h-4 text-accent-primary" />
+                <CheckSquare className="w-5 h-5 text-accent-primary" />
               ) : (
-                <Square className="w-4 h-4 text-muted" />
+                <Square className="w-5 h-5 text-muted" />
               )}
               <span>
                 {selectedIds.size} selected of {processedQuestions.length}
@@ -456,21 +427,21 @@ export default function QuestionSetDetail({
             <button
               type="button"
               onClick={() => handleBulkComplete(true)}
-              className="px-3.5 py-2 rounded-xl font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 cursor-pointer"
+              className="px-4 py-2 rounded-xl font-bold bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/30 cursor-pointer transition-colors"
             >
               Mark Completed
             </button>
             <button
               type="button"
               onClick={() => handleBulkComplete(false)}
-              className="px-3.5 py-2 rounded-xl font-bold inset-field text-muted hover:text-main cursor-pointer"
+              className="px-4 py-2 rounded-xl font-bold inset-field text-muted hover:text-main cursor-pointer border border-[var(--neu-border)] transition-colors"
             >
               Mark Incomplete
             </button>
             <button
               type="button"
               onClick={() => setBulkDeleteConfirm(true)}
-              className="px-3.5 py-2 rounded-xl font-bold bg-red-500/20 text-red-400 border border-red-500/30 hover:bg-red-500/30 cursor-pointer"
+              className="px-4 py-2 rounded-xl font-bold bg-red-500/20 text-red-600 dark:text-red-400 border border-red-500/30 hover:bg-red-500/30 cursor-pointer transition-colors"
             >
               Delete Selected
             </button>
@@ -480,7 +451,7 @@ export default function QuestionSetDetail({
 
       {/* Question Cards List */}
       {processedQuestions.length > 0 ? (
-        <div className="space-y-4">
+        <div className="space-y-6">
           {processedQuestions.map((q, idx) => (
             <QuestionCard
               key={q.id || idx}
@@ -497,38 +468,39 @@ export default function QuestionSetDetail({
               onEdit={(target) => setEditingQuestion(target)}
               onDelete={(qId, text) => handleDeleteSingleQuestion(qId, text)}
               onPractice={(qId) => onStartPractice(set.id, qId)}
+              onUpdateQuestion={onUpdateQuestion}
             />
           ))}
         </div>
       ) : (
-        <div className="p-12 text-center rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] space-y-4">
-          <Circle className="w-8 h-8 text-muted mx-auto" />
-          <h3 className="text-lg font-bold text-main">
+        <div className="p-16 text-center rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] space-y-4">
+          <Circle className="w-10 h-10 text-muted mx-auto" />
+          <h3 className="text-xl font-bold text-main">
             {questions.length === 0
               ? 'No Questions in this Set Yet'
               : 'No questions match your current filter or search'}
           </h3>
-          <p className="text-sm text-muted max-w-sm mx-auto">
+          <p className="text-base text-muted max-w-md mx-auto leading-relaxed">
             {questions.length === 0
               ? 'Paste a list of questions to convert them automatically, or add a single question.'
               : 'Try clearing your search query or switching filters to "All".'}
           </p>
 
-          <div className="flex items-center justify-center gap-3 pt-2">
+          <div className="flex items-center justify-center gap-3 pt-6">
             {questions.length === 0 ? (
               <>
                 <button
                   type="button"
                   onClick={() => setShowPasteModal(true)}
-                  className="brass-btn px-4 py-2.5 rounded-xl text-[13px] font-bold flex items-center gap-1.5 cursor-pointer"
+                  className="brass-btn h-11 px-6 rounded-xl text-sm font-bold flex items-center gap-2 cursor-pointer"
                 >
-                  <Sparkles className="w-3.5 h-3.5" />
+                  <Sparkles className="w-4 h-4" />
                   <span>Paste Questions</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowAddModal(true)}
-                  className="px-4 py-2.5 rounded-xl text-[13px] font-bold inset-field border border-[var(--neu-border)] text-main cursor-pointer"
+                  className="h-11 px-6 rounded-xl text-sm font-bold inset-field border border-[var(--neu-border)] text-main cursor-pointer hover:border-[var(--accent-orange)] transition-colors"
                 >
                   + Add Question
                 </button>
@@ -540,7 +512,7 @@ export default function QuestionSetDetail({
                   setSearch('');
                   setActiveFilter('all');
                 }}
-                className="brass-btn px-4 py-2 rounded-xl text-[13px] font-bold cursor-pointer"
+                className="brass-btn h-11 px-6 rounded-xl text-sm font-bold cursor-pointer"
               >
                 Clear Search & Filters
               </button>
