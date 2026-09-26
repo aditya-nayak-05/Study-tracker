@@ -20,7 +20,7 @@ export default function QuestionCard({
   onDelete,
   onPractice,
 }) {
-  const [expanded, setExpanded] = useState(!isCompact);
+  const [expanded, setExpanded] = useState(false);
   const [localAnswer, setLocalAnswer] = useState(question.answer || '');
   const [saveStatus, setSaveStatus] = useState('idle'); 
   const [showNotes, setShowNotes] = useState(false);
@@ -48,10 +48,7 @@ export default function QuestionCard({
     if (question.answer) setIsEditingAnswer(false);
   }, [question.answer]);
 
-  // Adjust expansion when global compact mode changes
-  useEffect(() => {
-    setExpanded(!isCompact);
-  }, [isCompact]);
+  // (Removed compact auto-expand effect to keep them hidden by default)
 
   // Safe debounced auto-save
   const debouncedSave = useCallback(
@@ -102,7 +99,7 @@ export default function QuestionCard({
 
   return (
     <div
-      className={`w-full p-5 sm:p-7 rounded-2xl border transition-all duration-300 relative bg-[var(--neu-card-bg)] ${
+      className={`w-full py-5 pl-6 pr-3 sm:py-7 sm:pl-10 sm:pr-4 rounded-2xl border transition-all duration-300 relative bg-[var(--neu-card-bg)] ${
         isCompleted ? 'opacity-80 border-[var(--neu-border-subtle)]' : 'border-[var(--neu-border)]'
       }`}
     >
@@ -159,7 +156,7 @@ export default function QuestionCard({
         )}
       </div>
 
-      <div className="flex flex-col md:flex-row md:items-start justify-between pr-8 md:pr-0 w-full gap-4 md:gap-8">
+      <div className="flex flex-col md:flex-row md:items-start justify-between w-full gap-4 md:gap-6">
         
         {/* LEFT COLUMN */}
         <div className="flex-1 min-w-0 flex flex-col gap-2">
