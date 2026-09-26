@@ -17,6 +17,7 @@ const DEFAULT_PROFILE = {
 };
 
 import { SIX_HUNDRED_QUOTES, getDailyQuote, getRandomQuote } from '../data/motivationQuotes';
+import { DEFAULT_QUESTION_SETS } from '../data/defaultQuestions';
 
 export const DEFAULT_MOTIVATION_QUOTES = SIX_HUNDRED_QUOTES;
 
@@ -183,6 +184,20 @@ function createDefaultState() {
     }
   }
 
+  // Load question sets defensively
+  let loadedQuestionSets = storage.getItem('questionSets', null);
+  if (!loadedQuestionSets) {
+    try {
+      const rawDirect = localStorage.getItem('studyFlow_questionSets');
+      if (rawDirect) loadedQuestionSets = JSON.parse(rawDirect);
+    } catch (e) {
+      console.warn('Direct studyFlow_questionSets parse failed:', e);
+    }
+  }
+  if (!loadedQuestionSets || !Array.isArray(loadedQuestionSets)) {
+    loadedQuestionSets = DEFAULT_QUESTION_SETS;
+  }
+
   return {
     profile: storage.getItem('profile', null),
     settings: loadedSettings,
@@ -195,6 +210,7 @@ function createDefaultState() {
     videoProgress: storage.getItem('videoProgress', {}),
     studySessions: storage.getItem('studySessions', []),
     activeSessionId: storage.getItem('activeSessionId', null),
+    questionSets: loadedQuestionSets,
     toasts: [],
   };
 }
@@ -1233,10 +1249,268 @@ function reducer(state, action) {
       };
     }
 
+    // ── Question Sets ──
+    case 'ADD_QUESTION_SET': {
+      const newSet = {
+        id: generateId(),
+        name: action.payload.name || 'Untitled Question Set',
+        description: action.payload.description || '',
+        subject: action.payload.subject || 'General',
+        color: action.payload.color || '#6366f1',
+        pinned: false,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        lastOpenedAt: new Date().toISOString(),
+        lastPracticeQuestionId: null,
+        questions: [],
+      };
+      return {
+        ...state,
+        questionSets: [newSet, ...(state.questionSets || [])],
+        globalActivities: [
+          { id: generateId(), type: 'create', message: `Created question set "${newSet.name}"`, timestamp: new Date().toISOString() },
+          ...state.globalActivities,
+        ].slice(0, 200),
+      };
+    }
+
+    case 'UPDATE_QUESTION_SET': {
+      const questionSets = (state.questionSets || []).map((s) => {
+        if (s.id !== action.payload.id) return s;
+        return {
+          ...s,
+          ...action.payload.updates,
+          updatedAt: new Date().toISOString(),
+        };
+      });
+      return { ...state, questionSets };
+    }
+
+    case 'DELETE_QUESTION_SET': {
+      const target = (state.questionSets || []).find((s) => s.id === action.payload);
+      return {
+        ...state,
+        questionSets: (state.questionSets || []).filter((s) => s.id !== action.payload),
+        globalActivities: target ? [
+          { id: generateId(), type: 'delete', message: `Deleted question set "${target.name}"`, timestamp: new Date().toISOString() },
+          ...state.globalActivities,
+        ].slice(0, 200) : state.globalActivities,
+      };
+    }
+
+    case 'DUPLICATE_QUESTION_SET': {
+      const source = (state.questionSets || []).find((s) => s.id === action.payload);
+      if (!source) return state;
+      const copy = JSON.parse(JSON.stringify(source));
+      copy.id = generateId();
+      copy.name = `${source.name} (Copy)`;
+      copy.pinned = false;
+      copy.createdAt = new Date().toISOString();
+      copy.updatedAt = new Date().toISOString();
+      copy.lastOpenedAt = new Date().toISOString();
+      copy.questions = (copy.questions || []).map((q) => ({
+        ...q,
+        id: generateId(),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }));
+      return {
+        ...state,
+        questionSets: [copy, ...(state.questionSets || [])],
+        globalActivities: [
+          { id: generateId(), type: 'create', message: `Duplicated question set "${source.name}"`, timestamp: new Date().toISOString() },
+          ...state.globalActivities,
+        ].slice(0, 200),
+      };
+    }
+
+    case 'PIN_QUESTION_SET': {
+      const questionSets = (state.questionSets || []).map((s) =>
+        s.id === action.payload ? { ...s, pinned: !s.pinned, updatedAt: new Date().toISOString() } : s
+      );
+      return { ...state, questionSets };
+    }
+
+    case 'ADD_QUESTION': {
+      const { setId, question } = action.payload;
+      const newQuestion = {
+        id: generateId(),
+        text: (question.text || 'Untitled Question').trim(),
+        answer: (question.answer || '').trim(),
+        notes: (question.notes || '').trim(),
+        difficulty: question.difficulty || 'medium',
+        tags: Array.isArray(question.tags) ? question.tags : [],
+        important: Boolean(question.important),
+        completed: Boolean(question.completed),
+        status: question.completed ? 'completed' : question.answer ? 'in_progress' : 'not_started',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        completedAt: question.completed ? new Date().toISOString() : null,
+        answerUpdatedAt: question.answer ? new Date().toISOString() : null,
+      };
+      const questionSets = (state.questionSets || []).map((s) => {
+        if (s.id !== setId) return s;
+        return {
+          ...s,
+          questions: [newQuestion, ...(s.questions || [])],
+          updatedAt: new Date().toISOString(),
+        };
+      });
+      return { ...state, questionSets };
+    }
+
+    case 'UPDATE_QUESTION': {
+      const { setId, questionId, updates } = action.payload;
+      const now = new Date().toISOString();
+      let activityMessage = null;
+
+      const questionSets = (state.questionSets || []).map((s) => {
+        if (s.id !== setId) return s;
+        const questions = (s.questions || []).map((q) => {
+          if (q.id !== questionId) return q;
+          const merged = { ...q, ...updates, updatedAt: now };
+
+          // Handle completed status transitions
+          if (updates.completed !== undefined) {
+            merged.status = updates.completed ? 'completed' : merged.answer ? 'in_progress' : 'not_started';
+            merged.completedAt = updates.completed ? now : null;
+            activityMessage = updates.completed
+              ? `Completed question: "${q.text.slice(0, 40)}..."`
+              : `Marked incomplete: "${q.text.slice(0, 40)}..."`;
+          }
+
+          if (updates.answer !== undefined && updates.answer !== q.answer) {
+            merged.answerUpdatedAt = now;
+            if (!merged.completed) {
+              merged.status = updates.answer ? 'in_progress' : 'not_started';
+            }
+          }
+
+          return merged;
+        });
+        return { ...s, questions, updatedAt: now };
+      });
+
+      return {
+        ...state,
+        questionSets,
+        globalActivities: activityMessage
+          ? [{ id: generateId(), type: 'status', message: activityMessage, timestamp: now }, ...state.globalActivities].slice(0, 200)
+          : state.globalActivities,
+      };
+    }
+
+    case 'DELETE_QUESTION': {
+      const { setId, questionId } = action.payload;
+      const questionSets = (state.questionSets || []).map((s) => {
+        if (s.id !== setId) return s;
+        return {
+          ...s,
+          questions: (s.questions || []).filter((q) => q.id !== questionId),
+          updatedAt: new Date().toISOString(),
+        };
+      });
+      return { ...state, questionSets };
+    }
+
+    case 'BULK_UPDATE_QUESTIONS': {
+      const { setId, questionIds, updates } = action.payload;
+      const now = new Date().toISOString();
+      const idSet = new Set(questionIds);
+      const questionSets = (state.questionSets || []).map((s) => {
+        if (s.id !== setId) return s;
+        const questions = (s.questions || []).map((q) => {
+          if (!idSet.has(q.id)) return q;
+          const merged = { ...q, ...updates, updatedAt: now };
+          if (updates.completed !== undefined) {
+            merged.status = updates.completed ? 'completed' : merged.answer ? 'in_progress' : 'not_started';
+            merged.completedAt = updates.completed ? now : null;
+          }
+          return merged;
+        });
+        return { ...s, questions, updatedAt: now };
+      });
+      return { ...state, questionSets };
+    }
+
+    case 'BULK_DELETE_QUESTIONS': {
+      const { setId, questionIds } = action.payload;
+      const idSet = new Set(questionIds);
+      const questionSets = (state.questionSets || []).map((s) => {
+        if (s.id !== setId) return s;
+        return {
+          ...s,
+          questions: (s.questions || []).filter((q) => !idSet.has(q.id)),
+          updatedAt: new Date().toISOString(),
+        };
+      });
+      return { ...state, questionSets };
+    }
+
+    case 'IMPORT_QUESTIONS_TO_SET': {
+      const { setId, questions } = action.payload;
+      const now = new Date().toISOString();
+      const questionSets = (state.questionSets || []).map((s) => {
+        if (s.id !== setId) return s;
+        return {
+          ...s,
+          questions: [...questions, ...(s.questions || [])],
+          updatedAt: now,
+        };
+      });
+      return {
+        ...state,
+        questionSets,
+        globalActivities: [
+          { id: generateId(), type: 'import', message: `Imported ${questions.length} questions into set`, timestamp: now },
+          ...state.globalActivities,
+        ].slice(0, 200),
+      };
+    }
+
+    case 'IMPORT_QUESTION_SET': {
+      const imported = action.payload;
+      return {
+        ...state,
+        questionSets: [imported, ...(state.questionSets || [])],
+        globalActivities: [
+          { id: generateId(), type: 'import', message: `Imported question set "${imported.name}"`, timestamp: new Date().toISOString() },
+          ...state.globalActivities,
+        ].slice(0, 200),
+      };
+    }
+
+    case 'IMPORT_ALL_QUESTIONS': {
+      return {
+        ...state,
+        questionSets: action.payload,
+        globalActivities: [
+          { id: generateId(), type: 'import', message: `Restored ${action.payload.length} question sets from backup`, timestamp: new Date().toISOString() },
+          ...state.globalActivities,
+        ].slice(0, 200),
+      };
+    }
+
+    case 'CLEAR_ALL_QUESTIONS': {
+      storage.removeItem('questionSets');
+      try {
+        localStorage.removeItem('studyFlow_questionSets');
+      } catch {}
+      return {
+        ...state,
+        questionSets: [],
+        globalActivities: [
+          { id: generateId(), type: 'delete', message: 'Cleared all Question Sets and data', timestamp: new Date().toISOString() },
+          ...state.globalActivities,
+        ].slice(0, 200),
+      };
+    }
+
     // ── Reset ──
     case 'RESET_ALL':
       storage.clearAll();
-      return { profile: null, settings: DEFAULT_SETTINGS, plans: [], ui: DEFAULT_UI, globalStudyHours: [], globalActivities: [], videoProgress: {}, studySessions: [], activeSessionId: null, toasts: [] };
+      try { localStorage.removeItem('studyFlow_questionSets'); } catch {}
+      return { profile: null, settings: DEFAULT_SETTINGS, plans: [], ui: DEFAULT_UI, globalStudyHours: [], globalActivities: [], videoProgress: {}, studySessions: [], activeSessionId: null, questionSets: [], toasts: [] };
 
     default:
       return state;
@@ -1290,6 +1564,17 @@ export function StudyProvider({ children }) {
   useEffect(() => {
     if (state.activeSessionId !== undefined) storage.setItem('activeSessionId', state.activeSessionId);
   }, [state.activeSessionId]);
+
+  useEffect(() => {
+    if (state.questionSets) {
+      storage.setItem('questionSets', state.questionSets);
+      try {
+        localStorage.setItem('studyFlow_questionSets', JSON.stringify(state.questionSets));
+      } catch (e) {
+        console.warn('LocalStorage studyFlow_questionSets save failed:', e);
+      }
+    }
+  }, [state.questionSets]);
 
   // Persist timer state only when not running or on session change (not every 1s)
   useEffect(() => {

@@ -15,6 +15,7 @@ import {
 import {
   Plus, Play, Clock, CheckSquare, Calendar, BarChart3, User, Settings,
   BookOpen, Target, Flame, TrendingUp, StickyNote, Youtube, Sparkles, Quote, EyeOff,
+  HelpCircle, ArrowRight,
 } from 'lucide-react';
 import { extractVideoId, getThumbnailUrl, formatDuration } from '../utils/youtube';
 import { completionSweep, isReducedMotion, getMotionDuration, getSpeedMultiplier } from '../utils/motion';
@@ -115,6 +116,26 @@ export default function Dashboard() {
     }
   }, [state.globalStudyHours, activePlan, state.profile, state.settings]);
 
+  // Questions stats
+  const questionStats = useMemo(() => {
+    const sets = state.questionSets || [];
+    let totalQuestions = 0;
+    let completedQuestions = 0;
+    const todayStr = new Date().toISOString().split('T')[0];
+    let completedToday = 0;
+
+    sets.forEach((s) => {
+      (s.questions || []).forEach((q) => {
+        totalQuestions++;
+        if (q.completed) completedQuestions++;
+        if (q.completedAt && q.completedAt.startsWith(todayStr)) completedToday++;
+      });
+    });
+
+    const completionRate = totalQuestions > 0 ? Math.round((completedQuestions / totalQuestions) * 100) : 0;
+    return { totalQuestions, completedQuestions, completedToday, completionRate };
+  }, [state.questionSets]);
+
   // Compute YouTube session and recent tutorials
   const learningStats = useMemo(() => {
     let activeSession = null;
@@ -205,6 +226,7 @@ export default function Dashboard() {
   const quickActions = [
     { label: 'New Plan', icon: Plus, color: 'var(--accent-orange)', action: () => navigate('/plans') },
     { label: 'Continue', icon: Play, color: '#38a169', action: () => activePlan && navigate(`/plans/${activePlan.id}`) },
+    { label: 'Questions', icon: HelpCircle, color: '#6366f1', action: () => navigate('/questions') },
     { label: 'Timer', icon: Clock, color: 'var(--accent-orange)', action: () => navigate('/study-hours') },
     { label: 'Log Hours', icon: Clock, color: '#319795', action: () => navigate('/study-hours') },
     { label: 'Resume Video', icon: Youtube, isSpecial: true, action: handleResumeVideo },
@@ -314,7 +336,7 @@ export default function Dashboard() {
         </div>
 
         {/* Stats Grid (Centered) */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5">
           {/* Today's Hours (Centered) */}
           <div className="dash-card p-6 flex flex-col items-center justify-center text-center">
             <div className="flex items-center justify-center gap-2 mb-2 text-center w-full">
@@ -351,6 +373,31 @@ export default function Dashboard() {
             </div>
           </div>
 
+          {/* Questions Practice Card */}
+          <div
+            onClick={() => navigate('/questions')}
+            className="dash-card p-6 flex flex-col items-center justify-center text-center cursor-pointer hover:border-[var(--accent-orange)] transition-colors group"
+          >
+            <div className="flex items-center justify-center gap-2 mb-2 text-center w-full">
+              <HelpCircle className="w-4 h-4 text-accent-primary shrink-0" />
+              <span className="text-[11px] font-bold text-muted uppercase tracking-wider text-center">Questions</span>
+            </div>
+            <div className="flex items-baseline justify-center gap-1.5 text-center">
+              <AnimatedCounter value={questionStats.completedQuestions} className="text-2xl font-black text-main text-center" />
+              <span className="text-xs text-muted font-bold text-center">/ {questionStats.totalQuestions}</span>
+            </div>
+            <div className="mt-3 h-2 w-full max-w-[160px] rounded-full overflow-hidden neu-card mx-auto" style={{ boxShadow: 'inset 2px 2px 4px rgba(163,177,198,0.5), inset -2px -2px 4px rgba(255,255,255,0.8)' }}>
+              <div
+                className="h-full rounded-full transition-all duration-700 bg-gradient-to-r from-[#6366f1] to-[#a855f7]"
+                style={{ width: `${questionStats.completionRate}%` }}
+              />
+            </div>
+            <div className="flex items-center gap-1 text-[10px] font-bold text-muted group-hover:text-accent-primary mt-2 transition-colors">
+              <span>{questionStats.completionRate}% done</span>
+              <ArrowRight className="w-3 h-3 text-accent-primary" />
+            </div>
+          </div>
+
           {/* Streak (Centered) */}
           <div className="dash-card p-6 flex flex-col items-center justify-center text-center">
             <div className="flex items-center justify-center gap-2 mb-2 text-center w-full">
@@ -362,7 +409,7 @@ export default function Dashboard() {
           </div>
 
           {/* Overall Progress (Centered) */}
-          <div className="dash-card flex flex-col items-center justify-center p-6 text-center">
+          <div className="dash-card flex flex-col items-center justify-center p-6 text-center col-span-2 sm:col-span-1">
             <div className="flex items-center justify-center gap-2 mb-2 text-center w-full">
               <Target className="w-4 h-4 text-accent-primary shrink-0" />
               <span className="text-[11px] font-bold text-muted uppercase tracking-wider text-center">Overall</span>

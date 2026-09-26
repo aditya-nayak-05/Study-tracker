@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
 import {
   LayoutDashboard, BookOpen, Calendar, BarChart3, Clock, User, Settings,
-  ChevronLeft, ChevronRight, Pin, Sparkles, Youtube, FileText, X,
+  ChevronLeft, ChevronRight, Pin, Sparkles, Youtube, FileText, X, HelpCircle,
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { compactMorph, getMotionDuration, getSpeedMultiplier, isReducedMotion } from '../utils/motion';
@@ -12,6 +12,7 @@ import logoImg from '../assets/logo.png';
 const navItems = [
   { path: '/', label: 'Dashboard', icon: LayoutDashboard },
   { path: '/plans', label: 'Plans', icon: BookOpen },
+  { path: '/questions', label: 'Questions', icon: HelpCircle },
   { path: '/calendar', label: 'Calendar', icon: Calendar },
   { path: '/analytics', label: 'Analytics', icon: BarChart3 },
   { path: '/study-hours', label: 'Study Hours', icon: Clock },
@@ -200,7 +201,7 @@ const Sidebar = React.memo(function Sidebar({ mobileOpen = false, onClose }) {
         {/* Nav */}
         <nav className="flex-1 px-3 py-4 space-y-1.5 overflow-y-auto">
           {navItems.map((item, i) => {
-            const isActive = location.pathname === item.path;
+            const isActive = location.pathname === item.path || (item.path !== '/' && location.pathname.startsWith(item.path));
             return (
               <div key={item.path} ref={(el) => (itemRefs.current[i] = el)}>
                 <BookNavItem

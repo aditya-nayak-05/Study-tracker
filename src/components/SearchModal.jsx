@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
-import { Search, X, BookOpen, Calendar, CheckSquare, ArrowRight } from 'lucide-react';
+import { Search, X, BookOpen, Calendar, CheckSquare, ArrowRight, HelpCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 import { modalEnter, modalExit } from '../utils/motion';
@@ -72,12 +72,27 @@ export default function SearchModal({ onClose }) {
       }
     });
 
-    return items.slice(0, 20);
-  }, [query, state.plans]);
+    (state.questionSets || []).forEach((set) => {
+      if (set.name.toLowerCase().includes(q)) {
+        items.push({ type: 'questionSet', label: `Set: ${set.name}`, setId: set.id, icon: HelpCircle });
+      }
+      (set.questions || []).forEach((question) => {
+        if (question.text.toLowerCase().includes(q) || (question.answer && question.answer.toLowerCase().includes(q))) {
+          items.push({ type: 'question', label: `${question.text} — ${set.name}`, setId: set.id, questionId: question.id, icon: HelpCircle });
+        }
+      });
+    });
+
+    return items.slice(0, 25);
+  }, [query, state.plans, state.questionSets]);
 
   const handleSelect = (item) => {
-    dispatch({ type: 'SET_UI', payload: { activePlanId: item.planId } });
-    navigate(`/plans/${item.planId}`);
+    if (item.type === 'questionSet' || item.type === 'question') {
+      navigate(`/questions/${item.setId}`);
+    } else {
+      dispatch({ type: 'SET_UI', payload: { activePlanId: item.planId } });
+      navigate(`/plans/${item.planId}`);
+    }
     handleClose();
   };
 

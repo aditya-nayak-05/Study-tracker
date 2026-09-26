@@ -10,6 +10,7 @@ import InstallPWAButton from './InstallPWAButton';
 const pageNames = {
   '/': 'Dashboard',
   '/plans': 'Plans',
+  '/questions': 'Questions',
   '/calendar': 'Calendar',
   '/analytics': 'Analytics',
   '/study-hours': 'Study Hours',
@@ -204,6 +205,8 @@ const Navbar = React.memo(function Navbar({ onSearchOpen, onMobileMenuToggle }) 
       currentPage = 'Learning Session';
     } else if (location.pathname.startsWith('/plans/')) {
       currentPage = 'Plan Detail';
+    } else if (location.pathname.startsWith('/questions/')) {
+      currentPage = 'Question Set';
     } else {
       currentPage = 'Plan Detail';
     }
