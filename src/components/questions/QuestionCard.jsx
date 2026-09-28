@@ -28,6 +28,7 @@ export default function QuestionCard({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditingAnswer, setIsEditingAnswer] = useState(!question.answer);
   const [localNote, setLocalNote] = useState(question.notes || '');
+  const [isFadingOut, setIsFadingOut] = useState(false);
 
   // Menu ref for clicking outside
   const menuRef = useRef(null);
@@ -75,6 +76,18 @@ export default function QuestionCard({
     }
   };
 
+  const handleCompleteClick = () => {
+    const newStatus = !isCompleted;
+    if (newStatus) {
+      setIsFadingOut(true);
+      setTimeout(() => {
+        onToggleComplete(setId, question.id, newStatus);
+      }, 500);
+    } else {
+      onToggleComplete(setId, question.id, newStatus);
+    }
+  };
+
   // Highlight search matches
   const renderHighlighted = (text) => {
     if (!searchQuery.trim() || !text) return text;
@@ -99,8 +112,12 @@ export default function QuestionCard({
 
   return (
     <div
-      className={`w-full py-5 pl-6 pr-3 sm:py-7 sm:pl-10 sm:pr-4 rounded-2xl border transition-all duration-300 relative bg-[var(--neu-card-bg)] ${
-        isCompleted ? 'opacity-80 border-[var(--neu-border-subtle)]' : 'border-[var(--neu-border)]'
+      className={`w-full py-5 pl-16 pr-3 sm:py-7 sm:pl-10 sm:pr-4 rounded-2xl border transition-all duration-500 relative bg-[var(--neu-card-bg)] ${
+        isFadingOut 
+          ? 'opacity-0 scale-95 border-transparent' 
+          : isCompleted 
+            ? 'opacity-80 border-[var(--neu-border-subtle)]' 
+            : 'border-[var(--neu-border)]'
       }`}
     >
       {/* Selection Checkbox (if needed) */}
@@ -190,7 +207,7 @@ export default function QuestionCard({
           </button>
           
           <button 
-            onClick={() => onToggleComplete(setId, question.id, !isCompleted)}
+            onClick={handleCompleteClick}
             className={btnClasses}
           >
             <div className={`w-4 h-4 rounded-sm border flex items-center justify-center transition-colors ${

@@ -285,57 +285,6 @@ export default function OverviewView({
         </div>
       )}
 
-      {/* Today's Study Queue (Smart Revision list) */}
-      {studyQueue.length > 0 && (
-        <div
-          className="p-6 sm:p-7 rounded-3xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-md space-y-4"
-        >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-              <h3 className="text-[15px] font-semibold text-main">
-                Today's Priority Study Queue
-              </h3>
-            </div>
-            <span className="text-[13px] text-muted font-medium">
-              {studyQueue.length} questions waiting
-            </span>
-          </div>
-
-          <div className="space-y-1">
-            {studyQueue.map((item, idx) => (
-              <div
-                key={item.id || idx}
-                onClick={() => onStartPractice(item.setId, item.id)}
-                className="py-4 px-4 rounded-lg bg-[var(--neu-inset-bg)] transition-colors flex items-center justify-between gap-3 cursor-pointer group"
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <span className="text-[13px] font-mono font-bold text-muted px-2 py-0.5 rounded inset-field shrink-0">
-                    {idx + 1}
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-sm font-semibold text-main truncate group-hover:text-accent-primary transition-colors">
-                      {item.text}
-                    </p>
-                    <span className="text-[11px] text-muted">
-                      Set: {item.setName}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 shrink-0">
-                  {item.important && (
-                    <span className="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/30">
-                      ⭐ Important
-                    </span>
-                  )}
-                  <Play className="w-3.5 h-3.5 text-muted group-hover:text-accent-primary transition-colors" />
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
 
       {/* Pinned & Recent Question Sets Section */}
       <div className="space-y-5">

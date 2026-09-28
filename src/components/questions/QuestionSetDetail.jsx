@@ -29,7 +29,7 @@ export default function QuestionSetDetail({
   showToast,
 }) {
   const [search, setSearch] = useState('');
-  const [activeFilter, setActiveFilter] = useState('all'); // 'all' | 'incomplete' | 'completed' 
+  const [activeFilter, setActiveFilter] = useState('incomplete'); // 'all' | 'incomplete' | 'completed' 
   const [sortBy, setSortBy] = useState('original');
   const [isCompact, setIsCompact] = useState(false);
   const [selectedIds, setSelectedIds] = useState(new Set());
