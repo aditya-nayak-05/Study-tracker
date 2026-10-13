@@ -1588,48 +1588,65 @@ textarea:focus:not(.no-motion) {
 }
 
 /* ═══════════════════════════════════════════
-   FULLSCREEN VIDEO & ANIMATED BUTTON
+   PREMIUM FULLSCREEN VIDEO & ANIMATED BUTTON
    ═══════════════════════════════════════════ */
-@keyframes fsPulseGlow {
+@keyframes premiumPulseGlow {
   0%, 100% {
-    box-shadow: 0 4px 14px rgba(237, 137, 54, 0.4), 0 0 0 0 rgba(237, 137, 54, 0.35);
+    box-shadow: 0 4px 20px rgba(237, 137, 54, 0.55), 0 0 0 0 rgba(237, 137, 54, 0.4), inset 0 1px 2px rgba(255, 255, 255, 0.65), inset 0 -2px 4px rgba(0, 0, 0, 0.25);
+    transform: scale(1);
   }
   50% {
-    box-shadow: 0 6px 20px rgba(237, 137, 54, 0.7), 0 0 0 5px rgba(237, 137, 54, 0.2);
+    box-shadow: 0 8px 30px rgba(237, 137, 54, 0.85), 0 0 0 5px rgba(237, 137, 54, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.8), inset 0 -2px 4px rgba(0, 0, 0, 0.25);
+    transform: scale(1.02);
   }
 }
 
-.fs-animated-btn {
+@keyframes continuousShimmer {
+  0% { transform: translateX(-150%) skewX(-20deg); }
+  30% { transform: translateX(150%) skewX(-20deg); }
+  100% { transform: translateX(150%) skewX(-20deg); }
+}
+
+.premium-fs-btn {
   position: relative;
   overflow: hidden;
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-  animation: fsPulseGlow 3s ease-in-out infinite;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: premiumPulseGlow 3.5s ease-in-out infinite;
 }
 
-.fs-animated-btn:hover {
+.premium-fs-btn:hover {
   animation: none;
   transform: translateY(-2px) scale(1.04);
-  box-shadow: 0 8px 25px rgba(237, 137, 54, 0.8), 0 0 15px rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 10px 35px rgba(237, 137, 54, 0.95), 0 0 25px rgba(255, 255, 255, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.8) !important;
 }
 
-.fs-animated-btn:active {
+.premium-fs-btn:active {
   transform: translateY(1px) scale(0.97);
 }
 
-.fs-animated-btn::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -150%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.35) 50%, transparent 100%);
-  transform: skewX(-20deg);
-  pointer-events: none;
+.premium-fs-btn .shimmer-sweep {
+  animation: continuousShimmer 4s ease-in-out infinite;
 }
 
-.fs-animated-btn:hover::after {
-  animation: buttonShimmerSweep 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+.premium-floating-fs-btn {
+  position: absolute;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: premiumPulseGlow 4s ease-in-out infinite;
+}
+
+.premium-floating-fs-btn:hover {
+  animation: none;
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 10px 32px rgba(237, 137, 54, 0.9), 0 0 20px rgba(255, 255, 255, 0.5) !important;
+}
+
+.premium-floating-fs-btn:active {
+  transform: translateY(1px) scale(0.96);
+}
+
+.premium-floating-fs-btn .shimmer-sweep {
+  animation: continuousShimmer 4s ease-in-out infinite;
 }
 
 /* Fullscreen container styling */
@@ -1640,4 +1657,5 @@ textarea:focus:not(.no-motion) {
   max-height: 100vh !important;
   background: #000000 !important;
 }
+
 

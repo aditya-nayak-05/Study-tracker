@@ -10,7 +10,7 @@ import { extractVideoId, formatDuration, calcVideoProgress } from '../utils/yout
 import {
   ArrowLeft, Play, Pause, CheckSquare, Clock, BookOpen,
   MessageSquare, FileText, Settings, Video, CheckCircle2, RotateCcw, AlertTriangle,
-  Gauge, Zap, FastForward, Minus, Plus, Maximize2, Minimize2
+  Gauge, Zap, FastForward, Minus, Plus, Maximize2, Minimize2, Timer
 } from 'lucide-react';
 
 const cardStyle = {
@@ -56,7 +56,7 @@ export default function Learning() {
   const [startAt, setStartAt] = useState(null);
   const [showResumePrompt, setShowResumePrompt] = useState(false);
   const [notesText, setNotesText] = useState('');
-  const [activeTimerTab, setActiveTimerTab] = useState('session'); // 'session' | 'pomodoro'
+  const [activeTimerTab, setActiveTimerTab] = useState('both'); // 'session' | 'pomodoro' | 'both'
   const [videoPlaying, setVideoPlaying] = useState(false);
   const [playbackSpeed, setPlaybackSpeed] = useState(() => {
     try {
@@ -439,11 +439,11 @@ export default function Learning() {
         <div className="flex flex-col">
           {/* Viewport Player & Timers Side-by-Side */}
           <div 
-            className="relative -mx-[2.5rem] -mt-[2rem] mb-10 w-[calc(100%+5rem)] flex flex-col lg:flex-row gap-6 p-6 overflow-hidden"
+            className="relative -mx-[2.5rem] -mt-[2rem] mb-10 w-[calc(100%+5rem)] flex flex-col lg:flex-row items-start gap-6 p-6"
             style={{ background: 'var(--neu-card-bg)', borderBottom: '1px solid rgba(163,177,198,0.3)' }}
           >
             {/* Left Column: Title Bar + Video Player + Scroll Indicator */}
-            <div className="flex-1 flex flex-col justify-between h-full min-h-[50vh] lg:min-h-0">
+            <div className="flex-1 flex flex-col justify-between h-full min-h-[50vh] lg:min-h-0 w-full">
               {/* Title Bar */}
               <div className="flex items-center justify-between w-full mb-4">
                 <div className="flex items-center gap-3">
@@ -456,35 +456,46 @@ export default function Learning() {
                   </div>
                 </div>
 
-                {/* Top Bar Quick Controls: Speed Indicator + Animated Fullscreen Button */}
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-sm">
+                {/* Top Bar Quick Controls: Speed Indicator + Large Premium Fullscreen Button */}
+                <div className="flex items-center gap-2.5">
+                  <div className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-sm">
                     <Gauge className="w-3.5 h-3.5 text-accent-primary" />
                     <span className="text-[11px] font-extrabold text-main">{playbackSpeed}x Speed</span>
                   </div>
 
-                  {/* Animated Fullscreen Toggle Button */}
+                  {/* Large Premium Animated Fullscreen Toggle Button */}
                   <button
                     type="button"
                     onClick={toggleFullscreen}
-                    className="fs-animated-btn group flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-bold text-xs cursor-pointer select-none border border-white/40"
+                    className="premium-fs-btn group relative flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-2xl font-black text-xs sm:text-sm cursor-pointer select-none transition-all duration-300 ring-1 ring-white/30 hover:ring-white/60"
                     style={{
-                      background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)',
+                      background: 'linear-gradient(135deg, #f6ad55 0%, #ed8936 35%, #dd6b20 70%, #c05621 100%)',
                       color: '#ffffff',
+                      border: '1.5px solid rgba(255, 255, 255, 0.5)',
+                      boxShadow: '0 4px 20px rgba(237, 137, 54, 0.6), inset 0 1px 2px rgba(255, 255, 255, 0.7), inset 0 -2px 4px rgba(0, 0, 0, 0.25)',
+                      textShadow: '0 1px 2px rgba(0, 0, 0, 0.4)',
                     }}
                     title={isFullscreen ? 'Exit Full Screen (Esc or F)' : 'Make Video Fullscreen (F)'}
                   >
-                    {isFullscreen ? (
-                      <Minimize2 className="w-3.5 h-3.5 transition-transform duration-300 group-hover:scale-125" />
-                    ) : (
-                      <Maximize2 className="w-3.5 h-3.5 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-45" />
-                    )}
-                    <span className="font-extrabold tracking-wide">
-                      {isFullscreen ? 'Exit Fullscreen' : 'Full Screen'}
+                    {/* Animated Continuous Shimmer */}
+                    <span className="shimmer-sweep pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent skew-x-[-20deg]" />
+
+                    {/* Ambient Glow Aura */}
+                    <span className="pointer-events-none absolute -inset-1 rounded-2xl bg-orange-400 opacity-20 blur-md group-hover:opacity-60 transition-opacity duration-300" />
+
+                    <span className="relative z-10 flex items-center gap-2">
+                      {isFullscreen ? (
+                        <Minimize2 className="w-4 h-4 sm:w-5 sm:h-5 text-white transition-transform duration-300 group-hover:scale-125" />
+                      ) : (
+                        <Maximize2 className="w-4 h-4 sm:w-5 sm:h-5 text-white transition-transform duration-300 group-hover:scale-125 group-hover:rotate-45" />
+                      )}
+                      <span className="font-black tracking-wider uppercase">
+                        {isFullscreen ? 'Exit Fullscreen' : 'Full Screen'}
+                      </span>
+                      <span className="hidden sm:inline-flex items-center justify-center px-1.5 py-0.5 rounded-md bg-black/30 border border-white/30 text-[10px] font-mono font-bold text-white shadow-inner">
+                        {isFullscreen ? 'ESC' : 'F'}
+                      </span>
                     </span>
-                    <kbd className="hidden sm:inline-block text-[9px] font-mono px-1 py-0.2 rounded bg-black/25 text-white/90 border border-white/20">
-                      F
-                    </kbd>
                   </button>
                 </div>
               </div>
@@ -527,26 +538,34 @@ export default function Learning() {
                   }}
                 />
 
-                {/* Floating Animated Fullscreen Button on Video Player (Overlay) */}
+                {/* Floating Premium Animated Fullscreen Button on Video Player (Overlay) */}
                 <button
                   type="button"
                   onClick={toggleFullscreen}
-                  className={`fs-animated-btn group absolute z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer backdrop-blur-md select-none border transition-all duration-300 ${
+                  className={`premium-floating-fs-btn group absolute z-30 flex items-center gap-2 px-4 py-2 rounded-2xl text-xs font-black cursor-pointer backdrop-blur-xl select-none border transition-all duration-300 ${
                     isFullscreen
-                      ? 'top-4 right-4 bg-black/80 hover:bg-black/95 text-white border-white/30 shadow-2xl'
-                      : 'top-3 right-3 bg-black/65 hover:bg-black/90 text-white border-white/25 shadow-xl'
+                      ? 'top-4 right-4 bg-black/85 hover:bg-black text-white border-white/35 shadow-2xl'
+                      : 'top-3 right-3 bg-black/70 hover:bg-black/90 text-white border-white/30 shadow-xl'
                   }`}
+                  style={{
+                    boxShadow: isFullscreen
+                      ? '0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(237,137,54,0.5)'
+                      : '0 6px 20px rgba(0,0,0,0.6), 0 0 14px rgba(237,137,54,0.35)',
+                  }}
                   title={isFullscreen ? 'Exit Full Screen (Esc or F)' : 'Make Video Fullscreen (F)'}
                 >
+                  <span className="shimmer-sweep pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-[-20deg]" />
                   {isFullscreen ? (
                     <>
                       <Minimize2 className="w-4 h-4 text-orange-400 transition-transform duration-300 group-hover:scale-125" />
-                      <span className="font-bold tracking-wide">Exit Fullscreen</span>
+                      <span className="font-extrabold tracking-wide uppercase text-[11px]">Exit Fullscreen</span>
+                      <span className="hidden sm:inline-block px-1.5 py-0.2 rounded bg-white/20 text-[9px] font-mono">ESC</span>
                     </>
                   ) : (
                     <>
                       <Maximize2 className="w-4 h-4 text-orange-400 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-45" />
-                      <span className="font-bold tracking-wide">Full Screen</span>
+                      <span className="font-extrabold tracking-wide uppercase text-[11px]">Full Screen</span>
+                      <span className="hidden sm:inline-block px-1.5 py-0.2 rounded bg-white/20 text-[9px] font-mono">F</span>
                     </>
                   )}
                 </button>
@@ -563,87 +582,91 @@ export default function Learning() {
               </div>
             </div>
 
-            {/* Right Column: Stack of Timers & Playback Speed Controls */}
+            {/* Right Column: Timers Section */}
             <div 
-              className="w-full lg:w-[320px] flex flex-col justify-center gap-4 z-20 shrink-0"
+              className="w-full lg:w-[320px] flex flex-col justify-start gap-3 z-20 shrink-0"
             >
-              {/* Timer 1: Study Session Timer */}
-              <div style={{ ...cardStyle, padding: '1rem' }} className="flex flex-col items-center">
+              {/* Sleek Timer View Tabs */}
+              <div className="flex items-center p-1 rounded-2xl bg-[var(--neu-inset-bg)] border border-[var(--neu-border-subtle)] w-full shadow-inner">
+                <button
+                  type="button"
+                  onClick={() => setActiveTimerTab('session')}
+                  className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
+                    activeTimerTab === 'session'
+                      ? 'bg-[var(--accent-btn-bg)] text-[var(--accent-btn-text)] shadow-md scale-[1.02]'
+                      : 'text-muted hover:text-main'
+                  }`}
+                >
+                  <Timer className="w-3.5 h-3.5" />
+                  <span>Session</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTimerTab('pomodoro')}
+                  className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-black transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ${
+                    activeTimerTab === 'pomodoro'
+                      ? 'bg-[var(--accent-btn-bg)] text-[var(--accent-btn-text)] shadow-md scale-[1.02]'
+                      : 'text-muted hover:text-main'
+                  }`}
+                >
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>Pomodoro</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTimerTab('both')}
+                  className={`py-1.5 px-3 rounded-xl text-xs font-black transition-all duration-200 flex items-center justify-center gap-1 cursor-pointer ${
+                    activeTimerTab === 'both'
+                      ? 'bg-[var(--accent-btn-bg)] text-[var(--accent-btn-text)] shadow-md scale-[1.02]'
+                      : 'text-muted hover:text-main'
+                  }`}
+                  title="Show both timers simultaneously"
+                >
+                  <span>Both</span>
+                </button>
+              </div>
+
+              {/* View 1: Session Timer Only */}
+              {activeTimerTab === 'session' && (
                 <StudyTimer
                   sessionId={state.activeSessionId && currentSession?.taskId === taskId ? state.activeSessionId : null}
                   initialDuration={currentSession?.taskId === taskId ? currentSession.duration : 0}
                   onTick={handleTimerTick}
                   onFinish={handleFinishSession}
-                  compact={true}
+                  compact={false}
                   videoPlaying={videoPlaying}
                 />
-              </div>
+              )}
 
-              {/* Timer 2: Timer */}
-              <div style={{ ...cardStyle, padding: '1.25rem 1rem' }} className="flex flex-col items-center justify-center">
-                <div className="flex items-center gap-2 mb-2 w-full justify-start text-xs font-semibold text-main">
-                  <Clock className="w-4 h-4 text-accent-primary" /> Timer
-                </div>
-                <PomodoroTimer compact={true} />
-              </div>
-
-              {/* Playback Speed Controller Card */}
-              <div style={{ ...cardStyle, padding: '1.15rem 1rem' }} className="flex flex-col">
-                <div className="flex items-center justify-between mb-3 w-full">
-                  <div className="flex items-center gap-2 text-xs font-extrabold text-main">
-                    <Gauge className="w-4 h-4 text-accent-primary" />
-                    <span>Playback Speed</span>
+              {/* View 2: Pomodoro Timer Only */}
+              {activeTimerTab === 'pomodoro' && (
+                <div style={{ ...cardStyle, padding: '1.25rem 1rem' }} className="flex flex-col items-center justify-center">
+                  <div className="flex items-center gap-2 mb-2 w-full justify-start text-xs font-bold text-main">
+                    <Clock className="w-4 h-4 text-accent-primary" /> Focus Pomodoro
                   </div>
-                  <span className="text-[11px] font-black px-2 py-0.5 rounded-lg bg-[var(--neu-inset-bg)] border border-[var(--neu-border-subtle)] text-accent-primary shadow-inner">
-                    {playbackSpeed}x
-                  </span>
+                  <PomodoroTimer compact={false} />
                 </div>
+              )}
 
-                {/* Speed Controls Stepper + Quick Pills */}
-                <div className="flex items-center justify-between gap-1.5 w-full">
-                  <button
-                    onClick={() => handleStepSpeed(-1)}
-                    disabled={playbackSpeed <= SPEED_OPTIONS[0]}
-                    className="p-1.5 rounded-lg text-xs font-bold bg-[var(--neu-card-bg)] hover:bg-[var(--neu-hover-bg)] text-main disabled:opacity-30 cursor-pointer border border-[var(--neu-border-subtle)] transition-all shrink-0 active:scale-95"
-                    title="Slower (-0.25x)"
-                  >
-                    <Minus className="w-3.5 h-3.5" />
-                  </button>
-
-                  <div className="flex items-center gap-1 flex-1 justify-center overflow-x-auto py-0.5 scrollbar-none">
-                    {SPEED_OPTIONS.map((speed) => {
-                      const isActive = playbackSpeed === speed;
-                      return (
-                        <button
-                          key={speed}
-                          onClick={() => handleSpeedChange(speed)}
-                          className={`px-2 py-1 text-[10px] font-extrabold rounded-lg cursor-pointer transition-all ${
-                            isActive
-                              ? 'shadow-md scale-105'
-                              : 'opacity-70 hover:opacity-100 hover:bg-[var(--neu-hover-bg)]'
-                          }`}
-                          style={
-                            isActive
-                              ? { background: 'var(--accent-btn-bg)', color: 'var(--accent-btn-text)', border: '1px solid var(--accent-orange)' }
-                              : { background: 'var(--neu-inset-bg)', color: 'var(--neu-text-main)', border: '1px solid var(--neu-border-subtle)' }
-                          }
-                        >
-                          {speed}x
-                        </button>
-                      );
-                    })}
+              {/* View 3: Both Timers (Compact Adjusted Size) */}
+              {activeTimerTab === 'both' && (
+                <div className="flex flex-col gap-3">
+                  <StudyTimer
+                    sessionId={state.activeSessionId && currentSession?.taskId === taskId ? state.activeSessionId : null}
+                    initialDuration={currentSession?.taskId === taskId ? currentSession.duration : 0}
+                    onTick={handleTimerTick}
+                    onFinish={handleFinishSession}
+                    compact={true}
+                    videoPlaying={videoPlaying}
+                  />
+                  <div style={{ ...cardStyle, padding: '0.75rem 0.85rem' }} className="flex flex-col items-center justify-center">
+                    <div className="flex items-center gap-1.5 mb-1.5 w-full justify-start text-xs font-bold text-main">
+                      <Clock className="w-3.5 h-3.5 text-accent-primary" /> Focus Timer
+                    </div>
+                    <PomodoroTimer compact={true} />
                   </div>
-
-                  <button
-                    onClick={() => handleStepSpeed(1)}
-                    disabled={playbackSpeed >= SPEED_OPTIONS[SPEED_OPTIONS.length - 1]}
-                    className="p-1.5 rounded-lg text-xs font-bold bg-[var(--neu-card-bg)] hover:bg-[var(--neu-hover-bg)] text-main disabled:opacity-30 cursor-pointer border border-[var(--neu-border-subtle)] transition-all shrink-0 active:scale-95"
-                    title="Faster (+0.25x)"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                  </button>
                 </div>
-              </div>
+              )}
             </div>
           </div>
 

@@ -3,9 +3,9 @@ import gsap from 'gsap';
 import { Play, Pause, RotateCcw, Square, Timer } from 'lucide-react';
 import { formatDuration } from '../utils/youtube';
 
-const RING_STROKE = 6;
+const RING_STROKE = 5;
 const FULL_SIZE = 160;
-const COMPACT_SIZE = 80;
+const COMPACT_SIZE = 70;
 
 function StudyTimer({
   sessionId,
@@ -178,11 +178,11 @@ function StudyTimer({
         background: 'var(--neu-card-bg)',
         border: '1px solid var(--neu-border)',
         borderRadius: '1.25rem',
-        padding: compact ? '1rem' : '1.5rem',
+        padding: compact ? '0.75rem 0.85rem' : '1.5rem',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: compact ? '0.75rem' : '1.25rem',
+        gap: compact ? '0.45rem' : '1.25rem',
         fontFamily: "'Inter', sans-serif",
         color: 'var(--neu-text-main)',
         width: '100%',
