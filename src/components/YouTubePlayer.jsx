@@ -135,11 +135,14 @@ function YouTubePlayer({
         if (destroyed) return;
 
         playerRef.current = new window.YT.Player(playerDivId.current, {
+          width: '100%',
+          height: '100%',
           videoId,
           playerVars: {
             autoplay: autoPlay ? 1 : 0,
             modestbranding: 1,
             rel: 0,
+            fs: 1,
             ...(startAt != null ? { start: Math.floor(startAt) } : {}),
           },
           events: {
@@ -225,9 +228,12 @@ function YouTubePlayer({
         if (iframe && iframe.tagName === 'IFRAME') {
           iframe.setAttribute(
             'allow',
-            'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+            'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen'
           );
           iframe.setAttribute('allowfullscreen', 'true');
+          iframe.style.width = '100%';
+          iframe.style.height = '100%';
+          iframe.style.border = 'none';
         }
       } catch (err) {
         if (!destroyed) {
@@ -267,9 +273,12 @@ function YouTubePlayer({
       if (iframe) {
         iframe.setAttribute(
           'allow',
-          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen'
         );
         iframe.setAttribute('allowfullscreen', 'true');
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
         observer.disconnect();
       }
     });
@@ -280,9 +289,12 @@ function YouTubePlayer({
       if (iframe) {
         iframe.setAttribute(
           'allow',
-          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'
+          'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share; fullscreen'
         );
         iframe.setAttribute('allowfullscreen', 'true');
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.border = 'none';
       } else {
         observer.observe(containerRef.current, { childList: true, subtree: true });
       }

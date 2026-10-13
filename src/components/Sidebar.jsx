@@ -87,41 +87,6 @@ const Sidebar = React.memo(function Sidebar({ mobileOpen = false, onClose }) {
   const itemRefs = useRef([]);
   const collapsed = state.settings.sidebarCollapsed;
 
-  const [showCinemaControls, setShowCinemaControls] = useState(true);
-  const isLearnPage = location.pathname.startsWith('/learn/');
-
-  useEffect(() => {
-    if (!isLearnPage) {
-      setShowCinemaControls(true);
-      return;
-    }
-
-    let timeoutId = null;
-
-    const handleMouseMove = () => {
-      setShowCinemaControls(true);
-      if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        setShowCinemaControls(false);
-      }, 2500);
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('pointermove', handleMouseMove);
-    window.addEventListener('touchstart', handleMouseMove);
-    
-    timeoutId = setTimeout(() => {
-      setShowCinemaControls(false);
-    }, 2500);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('pointermove', handleMouseMove);
-      window.removeEventListener('touchstart', handleMouseMove);
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, [isLearnPage]);
-
   useEffect(() => {
     if (sidebarRef.current && window.innerWidth >= 1024) {
       compactMorph(sidebarRef.current, collapsed);
@@ -174,8 +139,6 @@ const Sidebar = React.memo(function Sidebar({ mobileOpen = false, onClose }) {
         }`}
         style={{ 
           width: typeof window !== 'undefined' && window.innerWidth < 1024 ? 260 : (collapsed ? 72 : 260), 
-          opacity: showCinemaControls ? 1 : 0,
-          pointerEvents: showCinemaControls ? 'auto' : 'none'
         }}
       >
         {/* Logo & Close Button Header */}

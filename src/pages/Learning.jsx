@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo, useLayoutEffect } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import gsap from 'gsap';
 import { useStudy } from '../context/StudyContext';
@@ -11,7 +10,7 @@ import { extractVideoId, formatDuration, calcVideoProgress } from '../utils/yout
 import {
   ArrowLeft, Play, Pause, CheckSquare, Clock, BookOpen,
   MessageSquare, FileText, Settings, Video, CheckCircle2, RotateCcw, AlertTriangle,
-  Gauge, Zap, FastForward, Minus, Plus
+  Gauge, Zap, FastForward, Minus, Plus, Maximize2, Minimize2
 } from 'lucide-react';
 
 const cardStyle = {
@@ -52,14 +51,13 @@ export default function Learning() {
   
   const autoResume = location.state?.autoResume;
   const containerRef = useRef(null);
-  const videoPlaceholderRef = useRef(null);
+  const playerContainerRef = useRef(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
   const [startAt, setStartAt] = useState(null);
   const [showResumePrompt, setShowResumePrompt] = useState(false);
   const [notesText, setNotesText] = useState('');
   const [activeTimerTab, setActiveTimerTab] = useState('session'); // 'session' | 'pomodoro'
-  const [showCinemaControls, setShowCinemaControls] = useState(true);
   const [videoPlaying, setVideoPlaying] = useState(false);
-  const [placeholderRect, setPlaceholderRect] = useState(null);
   const [playbackSpeed, setPlaybackSpeed] = useState(() => {
     try {
       const saved = localStorage.getItem('studyflow_playback_speed');
@@ -69,7 +67,6 @@ export default function Learning() {
     }
   });
   const notesTimeoutRef = useRef(null);
-  const cinemaControlsTimeoutRef = useRef(null);
 
   const handleSpeedChange = useCallback((newSpeed) => {
     const rounded = Math.round(newSpeed * 100) / 100;
@@ -102,63 +99,93 @@ export default function Learning() {
     }
   }, [playbackSpeed, handleSpeedChange]);
 
-  // Track the placeholder position for the portal-based video player
-  useLayoutEffect(() => {
-    const el = videoPlaceholderRef.current;
-    if (!el) return;
-    const update = () => {
-      if (videoPlaceholderRef.current) {
-        setPlaceholderRect(videoPlaceholderRef.current.getBoundingClientRect());
-      }
-    };
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    window.addEventListener('resize', update);
-    window.addEventListener('scroll', update, true);
-    return () => { ro.disconnect(); window.removeEventListener('resize', update); window.removeEventListener('scroll', update, true); };
-  }, [showCinemaControls, startAt]);
+  const toggleFullscreen = useCallback(async () => {
+    const container = playerContainerRef.current;
+    if (!container) return;
 
-  const handleCinemaMouseMove = useCallback(() => {
-    setShowCinemaControls(true);
-    if (cinemaControlsTimeoutRef.current) {
-      clearTimeout(cinemaControlsTimeoutRef.current);
+    const isCurrentlyFs = !!(
+      document.fullscreenElement ||
+      document.webkitFullscreenElement ||
+      document.mozFullScreenElement ||
+      document.msFullscreenElement ||
+      isFullscreen
+    );
+
+    if (!isCurrentlyFs) {
+      try {
+        if (container.requestFullscreen) {
+          await container.requestFullscreen();
+        } else if (container.webkitRequestFullscreen) {
+          await container.webkitRequestFullscreen();
+        } else if (container.mozRequestFullScreen) {
+          await container.mozRequestFullScreen();
+        } else if (container.msRequestFullscreen) {
+          await container.msRequestFullscreen();
+        } else {
+          setIsFullscreen(true);
+        }
+      } catch (err) {
+        console.warn('Native requestFullscreen failed or blocked, falling back to viewport fullscreen:', err);
+        setIsFullscreen(true);
+      }
+    } else {
+      try {
+        if (document.exitFullscreen && document.fullscreenElement) {
+          await document.exitFullscreen();
+        } else if (document.webkitExitFullscreen && document.webkitFullscreenElement) {
+          await document.webkitExitFullscreen();
+        } else if (document.mozCancelFullScreen && document.mozFullScreenElement) {
+          await document.mozCancelFullScreen();
+        } else if (document.msExitFullscreen && document.msFullscreenElement) {
+          await document.msExitFullscreen();
+        }
+      } catch (err) {
+        console.warn('Exit fullscreen error:', err);
+      }
+      setIsFullscreen(false);
     }
-    cinemaControlsTimeoutRef.current = setTimeout(() => {
-      setShowCinemaControls(false);
-    }, 2500); // 2.5 seconds
+  }, [isFullscreen]);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      const isFs = !!(
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement
+      );
+      setIsFullscreen(isFs);
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+    };
   }, []);
 
   useEffect(() => {
-    const handleGlobalMove = () => {
-      setShowCinemaControls(true);
-      if (cinemaControlsTimeoutRef.current) {
-        clearTimeout(cinemaControlsTimeoutRef.current);
+    const handleKeyDown = (e) => {
+      const tag = e.target?.tagName?.toLowerCase();
+      if (tag === 'textarea' || tag === 'input' || e.target?.isContentEditable) {
+        return;
       }
-      cinemaControlsTimeoutRef.current = setTimeout(() => {
-        setShowCinemaControls(false);
-      }, 2500);
-    };
-
-    window.addEventListener('mousemove', handleGlobalMove);
-    window.addEventListener('pointermove', handleGlobalMove);
-    window.addEventListener('touchstart', handleGlobalMove);
-    window.addEventListener('keydown', handleGlobalMove);
-
-    cinemaControlsTimeoutRef.current = setTimeout(() => {
-      setShowCinemaControls(false);
-    }, 2500);
-
-    return () => {
-      window.removeEventListener('mousemove', handleGlobalMove);
-      window.removeEventListener('pointermove', handleGlobalMove);
-      window.removeEventListener('touchstart', handleGlobalMove);
-      window.removeEventListener('keydown', handleGlobalMove);
-      if (cinemaControlsTimeoutRef.current) {
-        clearTimeout(cinemaControlsTimeoutRef.current);
+      if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        toggleFullscreen();
+      } else if (e.key === 'Escape' && isFullscreen) {
+        toggleFullscreen();
       }
     };
-  }, []);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [toggleFullscreen, isFullscreen]);
 
   // ── Find Plan and Task ──
   const { plan, task } = useMemo(() => {
@@ -410,28 +437,17 @@ export default function Learning() {
         </div>
       ) : startAt !== null && (
         <div className="flex flex-col">
-          {/* Cinematic Viewport Player & Timers Side-by-Side */}
+          {/* Viewport Player & Timers Side-by-Side */}
           <div 
-            onMouseMove={handleCinemaMouseMove}
-            onPointerMove={handleCinemaMouseMove}
-            onTouchStart={handleCinemaMouseMove}
-            onMouseLeave={() => setShowCinemaControls(false)}
             className="relative -mx-[2.5rem] -mt-[2rem] mb-10 w-[calc(100%+5rem)] flex flex-col lg:flex-row gap-6 p-6 overflow-hidden"
-            style={{ minHeight: 'calc(100vh - 4.5rem)', background: 'var(--neu-card-bg)', borderBottom: '1px solid rgba(163,177,198,0.3)' }}
+            style={{ background: 'var(--neu-card-bg)', borderBottom: '1px solid rgba(163,177,198,0.3)' }}
           >
             {/* Left Column: Title Bar + Video Player + Scroll Indicator */}
             <div className="flex-1 flex flex-col justify-between h-full min-h-[50vh] lg:min-h-0">
-              {/* Title Overlay */}
-              <div 
-                className="flex items-center justify-between w-full transition-all duration-500 mb-4"
-                style={{
-                  opacity: showCinemaControls ? 1 : 0,
-                  pointerEvents: showCinemaControls ? 'auto' : 'none',
-                  transform: showCinemaControls ? 'translateY(0)' : 'translateY(-10px)',
-                }}
-              >
+              {/* Title Bar */}
+              <div className="flex items-center justify-between w-full mb-4">
                 <div className="flex items-center gap-3">
-                  <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl cursor-pointer transition-all text-muted border border-[var(--neu-border)]" style={{ background: 'var(--neu-card-bg)', boxShadow: '3px 3px 6px rgba(163,177,198,0.5), -3px -3px 6px rgba(255,255,255,0.8)' }}>
+                  <button onClick={() => navigate(-1)} className="p-2.5 rounded-xl cursor-pointer transition-all text-muted border border-[var(--neu-border)] hover:text-main" style={{ background: 'var(--neu-card-bg)', boxShadow: '3px 3px 6px rgba(163,177,198,0.5), -3px -3px 6px rgba(255,255,255,0.8)' }}>
                     <ArrowLeft className="w-4 h-4" />
                   </button>
                   <div>
@@ -440,111 +456,104 @@ export default function Learning() {
                   </div>
                 </div>
 
-                {/* Top Bar Quick Speed Indicator */}
+                {/* Top Bar Quick Controls: Speed Indicator + Animated Fullscreen Button */}
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[var(--neu-border)] bg-[var(--neu-card-bg)] shadow-sm">
                     <Gauge className="w-3.5 h-3.5 text-accent-primary" />
                     <span className="text-[11px] font-extrabold text-main">{playbackSpeed}x Speed</span>
                   </div>
+
+                  {/* Animated Fullscreen Toggle Button */}
+                  <button
+                    type="button"
+                    onClick={toggleFullscreen}
+                    className="fs-animated-btn group flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl font-bold text-xs cursor-pointer select-none border border-white/40"
+                    style={{
+                      background: 'linear-gradient(135deg, #ed8936 0%, #dd6b20 100%)',
+                      color: '#ffffff',
+                    }}
+                    title={isFullscreen ? 'Exit Full Screen (Esc or F)' : 'Make Video Fullscreen (F)'}
+                  >
+                    {isFullscreen ? (
+                      <Minimize2 className="w-3.5 h-3.5 transition-transform duration-300 group-hover:scale-125" />
+                    ) : (
+                      <Maximize2 className="w-3.5 h-3.5 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-45" />
+                    )}
+                    <span className="font-extrabold tracking-wide">
+                      {isFullscreen ? 'Exit Fullscreen' : 'Full Screen'}
+                    </span>
+                    <kbd className="hidden sm:inline-block text-[9px] font-mono px-1 py-0.2 rounded bg-black/25 text-white/90 border border-white/20">
+                      F
+                    </kbd>
+                  </button>
                 </div>
               </div>
 
-              {/* Placeholder: reserves space in the layout for the portal-rendered video */}
+              {/* Video Player Container */}
               <div 
-                ref={videoPlaceholderRef}
-                className="flex-1 w-full"
-                style={{ aspectRatio: '16 / 9', maxWidth: '1280px', maxHeight: 'calc(100vh - 12rem)' }}
-              />
-
-              {/* Video Player - rendered via portal on document.body so position:fixed always works */}
-              {ReactDOM.createPortal(
-                <div
-                  onMouseMove={handleCinemaMouseMove}
-                  onPointerMove={handleCinemaMouseMove}
-                  onTouchStart={handleCinemaMouseMove}
-                  style={(() => {
-                    const isInline = showCinemaControls && placeholderRect;
-                    if (isInline) {
-                      // Calculate transform to visually position the fullscreen-sized element at the placeholder's location
-                      const vw = window.innerWidth;
-                      const vh = window.innerHeight;
-                      const sx = placeholderRect.width / vw;
-                      const sy = placeholderRect.height / vh;
-                      // Transform origin is top-left, so translate to placeholder's top-left after scaling
-                      const tx = placeholderRect.left / sx;
-                      const ty = placeholderRect.top / sy;
-                      return {
-                        position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        width: '100vw',
-                        height: '100vh',
-                        zIndex: 99999,
-                        overflow: 'hidden',
-                        transformOrigin: '0 0',
-                        transform: `scale(${sx}, ${sy}) translate(${tx}px, ${ty}px)`,
-                        borderRadius: `${1.25 / sx}rem / ${1.25 / sy}rem`,
-                        boxShadow: '0 20px 50px rgba(0,0,0,0.4)',
-                        willChange: 'transform, border-radius',
-                        transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                      };
-                    }
-                    return {
-                      position: 'fixed',
-                      top: 0,
-                      left: 0,
-                      width: '100vw',
-                      height: '100vh',
-                      zIndex: 99999,
-                      overflow: 'hidden',
-                      transformOrigin: '0 0',
-                      transform: 'scale(1, 1) translate(0px, 0px)',
-                      borderRadius: '0px',
-                      background: '#000000',
-                      willChange: 'transform, border-radius',
-                      transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.6s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                    };
-                  })()}
-                >
-                  <YouTubePlayer
-                    videoId={videoId}
-                    startAt={startAt}
-                    autoPlay={true}
-                    playbackRate={playbackSpeed}
-                    onPlaybackRateChange={(rate) => {
-                      if (rate && rate > 0) setPlaybackSpeed(rate);
-                    }}
-                    onProgressUpdate={handleProgressUpdate}
-                    onStateChange={(stateCode) => {
-                      if (stateCode === 1) {
-                        setVideoPlaying(true);
-                        if (!state.activeSessionId) {
-                          handleStartSession();
-                        }
-                      } else if (stateCode === 2 || stateCode === 0) {
-                        setVideoPlaying(false);
+                ref={playerContainerRef}
+                className={`relative w-full overflow-hidden transition-all duration-300 ${
+                  isFullscreen
+                    ? 'fixed inset-0 z-[999999] w-screen h-screen bg-black flex items-center justify-center p-0 m-0 rounded-none'
+                    : 'rounded-2xl shadow-xl border border-[var(--neu-border)] bg-black'
+                }`}
+                style={!isFullscreen ? { aspectRatio: '16 / 9', maxWidth: '1280px', maxHeight: 'calc(100vh - 12rem)' } : {}}
+              >
+                <YouTubePlayer
+                  videoId={videoId}
+                  startAt={startAt}
+                  autoPlay={true}
+                  playbackRate={playbackSpeed}
+                  onPlaybackRateChange={(rate) => {
+                    if (rate && rate > 0) setPlaybackSpeed(rate);
+                  }}
+                  onProgressUpdate={handleProgressUpdate}
+                  onStateChange={(stateCode) => {
+                    if (stateCode === 1) {
+                      setVideoPlaying(true);
+                      if (!state.activeSessionId) {
+                        handleStartSession();
                       }
-                    }}
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      border: 'none',
-                      background: '#000000',
-                    }}
-                  />
-                </div>,
-                document.body
-              )}
+                    } else if (stateCode === 2 || stateCode === 0) {
+                      setVideoPlaying(false);
+                    }
+                  }}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    border: 'none',
+                    borderRadius: isFullscreen ? '0px' : '1rem',
+                    background: '#000000',
+                  }}
+                />
+
+                {/* Floating Animated Fullscreen Button on Video Player (Overlay) */}
+                <button
+                  type="button"
+                  onClick={toggleFullscreen}
+                  className={`fs-animated-btn group absolute z-30 flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold cursor-pointer backdrop-blur-md select-none border transition-all duration-300 ${
+                    isFullscreen
+                      ? 'top-4 right-4 bg-black/80 hover:bg-black/95 text-white border-white/30 shadow-2xl'
+                      : 'top-3 right-3 bg-black/65 hover:bg-black/90 text-white border-white/25 shadow-xl'
+                  }`}
+                  title={isFullscreen ? 'Exit Full Screen (Esc or F)' : 'Make Video Fullscreen (F)'}
+                >
+                  {isFullscreen ? (
+                    <>
+                      <Minimize2 className="w-4 h-4 text-orange-400 transition-transform duration-300 group-hover:scale-125" />
+                      <span className="font-bold tracking-wide">Exit Fullscreen</span>
+                    </>
+                  ) : (
+                    <>
+                      <Maximize2 className="w-4 h-4 text-orange-400 transition-transform duration-300 group-hover:scale-125 group-hover:rotate-45" />
+                      <span className="font-bold tracking-wide">Full Screen</span>
+                    </>
+                  )}
+                </button>
+              </div>
 
               {/* Scroll Indicator */}
-              <div 
-                className="flex flex-col items-center justify-center mt-4 transition-all duration-500"
-                style={{
-                  opacity: showCinemaControls ? 0.7 : 0.0,
-                  pointerEvents: showCinemaControls ? 'auto' : 'none',
-                  transform: showCinemaControls ? 'translateY(0)' : 'translateY(10px)',
-                }}
-              >
+              <div className="flex flex-col items-center justify-center mt-4">
                 <div className="flex flex-col items-center gap-1 animate-bounce">
                   <span className="text-[9px] uppercase font-bold tracking-wider text-muted">Scroll Down for Notes & Actions</span>
                   <svg className="w-3.5 h-3.5 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2.5">
@@ -556,12 +565,7 @@ export default function Learning() {
 
             {/* Right Column: Stack of Timers & Playback Speed Controls */}
             <div 
-              className="w-full lg:w-[320px] flex flex-col justify-center gap-4 transition-all duration-500 z-20 shrink-0"
-              style={{
-                opacity: showCinemaControls ? 1 : 0,
-                transform: showCinemaControls ? 'translateX(0)' : 'translateX(20px)',
-                pointerEvents: showCinemaControls ? 'auto' : 'none'
-              }}
+              className="w-full lg:w-[320px] flex flex-col justify-center gap-4 z-20 shrink-0"
             >
               {/* Timer 1: Study Session Timer */}
               <div style={{ ...cardStyle, padding: '1rem' }} className="flex flex-col items-center">

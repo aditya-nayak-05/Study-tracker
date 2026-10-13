@@ -20,7 +20,7 @@ const pageNames = {
 };
 
 // ── Custom Navbar Learning Page Stats Widget ──
-function NavbarLearningStats({ state, location, showCinemaControls }) {
+function NavbarLearningStats({ state, location }) {
   const [istTime, setIstTime] = useState('');
 
   const parts = location.pathname.split('/');
@@ -103,8 +103,6 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
         style={{ 
           background: 'var(--neu-card-bg)',
           boxShadow: 'var(--neu-shadow-raised)',
-          opacity: showCinemaControls ? 1 : 0,
-          pointerEvents: showCinemaControls ? 'auto' : 'none'
         }}
       >
         <span className="text-[10px] uppercase font-bold tracking-wider text-accent-primary shrink-0">Today Task:</span>
@@ -117,8 +115,6 @@ function NavbarLearningStats({ state, location, showCinemaControls }) {
         style={{ 
           background: 'var(--neu-card-bg)',
           boxShadow: 'var(--neu-shadow-raised)',
-          opacity: showCinemaControls ? 1 : 0,
-          pointerEvents: showCinemaControls ? 'auto' : 'none'
         }}
       >
         <span className="text-[10px] uppercase font-bold tracking-wider text-accent-primary shrink-0">Course Overall:</span>
@@ -163,42 +159,6 @@ const Navbar = React.memo(function Navbar({ onSearchOpen, onMobileMenuToggle }) 
   const [fontPickerOpen, setFontPickerOpen] = useState(false);
   const [themePickerOpen, setThemePickerOpen] = useState(false);
 
-  const [showCinemaControls, setShowCinemaControls] = useState(true);
-  const isLearnPage = location.pathname.startsWith('/learn/');
-
-  useEffect(() => {
-    if (!isLearnPage) {
-      setShowCinemaControls(true);
-      return;
-    }
-
-    let timeoutId = null;
-
-    const handleMouseMove = () => {
-      setShowCinemaControls(true);
-      if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        setShowCinemaControls(false);
-      }, 2500); // 2.5 seconds
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('pointermove', handleMouseMove);
-    window.addEventListener('touchstart', handleMouseMove);
-    
-    // Set initial timer to fade out after 2.5s if mouse is still
-    timeoutId = setTimeout(() => {
-      setShowCinemaControls(false);
-    }, 2500);
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('pointermove', handleMouseMove);
-      window.removeEventListener('touchstart', handleMouseMove);
-      if (timeoutId) clearTimeout(timeoutId);
-    };
-  }, [isLearnPage]);
-
   let currentPage = pageNames[location.pathname];
   if (!currentPage) {
     if (location.pathname.startsWith('/learn/')) {
@@ -225,12 +185,12 @@ const Navbar = React.memo(function Navbar({ onSearchOpen, onMobileMenuToggle }) 
   return (
     <header
       ref={navRef}
-      className="h-[4.5rem] border-b border-[var(--neu-border-subtle)] flex items-center justify-between px-3 sm:px-6 md:px-8 sticky top-0 z-30 transition-all duration-500"
+      className="h-[4.5rem] border-b border-[var(--neu-border-subtle)] flex items-center justify-between px-3 sm:px-6 md:px-8 sticky top-0 z-30 transition-all duration-300"
       style={{ 
-        background: showCinemaControls ? 'var(--neu-header-bg)' : 'transparent', 
-        backdropFilter: showCinemaControls ? 'blur(12px)' : 'none', 
-        borderBottomColor: showCinemaControls ? 'var(--neu-border-subtle)' : 'transparent', 
-        boxShadow: showCinemaControls ? 'var(--neu-shadow-raised)' : 'none' 
+        background: 'var(--neu-header-bg)', 
+        backdropFilter: 'blur(12px)', 
+        borderBottomColor: 'var(--neu-border-subtle)', 
+        boxShadow: 'var(--neu-shadow-raised)' 
       }}
     >
       {/* Left Section: Mobile Menu Button & Breadcrumbs */}
@@ -245,11 +205,7 @@ const Navbar = React.memo(function Navbar({ onSearchOpen, onMobileMenuToggle }) 
 
         {/* Breadcrumbs */}
         <div 
-          className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm shrink-0 transition-opacity duration-500 min-w-0"
-          style={{
-            opacity: showCinemaControls ? 1 : 0,
-            pointerEvents: showCinemaControls ? 'auto' : 'none'
-          }}
+          className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm shrink-0 min-w-0"
         >
           {breadcrumbs.map((crumb, i) => (
             <React.Fragment key={i}>
@@ -267,17 +223,12 @@ const Navbar = React.memo(function Navbar({ onSearchOpen, onMobileMenuToggle }) 
         <NavbarLearningStats 
           state={state} 
           location={location} 
-          showCinemaControls={showCinemaControls} 
         />
       )}
 
       {/* Actions */}
       <div 
-        className="flex items-center gap-3 transition-opacity duration-500"
-        style={{
-          opacity: showCinemaControls ? 1 : 0,
-          pointerEvents: showCinemaControls ? 'auto' : 'none'
-        }}
+        className="flex items-center gap-3"
       >
         {/* Install Desktop App Button */}
         <InstallPWAButton variant="navbar" />
